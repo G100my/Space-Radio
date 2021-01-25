@@ -6,6 +6,18 @@
     </div>
   </nav>
 </template>
+<script>
+import { getImplicitGrantToken } from '../utility/Oauth.js'
+
+export default {
+  methods: {
+    getImplicitGrantToken,
+    show() {
+      console.log(this.$store.state.token)
+    },
+  },
+}
+</script>
 <style lang="scss">
 .navbar {
   position: absolute;
