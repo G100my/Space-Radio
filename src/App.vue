@@ -1,17 +1,17 @@
 <template>
   <div class="main-container">
     <TheNavbar />
-    <main>
-      <router-view />
-    </main>
+    <TheHostControl />
   </div>
 </template>
 <script>
 import TheNavbar from './components/TheNavbar.vue'
+import TheHostControl from './components/TheHostControl.vue'
 
 export default {
   components: {
     TheNavbar,
+    TheHostControl,
   },
   data() {
     return {
