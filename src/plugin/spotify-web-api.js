@@ -1989,8 +1989,15 @@ var SpotifyWebApi = (function () {
 //   module.exports = SpotifyWebApi;
 // }
 
+const spotifyAPI = new SpotifyWebApi()
+
 export default {
   install: app => {
-    app.config.globalProperties.$spotifyAPI = new SpotifyWebApi()
+    app.config.globalProperties.$spotifyAPI = spotifyAPI
+    window.$spotifyAPI = spotifyAPI
+
+    app.provide('spotifyAPI', spotifyAPI)
   },
 }
+
+export { spotifyAPI }
