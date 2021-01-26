@@ -24,10 +24,6 @@ export default {
     },
   },
   created() {
-    this.$spotifyAPI.setAccessToken(this.token)
-
-    //
-
     const hash = window.location.hash
     // fixme 如果網址是帶有 token 的則導向驗證前的的頁面
     if (hash.includes('access_token')) {
@@ -36,6 +32,7 @@ export default {
     } else {
       this.token = localStorage.getItem('token') || null
     }
+    this.$spotifyAPI.setAccessToken(this.token)
   },
 }
 </script>
