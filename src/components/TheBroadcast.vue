@@ -1,10 +1,8 @@
 <template>
   <div>
     <h1>TTS</h1>
-    <p>text: {{ text }}</p>
     <button @click.prevent="TTS">speak test button</button>
   </div>
-  <div v-show="isPlay">{{ text }}</div>
 </template>
 <script>
 export default {
@@ -17,7 +15,6 @@ export default {
   emits: ['speakEnd'],
   data() {
     return {
-      isPlay: false,
       utterance: new window.SpeechSynthesisUtterance(),
       pitch: 1,
     }
@@ -28,9 +25,6 @@ export default {
     this.utterance.volume = 1
     this.utterance.addEventListener('end', () => {
       this.$emit('speakEnd')
-      setTimeout(() => {
-        this.isPlay = false
-      }, 5000)
     })
     window.speechSynthesis.onvoiceschanged = () => {
       const voice = speechSynthesis
@@ -44,7 +38,6 @@ export default {
     TTS() {
       this.utterance.text = this.text
       window.speechSynthesis.speak(this.utterance)
-      this.isPlay = true
       console.log(this.utterance)
     },
   },
