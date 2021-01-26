@@ -30,12 +30,23 @@ export default {
       type: Number,
       required: true,
     },
+    token: {
+      type: String,
+      required: true,
+    },
+    executeBeforeEndTime: {
+      type: Number,
+      default: null,
+    },
   },
+  emits: ['nearTheEnd'],
   data() {
     return {
       player: null,
       device_id: null,
       name: 'test play',
+      countDown: null,
+      countDownTrackID: null,
     }
   },
   watch: {
@@ -49,26 +60,46 @@ export default {
       this.player = new window.Spotify.Player({
         name: this.name,
         getOAuthToken: cb => {
-          cb(this.$store.state.token)
+          cb(this.token)
         },
       })
-      this.player.addListener('initialization_error', ({ message }) => {
-        console.error(message)
-      })
+      // prettier-ignore
+      this.player.addListener('initialization_error', ({ message }) => { console.error(message) })
+      // prettier-ignore
+      this.player.addListener('account_error', ({ message }) => { console.error(message) })
+      // prettier-ignore
+      this.player.addListener('playback_error', ({ message }) => { console.error(message) })
+
       this.player.addListener('authentication_error', ({ message }) => {
         console.error(message)
         getImplicitGrantToken()
       })
-      this.player.addListener('account_error', ({ message }) => {
-        console.error(message)
-      })
-      this.player.addListener('playback_error', ({ message }) => {
-        console.error(message)
-      })
 
       // Playback status updates
       this.player.addListener('player_state_changed', state => {
+        console.log(state.track_window.current_track)
         console.log(state)
+
+        if (!this.executeBeforeEndTime) return
+
+        // 避免還在讀取時的 state
+        const bufferTimer = state.duration - state.position - this.executeBeforeEndTime
+        if (bufferTimer < 800) return
+
+        if (
+          (state.track_window.current_track.id != this.countDownTrackID && state.position > state.duration / 2) ||
+          state.position == 0
+        )
+          return
+
+        this.countDownTrackID = state.track_window.current_track.id
+
+        console.log('setTimeout', Date.now())
+        clearTimeout(this.countDown)
+        this.countDown = setTimeout(() => {
+          console.log('timeout!!!')
+          this.$emit('nearTheEnd')
+        }, bufferTimer)
       })
 
       // Ready
@@ -114,8 +145,8 @@ export default {
       this.player.connect().then(success => console.log(success))
     },
     activeThisDevice() {
-      if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.$store.state.token)
-      this.$spotifyAPI.transferMyPlayback([this.device_id])
+      if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.token)
+      this.$spotifyAPI.transferMyPlayback([this.device_id], { play: true })
     },
   },
 }

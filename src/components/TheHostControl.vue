@@ -2,8 +2,13 @@
   <div>
     <h1>Host Control</h1>
     <TheBroadcast ref="broadcast" :text="message" @speakEnd="resumeVolume" />
-    <ThePlayer :volume="currentVolume" />
-    <button @click.prevent="adjustVolume">adjustVolume</button>
+    <ThePlayer
+      :execute-before-end-time="executeBeforeEndTime"
+      :token="host_token"
+      :volume="currentVolume"
+      @nearTheEnd="timeoutHandler"
+    />
+    <button @click.prevent="reduceVolume($refs.broadcast.TTS)">reduceVolume</button>
     <button @click.prevent="resumeVolume">resumeVolume</button>
     <input v-model="currentVolume" type="range" step="0.1" min="0" max="1" />
   </div>
@@ -23,9 +28,11 @@ export default {
       message: 'This is default message!',
       currentVolume: 1,
       recodeVolume: null,
-      targetVolume: 0.2,
-      adjustTotalTime: 3000,
+      targetVolume: 0.1,
+      executeBeforeEndTime: 10000,
+      adjustTotalTime: 5000,
       adjustStepTime: 100,
+      host_token: this.$store.state.token,
     }
   },
   computed: {
@@ -34,7 +41,7 @@ export default {
     },
   },
   methods: {
-    adjustVolume() {
+    reduceVolume(intervalCallback) {
       this.recodeVolume = this.currentVolume
 
       const step = (this.currentVolume - this.targetVolume) / this.adjustExecuteTimes
@@ -43,7 +50,7 @@ export default {
         this.currentVolume -= step
 
         if (this.currentVolume < this.targetVolume) {
-          this.$refs.broadcast.TTS()
+          intervalCallback()
           clearInterval(timer)
         }
       }, this.adjustStepTime)
@@ -60,6 +67,9 @@ export default {
           this.recodeVolume = null
         }
       }, this.adjustStepTime)
+    },
+    timeoutHandler() {
+      this.reduceVolume(this.$refs.broadcast.TTS)
     },
   },
 }
