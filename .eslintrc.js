@@ -4,6 +4,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
+  // prettier-ignore
   extends: [
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
