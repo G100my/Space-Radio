@@ -25,7 +25,7 @@ const store = createStore({
       state.trackIdQueue = newQueue
     },
     room_queue_push(state, addedTrack) {
-      room_queue_ref.push(addedTrack)
+      room_queue_ref.push(addedTrack.id)
     },
     room_queue_remove_first(state) {
       const key = Object.keys(state.trackIdQueue)[0]
