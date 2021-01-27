@@ -10,6 +10,7 @@
     />
     <button @click.prevent="reduceVolume($refs.broadcast.TTS)">reduceVolume</button>
     <button @click.prevent="resumeVolume">resumeVolume</button>
+    <button @click.prevent="playQueue">playQueue</button>
     <input v-model="currentVolume" type="range" step="0.1" min="0" max="1" />
   </div>
 </template>
@@ -70,6 +71,9 @@ export default {
     },
     timeoutHandler() {
       this.reduceVolume(this.$refs.broadcast.TTS)
+    },
+    playWholeQueue() {
+      this.$spotifyAPI.play({ uris: this.$store.getters.getRoomQueueURIArray })
     },
   },
 }
