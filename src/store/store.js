@@ -1,6 +1,5 @@
 import { createStore } from 'vuex'
 import firebase from './firebase.js'
-import { transferTrackObjectFormat } from './utility.js'
 
 // 用不一樣的命名方式做區隔
 const room_queue_ref = firebase.database().ref('room_queue')
@@ -26,7 +25,7 @@ const store = createStore({
       state.trackIdQueue = newQueue
     },
     room_queue_push(state, addedTrack) {
-      room_queue_ref.push(transferTrackObjectFormat(addedTrack))
+      room_queue_ref.push(addedTrack)
     },
     room_queue_remove_first(state) {
       const key = Object.keys(state.trackIdQueue)[0]
