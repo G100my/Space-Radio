@@ -1,20 +1,24 @@
 <template>
-  <div class="track">
-    <div class="cover">
-      <img :src="coverUrl" alt="" />
-    </div>
-    <div class="base-info">
+  <tr class="track">
+    <td class="cover">
+      <div>
+        <img :src="coverUrl" alt="" />
+      </div>
+    </td>
+    <td>
       <p class="name">
         <a :href="info.external_urls.spotify">{{ info.name }}</a>
       </p>
-
       <p class="artist">
         <a v-for="artist in info.artists" :key="artist.name" :href="artist.external_urls.spotify">{{ artist.name }}</a>
       </p>
-
+    </td>
+    <td>
       <p class="album">
         <a :href="info.album.external_urls.spotify">{{ info.album.name }}</a>
       </p>
+    </td>
+    <td>
       <section class="time-data">
         <p>
           <label>Duration Time:</label>
@@ -25,9 +29,11 @@
           <span class="number">{{ release }}</span>
         </p>
       </section>
-    </div>
-    <slot />
-  </div>
+    </td>
+    <td>
+      <slot />
+    </td>
+  </tr>
 </template>
 <script>
 export default {
@@ -59,68 +65,33 @@ export default {
 .track {
   $margin-gap: 10px;
 
-  display: flex;
-  align-items: center;
-  padding: 15px;
   font-size: 14px;
 
   label {
     font-size: 12px;
   }
-  section {
-    padding: 0 5px;
+  td {
+    vertical-align: middle;
   }
 
   .cover {
-    display: flex;
-    align-items: center;
     margin-right: $margin-gap;
+    font-size: 0;
+    height: 100%;
     img {
       height: 64px;
       width: 64px;
     }
   }
 
-  .base-info {
-    flex: 1;
-    display: grid;
-    grid-template-areas:
-      'name album time feature'
-      'artist album time feature';
-    grid-template-columns: 1fr 1fr auto 50px;
-  }
-  .name {
-    grid-area: name;
-  }
-  .artist {
-    grid-area: artist;
-  }
-  .album {
-    grid-area: album;
-  }
-  .time-data {
-    grid-area: time;
-  }
-  .feature {
-    grid-area: feature;
-  }
-
   .name a {
+    white-space: nowrap;
     font-size: 18px;
     font-weight: 600;
   }
-
   .artist > a:not(:last-child)::after {
     content: ',';
     margin-right: 5px;
-  }
-
-  .album,
-  .time-data,
-  .feature {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 
   .time-data > p {
