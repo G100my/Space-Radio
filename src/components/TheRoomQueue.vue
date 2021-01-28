@@ -3,28 +3,19 @@
     <h1>Room Tracks</h1>
     <button @click.prevent="testAdd">testAdd</button>
     <button @click.prevent="testRemoveFirst">testRemoveFirst</button>
-    <table>
-      <thead>
-        <tr>
-          <td>Cover</td>
-          <td>Track / Artists</td>
-          <td>Album</td>
-          <td>Detail</td>
-          <td>Feature</td>
-        </tr>
-      </thead>
-      <tbody>
-        <Track v-for="(detailObject, index) in detailObjects" :key="index" :info="detailObject" />
-      </tbody>
-    </table>
+    <TrackTable>
+      <Track v-for="(detailObject, index) in detailObjects" :key="index" :info="detailObject" />
+    </TrackTable>
   </div>
 </template>
 <script>
 import Track from './Track.vue'
+import TrackTable from './TrackTable.vue'
 
 export default {
   components: {
     Track,
+    TrackTable,
   },
   data() {
     return {
