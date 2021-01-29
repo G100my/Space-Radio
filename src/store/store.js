@@ -4,11 +4,11 @@ import { spotifyAPI } from '../plugin/spotify-web-api.js'
 import { getImplicitGrantToken } from '../utility/Oauth.js'
 
 // 用不一樣的命名方式做區隔
-const room_queue_ref = firebase.database().ref('room_queue')
-room_queue_ref.on('value', snapshot => {
-  store.commit('updateRoomQueue', snapshot.val())
+const normal_queue_ref = firebase.database().ref('normal_queue')
+normal_queue_ref.on('value', normal_queue => {
+  store.commit('updateNormalQueue', normal_queue.val())
 
-  const trackIdArray = Object.values(snapshot.val()).map(item => item.id)
+  const trackIdArray = Object.values(normal_queue.val()).map(item => item.id)
 
   if (spotifyAPI.getAccessToken())
     spotifyAPI.getTracks(trackIdArray).then(result => {
@@ -22,6 +22,7 @@ room_queue_ref.on('value', snapshot => {
 
 const store = createStore({
   state: {
+    userId: 'zhangLo',
     token: null,
     trackIdQueue: null,
     trackObjectArray: null,
@@ -35,18 +36,23 @@ const store = createStore({
     setToken(state, newToken) {
       state.token = newToken
     },
-    updateRoomQueue(state, newQueue) {
+    updateNormalQueue(state, newQueue) {
       state.trackIdQueue = newQueue
     },
     updateTrackObjectArray(state, newArray) {
       state.trackObjectArray = newArray
     },
-    room_queue_push(state, addedTrack) {
-      room_queue_ref.push(addedTrack.id)
+    push(state, trackId) {
+      normal_queue_ref.push({
+        id: trackId,
+        urgent_time: false,
+        added_time: Date.now(),
+        add_by: state.userName,
+      })
     },
-    room_queue_remove_first(state) {
+    normal_queue_remove_first(state) {
       const key = Object.keys(state.trackIdQueue)[0]
-      room_queue_ref.child(key).remove()
+      normal_queue_ref.child(key).remove()
     },
   },
 })
