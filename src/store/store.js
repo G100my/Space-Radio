@@ -20,12 +20,30 @@ normal_queue_ref.on('value', normal_queue => {
   }
 })
 
+const urgent_queue_ref = firebase.database().ref('urgent_queue')
+urgent_queue_ref.on('value', urgent_queue => {
+  store.commit('updateUrgentQueue', urgent_queue.val())
+
+  const trackIdArray = Object.values(urgent_queue.val()).map(item => item.id)
+
+  if (spotifyAPI.getAccessToken())
+    spotifyAPI.getTracks(trackIdArray).then(result => {
+      store.commit('updateTrackObjectArray', result.tracks)
+    })
+  else {
+    console.log('spotifyAPI AccessToken is null')
+    getImplicitGrantToken()
+  }
+})
+
+//
+
 const store = createStore({
   state: {
     userId: 'zhangLo',
     token: null,
-    trackIdQueue: null,
-    trackObjectArray: null,
+    urgentIdQueue: null,
+    urgentTrackObjectArray: null,
   },
   getters: {
     getRoomQueueURIArray(state) {
@@ -37,7 +55,10 @@ const store = createStore({
       state.token = newToken
     },
     updateNormalQueue(state, newQueue) {
-      state.trackIdQueue = newQueue
+      state.normalQueue = newQueue
+    },
+    updateUrgentQueue(state, newQueue) {
+      state.urgentQueue = newQueue
     },
     updateTrackObjectArray(state, newArray) {
       state.trackObjectArray = newArray
@@ -48,6 +69,15 @@ const store = createStore({
         urgent_time: false,
         added_time: Date.now(),
         add_by: state.userName,
+      })
+    },
+    jump_in(state, { trackId, message }) {
+      urgent_queue_ref.push({
+        id: trackId,
+        urgent_time: Date.now(),
+        added_time: Date.now(),
+        add_by: state.userName,
+        message,
       })
     },
     normal_queue_remove_first(state) {
