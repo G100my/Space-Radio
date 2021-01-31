@@ -19,7 +19,7 @@ function getDataHandler(snapshot, storeTarget) {
       // 有點冒險的作法。firebase 會把看起來像 array 的東西(例如用 push 上去的 object)自動轉換成 array 傳過來，且順序一樣。然後祈禱 spotify 回傳的順序也一樣...
       const tracks = result.tracks.reduce((previous, trackDetail, index) => {
         const key = keyArray[index]
-        previous[key] = { ...trackDetail, ...queue[key] }
+        previous[key] = trackDetail
         return previous
       }, {})
       store.commit('updateQueueTrack', { storeTarget, newQueue: queue, newTrack: tracks })
