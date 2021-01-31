@@ -30,28 +30,29 @@ function getDataHandler(snapshot, storeTarget) {
   }
 }
 
+function bindListener(target, storeTarget) {
+  target.once('value', snapshot => {
+    getDataHandler(snapshot, storeTarget)
+  })
+  target.on('child_removed', oldChildSnapshot => {
+    store.commit('deleteQueueTrack', { storeTarget, oldChildSnapshot })
+  })
+  target.on('child_added', childSnapshot => {
+    const trackId = childSnapshot.val().id
+    spotifyAPI.getTrack(trackId).then(addedTrack => {
+      store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
+    })
+  })
+  target.on('child_changed', childSnapshot => {
+    store.commit('editQueue', { storeTarget, childSnapshot })
+  })
+}
+
 const normal_queue_ref = firebase.database().ref('normal_queue')
 const urgent_queue_ref = firebase.database().ref('urgent_queue')
 
-normal_queue_ref.once('value', snapshot => {
-  getDataHandler(snapshot, 'normal')
-})
-normal_queue_ref.on('child_removed', oldChildSnapshot => {
-  store.commit('deleteQueueTrack', { storeTarget: 'normal', oldChildSnapshot })
-})
-normal_queue_ref.on('child_added', childSnapshot => {
-  const trackId = childSnapshot.val().id
-  spotifyAPI.getTrack(trackId).then(addedTrack => {
-    store.commit('addQueueTrack', { storeTarget: 'normal', childSnapshot, addedTrack })
-  })
-})
-normal_queue_ref.on('child_changed', childSnapshot => {
-  store.commit('editQueue', { storeTarget: 'normal', childSnapshot })
-})
-
-urgent_queue_ref.on('value', urgent_queue => {
-  getDataHandler(urgent_queue, 'urgent')
-})
+bindListener(normal_queue_ref, 'normal')
+bindListener(urgent_queue_ref, 'urgent')
 
 const store = createStore({
   state: {
@@ -61,7 +62,6 @@ const store = createStore({
     normal_track: {},
     urgent_queue: {},
     urgent_track: {},
-    isReady: false,
   },
   getters: {
     // fixme
@@ -85,14 +85,12 @@ const store = createStore({
       state.token = newToken
     },
     updateQueueTrack(state, { storeTarget, newQueue, newTrack }) {
-      console.log({ storeTarget, newQueue, newTrack })
       const queueKey = `${storeTarget}_queue`
       const trackKey = `${storeTarget}_track`
       state[queueKey] = newQueue
       state[trackKey] = newTrack
     },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
-      console.log('deleteQueueTrack')
       const key = oldChildSnapshot.key
       const queue = `${storeTarget}_queue`
       const track = `${storeTarget}_track`
@@ -120,9 +118,8 @@ const store = createStore({
       const orderKey = `${now}-${userId}`
       parameter[orderKey] = {
         id,
-        urgent_time: false,
         added_time: now,
-        add_by: userId,
+        added_by: userId,
         message,
         orderKey,
       }
@@ -134,9 +131,8 @@ const store = createStore({
       const orderKey = `${now}-${userId}`
       urgent_queue_ref.push({
         id,
-        urgent_time: now,
         added_time: now,
-        add_by: userId,
+        added_by: userId,
         message,
         orderKey,
       })
@@ -149,9 +145,7 @@ const store = createStore({
     },
 
     urgent2normal(context, key) {
-      console.log(key)
       const queue = { ...context.state.urgent_queue[key] }
-      queue.urgent_time = false
       const orderKey = queue.orderKey
 
       const parameter = {}
@@ -163,7 +157,6 @@ const store = createStore({
 
     normal2urgent(context, { key, message }) {
       const queue = { ...context.state.normal_queue[key] }
-      queue.urgent_time = Date.now()
       queue.message = message
 
       urgent_queue_ref.push(queue)
