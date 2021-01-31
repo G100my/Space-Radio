@@ -5,14 +5,12 @@ import { getImplicitGrantToken } from '../utility/Oauth.js'
 
 // 用 _ 區隔 firebase 變數
 
-function getDataHandler(snapshot, QueueHandlerName, trackHandlerName) {
+function getDataHandler(snapshot, storeTarget) {
   const queue = snapshot.exportVal()
   if (queue === null) {
     console.log('queue === null')
-    store.commit(QueueHandlerName, {})
-    store.commit(trackHandlerName, {})
+    store.commit('updateQueueTrack', { storeTarget, newQueue: {}, newTrack: {} })
   } else if (spotifyAPI.getAccessToken()) {
-    store.commit(QueueHandlerName, queue)
     const dataArray = Object.values(queue)
     const keyArray = Object.keys(queue)
     const trackIdArray = dataArray.map(item => item.id)
@@ -24,8 +22,7 @@ function getDataHandler(snapshot, QueueHandlerName, trackHandlerName) {
         previous[key] = { ...trackDetail, ...queue[key] }
         return previous
       }, {})
-      console.log('reduce tracks', tracks)
-      store.commit(trackHandlerName, tracks)
+      store.commit('updateQueueTrack', { storeTarget, newQueue: queue, newTrack: tracks })
     })
   } else {
     console.log('spotifyAPI AccessToken is null')
@@ -75,19 +72,12 @@ const store = createStore({
     setToken(state, newToken) {
       state.token = newToken
     },
-    updateNormalQueue(state, newQueue) {
-      state.normalQueue = newQueue
-    },
-    updateUrgentQueue(state, newQueue) {
-      state.urgentQueue = newQueue
-    },
-    updateNormalTracks(state, newData) {
-      console.log(newData)
-      state.normal_track = newData
-    },
-    updateUrgentTracks(state, newData) {
-      console.log(newData)
-      state.urgent_track = newData
+    updateQueueTrack(state, { storeTarget, newQueue, newTrack }) {
+      console.log({ storeTarget, newQueue, newTrack })
+      const queueKey = `${storeTarget}_queue`
+      const trackKey = `${storeTarget}_track`
+      state[queueKey] = newQueue
+      state[trackKey] = newTrack
     },
   },
   actions: {
