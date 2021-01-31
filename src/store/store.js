@@ -33,13 +33,25 @@ function getDataHandler(snapshot, storeTarget) {
 const normal_queue_ref = firebase.database().ref('normal_queue')
 const urgent_queue_ref = firebase.database().ref('urgent_queue')
 
-normal_queue_ref.orderByKey().on('value', normal_queue => {
-  getDataHandler(normal_queue, 'updateNormalQueue', 'updateNormalTracks')
+normal_queue_ref.once('value', snapshot => {
+  getDataHandler(snapshot, 'normal')
 })
+normal_queue_ref.on('child_removed', oldChildSnapshot => {
+  store.commit('deleteQueueTrack', { storeTarget: 'normal', oldChildSnapshot })
+})
+normal_queue_ref.on('child_added', childSnapshot => {
+  const trackId = childSnapshot.val().id
+  spotifyAPI.getTrack(trackId).then(addedTrack => {
+    store.commit('addQueueTrack', { storeTarget: 'normal', childSnapshot, addedTrack })
+  })
+})
+normal_queue_ref.on('child_changed', childSnapshot => {
+  store.commit('editQueue', { storeTarget: 'normal', childSnapshot })
+})
+
 urgent_queue_ref.on('value', urgent_queue => {
-  getDataHandler(urgent_queue, 'updateUrgentQueue', 'updateUrgentTracks')
+  getDataHandler(urgent_queue, 'urgent')
 })
-//
 
 const store = createStore({
   state: {
@@ -78,6 +90,26 @@ const store = createStore({
       const trackKey = `${storeTarget}_track`
       state[queueKey] = newQueue
       state[trackKey] = newTrack
+    },
+    deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
+      console.log('deleteQueueTrack')
+      const key = oldChildSnapshot.key
+      const queue = `${storeTarget}_queue`
+      const track = `${storeTarget}_track`
+      delete state[queue][key]
+      delete state[track][key]
+    },
+    addQueueTrack(state, { storeTarget, childSnapshot, addedTrack }) {
+      const key = childSnapshot.key
+      const queue = `${storeTarget}_queue`
+      const track = `${storeTarget}_track`
+      state[queue][key] = childSnapshot.val()
+      state[track][key] = addedTrack
+    },
+    editQueue(state, { storeTarget, childSnapshot }) {
+      const key = childSnapshot.key
+      const queue = `${storeTarget}_queue`
+      state[queue][key] = childSnapshot.val()
     },
   },
   actions: {
