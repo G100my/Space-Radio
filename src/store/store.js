@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore, createLogger } from 'vuex'
 import firebase from './firebase.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 import { getImplicitGrantToken } from '../utility/Oauth.js'
@@ -232,6 +232,8 @@ const store = createStore({
     Personal,
     PlayingState,
   },
+  // https://next.vuex.vuejs.org/guide/plugins.html#built-in-logger-plugin
+  plugins: [createLogger()],
 })
 
 export default store
