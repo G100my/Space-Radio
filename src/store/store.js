@@ -54,7 +54,7 @@ const urgent_queue_ref = firebase.database().ref('urgent_queue')
 bindListener(normal_queue_ref, 'normal')
 bindListener(urgent_queue_ref, 'urgent')
 
-const store = createStore({
+const Queue = {
   state: {
     userId: 'zhangLo',
     token: null,
@@ -111,10 +111,10 @@ const store = createStore({
     },
   },
   actions: {
-    add(context, { id, message }) {
+    add({ state }, { id, message }) {
       const now = Date.now()
       const parameter = {}
-      const userId = context.state.userId
+      const userId = state.userId
       const orderKey = `${now}-${userId}`
       parameter[orderKey] = {
         id,
@@ -125,9 +125,9 @@ const store = createStore({
       }
       normal_queue_ref.update(parameter)
     },
-    jumpIn(context, { id, message }) {
+    jumpIn({ state }, { id, message }) {
       const now = Date.now()
-      const userId = context.state.userId
+      const userId = state.userId
       const orderKey = `${now}-${userId}`
       urgent_queue_ref.push({
         id,
@@ -169,11 +169,17 @@ const store = createStore({
     editMessageAtNormal(_context, { key, message }) {
       normal_queue_ref.child(key).update({ message })
     },
-    removeFirst(context) {
-      const target_ref = context.state.urgentQueueArray ? urgent_queue_ref : normal_queue_ref
-      const queueArray = context.state.urgentQueueArray ? context.state.urgentQueueArray : context.state.normal_queue
+    removeFirst({ state }) {
+      const target_ref = state.urgentQueueArray ? urgent_queue_ref : normal_queue_ref
+      const queueArray = state.urgentQueueArray ? state.urgentQueueArray : state.normal_queue
       target_ref.child(queueArray[0].key).remove()
     },
+  },
+}
+
+const store = createStore({
+  modules: {
+    Queue,
   },
 })
 
