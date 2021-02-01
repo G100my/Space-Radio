@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     trackInfo() {
-      return this.$store.state.Playing.trackInfo
+      return this.$store.state.PlayingState.trackInfo
     },
     artists() {
       return this.trackInfo.artists
@@ -70,10 +70,10 @@ export default {
       return this.trackInfo.album ? this.trackInfo.album.images[0].url : ''
     },
     volumeValue() {
-      return Number.parseInt(this.$store.state.Playing.volume * 100)
+      return Number.parseInt(this.$store.state.PlayingState.volume * 100)
     },
     dislike() {
-      return this.$store.state.Playing.dislike
+      return this.$store.state.PlayingState.dislike
     },
   },
   methods: {
