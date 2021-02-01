@@ -172,6 +172,47 @@ const Queue = {
   },
 }
 
+const PlayingState = {
+  state: {
+    volume: 0.3,
+    minVolume: 0.2,
+    trackInfo: {
+      artists: {},
+      album: {
+        images: [{ url: '' }],
+        external_urls: { spotify: '' },
+      },
+    },
+    added_by: 'somebody',
+    id: '1111111111',
+    message: 'test test test string',
+    dislike: 0,
+  },
+  mutations: {
+    turnUp(state) {
+      if (state.volume + 0.02 <= 1) state.volume += 0.02
+    },
+    turnDown(state) {
+      if (state.volume - 0.02 >= state.minVolume) state.volume -= 0.02
+    },
+    refresh(state, { newTrackInfo, added_by, message, id }) {
+      state.trackInfo = newTrackInfo
+      state.added_by = added_by
+      state.message = message
+      state.dislike = 0
+      state.id = id
+    },
+    reduceDislike(state) {
+      if (state.dislike - 1 >= 0) state.dislike -= 1
+    },
+  },
+  actions: {
+    increaseDislike({ state }) {
+      state.dislike += 1
+      // do something
+    },
+  },
+}
 
 const Personal = {
   state: {
@@ -189,6 +230,7 @@ const store = createStore({
   modules: {
     Queue,
     Personal,
+    PlayingState,
   },
 })
 
