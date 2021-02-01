@@ -1,27 +1,29 @@
 <template>
-  <div class="main-container">
-    <TheNavbar />
-    <main>
-      <div>
-        <router-view />
-      </div>
+  <main>
+    <div class="sidebar-area">
+      <button style="height: 30px" @click="getImplicitGrantToken">getImplicitGrantToken</button>
+    </div>
+    <div class="view">
+      <div class="search">search</div>
       <div>
         <TheRoomQueue />
       </div>
-    </main>
-    <TheHostControl />
-  </div>
+    </div>
+    <PlaylistContent />
+  </main>
 </template>
 <script>
-import TheNavbar from './components/TheNavbar.vue'
-import TheHostControl from './components/TheHostControl.vue'
+import { getImplicitGrantToken } from './utility/Oauth.js'
+// import TheSidebar from './components/TheSidebar.vue'
+// import TheHostControl from './components/TheHostControl.vue'
 import TheRoomQueue from './components/TheRoomQueue.vue'
-
+import PlaylistContent from './views/PlaylistContent.vue'
 export default {
   components: {
-    TheNavbar,
-    TheHostControl,
+    // TheHostControl,
+    PlaylistContent,
     TheRoomQueue,
+    // TheSidebar,
   },
   data() {
     return {
@@ -44,23 +46,49 @@ export default {
     }
     this.$spotifyAPI.setAccessToken(this.token)
   },
+  methods: {
+    getImplicitGrantToken,
+  },
 }
 </script>
-<style>
+<style lang="scss">
 * {
-  outline: 2px lightblue dashed;
+  outline: 1px lightblue dashed;
 }
 body {
-  padding-left: 150px;
   margin: 0;
-}
-.main-container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
+  font-size: 18px;
 }
 main {
-  flex: 1;
+  height: 100vh;
+  width: 100vw;
   display: flex;
+}
+.sidebar-area {
+  flex: 0 0 250px;
+  padding: 20px;
+  display: flex;
+  align-items: stretch;
+}
+.view {
+  flex: 1;
+}
+.search {
+  height: 50px;
+}
+h1 {
+  margin: 0;
+}
+p {
+  margin: 0;
+}
+a {
+  text-decoration: none;
+  &:hover {
+    filter: invert(0.5);
+  }
+}
+li {
+  list-style: none;
 }
 </style>
