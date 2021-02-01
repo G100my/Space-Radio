@@ -56,8 +56,6 @@ bindListener(urgent_queue_ref, 'urgent')
 
 const Queue = {
   state: {
-    userId: 'zhangLo',
-    token: null,
     normal_queue: {},
     normal_track: {},
     urgent_queue: {},
@@ -81,9 +79,6 @@ const Queue = {
     },
   },
   mutations: {
-    setToken(state, newToken) {
-      state.token = newToken
-    },
     updateQueueTrack(state, { storeTarget, newQueue, newTrack }) {
       const queueKey = `${storeTarget}_queue`
       const trackKey = `${storeTarget}_track`
@@ -111,10 +106,10 @@ const Queue = {
     },
   },
   actions: {
-    add({ state }, { id, message }) {
+    add({ rootState }, { id, message }) {
       const now = Date.now()
       const parameter = {}
-      const userId = state.userId
+      const userId = rootState.Personal.userId
       const orderKey = `${now}-${userId}`
       parameter[orderKey] = {
         id,
@@ -125,9 +120,9 @@ const Queue = {
       }
       normal_queue_ref.update(parameter)
     },
-    jumpIn({ state }, { id, message }) {
+    jumpIn({ rootState }, { id, message }) {
       const now = Date.now()
-      const userId = state.userId
+      const userId = rootState.Personal.userId
       const orderKey = `${now}-${userId}`
       urgent_queue_ref.push({
         id,
@@ -169,10 +164,23 @@ const Queue = {
     editMessageAtNormal(_context, { key, message }) {
       normal_queue_ref.child(key).update({ message })
     },
-    removeFirst({ state }) {
-      const target_ref = state.urgentQueueArray ? urgent_queue_ref : normal_queue_ref
-      const queueArray = state.urgentQueueArray ? state.urgentQueueArray : state.normal_queue
-      target_ref.child(queueArray[0].key).remove()
+    // removeFirst({ state }) {
+    //   const target_ref = state.urgentQueueArray ? urgent_queue_ref : normal_queue_ref
+    //   const queueArray = state.urgentQueueArray ? state.urgentQueueArray : state.normal_queue
+    //   target_ref.child(queueArray[0].key).remove()
+    // },
+  },
+}
+
+
+const Personal = {
+  state: {
+    userId: 'zhangLo',
+    token: null,
+  },
+  mutations: {
+    setToken(state, newToken) {
+      state.token = newToken
     },
   },
 }
@@ -180,6 +188,7 @@ const Queue = {
 const store = createStore({
   modules: {
     Queue,
+    Personal,
   },
 })
 
