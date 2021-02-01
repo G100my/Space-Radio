@@ -172,44 +172,96 @@ const Queue = {
   },
 }
 
+const playing_state_ref = firebase.database().ref('playing_state')
+
+playing_state_ref.child('volume').on('value', snapshot => {
+  store.commit('adjustVolume', snapshot.val())
+})
+playing_state_ref.child('info').on('value', snapshot => {
+  store.commit('refreshPlayingSatae', snapshot.val())
+})
+playing_state_ref.child('dislike').on('value', snapshot => {
+  console.log('dislike', snapshot.val())
+  store.commit('adjustDislike', snapshot.val())
+})
+playing_state_ref.child('votedUsers').on('value', snapshot => {
+  console.log('votedUsers', snapshot)
+  store.dispatch('adjustIsVoted', snapshot)
+})
+
+const volumeStep = 0.02
 const PlayingState = {
   state: {
     volume: 0.3,
     minVolume: 0.2,
-    trackInfo: {
-      artists: {},
-      album: {
-        images: [{ url: '' }],
-        external_urls: { spotify: '' },
+    dislike: 0,
+    isVoted: false,
+    info: {
+      track: {
+        artists: {},
+        album: {
+          images: [{ url: '' }],
+          external_urls: { spotify: '' },
+        },
+        id: '',
+      },
+      queue: {
+        added_time: '',
+        added_by: 'somebody',
+        message: 'test test test string',
       },
     },
-    added_by: 'somebody',
-    id: '1111111111',
-    message: 'test test test string',
-    dislike: 0,
+  },
+  getters: {
+    getCurrentPlayingTrackId(state) {
+      return state.info.track.id
+    },
+    getCurrentPlayingArtists(state) {
+      return state.info.track.artists
+    },
+    getCurrentPlayingAlbum(state) {
+      return state.info.track.album
+    },
   },
   mutations: {
-    turnUp(state) {
-      if (state.volume + 0.02 <= 1) state.volume += 0.02
-    },
-    turnDown(state) {
-      if (state.volume - 0.02 >= state.minVolume) state.volume -= 0.02
-    },
-    refresh(state, { newTrackInfo, added_by, message, id }) {
-      state.trackInfo = newTrackInfo
-      state.added_by = added_by
-      state.message = message
+    refreshPlayingSatae(state, infoObject) {
+      state.info = infoObject
       state.dislike = 0
-      state.id = id
     },
-    reduceDislike(state) {
-      if (state.dislike - 1 >= 0) state.dislike -= 1
+    adjustVolume(state, value) {
+      state.volume = value
+    },
+    adjustDislike(state, value) {
+      state.dislike = value
     },
   },
   actions: {
-    increaseDislike({ state }) {
-      state.dislike += 1
-      // do something
+    turnUp({ state }) {
+      const addResult = state.volume + volumeStep
+      if (addResult <= 1) playing_state_ref.update({ volume: addResult })
+    },
+    turnDown({ state }) {
+      const reduceResult = state.volume - volumeStep
+      if (reduceResult >= state.minVolume) playing_state_ref.update({ volume: reduceResult })
+    },
+    reduceDislike({ state, rootState }) {
+      const reduceResult = state.dislike - 1
+      if (reduceResult >= 0) {
+        playing_state_ref.update({ dislike: reduceResult })
+        playing_state_ref.child(`votedUsers/${rootState.Personal.userId}`).remove()
+      }
+    },
+    increaseDislike({ state, rootState }) {
+      const reduceResult = state.dislike + 1
+      if (reduceResult <= 2) {
+        playing_state_ref.update({ dislike: reduceResult })
+        const parameter = {}
+        parameter[rootState.Personal.userId] = true
+        playing_state_ref.child('votedUsers').update(parameter)
+      }
+    },
+    adjustIsVoted({ state, rootState }, snapshot) {
+      state.isVoted = snapshot.hasChild(rootState.Personal.userId)
     },
   },
 }

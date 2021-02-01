@@ -4,13 +4,18 @@
     <p>Now Playing:</p>
     <div class="track-info">
       <div class="cover">
-        <img :src="album.images[0].url" alt="" />
+        <img :src="getCurrentPlayingAlbum.images[0].url" alt="" />
       </div>
       <p class="artists">
-        <a v-for="(artist, index) in artists" :key="index" :href="artist.external_urls.spotify">{{ artist.name }}</a>
+        <a
+          v-for="(getCurrentPlayingArtists, index) in getCurrentPlayingArtists"
+          :key="index"
+          :href="getCurrentPlayingArtists.external_urls.spotify"
+          >{{ getCurrentPlayingArtists.name }}</a
+        >
       </p>
       <p class="album">
-        <a :href="album.external_urls.spotify">{{ album.name }}</a>
+        <a :href="getCurrentPlayingAlbum.external_urls.spotify">{{ getCurrentPlayingAlbum.name }}</a>
       </p>
     </div>
     <div class="control-board">
@@ -50,7 +55,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -60,19 +65,17 @@ export default {
   },
   computed: {
     ...mapState({
-      trackInfo: state => state.PlayingState.trackInfo,
-      artists: state => state.PlayingState.trackInfo.artists,
-      album: state => state.PlayingState.trackInfo.album,
       volumeValue: state => Number.parseInt(state.PlayingState.volume * 100),
       dislike: state => state.PlayingState.dislike,
     }),
+    ...mapGetters(['getCurrentPlayingAlbum', 'getCurrentPlayingArtists', 'getCurrentPlayingTrackId']),
   },
   methods: {
     turnUp() {
-      this.$store.commit('turnUp')
+      this.$store.dispatch('turnUp')
     },
     turnDown() {
-      this.$store.commit('turnDown')
+      this.$store.dispatch('turnDown')
     },
     increaseDislike() {
       this.isVoted = true
@@ -80,7 +83,7 @@ export default {
     },
     reduceDislike() {
       this.isVoted = false
-      this.$store.commit('reduceDislike')
+      this.$store.dispatch('reduceDislike')
     },
   },
 }
