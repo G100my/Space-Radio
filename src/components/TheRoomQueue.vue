@@ -1,10 +1,22 @@
 <template>
+  <!-- eslint-disable vue/html-self-closing eslint-disable vue/no-parsing-error-->
   <div class="room-queue">
     <h1>Room Tracks</h1>
-    <button @click.prevent="testAdd">testAdd</button>
-    <button @click.prevent="testRemoveFirst">testRemoveFirst</button>
-    <TrackTable>
-      <Track v-for="(detailObject, index) in detailObjects" :key="index" :info="detailObject" />
+    <TrackTable v-if="isReady">
+      <Track v-for="(detailObject, key) in urgentTrack" :key="key" :info="detailObject">
+        <div class="urgent" :data-key="key">
+          <button type="button" @click="removeFromUrgent">removeFromUrgent</button>
+          <button type="button" @click="editMessageAtUrgent">editMessageAtUrgent</button>
+          <button type="button" @click="urgent2normal">urgent2normal</button>
+        </div>
+      </Track>
+      <Track v-for="(detailObject, key) in normalTrack" :key="key" :info="detailObject">
+        <div class="normal" :data-key="key">
+          <button type="button" @click="removeFromNormal">removeFromNormal</button>
+          <button type="button" @click="editMessageAtNormal">editMessageAtNormal</button>
+          <button type="button" @click="normal2urgent">normal2urgent</button>
+        </div>
+      </Track>
     </TrackTable>
   </div>
 </template>
@@ -20,23 +32,62 @@ export default {
   data() {
     return {
       testNumber: 0,
+      message: 'test string',
     }
   },
   computed: {
-    idQueue() {
-      return this.$store.state.trackIdQueue
+    normalTrack() {
+      return this.$store.getters.getNormal
     },
-    detailObjects() {
-      return this.$store.state.trackObjectArray
+    urgentTrack() {
+      return this.$store.getters.getUrgent
+    },
+    isReady() {
+      return this.$store.getters.readyState
+    },
+    normalQueue() {
+      return this.$store.state.normal_queue
+    },
+    urgentQueue() {
+      return this.$store.state.urgent_queue
     },
   },
   methods: {
-    testAdd() {
-      this.$store.commit('room_queue_push', 'edvgredvbgtrdcvbgredcvbgrd')
+    removeFromUrgent(event) {
+      const key = event.target.parentElement.dataset.key
+      this.$store.dispatch('removeFromUrgent', key)
     },
-    testRemoveFirst() {
-      this.$store.commit('room_queue_remove_first')
+    editMessageAtUrgent(event) {
+      const key = event.target.parentElement.dataset.key
+      const message = this.message
+      this.$store.dispatch('editMessageAtUrgent', { key, message })
+    },
+    urgent2normal(event) {
+      const key = event.target.parentElement.dataset.key
+      this.$store.dispatch('urgent2normal', key)
+    },
+    removeFromNormal(event) {
+      const key = event.target.parentElement.dataset.key
+      this.$store.dispatch('removeFromNormal', key)
+    },
+    editMessageAtNormal(event) {
+      const key = event.target.parentElement.dataset.key
+      const message = this.message
+      this.$store.dispatch('editMessageAtNormal', { key, message })
+    },
+    normal2urgent(event) {
+      const key = event.target.parentElement.dataset.key
+      const message = this.message
+      this.$store.dispatch('normal2urgent', { key, message })
     },
   },
 }
 </script>
+<style>
+.normal button {
+  background-color: pink;
+}
+.urgent button {
+  background-color: lightskyblue;
+}
+</style>
