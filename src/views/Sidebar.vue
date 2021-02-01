@@ -4,7 +4,7 @@
     <p>Now Playing:</p>
     <div class="track-info">
       <div class="cover">
-        <img :src="cover" alt="" />
+        <img :src="album.images[0].url" alt="" />
       </div>
       <p class="artists">
         <a v-for="(artist, index) in artists" :key="index" :href="artist.external_urls.spotify">{{ artist.name }}</a>
@@ -50,6 +50,8 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
@@ -57,24 +59,13 @@ export default {
     }
   },
   computed: {
-    trackInfo() {
-      return this.$store.state.PlayingState.trackInfo
-    },
-    artists() {
-      return this.trackInfo.artists
-    },
-    album() {
-      return this.trackInfo.album
-    },
-    cover() {
-      return this.trackInfo.album ? this.trackInfo.album.images[0].url : ''
-    },
-    volumeValue() {
-      return Number.parseInt(this.$store.state.PlayingState.volume * 100)
-    },
-    dislike() {
-      return this.$store.state.PlayingState.dislike
-    },
+    ...mapState({
+      trackInfo: state => state.PlayingState.trackInfo,
+      artists: state => state.PlayingState.trackInfo.artists,
+      album: state => state.PlayingState.trackInfo.album,
+      volumeValue: state => Number.parseInt(state.PlayingState.volume * 100),
+      dislike: state => state.PlayingState.dislike,
+    }),
   },
   methods: {
     turnUp() {
