@@ -4,10 +4,12 @@
     <h1>PlaylistContent</h1>
     <TrackTable>
       <Track v-for="(track, index) in trackArray" :key="index" :info="track">
-        <div class="button-group">
-          <button type="button" @click="addToRoomQueue(track.id, index)">addToRoomQueue</button>
+        <div class="button-group" :data-id="track.id" :data-index="index">
+          <p>{{ track.id }}</p>
+          <p>{{ index }}</p>
+          <button type="button" @click.stop="addToRoomQueue">addToRoomQueue</button>
           <input :ref="`${index}`" type="text" />
-          <button type="button" @click="jumpInRoomQueue(track.id, index)">jumpInRoomQueue</button>
+          <button type="button" @click.stop="jumpInRoomQueue">jumpInRoomQueue</button>
         </div>
       </Track>
     </TrackTable>
@@ -38,12 +40,17 @@ export default {
         this.trackArray = result.items.map(item => item.track)
       })
     },
-    addToRoomQueue(trackId) {
-      this.$store.commit('push', trackId)
-    },
-    jumpInRoomQueue(trackId, index) {
+    addToRoomQueue(event) {
+      const index = event.target.parentElement.dataset.index
+      const id = event.target.parentElement.dataset.id
       const message = this.$refs[`${index}`].value
-      this.$store.commit('jump_in', { trackId, message })
+      this.$store.dispatch('add', { id, message })
+    },
+    jumpInRoomQueue(event) {
+      const id = event.target.parentElement.dataset.id
+      const index = event.target.parentElement.dataset.index
+      const message = this.$refs[`${index}`].value
+      this.$store.dispatch('jumpIn', { id, message })
       this.$refs[`${index}`].value = ''
     },
   },
