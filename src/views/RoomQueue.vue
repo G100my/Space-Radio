@@ -21,8 +21,8 @@
   </div>
 </template>
 <script>
-import Track from './Track.vue'
-import TrackTable from './TrackTable.vue'
+import Track from '../components/Track.vue'
+import TrackTable from '../components/TrackTable.vue'
 
 export default {
   components: {
