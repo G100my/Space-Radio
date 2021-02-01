@@ -1,10 +1,15 @@
 <template>
   <main>
     <div class="sidebar-area">
-      <button style="height: 30px" @click="getImplicitGrantToken">getImplicitGrantToken</button>
+      <Sidebar />
     </div>
     <div class="view">
-      <div class="search">search</div>
+      <div class="search">
+        search
+        <div>
+          <button style="height: 30px" @click="getImplicitGrantToken">getImplicitGrantToken</button>
+        </div>
+      </div>
       <div>
         <TheRoomQueue />
       </div>
@@ -14,16 +19,17 @@
 </template>
 <script>
 import { getImplicitGrantToken } from './utility/Oauth.js'
-// import TheSidebar from './components/TheSidebar.vue'
+import Sidebar from './views/Sidebar.vue'
 // import TheHostControl from './components/TheHostControl.vue'
 import TheRoomQueue from './components/TheRoomQueue.vue'
 import PlaylistContent from './views/PlaylistContent.vue'
+
 export default {
   components: {
     // TheHostControl,
     PlaylistContent,
+    Sidebar,
     TheRoomQueue,
-    // TheSidebar,
   },
   data() {
     return {
