@@ -11,7 +11,7 @@
         </div>
       </div>
       <div>
-        <TheRoomQueue />
+        <RoomQueue />
       </div>
     </div>
     <PlaylistContent />
@@ -21,15 +21,15 @@
 import { getImplicitGrantToken } from './utility/Oauth.js'
 import Sidebar from './views/Sidebar.vue'
 // import TheHostControl from './components/TheHostControl.vue'
-import TheRoomQueue from './components/TheRoomQueue.vue'
+import RoomQueue from './views/RoomQueue.vue'
 import PlaylistContent from './views/PlaylistContent.vue'
 
 export default {
   components: {
     // TheHostControl,
     PlaylistContent,
+    RoomQueue,
     Sidebar,
-    TheRoomQueue,
   },
   data() {
     return {
