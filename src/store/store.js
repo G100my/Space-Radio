@@ -270,10 +270,15 @@ const Personal = {
   state: {
     userId: 'zhangLo',
     token: null,
+    expiredTime: null,
   },
   mutations: {
     setToken(state, newToken) {
       state.token = newToken
+    },
+    refreshToken(state, { newToken, expiredTime }) {
+      state.token = newToken
+      state.expiredTime = expiredTime
     },
   },
 }
