@@ -2,6 +2,7 @@ import { createStore, createLogger } from 'vuex'
 import firebase from './firebase.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 import { getImplicitGrantToken } from '../utility/Oauth.js'
+import jukeboxLogo from '../assets/vinyl-record.png'
 
 // 用 _ 區隔 firebase 變數
 
@@ -199,12 +200,19 @@ const PlayingState = {
     isVoted: false,
     info: {
       track: {
-        artists: {},
-        album: {
-          images: [{ url: '' }],
-          external_urls: { spotify: '' },
+        artists: {
+          0: {
+            name: 'No artists data',
+            external_urls: {
+              spotify: '##',
+            },
+          },
         },
-        id: '',
+        album: {
+          images: [{ url: jukeboxLogo }],
+          external_urls: { spotify: '##' },
+        },
+        id: null,
       },
       queue: {
         added_time: '',
