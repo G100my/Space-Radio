@@ -251,14 +251,25 @@ const Personal = {
     userId: 'zhangLo',
     token: null,
     expiredTime: null,
+    playlists: null,
+    image: null,
+  },
+  getters: {
+    token(state) {
+      return state.token
+    },
+    isTokenValid(state) {
+      if (state.expiredTime === null) return false
+      const now = Date.now()
+      return state.expiredTime > now
+    },
   },
   mutations: {
-    setToken(state, newToken) {
-      state.token = newToken
-    },
     refreshToken(state, { newToken, expiredTime }) {
       state.token = newToken
       state.expiredTime = expiredTime
+      localStorage.setItem('jukebox_token', newToken)
+      localStorage.setItem('jukebox_expired_time', expiredTime)
     },
   },
 }
