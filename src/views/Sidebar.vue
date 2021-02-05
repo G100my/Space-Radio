@@ -1,74 +1,52 @@
 <template>
   <div class="sidebar-container">
-    <h1>Jukebox</h1>
-    <p>Now Playing:</p>
-    <div class="track-info">
-      <div class="cover">
-        <img :src="getCurrentPlayingAlbum.images[0].url" alt="" />
-      </div>
-      <p class="artists">
-        <a
-          v-for="(getCurrentPlayingArtists, index) in getCurrentPlayingArtists"
-          :key="index"
-          :href="getCurrentPlayingArtists.external_urls.spotify"
-          >{{ getCurrentPlayingArtists.name }}</a
-        >
-      </p>
-      <p class="album">
-        <a :href="getCurrentPlayingAlbum.external_urls.spotify">{{ getCurrentPlayingAlbum.name }}</a>
-      </p>
-    </div>
-    <div class="control-board">
-      <div class="volumn-control">
-        <img src="../assets/volume.svg" alt="" />
-        <div class="progress">
-          <div class="bar">
-            <p :style="{ width: `${volumeValue}%` }" />
+    <PlayingState>
+      <div class="control-board">
+        <div class="volumn-control">
+          <img src="../assets/volume.svg" alt="" />
+          <div class="progress">
+            <div class="bar">
+              <p :style="{ width: `${volumeValue}%` }" />
+            </div>
+          </div>
+          <p>{{ volumeValue }}</p>
+          <div class="buttons">
+            <button type="button" @click="turnDown">-</button>
+            <button type="button" @click="turnUp">+</button>
           </div>
         </div>
-        <p>{{ volumeValue }}</p>
-        <div class="buttons">
-          <button type="button" @click="turnDown">-</button>
-          <button type="button" @click="turnUp">+</button>
+        <div class="terminate-control">
+          <div class="sign">
+            <span :class="{ active: dislike > 0 }" />
+            <span :class="{ active: dislike > 1 }" />
+          </div>
+          <p>{{ dislike }}</p>
+          <div class="buttons">
+            <button v-show="!isVoted" type="button" @click="increaseDislike">terminate</button>
+            <button v-show="isVoted" type="button" @click="reduceDislike">cancel</button>
+          </div>
+        </div>
+        <div class="collect">
+          <button type="button">collect</button>
         </div>
       </div>
-      <div class="terminate-control">
-        <div class="sign">
-          <span :class="{ active: dislike > 0 }" />
-          <span :class="{ active: dislike > 1 }" />
-        </div>
-        <p>{{ dislike }}</p>
-        <div class="buttons">
-          <button v-show="!isVoted" type="button" @click="increaseDislike">terminate</button>
-          <button v-show="isVoted" type="button" @click="reduceDislike">cancel</button>
-        </div>
-      </div>
-      <div class="collect">
-        <button type="button">collect</button>
-      </div>
-    </div>
-    <div class="log">
-      <ul>
-        <li />
-      </ul>
-    </div>
+    </PlayingState>
   </div>
 </template>
 <script>
-import { mapState, mapGetters } from 'vuex'
+import PlayingState from '../components/PlayingState.vue'
+import { mapState } from 'vuex'
 
 export default {
-  data() {
-    return {
-      isVoted: false,
-    }
+  components: {
+    PlayingState,
   },
   computed: {
     ...mapState({
       volumeValue: state => Number.parseInt(state.PlayingState.volume * 100),
       dislike: state => state.PlayingState.dislike,
+      isVoted: state => state.PlayingState.isVoted,
     }),
-    ...mapGetters(['getCurrentPlayingAlbum', 'getCurrentPlayingArtists', 'getCurrentPlayingTrackId']),
   },
   methods: {
     turnUp() {
@@ -78,11 +56,9 @@ export default {
       this.$store.dispatch('turnDown')
     },
     increaseDislike() {
-      this.isVoted = true
       this.$store.dispatch('increaseDislike')
     },
     reduceDislike() {
-      this.isVoted = false
       this.$store.dispatch('reduceDislike')
     },
   },
@@ -94,6 +70,7 @@ export default {
     font-size: 0;
     img {
       width: 100%;
+      max-width: 400px;
     }
   }
 
