@@ -26,7 +26,7 @@ function getDataHandler(snapshot, storeTarget) {
     })
   } else {
     console.log('spotifyAPI AccessToken is null')
-    getImplicitGrantToken()
+    // getImplicitGrantToken()
   }
 }
 
@@ -39,9 +39,10 @@ function bindListener(target, storeTarget) {
   })
   target.on('child_added', childSnapshot => {
     const trackId = childSnapshot.val().id
-    spotifyAPI.getTrack(trackId).then(addedTrack => {
-      store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
-    })
+    if (spotifyAPI.getAccessToken())
+      spotifyAPI.getTrack(trackId).then(addedTrack => {
+        store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
+      })
   })
   target.on('child_changed', childSnapshot => {
     store.commit('editQueue', { storeTarget, childSnapshot })
