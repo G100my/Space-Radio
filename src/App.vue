@@ -1,61 +1,10 @@
 <template>
   <main>
-    <div class="sidebar-area">
-      <Sidebar />
-    </div>
-    <div class="view">
-      <div class="search">
-        search
-        <div>
-          <button style="height: 30px" @click="getImplicitGrantToken">getImplicitGrantToken</button>
-        </div>
-      </div>
-      <div>
-        <RoomQueue />
-      </div>
-    </div>
-    <PlaylistContent />
+    <router-view />
   </main>
 </template>
 <script>
-import { getImplicitGrantToken } from './utility/Oauth.js'
-import Sidebar from './views/Sidebar.vue'
-// import TheHostControl from './components/TheHostControl.vue'
-import RoomQueue from './views/RoomQueue.vue'
-import PlaylistContent from './views/PlaylistContent.vue'
-
-export default {
-  components: {
-    // TheHostControl,
-    PlaylistContent,
-    RoomQueue,
-    Sidebar,
-  },
-  data() {
-    return {
-      token: null,
-    }
-  },
-  watch: {
-    token(newValue) {
-      this.$store.commit('setToken', newValue)
-    },
-  },
-  created() {
-    const hash = window.location.hash
-    // fixme 如果網址是帶有 token 的則導向驗證前的的頁面
-    if (hash.includes('access_token')) {
-      this.token = hash.substring(hash.search(/(?<=access_token=)[\w+]/), hash.indexOf('&token_type'))
-      localStorage.setItem('token', this.token)
-    } else {
-      this.token = localStorage.getItem('token') || null
-    }
-    this.$spotifyAPI.setAccessToken(this.token)
-  },
-  methods: {
-    getImplicitGrantToken,
-  },
-}
+export default {}
 </script>
 <style lang="scss">
 * {
@@ -68,19 +17,6 @@ body {
 main {
   height: 100vh;
   width: 100vw;
-  display: flex;
-}
-.sidebar-area {
-  flex: 0 0 250px;
-  padding: 20px;
-  display: flex;
-  align-items: stretch;
-}
-.view {
-  flex: 1;
-}
-.search {
-  height: 50px;
 }
 h1 {
   margin: 0;
@@ -93,6 +29,10 @@ a {
   &:hover {
     filter: invert(0.5);
   }
+}
+ul {
+  margin-block: 0;
+  padding-inline-start: 0;
 }
 li {
   list-style: none;
