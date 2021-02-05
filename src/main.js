@@ -14,6 +14,12 @@ router.beforeEach(to => {
     const originPath = hash.slice(0, hash.search('access_token='))
     return { path: originPath }
   }
+
+  if (to.meta.requiresAuth && !store.getters.isTokenValid) {
+    return { name: 'Doorscope' }
+  } else {
+    return true
+  }
 })
 
 // prettier-ignore
