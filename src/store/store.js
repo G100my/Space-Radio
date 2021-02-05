@@ -1,40 +1,11 @@
 import { createStore, createLogger } from 'vuex'
 import firebase from './firebase.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
-import { getImplicitGrantToken } from '../utility/Oauth.js'
 import jukeboxLogo from '../assets/vinyl-record.png'
 
 // 用 _ 區隔 firebase 變數
 
-function getDataHandler(snapshot, storeTarget) {
-  const queue = snapshot.exportVal()
-  if (queue === null) {
-    console.log('queue === null')
-    store.commit('updateQueueTrack', { storeTarget, newQueue: {}, newTrack: {} })
-  } else if (spotifyAPI.getAccessToken()) {
-    const dataArray = Object.values(queue)
-    const keyArray = Object.keys(queue)
-    const trackIdArray = dataArray.map(item => item.id)
-
-    spotifyAPI.getTracks(trackIdArray).then(result => {
-      // 有點冒險的作法。firebase 會把看起來像 array 的東西(例如用 push 上去的 object)自動轉換成 array 傳過來，且順序一樣。然後祈禱 spotify 回傳的順序也一樣...
-      const tracks = result.tracks.reduce((previous, trackDetail, index) => {
-        const key = keyArray[index]
-        previous[key] = trackDetail
-        return previous
-      }, {})
-      store.commit('updateQueueTrack', { storeTarget, newQueue: queue, newTrack: tracks })
-    })
-  } else {
-    console.log('spotifyAPI AccessToken is null')
-    // getImplicitGrantToken()
-  }
-}
-
 function bindListener(target, storeTarget) {
-  target.once('value', snapshot => {
-    getDataHandler(snapshot, storeTarget)
-  })
   target.on('child_removed', oldChildSnapshot => {
     store.commit('deleteQueueTrack', { storeTarget, oldChildSnapshot })
   })
