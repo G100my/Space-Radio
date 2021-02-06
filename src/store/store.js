@@ -137,11 +137,6 @@ const Queue = {
     editMessageAtNormal(_context, { key, message }) {
       normal_queue_ref.child(key).update({ message })
     },
-    // removeFirst({ state }) {
-    //   const target_ref = state.urgentQueueArray ? urgent_queue_ref : normal_queue_ref
-    //   const queueArray = state.urgentQueueArray ? state.urgentQueueArray : state.normal_queue
-    //   target_ref.child(queueArray[0].key).remove()
-    // },
   },
 }
 
@@ -184,6 +179,7 @@ const PlayingState = {
           external_urls: { spotify: '##' },
         },
         id: null,
+        name: 'Hakuna Matata',
       },
       queue: {
         added_time: '',
@@ -201,6 +197,9 @@ const PlayingState = {
     },
     getCurrentPlayingAlbum(state) {
       return state.info.track.album
+    },
+    getCurrentPlayingTrackName(state) {
+      return state.info.track.name
     },
   },
   mutations: {
