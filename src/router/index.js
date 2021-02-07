@@ -9,6 +9,7 @@ const routes = [
   {
     path: '/',
     name: 'Doorscope',
+    meta: { requiresAuth: false },
     component: Doorscope,
   },
   {
