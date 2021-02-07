@@ -1,3 +1,14 @@
 <template>
-  <h1>room</h1>
+  <div class="room">
+    <Sidebar />
+  </div>
 </template>
+<script>
+import Sidebar from '../components/TheSidebar.vue'
+
+export default {
+  components: {
+    Sidebar,
+  },
+}
+</script>
