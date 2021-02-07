@@ -12,8 +12,7 @@ router.beforeEach(to => {
 
     const newToken = hash.substring(hash.search(/(?<=access_token=)[\w+]/), hash.indexOf('&token_type'))
     store.commit('refreshToken', { newToken, expiredTime })
-    const originPath = hash.slice(0, hash.search('access_token='))
-    return { path: originPath }
+    return { name: 'Room' }
   }
 
   if (to.meta.requiresAuth && !store.getters.isTokenValid) {
