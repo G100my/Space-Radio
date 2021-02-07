@@ -189,16 +189,16 @@ const PlayingState = {
     },
   },
   getters: {
-    getCurrentPlayingTrackId(state) {
+    currentPlayingTrackId(state) {
       return state.info.track.id
     },
-    getCurrentPlayingArtists(state) {
+    currentPlayingArtists(state) {
       return state.info.track.artists
     },
-    getCurrentPlayingAlbum(state) {
+    currentPlayingAlbum(state) {
       return state.info.track.album
     },
-    getCurrentPlayingTrackName(state) {
+    currentPlayingTrackName(state) {
       return state.info.track.name
     },
   },
