@@ -139,9 +139,9 @@ const Queue = {
   },
 }
 
-function queueFirebasePlugin(store) {
+function connect2FirebaseQueue(store) {
   bindListener(normal_queue_ref, 'normal', store)
   bindListener(urgent_queue_ref, 'urgent', store)
 }
 
-export { Queue, queueFirebasePlugin }
+export { Queue, connect2FirebaseQueue }
