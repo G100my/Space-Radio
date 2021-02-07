@@ -1,3 +1,5 @@
+import { spotifyAPI } from '../plugin/spotify-web-api.js'
+
 const Personal = {
   state: {
     userId: 'zhangLo',
@@ -22,6 +24,8 @@ const Personal = {
       state.expiredTime = expiredTime
       localStorage.setItem('jukebox_token', newToken)
       localStorage.setItem('jukebox_expired_time', expiredTime)
+
+      spotifyAPI.setAccessToken(newToken)
     },
   },
 }
