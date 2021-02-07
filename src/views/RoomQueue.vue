@@ -37,19 +37,19 @@ export default {
   },
   computed: {
     normalTrack() {
-      return this.$store.getters.getNormal
+      return this.$store.getters.normalTrackInfo
     },
     urgentTrack() {
-      return this.$store.getters.getUrgent
+      return this.$store.getters.urgentTrackInfo
+    },
+    normalQueue() {
+      return this.$store.getters.normalQueue
+    },
+    urgentQueue() {
+      return this.$store.getters.urgetnQueue
     },
     isReady() {
       return this.$store.getters.readyState
-    },
-    normalQueue() {
-      return this.$store.state.normal_queue
-    },
-    urgentQueue() {
-      return this.$store.state.urgent_queue
     },
   },
   methods: {

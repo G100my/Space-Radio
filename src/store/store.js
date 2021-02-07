@@ -44,11 +44,17 @@ const Queue = {
     readyState(state) {
       return !!state.normal_track && !!state.urgent_track
     },
-    getNormal(state) {
+    normalTrackInfo(state) {
       return state.normal_track
     },
-    getUrgent(state) {
+    urgentTrackInfo(state) {
       return state.urgent_track
+    },
+    normalQueue(state) {
+      return state.normal_queue
+  },
+    urgentQueue(state) {
+      return state.urgent_queue
     },
   },
   mutations: {
