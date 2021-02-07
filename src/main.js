@@ -15,6 +15,10 @@ router.beforeEach(to => {
     return { name: 'Room' }
   }
 
+  if (!to.meta.requiresAuth && store.getters.isTokenValid) {
+    return { name: 'Room' }
+  }
+
   if (to.meta.requiresAuth && !store.getters.isTokenValid) {
     return { name: 'Doorscope' }
   } else {
