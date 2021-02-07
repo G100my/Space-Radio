@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="playing-state">
     <h1>
       <img src="../assets/vinyl-record.png" alt="" />
       <p>Jukebox</p>
@@ -90,7 +90,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.sidebar {
+.playing-state {
   min-height: 100vh;
   padding: 35px 20px 15px;
   box-sizing: border-box;
