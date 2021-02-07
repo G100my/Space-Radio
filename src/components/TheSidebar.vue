@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-container">
+  <div class="sidebar">
     <h1>
       <img src="../assets/vinyl-record.png" alt="" />
       <p>Jukebox</p>
@@ -71,7 +71,7 @@ export default {
       dislike: state => state.PlayingState.dislike,
       isVoted: state => state.PlayingState.isVoted,
     }),
-    ...mapGetters(['currentPlayingAlbum', 'currentPlayingArtists', 'currentPlayingTrackId']),
+    ...mapGetters(['currentPlayingAlbum', 'currentPlayingArtists', 'currentPlayingTrackId', 'currentPlayingTrackName']),
   },
   methods: {
     turnUp() {
@@ -90,25 +90,71 @@ export default {
 }
 </script>
 <style lang="scss">
-.sidebar-container {
+.sidebar {
+  min-height: 100vh;
+  padding: 35px 20px 15px;
+  box-sizing: border-box;
+  h1 {
+    display: flex;
+    align-items: center;
+    img {
+      width: 40px;
+      margin-right: 15px;
+    }
+    p {
+      margin-right: auto;
+    }
+  }
+  .track-info {
+    margin-top: 30px;
+    text-align: center;
+  }
+  .description {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+    span + span::before {
+      content: '/';
+      margin: 0 10px;
+    }
+    p:first-child > span:first-child {
+      font-size: larger;
+    }
+    p:nth-child(2) {
+      margin-top: 5px;
+      > span + span {
+        font-size: xx-small;
+      }
+    }
+  }
   .cover {
     font-size: 0;
+    width: 80%;
+    margin: 0 auto;
     img {
       width: 100%;
       max-width: 400px;
     }
   }
 
-  .artists,
-  .album {
-    display: flex;
-    justify-content: center;
+  .control-board {
+    margin-top: 20px;
   }
-
+  .terminate-control,
+  .collect {
+    margin-top: 15px;
+  }
+  .volumn-control,
+  .collect,
+  .terminate-control {
+    padding: 0 30px;
+  }
   .volumn-control {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     .buttons {
       flex: 0 0 auto;
       height: 30px;
@@ -138,7 +184,6 @@ export default {
       transition: width 0.3 ease-in-out;
     }
   }
-
   .terminate-control {
     display: flex;
     align-items: center;
@@ -158,9 +203,6 @@ export default {
         margin-left: 4px;
       }
     }
-    .buttons {
-      margin-left: auto;
-    }
     button + button {
       margin-left: 5px;
     }
@@ -169,7 +211,6 @@ export default {
     background-color: orange;
   }
   .collect {
-    padding: 10px;
     button {
       width: 100%;
     }
