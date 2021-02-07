@@ -6,26 +6,23 @@
     <div class="content">
       <div class="cover-container">
         <div class="cover">
-          <img :src="getCurrentPlayingAlbum.images[0].url" alt="" />
+          <img :src="currentPlayingAlbum.images[0].url" alt="" />
         </div>
       </div>
       <div class="others">
         <h2>Now playing:</h2>
         <div class="track-info">
           <p>Track Name:</p>
-          <p>{{ getCurrentPlayingTrackName }}</p>
+          <p>{{ currentPlayingTrackName }}</p>
           <p>Artists:</p>
           <p>
-            <a
-              v-for="(getCurrentPlayingArtists, index) in getCurrentPlayingArtists"
-              :key="index"
-              :href="getCurrentPlayingArtists.external_urls.spotify"
-              >{{ getCurrentPlayingArtists.name }}</a
-            >
+            <a v-for="(artist, index) in currentPlayingArtists" :key="index" :href="artist.external_urls.spotify">{{
+              artist.name
+            }}</a>
           </p>
           <p>Album:</p>
           <p>
-            <a :href="getCurrentPlayingAlbum.external_urls.spotify">{{ getCurrentPlayingAlbum.name }}</a>
+            <a :href="currentPlayingAlbum.external_urls.spotify">{{ currentPlayingAlbum.name }}</a>
           </p>
         </div>
         <div class="log">
@@ -46,7 +43,7 @@ import { getImplicitGrantToken } from '../utility/Oauth.js'
 
 export default {
   computed: {
-    ...mapGetters(['getCurrentPlayingAlbum', 'getCurrentPlayingArtists', 'getCurrentPlayingTrackName']),
+    ...mapGetters(['currentPlayingAlbum', 'currentPlayingArtists', 'currentPlayingTrackName']),
   },
   methods: {
     getImplicitGrantToken,
