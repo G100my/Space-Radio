@@ -21,8 +21,6 @@ router.beforeEach(to => {
 
   if (to.meta.requiresAuth && !store.getters.isTokenValid) {
     return { name: 'Doorscope' }
-  } else {
-    return true
   }
 })
 
