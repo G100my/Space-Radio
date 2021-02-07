@@ -1,14 +1,14 @@
 <template>
   <div class="room">
-    <Sidebar />
+    <PlayingState />
   </div>
 </template>
 <script>
-import Sidebar from '../components/TheSidebar.vue'
+import PlayingState from '../components/ThePlayingState.vue'
 
 export default {
   components: {
-    Sidebar,
+    PlayingState,
   },
 }
 </script>
