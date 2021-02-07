@@ -248,8 +248,8 @@ const PlayingState = {
 const Personal = {
   state: {
     userId: 'zhangLo',
-    token: null,
-    expiredTime: null,
+    token: localStorage.getItem('jukebox_token') || null,
+    expiredTime: Number(localStorage.getItem('jukebox_expired_time')) || null,
     playlists: null,
     image: null,
   },
