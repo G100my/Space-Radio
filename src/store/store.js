@@ -177,6 +177,7 @@ const PlayingState = {
         album: {
           images: [{ url: jukeboxLogo }],
           external_urls: { spotify: '##' },
+          release_date: '',
         },
         id: null,
         name: 'Hakuna Matata',
