@@ -29,11 +29,10 @@ body {
   background-color: var(--primary-dark);
 }
 main {
-  min-height: 100vh;
-  min-width: 100%;
   color: var(--primary-light);
-  display: flex;
-  align-items: center;
+  @media (min-width: 768px) {
+    display: flex;
+  }
 }
 h1,
 h2 {
