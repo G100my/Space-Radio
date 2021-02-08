@@ -155,7 +155,7 @@ export default {
   }
   .log {
     background-color: gray;
-    height: 150px;
+    height: 120px;
   }
   .login {
     margin-top: 20px;
@@ -180,7 +180,7 @@ export default {
       margin: 60px auto;
       border: 8px outset var(--secondary-neutral);
       box-sizing: border-box;
-      padding: 40px 65px 65px;
+      padding: 40px 65px 40px;
       flex: 1;
     }
     .title > h1 {
@@ -199,7 +199,7 @@ export default {
       padding-right: 80px;
     }
     .cover {
-      max-width: 400px;
+      max-width: 350px;
     }
   }
 }
