@@ -4,7 +4,7 @@
       <div class="sidebar slide-items">
         <PlayingState />
       </div>
-      <div class="slide-items">
+      <div class="view slide-items">
         <nav>
           <SearchBar />
           <ul>
@@ -110,11 +110,6 @@ export default {
 }
 </script>
 <style lang="scss">
-.test-button {
-  position: absolute;
-  top: 0;
-}
-
 .room {
   position: relative;
   overflow: hidden;
@@ -129,6 +124,14 @@ export default {
     height: 100vh;
     width: 100%;
     box-sizing: border-box;
+  }
+  .view.slide-items {
+    display: flex;
+    flex-direction: column;
+    @media (min-width: 768px) {
+      width: auto;
+      flex: 1;
+    }
   }
 
   nav {
@@ -159,11 +162,6 @@ export default {
 
   @media (min-width: 768px) {
     overflow-y: initial;
-    .slide-items {
-      &:nth-child(2) {
-        background-color: skyblue;
-      }
-    }
     .sidebar {
       width: 300px;
     }

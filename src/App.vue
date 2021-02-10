@@ -21,10 +21,12 @@ export default {}
   --secondary-neutral: #5aa4da;
 
   --ignore: #c0c0c0;
+
+  --border-radius: 4px;
+  font-size: 16px;
 }
 body {
   margin: 0;
-  font-size: 16px;
   font-family: 'Roboto', sans-serif;
   background-color: var(--primary-dark);
 }
@@ -42,6 +44,7 @@ p {
   margin: 0;
 }
 a {
+  color: var(--primary-light);
   text-decoration: none;
   text-decoration-color: var(--primary-neutral);
   &:visited {
