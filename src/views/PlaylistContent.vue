@@ -2,7 +2,17 @@
   <!-- eslint-disable vue/no-parsing-error eslint-disable vue/html-self-closing -->
   <div class="tracks">
     <h1>PlaylistContent</h1>
-    <TrackTable>
+    <div class="track-table">
+      <div class="table-header track-cover">Cover</div>
+      <div class="table-header track-name-artist">
+        <p>Track</p>
+        <p>Artists</p>
+      </div>
+      <div class="table-header track-album">Album</div>
+      <div class="table-header track-time-data">
+        <p>Duration Time</p>
+        <p>Release Time</p>
+      </div>
       <Track v-for="(track, index) in trackArray" :key="index" :info="track">
         <div class="button-group" :data-id="track.id" :data-index="index">
           <p>{{ track.id }}</p>
@@ -12,17 +22,15 @@
           <button type="button" @click.stop="jumpInRoomQueue">jumpInRoomQueue</button>
         </div>
       </Track>
-    </TrackTable>
+    </div>
   </div>
 </template>
 <script>
-import TrackTable from '../components/TrackTable.vue'
 import Track from '../components/Track.vue'
 
 export default {
   components: {
     Track,
-    TrackTable,
   },
   data() {
     return {

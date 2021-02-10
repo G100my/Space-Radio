@@ -1,39 +1,29 @@
 <template>
-  <tr class="track">
-    <td class="cover">
-      <div>
-        <img :src="coverUrl" alt="" />
-      </div>
-    </td>
-    <td>
-      <p class="name">
-        <a :href="info.external_urls.spotify">{{ info.name }}</a>
-      </p>
-      <p class="artist">
-        <a v-for="artist in info.artists" :key="artist.name" :href="artist.external_urls.spotify">{{ artist.name }}</a>
-      </p>
-    </td>
-    <td>
-      <p class="album">
-        <a :href="info.album.external_urls.spotify">{{ info.album.name }}</a>
-      </p>
-    </td>
-    <td>
-      <section class="time-data">
-        <p>
-          <label>Duration Time:</label>
-          <span class="number">{{ durationTime }}</span>
-        </p>
-        <p>
-          <label>Release:</label>
-          <span class="number">{{ release }}</span>
-        </p>
-      </section>
-    </td>
-    <td>
-      <slot />
-    </td>
-  </tr>
+  <div class="track-cover" :class="{ urgent: isUrgent }">
+    <img :src="coverUrl" alt="" />
+  </div>
+  <div class="track-name-artist" :class="{ urgent: isUrgent }">
+    <p class="name">
+      <a :href="info.external_urls.spotify">{{ info.name }}</a>
+    </p>
+    <p class="artist">
+      <a v-for="artist in info.artists" :key="artist.name" :href="artist.external_urls.spotify">{{ artist.name }}</a>
+    </p>
+  </div>
+  <div class="track-album" :class="{ urgent: isUrgent }">
+    <p>
+      <a :href="info.album.external_urls.spotify">{{ info.album.name }}</a>
+    </p>
+  </div>
+  <div class="track-time-data" :class="{ urgent: isUrgent }">
+    <p>
+      {{ durationTime }}
+    </p>
+    <p>{{ release }}</p>
+  </div>
+  <div class="track-feature" :class="{ urgent: isUrgent }">
+    <slot />
+  </div>
 </template>
 <script>
 export default {
@@ -41,6 +31,10 @@ export default {
     info: {
       type: Object,
       required: true,
+    },
+    isUrgent: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -62,45 +56,83 @@ export default {
 }
 </script>
 <style lang="scss">
-.track {
-  $margin-gap: 10px;
+.track-cover,
+.track-feature,
+.track-album,
+.track-name-artist,
+.track-time-data,
+.track-feature {
+  align-self: center;
+}
+.track-cover,
+.track-feature {
+  justify-self: center;
+}
+.track-time-data {
+  justify-self: end;
+}
 
-  font-size: 14px;
-
-  label {
-    font-size: 12px;
+.track-album,
+.track-time-data {
+  display: none;
+  @media (min-width: 768px) {
+    display: initial;
   }
-  td {
-    vertical-align: middle;
-  }
+}
 
-  .cover {
-    margin-right: $margin-gap;
-    font-size: 0;
-    height: 100%;
-    img {
-      height: 64px;
-      width: 64px;
+.track-cover {
+  font-size: 0;
+  img {
+    height: 64px;
+    width: 64px;
+  }
+}
+
+.track-name-artist {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 768px) {
+    display: flex;
+    > p {
+      flex: 1;
     }
   }
-
-  .name a {
-    white-space: nowrap;
-    font-size: 18px;
-    font-weight: 600;
+  > a,
+  > p {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .artist > a:not(:last-child)::after {
-    content: ',';
-    margin-right: 5px;
+  .name {
+    margin-bottom: 3px;
+    > a {
+      white-space: nowrap;
+      font-size: 1.5em;
+      font-weight: 600;
+    }
   }
-
-  .time-data > p {
+  .artist {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    > a:not(:last-child)::after {
+      content: ',';
+      margin-right: 5px;
+    }
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
   }
-  .number {
-    font-size: 12px;
-    margin-left: 8px;
+}
+
+.track-time-data {
+  font-size: smaller;
+  text-align: right;
+}
+
+.urgent {
+  p > a,
+  > p,
+  button {
+    color: var(--primary-highlight);
   }
 }
 </style>
