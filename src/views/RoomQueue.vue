@@ -94,29 +94,29 @@ export default {
   },
   methods: {
     removeFromUrgent(event) {
-      const key = event.target.parentElement.dataset.key
+      const key = event.currentTarget.parentElement.dataset.key
       this.$store.dispatch('removeFromUrgent', key)
     },
     editMessageAtUrgent(event) {
-      const key = event.target.parentElement.dataset.key
+      const key = event.currentTarget.parentElement.dataset.key
       const message = this.message
       this.$store.dispatch('editMessageAtUrgent', { key, message })
     },
     urgent2normal(event) {
-      const key = event.target.parentElement.dataset.key
+      const key = event.currentTarget.parentElement.dataset.key
       this.$store.dispatch('urgent2normal', key)
     },
     removeFromNormal(event) {
-      const key = event.target.parentElement.dataset.key
+      const key = event.currentTarget.parentElement.dataset.key
       this.$store.dispatch('removeFromNormal', key)
     },
     editMessageAtNormal(event) {
-      const key = event.target.parentElement.dataset.key
+      const key = event.currentTarget.parentElement.dataset.key
       const message = this.message
       this.$store.dispatch('editMessageAtNormal', { key, message })
     },
     normal2urgent(event) {
-      const key = event.target.parentElement.dataset.key
+      const key = event.currentTarget.parentElement.dataset.key
       const message = this.message
       this.$store.dispatch('normal2urgent', { key, message })
     },
