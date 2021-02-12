@@ -84,11 +84,11 @@ export default {
         })
     },
     addHandler(trackId) {
-      this.$store.dispatch('add', { trackId, message: '' })
+      this.$store.dispatch('add', { id: trackId, message: false })
     },
     jumpInHandler(trackId) {
       // fixme
-      this.$store.dispatch('jumpIn', { id: trackId, message: '' })
+      this.$store.dispatch('jumpIn', { id: trackId, message: false })
     },
   },
 }
