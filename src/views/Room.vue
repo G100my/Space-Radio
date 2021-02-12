@@ -135,14 +135,14 @@ export default {
   }
 
   nav {
-    padding: 15px;
+    margin: 15px;
     display: flex;
+    position: relative;
 
-    ul {
+    > ul {
       display: flex;
       margin-left: auto;
       font-size: 0;
-    }
     li {
       height: 45px;
       width: 45px;
@@ -158,6 +158,7 @@ export default {
       height: 100%;
       width: 100%;
     }
+  }
   }
 
   @media (min-width: 768px) {
