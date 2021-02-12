@@ -1,10 +1,10 @@
 <template>
   <div class="search">
     <input
+      v-model="searchText"
       type="text"
       autocomplete="off"
       @keydown.prevent.enter="searchHandler"
-      @input="searchText = $event.target.value"
     />
     <button type="button" @click="searchHandler">
       <svg
@@ -85,10 +85,16 @@ export default {
     },
     addHandler(trackId) {
       this.$store.dispatch('add', { id: trackId, message: false })
+      this.clearResult()
     },
     jumpInHandler(trackId) {
-      // fixme
       this.$store.dispatch('jumpIn', { id: trackId, message: false })
+      this.clearResult()
+    },
+    clearResult() {
+      this.isImmediatelyOpen = false
+      if (this.tracksResult.length != 0) this.tracksResult = []
+      if (this.artistsResult.length != 0) this.artistsResult = []
     },
   },
 }
