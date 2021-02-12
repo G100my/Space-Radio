@@ -22,6 +22,10 @@
       </svg>
     </button>
     <div v-show="isImmediatelyOpen" class="immediately-result">
+      <template v-if="tracksResult.length === 0 && artistsResult.length === 0">
+        <p>No result</p>
+      </template>
+      <template v-else>
       <ul>
         <li v-for="track in tracksResult" :key="track.id">
           <div class="result-track">
@@ -55,6 +59,7 @@
           <p>{{ artist.name }}</p>
         </li>
       </ul>
+      </template>
     </div>
   </div>
 </template>
