@@ -14,19 +14,18 @@ const routes = [
   },
   {
     path: '/room',
-    name: 'Room',
     component: Room,
     meta: { requiresAuth: true },
     children: [
       {
+        path: '',
+        name: 'Room',
+        component: RoomQueue,
+      },
+      {
         path: 'playlist-content',
         name: 'PlaylistContent',
         component: PlaylistContent,
-      },
-      {
-        path: 'room-queue',
-        name: 'RoomQueue',
-        component: RoomQueue,
       },
       {
         path: 'search-result',
