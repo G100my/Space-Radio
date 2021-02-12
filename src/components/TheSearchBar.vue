@@ -5,6 +5,7 @@
       type="text"
       autocomplete="off"
       @keydown.prevent.enter="searchHandler"
+      @focus="isImmediatelyOpen = true"
     />
     <button type="button" @click="searchHandler">
       <svg
@@ -20,7 +21,7 @@
         />
       </svg>
     </button>
-    <div class="immediately-result">
+    <div v-show="isImmediatelyOpen" class="immediately-result">
       <ul>
         <li v-for="track in tracksResult" :key="track.id">
           <div class="result-track">
@@ -63,9 +64,17 @@ export default {
     return {
       searchText: '',
       result: [],
+      isImmediatelyOpen: false,
       tracksResult: [],
       artistsResult: [],
     }
+  },
+  watch: {
+    isImmediatelyOpen(value) {
+      if (!value) {
+        this.searchText = ''
+      }
+    },
   },
   methods: {
     searchHandler() {
