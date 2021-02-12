@@ -82,6 +82,7 @@ export default {
   },
   methods: {
     searchHandler() {
+      if (this.searchText === '') return
       this.$spotifyAPI
         // fixme
         .search(this.searchText, ['track', 'artist'], { market: 'from_token', limit: 10 })
