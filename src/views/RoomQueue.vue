@@ -133,7 +133,7 @@ export default {
   }
 
   .track-table {
-    padding: 10px;
+    padding: var(--edge-gap);
     display: grid;
     grid-template-columns: min-content minmax(50px, 1fr) max-content;
     gap: 10px 10px;

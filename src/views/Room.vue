@@ -135,7 +135,8 @@ export default {
   }
 
   nav {
-    margin: 15px;
+    margin: 0 var(--edge-gap);
+    padding: var(--edge-gap) 0;
     display: flex;
     position: relative;
 
@@ -143,22 +144,22 @@ export default {
       display: flex;
       margin-left: auto;
       font-size: 0;
-    li {
-      height: 45px;
-      width: 45px;
-      border: 2px solid var(--primary-highlight);
-      border-radius: 4px;
-      padding: 5px;
-      box-sizing: border-box;
+      li {
+        height: 45px;
+        width: 45px;
+        border: 2px solid var(--primary-highlight);
+        border-radius: 4px;
+        padding: 5px;
+        box-sizing: border-box;
+      }
+      li + li {
+        margin-left: 15px;
+      }
+      svg {
+        height: 100%;
+        width: 100%;
+      }
     }
-    li + li {
-      margin-left: 15px;
-    }
-    svg {
-      height: 100%;
-      width: 100%;
-    }
-  }
   }
 
   @media (min-width: 768px) {

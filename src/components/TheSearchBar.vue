@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search" :class="{ cloak: isImmediatelyOpen }">
     <input
       v-model="searchText"
       type="text"
@@ -144,11 +144,26 @@ export default {
     transform: translateX(-1px);
   }
 }
+.search.cloak {
+  &::before {
+    content: '';
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--primary-dark);
+    top: 100%;
+    left: var(--edge-gap-n);
+    display: block;
+  }
+}
 
 .immediately-result {
+  outline: 1px pink solid;
   position: absolute;
-  top: 100px;
+  top: 100%;
   width: 100%;
+  height: calc(100vh - 45px - (var(--edge-gap) * 3));
+  overflow-y: auto;
   p {
     overflow: hidden;
     text-overflow: ellipsis;
