@@ -192,6 +192,10 @@ export default {
       width: 100%;
       white-space: nowrap;
     }
+    span:not(span:last-child)::after {
+      content: ',';
+      margin-right: 5px;
+    }
   }
   .buttons {
     flex: 0;
