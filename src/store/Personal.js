@@ -24,8 +24,6 @@ const Personal = {
       state.expiredTime = expiredTime
       localStorage.setItem('jukebox_token', newToken)
       localStorage.setItem('jukebox_expired_time', expiredTime)
-
-      spotifyAPI.setAccessToken(newToken)
     },
   },
 }

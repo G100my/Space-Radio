@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/'
-import spotifyAPI from './plugin/spotify-web-api.js'
+import spotifyPlugin, { spotifyAPI } from './plugin/spotify-web-api.js'
 
 router.beforeEach(to => {
   if (to.fullPath.includes('access_token')) {
@@ -12,6 +12,7 @@ router.beforeEach(to => {
 
     const newToken = hash.substring(hash.search(/(?<=access_token=)[\w+]/), hash.indexOf('&token_type'))
     store.commit('refreshToken', { newToken, expiredTime })
+    spotifyAPI.setAccessToken(newToken)
     return { name: 'Room' }
   }
 
@@ -28,5 +29,5 @@ router.beforeEach(to => {
 createApp(App)
   .use(router)
   .use(store)
-  .use(spotifyAPI)
+  .use(spotifyPlugin)
   .mount('#app')
