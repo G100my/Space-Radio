@@ -4,15 +4,17 @@
   </div>
   <div class="track-name-artist" :class="{ urgent: isUrgent }">
     <p class="name">
-      <a :href="info.external_urls.spotify">{{ info.name }}</a>
+      <a :href="info.external_urls.spotify" target="_blank">{{ info.name }}</a>
     </p>
     <p class="artist">
-      <a v-for="artist in info.artists" :key="artist.name" :href="artist.external_urls.spotify">{{ artist.name }}</a>
+      <a v-for="artist in info.artists" :key="artist.name" :href="artist.external_urls.spotify" target="_blank">{{
+        artist.name
+      }}</a>
     </p>
   </div>
   <div class="track-album" :class="{ urgent: isUrgent }">
     <p>
-      <a :href="info.album.external_urls.spotify">{{ info.album.name }}</a>
+      <a :href="info.album.external_urls.spotify" target="_blank">{{ info.album.name }}</a>
     </p>
   </div>
   <div class="track-time-data" :class="{ urgent: isUrgent }">
