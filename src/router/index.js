@@ -2,8 +2,6 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import RoomQueue from '../views/RoomQueue.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
-import SearchResult from '../views/SearchResult.vue'
-import PlaylistContent from '../views/PlaylistContent.vue'
 
 const routes = [
   {
@@ -21,16 +19,6 @@ const routes = [
         path: '',
         name: 'Room',
         component: RoomQueue,
-      },
-      {
-        path: 'playlist-content',
-        name: 'PlaylistContent',
-        component: PlaylistContent,
-      },
-      {
-        path: 'search-result',
-        name: 'SearchResult',
-        component: SearchResult,
       },
     ],
   },
