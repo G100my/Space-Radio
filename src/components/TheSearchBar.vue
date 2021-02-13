@@ -21,7 +21,7 @@
       </svg>
     </button>
     <div v-show="isImmediatelyOpen" class="immediately-result">
-      <template v-if="tracksResult.length === 0 && artistsResult.length === 0">
+      <template v-if="tracksResult.length === 0">
         <p class="no-result" @click="isImmediatelyOpen = false">No result</p>
       </template>
       <template v-else>
@@ -32,7 +32,13 @@
               <div class="track-info">
                 <p>{{ track.name }}</p>
                 <p>
-                  <span v-for="(artist, index) in track.artists" :key="index">{{ artist.name }}</span>
+                  <a
+                    v-for="(artist, index) in track.artists"
+                    :key="index"
+                    :href="artist.external_urls.spotify"
+                    target="_blank"
+                    >{{ artist.name }}</a
+                  >
                 </p>
               </div>
               <div class="buttons">
@@ -53,11 +59,6 @@
             </div>
           </li>
         </ul>
-        <ul>
-          <li v-for="artist in artistsResult" :key="artist.external_ids">
-            <p>{{ artist.name }}</p>
-          </li>
-        </ul>
       </template>
     </div>
   </div>
@@ -70,7 +71,6 @@ export default {
       result: [],
       isImmediatelyOpen: false,
       tracksResult: [],
-      artistsResult: [],
     }
   },
   watch: {
@@ -85,13 +85,12 @@ export default {
       if (this.searchText === '') return
       this.$spotifyAPI
         // fixme
-        .search(this.searchText, ['track', 'artist'], { market: 'from_token', limit: 10 })
+        .search(this.searchText, ['track'], { market: 'from_token', limit: 10 })
         .then((success, error) => {
           if (success) {
             console.log('success')
             console.log(success)
             this.tracksResult = success.tracks.items
-            this.artistsResult = success.artists.items
           } else {
             console.log('error', error)
           }
@@ -108,7 +107,6 @@ export default {
     clearSearch() {
       this.isImmediatelyOpen = false
       if (this.tracksResult.length != 0) this.tracksResult = []
-      if (this.artistsResult.length != 0) this.artistsResult = []
     },
   },
 }
