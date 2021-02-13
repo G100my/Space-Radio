@@ -1,5 +1,5 @@
 <template>
-  <div class="search" :class="{ cloak: isImmediatelyOpen }">
+  <div class="search" :class="{ active: isImmediatelyOpen }">
     <input
       v-model="searchText"
       type="text"
@@ -13,7 +13,7 @@
         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
       </svg>
     </button>
-    <button class="cancel-search-button" :class="{ active: isImmediatelyOpen }" type="button" @click="clearSearch">
+    <button class="cancel-search-button" type="button" @click="clearSearch">
       <!-- prettier-ignore -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -145,17 +145,12 @@ export default {
     padding: 0;
   }
   .cancel-search-button {
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.3s;
-    transition-property: flex-basis;
+    transition: flex-basis 0.3s ease-in-out 0.2s;
     flex-basis: 0;
     overflow: hidden;
   }
-  .cancel-search-button.active {
-    flex-basis: 40px;
-  }
 }
-.search.cloak {
+.search.active {
   &::before {
     content: '';
     position: absolute;
@@ -166,6 +161,17 @@ export default {
     left: var(--edge-gap-n);
     display: block;
   }
+  .cancel-search-button {
+    flex-basis: 40px;
+  }
+}
+.search + ul {
+  overflow: hidden;
+  transition: flex-basis 0.2s ease-in-out;
+  flex-basis: 105px;
+}
+.search.active + ul {
+  flex-basis: 0;
 }
 
 .immediately-result {
