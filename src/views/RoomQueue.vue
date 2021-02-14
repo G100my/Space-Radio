@@ -69,11 +69,7 @@ export default {
   components: {
     Track,
   },
-  data() {
-    return {
-      message: 'test string',
-    }
-  },
+  emits: ['activeNoteDialog'],
   computed: {
     normalTrack() {
       return this.$store.getters.normalTrackInfo
@@ -96,6 +92,10 @@ export default {
       this.$store.dispatch(`${level}Remove`, key)
     },
     editNote(key, level) {
+      const submitFunction = newNote => {
+        this.$store.dispatch(`${level}Edit`, { key, note: newNote })
+      }
+      this.$emit('activeNoteDialog', key, level, submitFunction)
     },
     urgent2normal(key) {
       this.$store.dispatch('urgent2normal', key)

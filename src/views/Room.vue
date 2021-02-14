@@ -25,7 +25,7 @@
             </li>
           </ul>
         </nav>
-        <router-view />
+        <router-view @activeNoteDialog="activeNoteDialogHandler" />
       </div>
     </div>
     <NoteDialog
@@ -70,6 +70,8 @@ export default {
     }
   },
   methods: {
+    activeNoteDialogHandler(key, level, callback) {
+    },
     sliderToggler(direction) {
       switch (direction) {
         case 'slide2right':
