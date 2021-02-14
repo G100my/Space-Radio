@@ -17,6 +17,9 @@ const Personal = {
       const now = Date.now()
       return state.expiredTime > now
     },
+    userId(state) {
+      return state.userId
+    },
   },
   mutations: {
     refreshToken(state, { newToken, expiredTime }) {
