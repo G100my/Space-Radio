@@ -28,13 +28,13 @@
         <router-view />
       </div>
     </div>
-    <MessageDialog
-      v-if="isMessageDialogActive"
-      :track-name="editing.trackName"
-      :original-message="editing.message"
-      :original-recipient="editing.recipient"
-      :submit-function="editing.submitFunction"
-      @finish="isMessageDialogActive = false"
+    <NoteDialog
+      v-if="isNoteDialogActive"
+      :track-name="editingNote.trackName"
+      :original-message="editingNote.message"
+      :original-recipient="editingNote.recipient"
+      :submit-function="editingNote.submitFunction"
+      @finish="isNoteDialogActive = false"
     />
   </div>
 </template>
@@ -42,20 +42,20 @@
 import PlayingState from '../components/ThePlayingState.vue'
 import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
 import SearchBar from '../components/TheSearchBar.vue'
-import MessageDialog from '../components/MessageDialog.vue'
+import NoteDialog from '../components/NoteDialog.vue'
 
 export default {
   components: {
     PlayingState,
     SearchBar,
-    MessageDialog,
+    NoteDialog,
   },
   data() {
     return {
       isMainSide: true,
       touchStartPosition: 0,
-      isMessageDialogActive: false,
-      editing: {
+      isNoteDialogActive: false,
+      editingNote: {
         trackName: '二十一世紀的破青年',
         message: '恭喜發大財',
         recipient: '羅',

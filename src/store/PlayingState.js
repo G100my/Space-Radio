@@ -31,7 +31,11 @@ const PlayingState = {
       queue: {
         added_time: '',
         added_by: 'somebody',
-        message: 'test test test string',
+        note: {
+          sender: 'Lo',
+          message: 'hakuna matata',
+          recipient: 'myself',
+        },
       },
     },
   },
