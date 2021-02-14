@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Host Control</h1>
-    <TheBroadcast ref="broadcast" :text="message" @speakEnd="resumeVolume" />
+    <TheBroadcast ref="broadcast" :text="note.message" @speakEnd="resumeVolume" />
     <ThePlayer
       :execute-before-end-time="executeBeforeEndTime"
       :token="host_token"
@@ -26,7 +26,11 @@ export default {
   },
   data() {
     return {
-      message: 'This is default message!',
+      note: {
+        sender: '',
+        message: '',
+        recipient: '',
+      },
       currentVolume: 1,
       recodeVolume: null,
       targetVolume: 0.1,

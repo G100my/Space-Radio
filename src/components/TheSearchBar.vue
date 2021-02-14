@@ -97,11 +97,11 @@ export default {
         })
     },
     addHandler(trackId) {
-      this.$store.dispatch('add', { id: trackId, message: false })
+      this.$store.dispatch('add', { id: trackId, note: false })
       this.clearSearch()
     },
     jumpInHandler(trackId) {
-      this.$store.dispatch('jumpIn', { id: trackId, message: false })
+      this.$store.dispatch('jumpIn', { id: trackId, note: false })
       this.clearSearch()
     },
     clearSearch() {

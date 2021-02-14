@@ -78,7 +78,7 @@ const Queue = {
     },
   },
   actions: {
-    add({ rootState }, { id, message }) {
+    add({ rootState }, { id, note }) {
       const now = Date.now()
       const parameter = {}
       const userId = rootState.Personal.userId
@@ -87,12 +87,12 @@ const Queue = {
         id,
         added_time: now,
         added_by: userId,
-        message,
+        note,
         orderKey,
       }
       normal_queue_ref.update(parameter)
     },
-    jumpIn({ rootState }, { id, message }) {
+    jumpIn({ rootState }, { id, note }) {
       const now = Date.now()
       const userId = rootState.Personal.userId
       const orderKey = `${now}-${userId}`
@@ -100,7 +100,7 @@ const Queue = {
         id,
         added_time: now,
         added_by: userId,
-        message,
+        note,
         orderKey,
       })
     },
@@ -122,19 +122,19 @@ const Queue = {
       context.dispatch('urgentRemove', key)
     },
 
-    normal2urgent(context, { key, message }) {
+    normal2urgent(context, { key, note }) {
       const queue = { ...context.state.normal_queue[key] }
-      queue.message = message
+      queue.note = note
 
       urgent_queue_ref.push(queue)
       context.dispatch('normalRemove', key)
     },
 
-    urgentEdit(_context, { key, message }) {
-      urgent_queue_ref.child(key).update({ message })
+    urgentEdit(_context, { key, note }) {
+      urgent_queue_ref.child(key).update({ note })
     },
-    normalEdit(_context, { key, message }) {
-      normal_queue_ref.child(key).update({ message })
+    normalEdit(_context, { key, note }) {
+      normal_queue_ref.child(key).update({ note })
     },
   },
 }
