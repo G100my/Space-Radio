@@ -28,22 +28,39 @@
         <router-view />
       </div>
     </div>
+    <MessageDialog
+      v-if="isMessageDialogActive"
+      :track-name="editing.trackName"
+      :original-message="editing.message"
+      :original-recipient="editing.recipient"
+      :submit-function="editing.submitFunction"
+      @finish="isMessageDialogActive = false"
+    />
   </div>
 </template>
 <script>
 import PlayingState from '../components/ThePlayingState.vue'
 import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
 import SearchBar from '../components/TheSearchBar.vue'
+import MessageDialog from '../components/MessageDialog.vue'
 
 export default {
   components: {
     PlayingState,
     SearchBar,
+    MessageDialog,
   },
   data() {
     return {
       isMainSide: true,
       touchStartPosition: 0,
+      isMessageDialogActive: false,
+      editing: {
+        trackName: '二十一世紀的破青年',
+        message: '恭喜發大財',
+        recipient: '羅',
+        submitFunction: () => {},
+      },
     }
   },
   beforeCreate() {
