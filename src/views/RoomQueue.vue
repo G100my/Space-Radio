@@ -14,20 +14,20 @@
       </div>
       <div class="table-header track-feature">Feature</div>
       <Track v-for="(detailObject, key) in urgentTrack" :key="key" :info="detailObject" :is-urgent="true">
-        <div class="feature-buttons" :data-key="key">
-          <button class="remove-button" type="button" @click="removeFromUrgent">
+        <div class="feature-buttons">
+          <button class="remove-button" type="button" @click="remove(key, 'urgent')">
             <!-- prettier-ignore -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
               <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
             </svg>
           </button>
-          <button class="edit-button" type="button" @click="editMessageAtUrgent">
+          <button class="edit-button" type="button" @click="editMessage(key, 'urgent')">
             <!-- prettier-ignore -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
               <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
             </svg>
           </button>
-          <button class="urgent2normal-button" type="button" @click="urgent2normal">
+          <button class="urgent2normal-button" type="button" @click="urgent2normal(key)">
             <!-- prettier-ignore -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -37,20 +37,20 @@
         </div>
       </Track>
       <Track v-for="(detailObject, key) in normalTrack" :key="key" :info="detailObject">
-        <div class="feature-buttons" :data-key="key">
-          <button class="remove-button" type="button" @click="removeFromNormal">
+        <div class="feature-buttons">
+          <button class="remove-button" type="button" @click="remove(key, 'normal')">
             <!-- prettier-ignore -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
               <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
             </svg>
           </button>
-          <button class="edit-button" type="button" @click="editMessageAtNormal">
+          <button class="edit-button" type="button" @click="editMessage(key, 'normal')">
             <!-- prettier-ignore -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
               <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
             </svg>
           </button>
-          <button class="normal2urgent-button" type="button" @click="normal2urgent">
+          <button class="normal2urgent-button" type="button" @click="normal2urgent(key)">
             <!-- prettier-ignore -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
@@ -71,7 +71,6 @@ export default {
   },
   data() {
     return {
-      testNumber: 0,
       message: 'test string',
     }
   },
@@ -93,30 +92,17 @@ export default {
     },
   },
   methods: {
-    removeFromUrgent(event) {
-      const key = event.currentTarget.parentElement.dataset.key
-      this.$store.dispatch('removeFromUrgent', key)
+    remove(key, level) {
+      this.$store.dispatch(`${level}Remove`, key)
     },
-    editMessageAtUrgent(event) {
-      const key = event.currentTarget.parentElement.dataset.key
+    editMessage(key, level) {
       const message = this.message
-      this.$store.dispatch('editMessageAtUrgent', { key, message })
+      this.$store.dispatch(`${level}Edit`, { key, message })
     },
-    urgent2normal(event) {
-      const key = event.currentTarget.parentElement.dataset.key
+    urgent2normal(key) {
       this.$store.dispatch('urgent2normal', key)
     },
-    removeFromNormal(event) {
-      const key = event.currentTarget.parentElement.dataset.key
-      this.$store.dispatch('removeFromNormal', key)
-    },
-    editMessageAtNormal(event) {
-      const key = event.currentTarget.parentElement.dataset.key
-      const message = this.message
-      this.$store.dispatch('editMessageAtNormal', { key, message })
-    },
-    normal2urgent(event) {
-      const key = event.currentTarget.parentElement.dataset.key
+    normal2urgent(key) {
       const message = this.message
       this.$store.dispatch('normal2urgent', { key, message })
     },

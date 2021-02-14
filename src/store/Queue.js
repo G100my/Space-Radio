@@ -104,10 +104,10 @@ const Queue = {
         orderKey,
       })
     },
-    removeFromUrgent(_context, key) {
+    urgentRemove(_context, key) {
       urgent_queue_ref.child(key).remove()
     },
-    removeFromNormal(_context, key) {
+    normalRemove(_context, key) {
       normal_queue_ref.child(key).remove()
     },
 
@@ -119,7 +119,7 @@ const Queue = {
       parameter[orderKey] = queue
 
       normal_queue_ref.update(parameter)
-      context.dispatch('removeFromUrgent', key)
+      context.dispatch('urgentRemove', key)
     },
 
     normal2urgent(context, { key, message }) {
@@ -127,13 +127,13 @@ const Queue = {
       queue.message = message
 
       urgent_queue_ref.push(queue)
-      context.dispatch('removeFromNormal', key)
+      context.dispatch('normalRemove', key)
     },
 
-    editMessageAtUrgent(_context, { key, message }) {
+    urgentEdit(_context, { key, message }) {
       urgent_queue_ref.child(key).update({ message })
     },
-    editMessageAtNormal(_context, { key, message }) {
+    normalEdit(_context, { key, message }) {
       normal_queue_ref.child(key).update({ message })
     },
   },
