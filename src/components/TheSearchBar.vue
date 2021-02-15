@@ -65,6 +65,7 @@
 </template>
 <script>
 export default {
+  emits: ['activeNoteDialog'],
   data() {
     return {
       searchText: '',
@@ -101,8 +102,11 @@ export default {
       this.clearSearch()
     },
     jumpInHandler(trackId) {
-      this.$store.dispatch('jumpIn', { id: trackId, note: false })
-      this.clearSearch()
+      const submitFunction = newNote => {
+        this.$store.dispatch('jumpIn', { id: trackId, note: newNote })
+        this.clearSearch()
+      }
+      this.$emit('activeNoteDialog', { submitFunction })
     },
     clearSearch() {
       this.isImmediatelyOpen = false

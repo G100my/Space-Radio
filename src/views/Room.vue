@@ -6,7 +6,7 @@
       </div>
       <div class="view slide-items">
         <nav>
-          <SearchBar />
+          <SearchBar @activeNoteDialog="activeNoteDialogHandler" />
           <ul>
             <li>
               <!-- prettier-ignore -->
