@@ -26,15 +26,15 @@
           </ul>
         </nav>
         <router-view @activeNoteDialog="activeNoteDialogHandler" />
+        <NoteDialog
+          v-if="isNoteDialogActive"
+          :order-key="editingNote.key"
+          :level="editingNote.level"
+          :submit-function="editingNote.submitFunction"
+          @finish="isNoteDialogActive = false"
+        />
       </div>
     </div>
-    <NoteDialog
-      v-if="isNoteDialogActive"
-      :order-key="editingNote.key"
-      :level="editingNote.level"
-      :submit-function="editingNote.submitFunction"
-      @finish="isNoteDialogActive = false"
-    />
   </div>
 </template>
 <script>
@@ -130,7 +130,6 @@ export default {
 </script>
 <style lang="scss">
 .room {
-  position: relative;
   overflow: hidden;
   flex: 1;
 
@@ -145,6 +144,7 @@ export default {
     box-sizing: border-box;
   }
   .view.slide-items {
+    position: relative;
     display: flex;
     flex-direction: column;
     @media (min-width: 768px) {

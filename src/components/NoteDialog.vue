@@ -1,4 +1,5 @@
 <template>
+  <span class="mask dialog" />
   <div class="dialog">
     <p class="dialog-header">Write your message.</p>
     <div class="dialog-body">
@@ -94,17 +95,14 @@ export default {
   border-radius: var(--border-radius);
   z-index: 10;
   background-clip: border-box;
-  &::before {
-    content: '';
+  &.mask {
     display: block;
     position: absolute;
-    height: 200vh;
-    width: 200vw;
-    top: -100vh;
-    left: -100vw;
+    height: 100vh;
+    width: 100vw;
     background-color: black;
     opacity: 0.3;
-    z-index: -1;
+    z-index: 9;
   }
 
   .dialog-header,
