@@ -26,7 +26,7 @@ export default {
   props: {
     orderKey: {
       type: String,
-      required: true,
+      default: '',
     },
     level: {
       type: String,
@@ -57,8 +57,8 @@ export default {
     },
   },
   created() {
-    const note = this.$store.state.Queue[`${this.level}_queue`][this.orderKey].note
-    console.log(note)
+    if (this.orderKey !== '') {
+      const note = this.$store.state.Queue[`${this.level}_queue`][this.queueKey].note
     if (note) {
       if (note.recipient) this.recipient = note.recipient
       if (note.message) this.message = note.message
@@ -66,6 +66,7 @@ export default {
     } else {
       const previousSenderName = localStorage.getItem('jukebox_senderName')
       this.sender = previousSenderName ? previousSenderName : this.$store.getters.userId
+    }
     }
   },
   beforeUnmount() {
