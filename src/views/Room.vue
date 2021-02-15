@@ -30,9 +30,8 @@
     </div>
     <NoteDialog
       v-if="isNoteDialogActive"
-      :track-name="editingNote.trackName"
-      :original-message="editingNote.message"
-      :original-recipient="editingNote.recipient"
+      :order-key="editingNote.key"
+      :level="editingNote.level"
       :submit-function="editingNote.submitFunction"
       @finish="isNoteDialogActive = false"
     />
@@ -56,9 +55,8 @@ export default {
       touchStartPosition: 0,
       isNoteDialogActive: false,
       editingNote: {
-        trackName: '二十一世紀的破青年',
-        message: '恭喜發大財',
-        recipient: '羅',
+        key: '',
+        level: '',
         submitFunction: () => {},
       },
     }
@@ -70,7 +68,9 @@ export default {
     }
   },
   methods: {
-    activeNoteDialogHandler(key, level, callback) {
+    activeNoteDialogHandler(key, level, submitFunction) {
+      this.editingNote = { key, level, submitFunction }
+      this.isNoteDialogActive = true
     },
     sliderToggler(direction) {
       switch (direction) {

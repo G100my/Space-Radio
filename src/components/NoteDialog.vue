@@ -2,7 +2,9 @@
   <div class="dialog">
     <p class="dialog-header">Write your message.</p>
     <div class="dialog-body">
-      <input v-model="sender" class="sender" />插播一首<span class="track-name">{{ trackName }}</span
+      <input v-model="sender" class="sender" :placeholder="$store.getters.userId" />插播一首<span class="track-name">{{
+        trackName
+      }}</span
       >給<input v-model="recipient" class="recipient" type="text" placeholder="everyone" />，<br /><textarea
         v-model="message"
         class="message"
@@ -21,15 +23,11 @@
 <script>
 export default {
   props: {
-    originalMessage: {
+    orderKey: {
       type: String,
-      default: '',
+      required: true,
     },
-    originalRecipient: {
-      type: String,
-      default: '',
-    },
-    trackName: {
+    level: {
       type: String,
       required: true,
     },
@@ -41,9 +39,10 @@ export default {
   emits: ['finish'],
   data() {
     return {
-      sender: this.$store.state.Personal.userId,
-      recipient: this.originalRecipient,
-      message: this.originalMessage,
+      sender: '',
+      recipient: '',
+      message: '',
+      trackName: this.$store.state.Queue[`${this.level}_track`][this.orderKey].name,
     }
   },
   computed: {
@@ -53,9 +52,28 @@ export default {
       } \n ${this.message}`
     },
   },
+  created() {
+    const note = this.$store.state.Queue[`${this.level}_queue`][this.orderKey].note
+    console.log(note)
+    if (note) {
+      if (note.recipient) this.recipient = note.recipient
+      if (note.message) this.message = note.message
+      if (note.sender) this.sender = note.sender
+    } else {
+      const previousSenderName = localStorage.getItem('jukebox_senderName')
+      this.sender = previousSenderName ? previousSenderName : this.$store.getters.userId
+    }
+  },
+  beforeUnmount() {
+    if (this.sender.length !== 0) localStorage.setItem('jukebox_senderName', this.sender)
+  },
   methods: {
     submitHandler() {
-      this.submitFunction()
+      this.submitFunction({
+        sender: this.sender === '' ? this.$store.getters.userId : this.sender,
+        recipient: this.recipient,
+        message: this.message,
+      })
       this.$emit('finish')
     },
   },
