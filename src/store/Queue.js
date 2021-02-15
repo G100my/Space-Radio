@@ -113,6 +113,7 @@ const Queue = {
 
     urgent2normal(context, key) {
       const queue = { ...context.state.urgent_queue[key] }
+      queue.note = false
       const orderKey = queue.orderKey
 
       const parameter = {}
