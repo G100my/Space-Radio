@@ -24,7 +24,7 @@
 <script>
 export default {
   props: {
-    orderKey: {
+    queueKey: {
       type: String,
       default: '',
     },
@@ -57,16 +57,16 @@ export default {
     },
   },
   created() {
-    if (this.orderKey !== '') {
+    if (this.queueKey !== '') {
       const note = this.$store.state.Queue[`${this.level}_queue`][this.queueKey].note
-    if (note) {
-      if (note.recipient) this.recipient = note.recipient
-      if (note.message) this.message = note.message
-      if (note.sender) this.sender = note.sender
-    } else {
-      const previousSenderName = localStorage.getItem('jukebox_senderName')
-      this.sender = previousSenderName ? previousSenderName : this.$store.getters.userId
-    }
+      if (note) {
+        if (note.recipient) this.recipient = note.recipient
+        if (note.message) this.message = note.message
+        if (note.sender) this.sender = note.sender
+      } else {
+        const previousSenderName = localStorage.getItem('jukebox_senderName')
+        this.sender = previousSenderName ? previousSenderName : this.$store.getters.userId
+      }
     }
   },
   beforeUnmount() {
