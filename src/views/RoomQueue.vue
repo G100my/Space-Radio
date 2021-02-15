@@ -98,7 +98,7 @@ export default {
       const submitFunction = newNote => {
         this.$store.dispatch('normal2urgent', { key, note: newNote })
       }
-      this.$emit('activeNoteDialog', key, 'normal', trackName, submitFunction)
+      this.$emit('activeNoteDialog', { queueKey: key, level: 'normal', trackName, submitFunction })
     },
   },
 }

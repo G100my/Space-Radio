@@ -63,8 +63,8 @@ export default {
     }
   },
   methods: {
-    activeNoteDialogHandler(orderKey, level, trackName, submitFunction) {
-      this.editingNote = { orderKey, level, trackName, submitFunction }
+    activeNoteDialogHandler(note) {
+      this.editingNote = { ...note }
       this.isNoteDialogActive = true
     },
     dialogFinishHandler() {
