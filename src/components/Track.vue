@@ -66,12 +66,14 @@ export default {
 .track-feature {
   align-self: center;
 }
-.track-cover,
-.track-feature {
+.track-cover {
   justify-self: center;
 }
 .track-time-data {
-  justify-self: end;
+  justify-self: flex-end;
+}
+.track-feature {
+  justify-self: flex-start;
 }
 
 .track-album,
