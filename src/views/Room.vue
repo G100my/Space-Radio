@@ -26,11 +26,7 @@
           </ul>
         </nav>
         <router-view @activeNoteDialog="activeNoteDialogHandler" />
-        <NoteDialog
-          v-if="isNoteDialogActive"
-          v-bind="editingNote"
-          @finish="isNoteDialogActive = false"
-        />
+        <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
       </div>
     </div>
   </div>
@@ -70,6 +66,15 @@ export default {
     activeNoteDialogHandler(orderKey, level, trackName, submitFunction) {
       this.editingNote = { orderKey, level, trackName, submitFunction }
       this.isNoteDialogActive = true
+    },
+    dialogFinishHandler() {
+      this.isNoteDialogActive = false
+      this.editingNote = {
+        orderKey: '',
+        level: '',
+        trackName: '',
+        submitFunction: () => {},
+      }
     },
     sliderToggler(direction) {
       switch (direction) {
