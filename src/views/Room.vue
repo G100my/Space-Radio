@@ -28,9 +28,7 @@
         <router-view @activeNoteDialog="activeNoteDialogHandler" />
         <NoteDialog
           v-if="isNoteDialogActive"
-          :order-key="editingNote.key"
-          :level="editingNote.level"
-          :submit-function="editingNote.submitFunction"
+          v-bind="editingNote"
           @finish="isNoteDialogActive = false"
         />
       </div>
@@ -55,8 +53,9 @@ export default {
       touchStartPosition: 0,
       isNoteDialogActive: false,
       editingNote: {
-        key: '',
+        orderKey: '',
         level: '',
+        trackName: '',
         submitFunction: () => {},
       },
     }
@@ -68,8 +67,8 @@ export default {
     }
   },
   methods: {
-    activeNoteDialogHandler(key, level, submitFunction) {
-      this.editingNote = { key, level, submitFunction }
+    activeNoteDialogHandler(orderKey, level, trackName, submitFunction) {
+      this.editingNote = { orderKey, level, trackName, submitFunction }
       this.isNoteDialogActive = true
     },
     sliderToggler(direction) {

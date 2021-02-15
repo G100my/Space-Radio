@@ -32,6 +32,10 @@ export default {
       type: String,
       required: true,
     },
+    trackName: {
+      type: String,
+      required: true,
+    },
     submitFunction: {
       type: Function,
       required: true,
@@ -43,7 +47,6 @@ export default {
       sender: '',
       recipient: '',
       message: '',
-      trackName: this.$store.state.Queue[`${this.level}_track`][this.orderKey].name,
     }
   },
   computed: {
