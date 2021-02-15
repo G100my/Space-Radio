@@ -58,23 +58,23 @@ const Queue = {
       state[trackKey] = newTrack
     },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
-      const key = oldChildSnapshot.key
+      const queueKey = oldChildSnapshot.key
       const queue = `${storeTarget}_queue`
       const track = `${storeTarget}_track`
-      delete state[queue][key]
-      delete state[track][key]
+      delete state[queue][queueKey]
+      delete state[track][queueKey]
     },
     addQueueTrack(state, { storeTarget, childSnapshot, addedTrack }) {
-      const key = childSnapshot.key
+      const queueKey = childSnapshot.key
       const queue = `${storeTarget}_queue`
       const track = `${storeTarget}_track`
-      state[queue][key] = childSnapshot.val()
-      state[track][key] = addedTrack
+      state[queue][queueKey] = childSnapshot.val()
+      state[track][queueKey] = addedTrack
     },
     editQueue(state, { storeTarget, childSnapshot }) {
-      const key = childSnapshot.key
+      const queueKey = childSnapshot.key
       const queue = `${storeTarget}_queue`
-      state[queue][key] = childSnapshot.val()
+      state[queue][queueKey] = childSnapshot.val()
     },
   },
   actions: {
@@ -104,15 +104,15 @@ const Queue = {
         orderKey,
       })
     },
-    urgentRemove(_context, key) {
-      urgent_queue_ref.child(key).remove()
+    urgentRemove(_context, queueKey) {
+      urgent_queue_ref.child(queueKey).remove()
     },
-    normalRemove(_context, key) {
-      normal_queue_ref.child(key).remove()
+    normalRemove(_context, queueKey) {
+      normal_queue_ref.child(queueKey).remove()
     },
 
-    urgent2normal(context, key) {
-      const queue = { ...context.state.urgent_queue[key] }
+    urgent2normal(context, queueKey) {
+      const queue = { ...context.state.urgent_queue[queueKey] }
       queue.note = false
       const orderKey = queue.orderKey
 
@@ -120,22 +120,22 @@ const Queue = {
       parameter[orderKey] = queue
 
       normal_queue_ref.update(parameter)
-      context.dispatch('urgentRemove', key)
+      context.dispatch('urgentRemove', queueKey)
     },
 
-    normal2urgent(context, { key, note }) {
-      const queue = { ...context.state.normal_queue[key] }
+    normal2urgent(context, { queueKey, note }) {
+      const queue = { ...context.state.normal_queue[queueKey] }
       queue.note = note
 
       urgent_queue_ref.push(queue)
-      context.dispatch('normalRemove', key)
+      context.dispatch('normalRemove', queueKey)
     },
 
-    urgentEdit(_context, { key, note }) {
-      urgent_queue_ref.child(key).update({ note })
+    urgentEdit(_context, { queueKey, note }) {
+      urgent_queue_ref.child(queueKey).update({ note })
     },
-    normalEdit(_context, { key, note }) {
-      normal_queue_ref.child(key).update({ note })
+    normalEdit(_context, { queueKey, note }) {
+      normal_queue_ref.child(queueKey).update({ note })
     },
   },
 }

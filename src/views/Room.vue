@@ -49,7 +49,7 @@ export default {
       touchStartPosition: 0,
       isNoteDialogActive: false,
       editingNote: {
-        orderKey: '',
+        queueKey: '',
         level: '',
         trackName: '',
         submitFunction: () => {},
@@ -70,7 +70,7 @@ export default {
     dialogFinishHandler() {
       this.isNoteDialogActive = false
       this.editingNote = {
-        orderKey: '',
+        queueKey: '',
         level: '',
         trackName: '',
         submitFunction: () => {},
