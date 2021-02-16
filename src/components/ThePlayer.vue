@@ -1,11 +1,6 @@
 <template>
   <div class="player">
-    <h1>player</h1>
     <p>device_id: {{ device_id }}</p>
-    <div class="now-playing">
-      <p />
-    </div>
-    <h2>SDK method</h2>
     <div>
       <button type="button" @click="togglePlay">play</button>
       <button type="button" @click="next">next</button>
@@ -21,9 +16,6 @@
   </div>
 </template>
 <script>
-import '../utility/spotify-player-SDK.js'
-import { getImplicitGrantToken } from '../utility/Oauth.js'
-
 export default {
   props: {
     volume: {
@@ -56,6 +48,7 @@ export default {
     },
   },
   created() {
+    import('../utility/spotify-player-SDK.js')
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
         name: this.name,
@@ -72,7 +65,6 @@ export default {
 
       this.player.addListener('authentication_error', ({ message }) => {
         console.error(message)
-        getImplicitGrantToken()
       })
 
       // Playback status updates
@@ -153,10 +145,5 @@ export default {
 </script>
 <style>
 .player {
-  padding-bottom: 30px;
-  position: absolute;
-  bottom: 0;
-  width: 100vw;
-  left: 0;
 }
 </style>
