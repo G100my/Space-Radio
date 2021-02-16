@@ -12,14 +12,14 @@
         <p>
           <span>{{ currentPlayingTrackName }}</span>
           <span>
-            <a v-for="(artists, index) in currentPlayingArtists" :key="index" :href="artists.url">
+            <a v-for="(artists, index) in currentPlayingArtists" :key="index" target="_blank" :href="artists.url">
               {{ artists.name }}
             </a>
           </span>
         </p>
         <p>
           <span>
-            <a :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
+            <a target="_blank" :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
           </span>
         </p>
       </section>
