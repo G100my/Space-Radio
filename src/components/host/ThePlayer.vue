@@ -32,7 +32,7 @@ export default {
     return {
       player: null,
       device_id: null,
-      name: 'test play',
+      name: 'jukebox',
       countDown: null,
       countDownTrackID: null,
     }
@@ -57,12 +57,15 @@ export default {
           cb(this.token)
         },
       })
-      // prettier-ignore
-      this.player.addListener('initialization_error', ({ message }) => { console.error(message) })
-      // prettier-ignore
-      this.player.addListener('account_error', ({ message }) => { console.error(message) })
-      // prettier-ignore
-      this.player.addListener('playback_error', ({ message }) => { console.error(message) })
+      this.player.addListener('initialization_error', ({ message }) => {
+        console.error(message)
+      })
+      this.player.addListener('account_error', ({ message }) => {
+        console.error(message)
+      })
+      this.player.addListener('playback_error', ({ message }) => {
+        console.error(message)
+      })
 
       this.player.addListener('authentication_error', ({ message }) => {
         console.error(message)
