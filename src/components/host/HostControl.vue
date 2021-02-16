@@ -1,7 +1,12 @@
 <template>
   <div>
     <Broadcast ref="broadcast" :text="note.message" @speakEnd="resumeVolume" />
-    <ThePlayer :execute-before-end-time="executeBeforeEndTime" :volume="currentVolume" @nearTheEnd="timeoutHandler" />
+    <ThePlayer
+      :execute-before-end-time="executeBeforeEndTime"
+      :volume="currentVolume"
+      :has-note2read="hasNote2read"
+      @activeTTS="reduceVolume($refs.broadcast.TTS)"
+    />
     <button @click.prevent="reduceVolume($refs.broadcast.TTS)">reduceVolume</button>
     <button @click.prevent="resumeVolume">resumeVolume</button>
     <button @click.prevent="playQueue">playQueue</button>
@@ -34,6 +39,9 @@ export default {
     }
   },
   computed: {
+    hasNote2read() {
+      return Boolean(this.note)
+    },
     adjustExecuteTimes() {
       return this.adjustTotalTime / this.adjustStepTime
     },
@@ -65,9 +73,6 @@ export default {
           this.recodeVolume = null
         }
       }, this.adjustStepTime)
-    },
-    timeoutHandler() {
-      this.reduceVolume(this.$refs.broadcast.TTS)
     },
     playWholeQueue() {
       this.$spotifyAPI.play({ uris: this.$store.getters.getRoomQueueURIArray })

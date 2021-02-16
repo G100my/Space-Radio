@@ -1,6 +1,5 @@
 <template>
   <div class="player">
-    <p>device_id: {{ device_id }}</p>
     <div>
       <button type="button" @click="togglePlay">play</button>
       <button type="button" @click="next">next</button>
@@ -24,17 +23,20 @@ export default {
     },
     executeBeforeEndTime: {
       type: Number,
-      default: null,
+      default: 10000,
+    },
+    hasNote2read: {
+      type: Boolean,
+      required: false,
     },
   },
-  emits: ['nearTheEnd'],
+  emits: ['activeTTS'],
   data() {
     return {
       player: null,
       device_id: null,
       name: 'jukebox',
       countDown: null,
-      countDownTrackID: null,
     }
   },
   computed: {
@@ -86,26 +88,21 @@ export default {
           this.$store.dispatch('updatePlayingTrack', { playingState })
         }
 
-        if (!this.executeBeforeEndTime) return
+        if (this.hasNote2read) {
+          if (state.position == 0) return
 
-        // 避免還在讀取時的 state
-        const bufferTimer = state.duration - state.position - this.executeBeforeEndTime
-        if (bufferTimer < 800) return
+          const bufferTimer = state.duration - state.position - this.executeBeforeEndTime
+          if (bufferTimer < 1000) return
 
-        if (
-          (state.track_window.current_track.id != this.countDownTrackID && state.position > state.duration / 2) ||
-          state.position == 0
-        )
-          return
+          console.log('setTimeout', Date.now())
+          if (this.countDown) clearTimeout(this.countDown)
 
-        this.countDownTrackID = state.track_window.current_track.id
-
-        console.log('setTimeout', Date.now())
-        clearTimeout(this.countDown)
-        this.countDown = setTimeout(() => {
-          console.log('timeout!!!')
-          this.$emit('nearTheEnd')
-        }, bufferTimer)
+          this.countDown = setTimeout(() => {
+            console.log('timeout!!!')
+            this.$emit('activeTTS')
+            this.countDown = null
+          }, bufferTimer)
+        }
       })
 
       // Ready
