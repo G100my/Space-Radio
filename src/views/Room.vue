@@ -2,7 +2,10 @@
   <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
     <div ref="slideContainer" class="slide-container">
       <div class="sidebar slide-items">
-        <PlayingState />
+        <div>
+          <PlayingState />
+          <component :is="hostToggler" />
+        </div>
       </div>
       <div class="view slide-items">
         <nav>
@@ -26,6 +29,7 @@
   </div>
 </template>
 <script>
+import { defineAsyncComponent } from 'vue'
 import PlayingState from '../components/PlayingState.vue'
 import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
 import SearchBar from '../components/SearchBar.vue'
@@ -36,9 +40,11 @@ export default {
     PlayingState,
     SearchBar,
     NoteDialog,
+    HostControl: defineAsyncComponent(() => import('../components/host/HostControl.vue')),
   },
   data() {
     return {
+      hostToggler: '',
       isMainSide: true,
       touchStartPosition: 0,
       isNoteDialogActive: false,
@@ -149,6 +155,10 @@ export default {
       width: auto;
       flex: 1;
     }
+  }
+  .sidebar > div {
+    overflow-y: auto;
+    height: 100%;
   }
 
   nav {
