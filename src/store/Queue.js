@@ -49,6 +49,19 @@ const Queue = {
     urgentQueue(state) {
       return state.urgent_queue
     },
+    nextQueueKey(state) {
+      const urgentQueueArray = Object.keys(state.urgent_queue)
+      if (urgentQueueArray.length === 0) {
+        const normalQueueArray = Object.keys(state.normal_queue)
+        if (normalQueueArray.length === 0) {
+          return null
+        } else {
+          return normalQueueArray[0]
+        }
+      } else {
+        return urgentQueueArray[0]
+      }
+    },
   },
   mutations: {
     updateQueueTrack(state, { storeTarget, newQueue, newTrack }) {
