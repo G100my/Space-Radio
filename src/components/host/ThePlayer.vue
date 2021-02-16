@@ -49,7 +49,7 @@ export default {
     },
   },
   created() {
-    import('../utility/spotify-player-SDK.js')
+    import('../../utility/spotify-player-SDK.js')
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
         name: this.name,

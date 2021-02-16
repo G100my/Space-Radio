@@ -9,8 +9,8 @@
   </div>
 </template>
 <script>
-import ThePlayer from '../components/ThePlayer.vue'
-import TheBroadcast from '../components/TheBroadcast.vue'
+import ThePlayer from './ThePlayer.vue'
+import TheBroadcast from './TheBroadcast.vue'
 
 // 載入歌單  調節播放
 export default {
