@@ -6,22 +6,21 @@
     </h1>
     <div class="track-info">
       <div class="cover">
-        <img :src="currentPlayingAlbum.images[0].url" alt="" />
+        <img :src="currentPlayingAlbum.imageURL" alt="" />
       </div>
       <section class="description">
         <p>
           <span>{{ currentPlayingTrackName }}</span>
           <span>
-            <a v-for="(artists, index) in currentPlayingArtists" :key="index" :href="artists.external_urls.spotify">
+            <a v-for="(artists, index) in currentPlayingArtists" :key="index" :href="artists.url">
               {{ artists.name }}
             </a>
           </span>
         </p>
         <p>
           <span>
-            <a :href="currentPlayingAlbum.external_urls.spotify">{{ currentPlayingAlbum.name }}</a>
+            <a :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
           </span>
-          <span>{{ currentPlayingAlbum.release_date.slice(0, -3) }}</span>
         </p>
       </section>
     </div>
