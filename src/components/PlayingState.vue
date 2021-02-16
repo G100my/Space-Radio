@@ -9,18 +9,16 @@
         <img :src="currentPlayingAlbum.imageURL" alt="" />
       </div>
       <section class="description">
-        <p>
+        <p class="track-name">
           <span>{{ currentPlayingTrackName }}</span>
-          <span>
-            <a v-for="(artists, index) in currentPlayingArtists" :key="index" target="_blank" :href="artists.url">
-              {{ artists.name }}
-            </a>
-          </span>
         </p>
-        <p>
-          <span>
-            <a target="_blank" :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
-          </span>
+        <p class="artists">
+          <a v-for="(artists, index) in currentPlayingArtists" :key="index" target="_blank" :href="artists.url">
+            {{ artists.name }}
+          </a>
+        </p>
+        <p class="album">
+          <a target="_blank" :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
         </p>
       </section>
     </div>
@@ -117,13 +115,14 @@ export default {
       content: '/';
       margin: 0 10px;
     }
-    p:first-child > span:first-child {
+    .track-name {
       font-size: larger;
     }
-    p:nth-child(2) {
+    .artists {
       margin-top: 5px;
-      > span + span {
-        font-size: xx-small;
+      > a + a::before {
+        content: ',';
+        margin-right: 5px;
       }
     }
   }
