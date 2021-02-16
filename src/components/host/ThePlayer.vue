@@ -73,8 +73,18 @@ export default {
 
       // Playback status updates
       this.player.addListener('player_state_changed', state => {
-        console.log(state.track_window.current_track)
         console.log(state)
+        // 斷開連結
+        if (state === null) {
+          this.$store.dispatch('clearPlayingTrack')
+          return
+        }
+
+        // 更改 playingState
+        if (state.track_window.current_track.id !== this.$store.getters.currentPlayingTrackId) {
+          const playingState = state.track_window.current_track
+          this.$store.dispatch('updatePlayingTrack', { playingState })
+        }
 
         if (!this.executeBeforeEndTime) return
 
