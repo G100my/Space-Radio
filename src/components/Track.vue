@@ -73,7 +73,7 @@ export default {
   justify-self: flex-end;
 }
 .track-feature {
-  justify-self: flex-start;
+  justify-self: center;
 }
 
 .track-album,
