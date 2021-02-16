@@ -169,11 +169,13 @@ export default {
 }
 .search + ul {
   overflow: hidden;
-  transition: flex-basis 0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
+  transition-property: flex-basis, margin-left;
   flex-basis: 105px;
 }
 .search.active + ul {
   flex-basis: 0;
+  margin-left: 0;
 }
 
 .immediately-result {
