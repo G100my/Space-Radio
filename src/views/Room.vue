@@ -26,9 +26,9 @@
   </div>
 </template>
 <script>
-import PlayingState from '../components/ThePlayingState.vue'
+import PlayingState from '../components/PlayingState.vue'
 import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
-import SearchBar from '../components/TheSearchBar.vue'
+import SearchBar from '../components/SearchBar.vue'
 import NoteDialog from '../components/NoteDialog.vue'
 
 export default {

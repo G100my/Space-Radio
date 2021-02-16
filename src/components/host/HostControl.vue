@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TheBroadcast ref="broadcast" :text="note.message" @speakEnd="resumeVolume" />
+    <Broadcast ref="broadcast" :text="note.message" @speakEnd="resumeVolume" />
     <ThePlayer :execute-before-end-time="executeBeforeEndTime" :volume="currentVolume" @nearTheEnd="timeoutHandler" />
     <button @click.prevent="reduceVolume($refs.broadcast.TTS)">reduceVolume</button>
     <button @click.prevent="resumeVolume">resumeVolume</button>
@@ -10,13 +10,13 @@
 </template>
 <script>
 import ThePlayer from './ThePlayer.vue'
-import TheBroadcast from './TheBroadcast.vue'
+import Broadcast from './Broadcast.vue'
 
 // 載入歌單  調節播放
 export default {
   components: {
     ThePlayer,
-    TheBroadcast,
+    Broadcast,
   },
   data() {
     return {

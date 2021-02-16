@@ -91,7 +91,6 @@ export default {
 </script>
 <style lang="scss">
 .playing-state {
-  min-height: 100vh;
   padding: 35px 20px 15px;
   box-sizing: border-box;
   h1 {
