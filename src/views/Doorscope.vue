@@ -6,7 +6,7 @@
     <div class="content">
       <div class="cover-container">
         <div class="cover">
-          <img :src="currentPlayingAlbum.images[0].url" alt="" />
+          <img :src="currentPlayingAlbum.imageURL" alt="" />
         </div>
       </div>
       <div class="others">
@@ -16,13 +16,11 @@
           <p>{{ currentPlayingTrackName }}</p>
           <p>Artists:</p>
           <p>
-            <a v-for="(artist, index) in currentPlayingArtists" :key="index" :href="artist.external_urls.spotify">{{
-              artist.name
-            }}</a>
+            <a v-for="(artist, index) in currentPlayingArtists" :key="index" :href="artist.url">{{ artist.name }}</a>
           </p>
           <p>Album:</p>
           <p>
-            <a :href="currentPlayingAlbum.external_urls.spotify">{{ currentPlayingAlbum.name }}</a>
+            <a :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
           </p>
         </div>
         <div class="log">

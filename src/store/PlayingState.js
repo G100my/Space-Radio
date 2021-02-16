@@ -2,8 +2,37 @@ import firebase from './firebase.js'
 import jukeboxLogo from '../assets/vinyl-record.png'
 
 const playing_state_ref = firebase.database().ref('playing_state')
-
+const transformURI2URL = uri => {
+  if (typeof uri !== 'string') return ''
+  const type = uri.split(':')[1]
+  return uri.replace(`spotify:${type}:`, `https://open.spotify.com/${type}/`)
+}
 const volumeStep = 0.02
+const initialTrack = {
+  id: false,
+  name: 'Jukebox',
+  artists: [
+    {
+      name: 'G100',
+      url: '##',
+    },
+  ],
+  album: {
+    url: '##',
+    name: 'Hakuna Matata',
+    imageURL: jukeboxLogo,
+  },
+  is_playable: true,
+}
+const initialQueue = {
+  added_time: '',
+  added_by: 'Gloomy',
+  note: {
+    sender: '努力的 G100',
+    message: '一袋米扛幾樓',
+    recipient: '遠方的~你',
+  },
+}
 const PlayingState = {
   state: {
     volume: 0.3,
@@ -11,32 +40,8 @@ const PlayingState = {
     dislike: 0,
     isVoted: false,
     info: {
-      track: {
-        artists: {
-          0: {
-            name: 'No artists data',
-            external_urls: {
-              spotify: '##',
-            },
-          },
-        },
-        album: {
-          images: [{ url: jukeboxLogo }],
-          external_urls: { spotify: '##' },
-          release_date: '',
-        },
-        id: null,
-        name: 'Hakuna Matata',
-      },
-      queue: {
-        added_time: '',
-        added_by: 'somebody',
-        note: {
-          sender: 'Lo',
-          message: 'hakuna matata',
-          recipient: 'myself',
-        },
-      },
+      track: { ...initialTrack },
+      queue: { ...initialQueue },
     },
   },
   getters: {
@@ -92,6 +97,36 @@ const PlayingState = {
     },
     adjustIsVoted({ state, rootState }, snapshot) {
       state.isVoted = snapshot.hasChild(rootState.Personal.userId)
+    },
+    updatePlayingTrack(_context, { playingState }) {
+      const track = {
+        name: playingState.name,
+        id: playingState.id,
+        artists: playingState.artists.map(item => {
+          item.url = transformURI2URL(item.uri)
+          delete item.uri
+          return item
+        }),
+        album: {
+          name: playingState.album.name,
+          imageURL: playingState.album.images.find(item => item.height >= 300).url,
+          url: transformURI2URL(playingState.album.uri),
+        },
+      }
+      playing_state_ref.child('info/track').set(track)
+    },
+    updatePlayingQueue({ rootState }, queueKey) {
+      let queue
+      if (queueKey !== undefined) {
+        const level = Object.prototype.hasOwnProperty.call(rootState.Queue.urgent_queue, queueKey) ? 'urgent' : 'normal'
+        queue = rootState.Queue[`${level}_queue`][queueKey]
+      } else {
+        queue = false
+      }
+      playing_state_ref.child('info/queue').set(queue)
+    },
+    clearPlayingTrack() {
+      playing_state_ref.child('info').update({ track: initialTrack, queue: initialQueue })
     },
   },
 }
