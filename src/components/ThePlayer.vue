@@ -22,10 +22,6 @@ export default {
       type: Number,
       required: true,
     },
-    token: {
-      type: String,
-      required: true,
-    },
     executeBeforeEndTime: {
       type: Number,
       default: null,
@@ -40,6 +36,11 @@ export default {
       countDown: null,
       countDownTrackID: null,
     }
+  },
+  computed: {
+    token() {
+      return this.$store.getters.token
+    },
   },
   watch: {
     volume(newValue) {

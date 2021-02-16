@@ -1,13 +1,7 @@
 <template>
   <div>
-    <h1>Host Control</h1>
     <TheBroadcast ref="broadcast" :text="note.message" @speakEnd="resumeVolume" />
-    <ThePlayer
-      :execute-before-end-time="executeBeforeEndTime"
-      :token="host_token"
-      :volume="currentVolume"
-      @nearTheEnd="timeoutHandler"
-    />
+    <ThePlayer :execute-before-end-time="executeBeforeEndTime" :volume="currentVolume" @nearTheEnd="timeoutHandler" />
     <button @click.prevent="reduceVolume($refs.broadcast.TTS)">reduceVolume</button>
     <button @click.prevent="resumeVolume">resumeVolume</button>
     <button @click.prevent="playQueue">playQueue</button>
@@ -37,7 +31,6 @@ export default {
       executeBeforeEndTime: 10000,
       adjustTotalTime: 5000,
       adjustStepTime: 100,
-      host_token: this.$store.state.token,
     }
   },
   computed: {
