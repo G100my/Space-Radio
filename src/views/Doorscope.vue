@@ -16,11 +16,13 @@
           <p>{{ currentPlayingTrackName }}</p>
           <p>Artists:</p>
           <p>
-            <a v-for="(artist, index) in currentPlayingArtists" :key="index" :href="artist.url">{{ artist.name }}</a>
+            <a v-for="(artist, index) in currentPlayingArtists" :key="index" target="_blank" :href="artist.url">{{
+              artist.name
+            }}</a>
           </p>
           <p>Album:</p>
           <p>
-            <a :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
+            <a target="_blank" :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
           </p>
         </div>
         <div class="log">
