@@ -77,9 +77,6 @@ export default {
     urgentQueue() {
       return this.$store.getters.urgetnQueue
     },
-    isReady() {
-      return this.$store.getters.readyState
-    },
   },
   methods: {
     remove(queueKey, level) {
