@@ -76,7 +76,7 @@ export default {
       const submitFunction = newNote => {
         this.$store.dispatch(`urgentEdit`, { queueKey, note: newNote })
       }
-      this.$emit('activeNoteDialog', { queueKey, level: 'urgent', trackName, submitFunction })
+      this.$emit('activeNoteDialog', { queueKey, trackName, submitFunction })
     },
     urgent2normal(queueKey) {
       this.$store.dispatch('urgent2normal', queueKey)
@@ -85,7 +85,7 @@ export default {
       const submitFunction = newNote => {
         this.$store.dispatch('normal2urgent', { queueKey, note: newNote })
       }
-      this.$emit('activeNoteDialog', { queueKey, level: 'normal', trackName, submitFunction })
+      this.$emit('activeNoteDialog', { queueKey, trackName, submitFunction })
     },
   },
 }

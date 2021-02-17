@@ -50,7 +50,6 @@ export default {
       isNoteDialogActive: false,
       editingNote: {
         queueKey: '',
-        level: '',
         trackName: '',
         submitFunction: () => {},
       },
@@ -85,7 +84,6 @@ export default {
       this.isNoteDialogActive = false
       this.editingNote = {
         queueKey: '',
-        level: '',
         trackName: '',
         submitFunction: () => {},
       }
