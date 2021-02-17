@@ -23,9 +23,8 @@ const normal_queue_ref = firebase.database().ref('normal_queue')
 const Queue = {
   state: {
     normal_queue: {},
-    normal_track: {},
     urgent_queue: {},
-    urgent_track: {},
+    trackData: {},
   },
   getters: {
     // fixme
@@ -34,14 +33,11 @@ const Queue = {
       const urgent = Object.values(state.urgentQueueArray).map(item => 'spotify:track:'.concat(item))
       return urgent.concat(normal)
     },
-    readyState(state) {
-      return !!state.normal_track && !!state.urgent_track
-    },
     normalTrackInfo(state) {
-      return state.normal_track
+      return state.trackData
     },
     urgentTrackInfo(state) {
-      return state.urgent_track
+      return state.trackData
     },
     normalQueue(state) {
       return state.normal_queue
@@ -64,30 +60,18 @@ const Queue = {
     },
   },
   mutations: {
-    updateQueueTrack(state, { storeTarget, newQueue, newTrack }) {
-      const queueKey = `${storeTarget}_queue`
-      const trackKey = `${storeTarget}_track`
-      state[queueKey] = newQueue
-      state[trackKey] = newTrack
-    },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
       const queueKey = oldChildSnapshot.key
-      const queue = `${storeTarget}_queue`
-      const track = `${storeTarget}_track`
-      delete state[queue][queueKey]
-      delete state[track][queueKey]
+      delete state[`${storeTarget}_queue`][queueKey]
     },
     addQueueTrack(state, { storeTarget, childSnapshot, addedTrack }) {
       const queueKey = childSnapshot.key
-      const queue = `${storeTarget}_queue`
-      const track = `${storeTarget}_track`
-      state[queue][queueKey] = childSnapshot.val()
-      state[track][queueKey] = addedTrack
+      state[`${storeTarget}_queue`][queueKey] = childSnapshot.val()
+      state.trackData[queueKey] = addedTrack
     },
     editQueue(state, { storeTarget, childSnapshot }) {
       const queueKey = childSnapshot.key
-      const queue = `${storeTarget}_queue`
-      state[queue][queueKey] = childSnapshot.val()
+      state[`${storeTarget}_queue`][queueKey] = childSnapshot.val()
     },
   },
   actions: {
@@ -125,7 +109,7 @@ const Queue = {
     },
 
     urgent2normal(context, queueKey) {
-      const queue = { ...context.state.urgent_queue[queueKey] }
+      const queue = { ...context.state.trackData[queueKey] }
       queue.note = false
       const orderKey = queue.orderKey
 
@@ -137,7 +121,7 @@ const Queue = {
     },
 
     normal2urgent(context, { queueKey, note }) {
-      const queue = { ...context.state.normal_queue[queueKey] }
+      const queue = { ...context.state.trackData[queueKey] }
       queue.note = note
 
       urgent_queue_ref.push(queue)
