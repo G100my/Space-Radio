@@ -84,18 +84,10 @@ export default {
   methods: {
     searchHandler() {
       if (this.searchText === '') return
-      this.$spotifyAPI
-        // fixme
-        .search(this.searchText, ['track'], { market: 'from_token', limit: 10 })
-        .then((success, error) => {
-          if (success) {
-            console.log('success')
-            console.log(success)
-            this.tracksResult = success.tracks.items
-          } else {
-            console.log('error', error)
-          }
-        })
+      this.$spotifyAPI.search(this.searchText, ['track'], { market: 'from_token', limit: 10 }, (error, success) => {
+        error && console.log(error.response)
+        success && (this.tracksResult = success.tracks.items)
+      })
     },
     addHandler(trackId) {
       this.$store.dispatch('add', { id: trackId, note: false })
