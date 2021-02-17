@@ -7,7 +7,7 @@ function bindListener(target, storeTarget, store) {
   })
   target.on('child_added', childSnapshot => {
     const trackId = childSnapshot.val().id
-    if (store.state.previousDeleted.id === trackId) {
+    if (store.state.previousDeleted && store.state.previousDeleted.id === trackId) {
       store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack: store.state.previousDeleted })
       store.commit('clearPreviousDeleted')
       return
@@ -30,7 +30,7 @@ const Queue = {
     normal_queue: {},
     urgent_queue: {},
     trackData: {},
-    previousDeleted: '',
+    previousDeleted: null,
   },
   getters: {
     // fixme
