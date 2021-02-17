@@ -7,15 +7,18 @@ function bindListener(target, storeTarget, store) {
   })
   target.on('child_added', childSnapshot => {
     const trackId = childSnapshot.val().id
-    if (store.state.previousDeleted && store.state.previousDeleted.id === trackId) {
-      store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack: store.state.previousDeleted })
+    if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
+      store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack: store.getters.previousDeleted })
       store.commit('clearPreviousDeleted')
       return
     }
-    if (spotifyAPI.getAccessToken())
+    if (spotifyAPI.getAccessToken()) {
       spotifyAPI.getTrack(trackId).then(addedTrack => {
         store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
       })
+    } else {
+      console.warn('spotifyAPI.getAccessToken() is ' + spotifyAPI.getAccessToken())
+    }
   })
   target.on('child_changed', childSnapshot => {
     store.commit('editQueue', { storeTarget, childSnapshot })
@@ -47,6 +50,9 @@ const Queue = {
     },
     urgentQueueKeys(state) {
       return Object.keys(state.urgent_queue)
+    },
+    previousDeleted(state) {
+      return state.previousDeleted
     },
     nextQueueKey(state) {
       const urgentQueueArray = Object.keys(state.urgent_queue)
