@@ -26,10 +26,6 @@ export default {
   props: {
     queueKey: {
       type: String,
-      default: '',
-    },
-    level: {
-      type: String,
       required: true,
     },
     trackName: {
@@ -57,8 +53,11 @@ export default {
     },
   },
   created() {
-    if (this.queueKey !== '') {
-      const note = this.$store.state.Queue[`${this.level}_queue`][this.queueKey].note
+    if (
+      this.queueKey !== '' &&
+      Object.prototype.hasOwnProperty.call(this.$store.state.Queue.urgent_queue, this.queueKey)
+    ) {
+      const note = this.$store.state.Queue.urgent_queue[this.queueKey].note
       if (note) {
         if (note.recipient) this.recipient = note.recipient
         if (note.message) this.message = note.message
