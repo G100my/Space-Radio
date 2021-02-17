@@ -33,17 +33,14 @@ const Queue = {
       const urgent = Object.values(state.urgentQueueArray).map(item => 'spotify:track:'.concat(item))
       return urgent.concat(normal)
     },
-    normalTrackInfo(state) {
+    trackData(state) {
       return state.trackData
     },
-    urgentTrackInfo(state) {
-      return state.trackData
+    normalQueueKeys(state) {
+      return Object.keys(state.normal_queue)
     },
-    normalQueue(state) {
-      return state.normal_queue
-    },
-    urgentQueue(state) {
-      return state.urgent_queue
+    urgentQueueKeys(state) {
+      return Object.keys(state.urgent_queue)
     },
     nextQueueKey(state) {
       const urgentQueueArray = Object.keys(state.urgent_queue)
