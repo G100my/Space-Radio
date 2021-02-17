@@ -91,12 +91,10 @@ export default {
     },
     addHandler(trackId) {
       this.$store.dispatch('add', { id: trackId, note: false })
-      this.clearSearch()
     },
     jumpInHandler(trackId) {
       const submitFunction = newNote => {
         this.$store.dispatch('jumpIn', { id: trackId, note: newNote })
-        this.clearSearch()
       }
       this.$emit('activeNoteDialog', { submitFunction })
     },
