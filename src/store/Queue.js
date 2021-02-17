@@ -27,11 +27,13 @@ function bindListener(target, storeTarget, store) {
 
 const urgent_queue_ref = firebase.database().ref('urgent_queue')
 const normal_queue_ref = firebase.database().ref('normal_queue')
+const pending_queue_ref = firebase.database().ref('pending_queue')
 
 const Queue = {
   state: {
     normal_queue: {},
     urgent_queue: {},
+    pending_queue: {},
     trackData: {},
     previousDeleted: null,
   },
@@ -72,6 +74,9 @@ const Queue = {
     clearPreviousDeleted(state) {
       state.previousDeleted = null
     },
+    clearPendingQueue(state) {
+      state.pending_queue = null
+    },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
       const queueKey = oldChildSnapshot.key
       state.previousDeleted = state[`${storeTarget}_queue`][queueKey]
@@ -85,6 +90,10 @@ const Queue = {
     editQueue(state, { storeTarget, childSnapshot }) {
       const queueKey = childSnapshot.key
       state[`${storeTarget}_queue`][queueKey] = childSnapshot.val()
+    },
+    refreshPending(state, queue) {
+      state.pending_queue = queue
+      state.trackData['pending'] = state.previousDeleted
     },
   },
   actions: {
@@ -155,12 +164,59 @@ const Queue = {
     normalEdit(_context, { queueKey, note }) {
       normal_queue_ref.child(queueKey).update({ note })
     },
+    sendNextQueue({ state, dispatch }) {
+      const urgentQueueArray = Object.keys(state.urgent_queue)
+      let nextQueueKey, level
+      if (urgentQueueArray.length === 0) {
+        const normalQueneArray = Object.keys(state.normal_queue)
+        if (normalQueneArray.length === 0) {
+          console.warn('已經沒有任何點播了~~')
+          pending_queue_ref.set(false)
+          return
+        } else {
+          nextQueueKey = normalQueneArray[0]
+          level = 'normal'
+        }
+      } else {
+        nextQueueKey = urgentQueueArray[0]
+        level = 'urgent'
+      }
+
+      spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextQueueKey].id}`, error => {
+        error && console.log(error)
+        if (!error) {
+          pending_queue_ref.set(state[`${level}_queue`][nextQueueKey])
+          dispatch(`${level}Remove`, nextQueueKey)
+        }
+      })
+    },
   },
 }
 
 function connect2FirebaseQueue(store) {
   bindListener(normal_queue_ref, 'normal', store)
   bindListener(urgent_queue_ref, 'urgent', store)
+  pending_queue_ref.on('value', snapshot => {
+    console.log(snapshot.val())
+
+    if (snapshot.val() === null) {
+      store.commit('clearPendingQueue')
+      return
+    }
+
+    const trackId = snapshot.val().id
+    if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
+      store.commit('refreshPending', snapshot.val())
+      store.commit('clearPreviousDeleted')
+      console.log('YAYAYA')
+      return
+    }
+
+    if (spotifyAPI.getAccessToken())
+      spotifyAPI.getTrack(trackId).then(addedTrack => {
+        store.commit('refreshPending', addedTrack)
+      })
+  })
 }
 
 export { Queue, connect2FirebaseQueue }
