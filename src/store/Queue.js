@@ -7,6 +7,11 @@ function bindListener(target, storeTarget, store) {
   })
   target.on('child_added', childSnapshot => {
     const trackId = childSnapshot.val().id
+    if (store.state.previousDeleted.id === trackId) {
+      store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack: store.state.previousDeleted })
+      store.commit('clearPreviousDeleted')
+      return
+    }
     if (spotifyAPI.getAccessToken())
       spotifyAPI.getTrack(trackId).then(addedTrack => {
         store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
@@ -25,6 +30,7 @@ const Queue = {
     normal_queue: {},
     urgent_queue: {},
     trackData: {},
+    previousDeleted: '',
   },
   getters: {
     // fixme
@@ -57,8 +63,12 @@ const Queue = {
     },
   },
   mutations: {
+    clearPreviousDeleted(state) {
+      state.previousDeleted = null
+    },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
       const queueKey = oldChildSnapshot.key
+      state.previousDeleted = state[`${storeTarget}_queue`][queueKey]
       delete state[`${storeTarget}_queue`][queueKey]
     },
     addQueueTrack(state, { storeTarget, childSnapshot, addedTrack }) {
@@ -113,16 +123,24 @@ const Queue = {
       const parameter = {}
       parameter[orderKey] = queue
 
-      normal_queue_ref.update(parameter)
-      context.dispatch('urgentRemove', queueKey)
+      urgent_queue_ref
+        .child(queueKey)
+        .remove()
+        .then(() => {
+          normal_queue_ref.update(parameter)
+        })
     },
 
     normal2urgent(context, { queueKey, note }) {
       const queue = { ...context.state.trackData[queueKey] }
       queue.note = note
 
-      urgent_queue_ref.push(queue)
-      context.dispatch('normalRemove', queueKey)
+      normal_queue_ref
+        .child(queueKey)
+        .remove()
+        .then(() => {
+          urgent_queue_ref.push(queue)
+        })
     },
 
     urgentEdit(_context, { queueKey, note }) {
