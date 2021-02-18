@@ -156,6 +156,11 @@ export default {
       if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.token)
       this.$spotifyAPI.transferMyPlayback([this.device_id], { play: true }, error => {
         error && console.log(error.response)
+        if (!error && !this.$store.getters.pendingQueue) {
+          setTimeout(() => {
+            this.$store.dispatch('sendNextQueue')
+          }, 3000)
+        }
       })
     },
   },
