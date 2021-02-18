@@ -98,6 +98,9 @@ const Queue = {
         return urgentQueueArray[0]
       }
     },
+    pendingNote(state) {
+      return state.pending_queue ? state.pending_queue.note : null
+    },
   },
   mutations: {
     clearPreviousDeleted(state) {
