@@ -22,11 +22,6 @@ export default {
   },
   data() {
     return {
-      note: {
-        sender: '',
-        message: 'Welcome to JukeBox',
-        recipient: '',
-      },
       currentVolume: 1,
       recodeVolume: null,
       targetVolume: 0.1,
@@ -38,10 +33,20 @@ export default {
   },
   computed: {
     hasNote2read() {
-      return Boolean(this.note)
+      return Boolean(this.currentNote)
     },
     adjustExecuteTimes() {
       return this.adjustTotalTime / this.adjustStepTime
+    },
+    currentNote() {
+      return this.$store.getters.pendingNote
+    },
+    messageOutput() {
+      if (!this.currentNote) return '一袋米扛幾樓'
+
+      return `${this.currentNote.sender} 插播一首 ${this.currentNote.trackName} 給 ${
+        this.currentNote.recipient.trim() === '' ? '所有人' : this.currentNote.recipient
+      } ${this.currentNote.message}`
     },
   },
   created() {
@@ -74,7 +79,7 @@ export default {
     tts() {
       console.log(this.utterance)
       if (this.utterance.voice === null) this.setVoice()
-      this.utterance.text = this.note.message
+      this.utterance.text = this.currentNote.message
       speechSynthesis.speak(this.utterance)
     },
     reduceVolume(callback) {
