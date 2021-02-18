@@ -1,8 +1,8 @@
 <template>
-  <div class="track-cover" :class="{ urgent: isUrgent }">
+  <div class="track-cover" :class="{ urgent: isUrgent, pending: isPending }">
     <img :src="coverUrl" alt="" />
   </div>
-  <div class="track-name-artist" :class="{ urgent: isUrgent }">
+  <div class="track-name-artist" :class="{ urgent: isUrgent, pending: isPending }">
     <p class="name">
       <a :href="info.external_urls.spotify" target="_blank">{{ info.name }}</a>
     </p>
@@ -12,19 +12,21 @@
       }}</a>
     </p>
   </div>
-  <div class="track-album" :class="{ urgent: isUrgent }">
+  <div class="track-album" :class="{ urgent: isUrgent, pending: isPending }">
     <p>
       <a :href="info.album.external_urls.spotify" target="_blank">{{ info.album.name }}</a>
     </p>
   </div>
-  <div class="track-time-data" :class="{ urgent: isUrgent }">
+  <div class="track-time-data" :class="{ urgent: isUrgent, pending: isPending }">
     <p>
       {{ durationTime }}
     </p>
     <p>{{ release }}</p>
   </div>
-  <div class="track-feature" :class="{ urgent: isUrgent }">
-    <slot />
+  <div class="track-feature" :class="{ urgent: isUrgent, pending: isPending }">
+    <slot>
+      <p class="pending">pending...</p>
+    </slot>
   </div>
 </template>
 <script>
@@ -35,6 +37,10 @@ export default {
       required: true,
     },
     isUrgent: {
+      type: Boolean,
+      default: false,
+    },
+    isPending: {
       type: Boolean,
       default: false,
     },
@@ -137,6 +143,13 @@ export default {
   > p,
   button {
     color: var(--primary-highlight);
+  }
+}
+.pending {
+  p > a,
+  > p,
+  button {
+    color: var(--primary-neutral);
   }
 }
 </style>
