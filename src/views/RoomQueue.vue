@@ -13,6 +13,7 @@
         <p>Release Time</p>
       </div>
       <div class="table-header track-feature">Feature</div>
+      <Track v-if="pendingQueue" :info="pendingQueue" :is-pending="true" />
       <Track v-for="queueKey in urgentQueueKeys" :key="queueKey" :info="trackData[queueKey]" :is-urgent="true">
         <div class="feature-buttons">
           <button class="remove-button" type="button" @click="remove(queueKey, 'urgent')">
@@ -66,7 +67,7 @@ export default {
   },
   emits: ['activeNoteDialog'],
   computed: {
-    ...mapGetters(['trackData', 'normalQueueKeys', 'urgentQueueKeys']),
+    ...mapGetters(['trackData', 'normalQueueKeys', 'urgentQueueKeys', 'pendingQueue']),
   },
   methods: {
     remove(queueKey, level) {
