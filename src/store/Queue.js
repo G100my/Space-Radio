@@ -11,7 +11,7 @@ function bindListener(target, storeTarget, store) {
   })
   target.on('child_added', childSnapshot => {
     const trackId = childSnapshot.val().id
-    if (!store.getters.pending_queue) store.dispatch('sendNextQueue')
+    if (!store.getters.pendingQueue) store.dispatch('sendNextQueue')
 
     if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
       store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack: store.getters.previousDeleted })
@@ -220,7 +220,10 @@ const Queue = {
         }
       })
     },
-  },
+    previousPendingIsPlayed({ state, dispatch }) {
+      dispatch('updatePlayingQueue', state.pending_queue)
+      pending_queue_ref.set(null)
+    },
   },
 }
 

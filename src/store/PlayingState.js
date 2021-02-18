@@ -32,6 +32,9 @@ const initialQueue = {
     message: '一袋米扛幾樓',
     recipient: '遠方的~你',
   },
+  // fixme 沒有用到的資訊
+  orderKey: null,
+  id: '',
 }
 const PlayingState = {
   state: {
@@ -115,14 +118,7 @@ const PlayingState = {
       }
       playing_state_ref.child('info/track').set(track)
     },
-    updatePlayingQueue({ rootState }, queueKey) {
-      let queue
-      if (queueKey !== undefined) {
-        const level = Object.prototype.hasOwnProperty.call(rootState.Queue.urgent_queue, queueKey) ? 'urgent' : 'normal'
-        queue = rootState.Queue[`${level}_queue`][queueKey]
-      } else {
-        queue = false
-      }
+    updatePlayingQueue(_context, queue) {
       playing_state_ref.child('info/queue').set(queue)
     },
     clearPlayingTrack() {
