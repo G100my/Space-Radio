@@ -149,7 +149,9 @@ export default {
     },
     activeThisDevice() {
       if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.token)
-      this.$spotifyAPI.transferMyPlayback([this.device_id], { play: true })
+      this.$spotifyAPI.transferMyPlayback([this.device_id], { play: true }, error => {
+        error && console.log(error.response)
+      })
     },
   },
 }
