@@ -1,33 +1,30 @@
 <template>
   <div>
-    <Broadcast ref="broadcast" :text="note.message" @speakEnd="resumeVolume" />
     <ThePlayer
       :execute-before-end-time="executeBeforeEndTime"
       :volume="currentVolume"
       :has-note2read="hasNote2read"
-      @activeTTS="reduceVolume($refs.broadcast.TTS)"
+      @activetts="reduceVolume(tts)"
     />
-    <button @click.prevent="reduceVolume($refs.broadcast.TTS)">reduceVolume</button>
-    <button @click.prevent="resumeVolume">resumeVolume</button>
-    <button @click.prevent="playQueue">playQueue</button>
+    <button type="button" @click="tts">tts</button>
+    <button type="button" @click="resumeVolume">resumeVolume</button>
+    <button type="button" @click="playQueue">playQueue</button>
     <input v-model="currentVolume" type="range" step="0.1" min="0" max="1" />
   </div>
 </template>
 <script>
 import ThePlayer from './ThePlayer.vue'
-import Broadcast from './Broadcast.vue'
 
 // 載入歌單  調節播放
 export default {
   components: {
     ThePlayer,
-    Broadcast,
   },
   data() {
     return {
       note: {
         sender: '',
-        message: '',
+        message: 'Welcome to JukeBox',
         recipient: '',
       },
       currentVolume: 1,
@@ -36,6 +33,7 @@ export default {
       executeBeforeEndTime: 10000,
       adjustTotalTime: 5000,
       adjustStepTime: 100,
+      utterance: new window.SpeechSynthesisUtterance(),
     }
   },
   computed: {
@@ -46,17 +44,48 @@ export default {
       return this.adjustTotalTime / this.adjustStepTime
     },
   },
+  created() {
+    this.utterance.pitch = 1
+    this.utterance.rate = 1
+    this.utterance.volume = 1
+    this.utterance.lang = 'zh-TW'
+    this.utterance.onstart = () => {
+      console.log('utterance start')
+    }
+    this.utterance.onend = () => {
+      console.log('utterance end')
+      this.resumeVolume()
+    }
+    this.utterance.onerror = event => {
+      console.log('An error has occurred with the speech synthesis: ' + event.error)
+    }
+    speechSynthesis.onvoiceschanged = () => {
+      console.log('onvoiceschanged')
+      this.setVoice()
+    }
+  },
   methods: {
-    reduceVolume(intervalCallback) {
+    setVoice() {
+      const voice = speechSynthesis
+        .getVoices()
+        .find(item => item.name.includes('Google') && item.lang.includes('zh-TW'))
+      if (voice !== null) this.utterance.voice = voice
+    },
+    tts() {
+      console.log(this.utterance)
+      if (this.utterance.voice === null) this.setVoice()
+      this.utterance.text = this.note.message
+      speechSynthesis.speak(this.utterance)
+    },
+    reduceVolume(callback) {
       this.recodeVolume = this.currentVolume
 
       const step = (this.currentVolume - this.targetVolume) / this.adjustExecuteTimes
 
       const timer = setInterval(() => {
         this.currentVolume -= step
-
         if (this.currentVolume < this.targetVolume) {
-          intervalCallback()
+          callback()
           clearInterval(timer)
         }
       }, this.adjustStepTime)
