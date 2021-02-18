@@ -30,7 +30,7 @@ export default {
       required: false,
     },
   },
-  emits: ['activeTTS'],
+  emits: ['activetts'],
   data() {
     return {
       player: null,
@@ -99,7 +99,7 @@ export default {
 
           this.countDown = setTimeout(() => {
             console.log('timeout!!!')
-            this.$emit('activeTTS')
+            this.$emit('activetts')
             this.countDown = null
           }, bufferTimer)
         }
