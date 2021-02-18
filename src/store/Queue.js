@@ -1,6 +1,10 @@
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 import firebase from './firebase.js'
 
+const urgent_queue_ref = firebase.database().ref('urgent_queue')
+const normal_queue_ref = firebase.database().ref('normal_queue')
+const pending_queue_ref = firebase.database().ref('pending_queue')
+
 function bindListener(target, storeTarget, store) {
   target.on('child_removed', oldChildSnapshot => {
     store.commit('deleteQueueTrack', { storeTarget, oldChildSnapshot })
@@ -25,9 +29,29 @@ function bindListener(target, storeTarget, store) {
   })
 }
 
-const urgent_queue_ref = firebase.database().ref('urgent_queue')
-const normal_queue_ref = firebase.database().ref('normal_queue')
-const pending_queue_ref = firebase.database().ref('pending_queue')
+function connect2FirebaseQueue(store) {
+  bindListener(normal_queue_ref, 'normal', store)
+  bindListener(urgent_queue_ref, 'urgent', store)
+  pending_queue_ref.on('value', snapshot => {
+    if (!snapshot.val()) {
+      store.commit('clearPendingQueue')
+      return
+    }
+
+    const trackId = snapshot.val().id
+    if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
+      store.commit('refreshPending', snapshot.val())
+      store.commit('clearPreviousDeleted')
+      console.log('YAYAYA')
+      return
+    }
+
+    if (spotifyAPI.getAccessToken())
+      spotifyAPI.getTrack(trackId).then(addedTrack => {
+        store.commit('refreshPending', addedTrack)
+      })
+  })
+}
 
 const Queue = {
   state: {
@@ -195,30 +219,7 @@ const Queue = {
       })
     },
   },
-}
-
-function connect2FirebaseQueue(store) {
-  bindListener(normal_queue_ref, 'normal', store)
-  bindListener(urgent_queue_ref, 'urgent', store)
-  pending_queue_ref.on('value', snapshot => {
-    if (!snapshot.val()) {
-      store.commit('clearPendingQueue')
-      return
-    }
-
-    const trackId = snapshot.val().id
-    if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
-      store.commit('refreshPending', snapshot.val())
-      store.commit('clearPreviousDeleted')
-      console.log('YAYAYA')
-      return
-    }
-
-    if (spotifyAPI.getAccessToken())
-      spotifyAPI.getTrack(trackId).then(addedTrack => {
-        store.commit('refreshPending', addedTrack)
-      })
-  })
+  },
 }
 
 export { Queue, connect2FirebaseQueue }
