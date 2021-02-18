@@ -11,6 +11,8 @@ function bindListener(target, storeTarget, store) {
   })
   target.on('child_added', childSnapshot => {
     const trackId = childSnapshot.val().id
+    if (!store.getters.pending_queue) store.dispatch('sendNextQueue')
+
     if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
       store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack: store.getters.previousDeleted })
       store.commit('clearPreviousDeleted')
