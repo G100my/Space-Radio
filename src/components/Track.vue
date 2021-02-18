@@ -4,17 +4,17 @@
   </div>
   <div class="track-name-artist" :class="{ urgent: isUrgent, pending: isPending }">
     <p class="name">
-      <a :href="info.external_urls.spotify" target="_blank">{{ info.name }}</a>
+      <a :href="track.external_urls.spotify" target="_blank">{{ track.name }}</a>
     </p>
     <p class="artist">
-      <a v-for="artist in info.artists" :key="artist.name" :href="artist.external_urls.spotify" target="_blank">{{
+      <a v-for="artist in track.artists" :key="artist.name" :href="artist.external_urls.spotify" target="_blank">{{
         artist.name
       }}</a>
     </p>
   </div>
   <div class="track-album" :class="{ urgent: isUrgent, pending: isPending }">
     <p>
-      <a :href="info.album.external_urls.spotify" target="_blank">{{ info.album.name }}</a>
+      <a :href="track.album.external_urls.spotify" target="_blank">{{ track.album.name }}</a>
     </p>
   </div>
   <div class="track-time-data" :class="{ urgent: isUrgent, pending: isPending }">
@@ -30,6 +30,7 @@
   </div>
 </template>
 <script>
+import logo from '../assets/vinyl-record.png'
 export default {
   props: {
     info: {
@@ -45,21 +46,44 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      track: {
+        name: '',
+        album: {
+          images: [{ url: logo }],
+          release_date: '',
+          name: '',
+        },
+        duration_ms: 123,
+        external_urls: { spotify: '##' },
+        artists: [
+          {
+            external_urls: { spotify: '##' },
+            name: '',
+          },
+        ],
+      },
+    }
+  },
   computed: {
     coverUrl() {
-      const imagesArray = this.info.album.images
+      const imagesArray = this.track.album.images
       const imageLastObject = imagesArray[imagesArray.length - 1]
 
       return imageLastObject ? imageLastObject.url : null
     },
     release() {
-      return this.info.album.release_date.slice(0, -3)
+      return this.track.album.release_date.slice(0, -3)
     },
     durationTime() {
-      const m = Math.floor(this.info.duration_ms / 60000)
-      const s = Math.floor((this.info.duration_ms % 60000) / 1000)
+      const m = Math.floor(this.track.duration_ms / 60000)
+      const s = Math.floor((this.track.duration_ms % 60000) / 1000)
       return `${m}:${s}`
     },
+  },
+  created() {
+    this.track = this.info
   },
 }
 </script>
