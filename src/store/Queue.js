@@ -33,7 +33,7 @@ const Queue = {
   state: {
     normal_queue: {},
     urgent_queue: {},
-    pending_queue: {},
+    pending_queue: null,
     trackData: {},
     previousDeleted: null,
   },
@@ -46,6 +46,9 @@ const Queue = {
     },
     trackData(state) {
       return state.trackData
+    },
+    pendingQueue(state) {
+      return state.pending_queue
     },
     normalQueueKeys(state) {
       return Object.keys(state.normal_queue)
@@ -171,7 +174,8 @@ const Queue = {
         const normalQueneArray = Object.keys(state.normal_queue)
         if (normalQueneArray.length === 0) {
           console.warn('已經沒有任何點播了~~')
-          pending_queue_ref.set(false)
+          // set it 'false' to keep it exist
+          pending_queue_ref.set(null)
           return
         } else {
           nextQueueKey = normalQueneArray[0]
@@ -197,9 +201,7 @@ function connect2FirebaseQueue(store) {
   bindListener(normal_queue_ref, 'normal', store)
   bindListener(urgent_queue_ref, 'urgent', store)
   pending_queue_ref.on('value', snapshot => {
-    console.log(snapshot.val())
-
-    if (snapshot.val() === null) {
+    if (!snapshot.val()) {
       store.commit('clearPendingQueue')
       return
     }
