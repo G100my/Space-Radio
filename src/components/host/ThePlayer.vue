@@ -82,10 +82,15 @@ export default {
           return
         }
 
-        // 更改 playingState
+        // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
         if (state.track_window.current_track.id !== this.$store.getters.currentPlayingTrackId) {
           const playingState = state.track_window.current_track
           this.$store.dispatch('updatePlayingTrack', { playingState })
+
+          // 歌曲切換時、且只能一次的時機
+          if (state.position === 0) {
+            this.$store.dispatch('sendNextQueue')
+          }
         }
 
         if (this.hasNote2read) {
