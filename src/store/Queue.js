@@ -83,18 +83,10 @@ const Queue = {
     previousDeleted(state) {
       return state.previousDeleted
     },
-    nextQueueKey(state) {
+    leftQueueAmount(state) {
       const urgentQueueArray = Object.keys(state.urgent_queue)
-      if (urgentQueueArray.length === 0) {
-        const normalQueueArray = Object.keys(state.normal_queue)
-        if (normalQueueArray.length === 0) {
-          return null
-        } else {
-          return normalQueueArray[0]
-        }
-      } else {
-        return urgentQueueArray[0]
-      }
+      const normalQueueArray = Object.keys(state.normal_queue)
+      return urgentQueueArray.length + normalQueueArray.length
     },
     pendingNote(state) {
       return state.pending_queue ? state.pending_queue.note : null
