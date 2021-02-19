@@ -101,7 +101,8 @@ const Queue = {
     },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
       const queueKey = oldChildSnapshot.key
-      state.previousDeleted = state[`${storeTarget}_queue`][queueKey]
+      state.previousDeleted = state.trackData[queueKey]
+      delete state.trackData[queueKey]
       delete state[`${storeTarget}_queue`][queueKey]
     },
     addQueueTrack(state, { storeTarget, childSnapshot, addedTrack }) {
@@ -152,8 +153,8 @@ const Queue = {
       normal_queue_ref.child(queueKey).remove()
     },
 
-    urgent2normal(context, queueKey) {
-      const queue = { ...context.state.trackData[queueKey] }
+    urgent2normal({ state }, queueKey) {
+      const queue = { ...state.urgent_queue[queueKey] }
       queue.note = false
       const orderKey = queue.orderKey
 
@@ -168,8 +169,8 @@ const Queue = {
         })
     },
 
-    normal2urgent(context, { queueKey, note }) {
-      const queue = { ...context.state.trackData[queueKey] }
+    normal2urgent({ state }, { queueKey, note }) {
+      const queue = { ...state.normal_queue[queueKey] }
       queue.note = note
 
       normal_queue_ref
