@@ -82,10 +82,17 @@ export default {
           return
         }
 
+        const currentNoteId = state.track_window.current_track.id
+
         // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
-        if (state.track_window.current_track.id !== this.$store.getters.currentPlayingTrackId) {
+        if (currentNoteId !== this.$store.getters.currentPlayingTrackId) {
           const playingState = state.track_window.current_track
           this.$store.dispatch('updatePlayingTrack', { playingState })
+          // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
+          if (this.$store.getters.pendingQueue && this.$store.getters.pendingQueue.id === currentNoteId) {
+            this.$store.dispatch('previousPendingIsPlayed')
+          }
+        }
 
           // 歌曲切換時、且只能一次的時機
           if (state.position === 0) {
