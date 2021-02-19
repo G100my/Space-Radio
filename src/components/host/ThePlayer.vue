@@ -37,6 +37,7 @@ export default {
       device_id: null,
       name: 'jukebox',
       countDown: null,
+      sendNextQueueCoundDownTimer: null,
     }
   },
   computed: {
@@ -94,9 +95,16 @@ export default {
           }
         }
 
-          // 歌曲切換時、且只能一次的時機
-          if (state.position === 0) {
-            this.$store.dispatch('sendNextQueue')
+        // fixme 每次隨機狀態出現就刷新秒數，避免曲目被快轉，但又必須防止剛換曲目時極短時間內重複出現的狀態...
+        if (this.sendNextQueueCoundDownTimer !== null) clearTimeout(this.sendNextQueueCoundDownTimer)
+        if (state.position >= 1000 && !state.paused) {
+          // 歌曲結束前 30 秒執行，超過就...下一次XD
+          const timeout = state.duration - state.position - 30000
+          if (this.$store.getters.leftQueueAmount !== 0 && timeout > 0) {
+            this.sendNextQueueCoundDownTimer = setTimeout(() => {
+              console.log('準備下一首~')
+              this.$store.dispatch('sendNextQueue')
+            }, timeout)
           }
         }
 
