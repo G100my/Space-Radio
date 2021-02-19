@@ -114,11 +114,9 @@ export default {
           const bufferTimer = state.duration - state.position - this.executeBeforeEndTime
           if (bufferTimer < 1000) return
 
-          console.log('setTimeout', Date.now())
           if (this.countDown) clearTimeout(this.countDown)
-
           this.countDown = setTimeout(() => {
-            console.log('timeout!!!')
+            console.warn('廣播時間')
             this.$emit('activetts')
             this.countDown = null
           }, bufferTimer)
