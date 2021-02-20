@@ -1,19 +1,7 @@
 <template>
   <div>
-    <button type="button" @click="TTS">TTS</button>
-    <button type="button" @click="playerResumeVolume">playerResumeVolume</button>
-    <button type="button" @click="playQueue">playQueue</button>
-    <input v-model="currentVolume" type="range" step="0.1" min="0" max="1" />
-    <button type="button" @click="togglePlay">play</button>
-    <button type="button" @click="next">next</button>
-    <button type="button" @click="getCurrentState">getCurrentState</button>
-    <button type="button" @click="getVolume">getVolume</button>
-    <button type="button" @click="connect">connect</button>
+    <button type="button" @click="togglePlay">togglePlay</button>
     <button type="button" @click="activeThisDevice">activeThisDevice</button>
-    <label>
-      <span>Volume:</span>
-      <input type="range" min="0" max="1" step=".05" @input="setVolume" />
-    </label>
   </div>
 </template>
 <script>
@@ -23,14 +11,13 @@ export default {
     return {
       currentVolume: 1,
       recodeVolume: null,
-      targetVolume: 0.1,
+      minimalVolume: 0.1,
       executeBeforeEndTime: 10000,
-      adjustTotalTime: 5000,
+      adjustProcessTime: 5000,
       adjustStepTime: 100,
       utterance: new window.SpeechSynthesisUtterance(),
       player: null,
-      device_id: null,
-      name: 'jukebox',
+      deviceId: null,
       countDown: null,
       sendNextQueueCoundDownTimer: null,
     }
@@ -40,7 +27,7 @@ export default {
       return Boolean(this.currentNote)
     },
     adjustExecuteTimes() {
-      return this.adjustTotalTime / this.adjustStepTime
+      return this.adjustProcessTime / this.adjustStepTime
     },
     currentNote() {
       return this.$store.getters.pendingNote
@@ -60,26 +47,30 @@ export default {
     },
   },
   created() {
-    import('../../utility/spotify-player-SDK.js')
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
-        name: this.name,
+        name: 'Jukebox player',
         getOAuthToken: cb => {
           cb(this.$store.getters.token)
         },
       })
-      this.player.addListener('initialization_error', ({ message }) => {
-        console.error(message)
-      })
-      this.player.addListener('account_error', ({ message }) => {
-        console.error(message)
-      })
-      this.player.addListener('playback_error', ({ message }) => {
-        console.error(message)
+      const eventArray = [
+        'initialization_error',
+        'account_error',
+        'playback_error',
+        'authentication_error',
+        'not_ready',
+      ]
+      eventArray.forEach(event => {
+        this.player.addListener(event, message => {
+          console.log(message)
+        })
       })
 
-      this.player.addListener('authentication_error', ({ message }) => {
-        console.error(message)
+      // Ready
+      this.player.addListener('ready', ({ deviceId }) => {
+        console.log('Ready with Device ID', deviceId)
+        this.deviceId = deviceId
       })
 
       // Playback status updates
@@ -131,36 +122,20 @@ export default {
         }
       })
 
-      // Ready
-      this.player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id)
-        this.device_id = device_id
-      })
-
-      // Not Ready
-      this.player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id)
-      })
-
       this.player.connect()
     }
+
+    import('../../utility/spotify-player-SDK.js')
 
     this.utterance.pitch = 1
     this.utterance.rate = 1
     this.utterance.volume = 1
     this.utterance.lang = 'zh-TW'
-    this.utterance.onstart = () => {
-      console.log('utterance start')
-    }
     this.utterance.onend = () => {
       console.log('utterance end')
-      this.playerResumeVolume()
-    }
-    this.utterance.onerror = event => {
-      console.log('An error has occurred with the speech synthesis: ' + event.error)
+      this.resumePlayerVolume()
     }
     speechSynthesis.onvoiceschanged = () => {
-      console.log('onvoiceschanged')
       this.TTSsetVoice()
     }
   },
@@ -177,20 +152,20 @@ export default {
       this.utterance.text = this.currentNote.message
       speechSynthesis.speak(this.utterance)
     },
-    playerReduceVolume(callback) {
+    reducePlayerVolume(callback) {
       this.recodeVolume = this.currentVolume
 
-      const step = (this.currentVolume - this.targetVolume) / this.adjustExecuteTimes
+      const step = (this.currentVolume - this.minimalVolume) / this.adjustExecuteTimes
 
       const timer = setInterval(() => {
         this.currentVolume -= step
-        if (this.currentVolume < this.targetVolume) {
+        if (this.currentVolume < this.minimalVolume) {
           callback()
           clearInterval(timer)
         }
       }, this.adjustStepTime)
     },
-    playerResumeVolume() {
+    resumePlayerVolume() {
       const step = (this.recodeVolume - this.currentVolume) / this.adjustExecuteTimes
 
       const timer = setInterval(() => {
@@ -203,39 +178,15 @@ export default {
         }
       }, this.adjustStepTime)
     },
-    playWholeQueue() {
-      this.$spotifyAPI.play({ uris: this.$store.getters.getRoomQueueURIArray })
-    },
     togglePlay() {
-      this.player.togglePlay(this.device_id).then(() => console.log('toggle play'))
+      this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
     },
     next() {
       this.player.nextTrack().then(() => console.log('Skipped to next track!'))
     },
-    getCurrentState() {
-      this.player.getCurrentState().then(state => {
-        console.log('get Current State')
-        if (!state) {
-          console.error('User is not playing music through the Web Playback SDK')
-          return
-        }
-        console.table(state)
-      })
-    },
-    getVolume() {
-      this.player.getVolume().then(volume => console.log(volume))
-    },
-    setVolume(event) {
-      this.player.setVolume(event.target.value).then(() => {
-        console.log(event.target.value)
-      })
-    },
-    connect() {
-      this.player.connect().then(success => console.log(success))
-    },
     activeThisDevice() {
       if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.$store.getters.token)
-      this.$spotifyAPI.transferMyPlayback([this.device_id], { play: true }, error => {
+      this.$spotifyAPI.transferMyPlayback([this.deviceId], { play: true }, error => {
         error && console.log(error.response)
         if (!error && !this.$store.getters.pendingQueue) {
           setTimeout(() => {
