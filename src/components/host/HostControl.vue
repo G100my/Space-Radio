@@ -21,6 +21,7 @@ export default {
       coundDownTimer: null,
       positionStateCounter: 0,
       dislikeThreshold: 2,
+      dislikeCountDownTimer: null,
     }
   },
   computed: {
@@ -40,7 +41,23 @@ export default {
       console.log(newValue)
     },
     dislike(newValue) {
-      if (newValue >= this.dislikeThreshold) this.nextTrack()
+      if (this.dislikeCountDownTimer && newValue < this.dislikeThreshold) {
+        clearTimeout(this.dislikeCountDownTimer)
+        this.dislikeCountDownTimer = null
+      }
+      if (newValue >= this.dislikeThreshold) {
+        let counter = 10
+        this.dislikeCountDownTimer = setInterval(() => {
+          counter -= 1
+          // fixme
+          console.log(counter)
+          if (counter <= 0) {
+            this.nextTrack()
+            clearInterval(this.dislikeCountDownTimer)
+            this.dislikeCountDownTimer = null
+          }
+        }, 1000)
+      }
     },
   },
   created() {
