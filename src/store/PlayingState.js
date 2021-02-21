@@ -60,11 +60,13 @@ const PlayingState = {
     currentPlayingTrackName(state) {
       return state.info.track.name
     },
+    currentDislike(state) {
+      return state.dislike
+    },
   },
   mutations: {
     refreshPlayingSatae(state, infoObject) {
       state.info = infoObject
-      state.dislike = 0
     },
     adjustVolume(state, value) {
       state.volume = value
@@ -97,6 +99,10 @@ const PlayingState = {
         parameter[rootState.Personal.userId] = true
         playing_state_ref.child('votedUsers').update(parameter)
       }
+    },
+    clearDislikeVote() {
+      playing_state_ref.child('dislike').set(0)
+      playing_state_ref.child('votedUsers').set(null)
     },
     adjustIsVoted({ state, rootState }, snapshot) {
       state.isVoted = snapshot.hasChild(rootState.Personal.userId)
