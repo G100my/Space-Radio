@@ -214,8 +214,7 @@ const Queue = {
         }
       })
     },
-    previousPendingIsPlayed({ state, dispatch }) {
-      dispatch('updatePlayingQueue', state.pending_queue)
+    clearPendingQueue() {
       pending_queue_ref.set(null)
     },
   },

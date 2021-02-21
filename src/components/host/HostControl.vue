@@ -98,7 +98,7 @@ export default {
         if (playerState.position === 0) {
           // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
           if (this.$store.getters.pendingQueue && this.$store.getters.pendingQueue.id === currentNoteId) {
-            this.$store.dispatch('previousPendingIsPlayed')
+            this.$store.dispatch('clearPendingQueue')
           }
         }
 
