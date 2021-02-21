@@ -68,9 +68,9 @@ export default {
       })
 
       // Ready
-      this.player.addListener('ready', ({ deviceId }) => {
-        console.log('Ready with Device ID', deviceId)
-        this.deviceId = deviceId
+      this.player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id)
+        this.deviceId = device_id
       })
 
       // Playback status updates
