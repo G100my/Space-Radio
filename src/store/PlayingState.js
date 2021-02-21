@@ -60,6 +60,9 @@ const PlayingState = {
     currentPlayingTrackName(state) {
       return state.info.track.name
     },
+    currentVolume(state) {
+      return state.currentVolume
+    },
     currentDislike(state) {
       return state.dislike
     },
