@@ -135,7 +135,7 @@ export default {
       this.resumePlayerVolume()
     }
     speechSynthesis.onvoiceschanged = () => {
-      this.TTSsetVoice()
+      if (!this.utterance.voice) this.TTSsetVoice()
     }
   },
   methods: {
@@ -146,7 +146,6 @@ export default {
       if (voice !== null) this.utterance.voice = voice
     },
     TTS() {
-      console.log(this.utterance)
       if (this.utterance.voice === null) this.TTSsetVoice()
       this.utterance.text = this.currentNote.message
       speechSynthesis.speak(this.utterance)
