@@ -118,9 +118,6 @@ const PlayingState = {
       }
       playing_state_ref.child('info/track').set(track)
     },
-    updatePlayingQueue(_context, queue) {
-      playing_state_ref.child('info/queue').set(queue)
-    },
     clearPlayingTrack() {
       playing_state_ref.child('info').update({ track: initialTrack, queue: initialQueue })
     },
