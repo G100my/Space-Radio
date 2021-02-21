@@ -117,7 +117,7 @@ export default {
                   note.recipient.trim() === '' ? '所有人' : note.recipient
                 } ${note.message}`
 
-                this.reducePlayerVolume(() => {
+                this.reducePlayerVolume().then(() => {
                   this.TTS(messageOutput)
                 })
               }
@@ -159,7 +159,8 @@ export default {
       this.utterance.text = text
       speechSynthesis.speak(this.utterance)
     },
-    reducePlayerVolume(callback) {
+    reducePlayerVolume() {
+      return new Promise(success => {
       this.recodeVolume = this.currentVolume
 
       const step = (this.currentVolume - this.minimalVolume) / this.adjustExecuteTimes
@@ -167,14 +168,16 @@ export default {
       const timer = setInterval(() => {
         const afterStep = this.currentVolume - step
         if (afterStep < this.minimalVolume) {
-          callback && callback()
           clearInterval(timer)
+          success()
           return
         }
         this.currentVolume = afterStep
       }, this.adjustStepTime)
+      })
     },
-    resumePlayerVolume(callback) {
+    resumePlayerVolume() {
+      return new Promise(success => {
       const step = (this.recodeVolume - this.currentVolume) / this.adjustExecuteTimes
 
       const timer = setInterval(() => {
@@ -183,11 +186,12 @@ export default {
           clearInterval(timer)
           this.currentVolume = this.recodeVolume
           this.recodeVolume = null
-          callback && callback()
+          success()
           return
         }
         this.currentVolume = afterStep
       }, this.adjustStepTime)
+      })
     },
     togglePlay() {
       this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
@@ -198,16 +202,16 @@ export default {
       this.minimalVolume = 0
       this.adjustProcessTime = 2000
 
-      this.reducePlayerVolume(() => {
+      this.reducePlayerVolume().then(()=>{
         this.player.nextTrack().then(() => {
           console.log('Skipped to next track!')
-          this.resumePlayerVolume(() => {
+          this.resumePlayerVolume().then(() => {
             this.minimalVolume = minimalVolumeBackup
             this.adjustProcessTime = adjustProcessTimeBackup
           })
         })
-      })
-    },
+        }
+      )},
     activeThisDevice() {
       if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.$store.getters.token)
       this.$spotifyAPI.transferMyPlayback([this.deviceId], { play: true }, error => {
