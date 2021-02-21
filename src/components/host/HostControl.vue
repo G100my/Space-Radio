@@ -173,7 +173,7 @@ export default {
         }
       }, this.adjustStepTime)
     },
-    resumePlayerVolume() {
+    resumePlayerVolume(callback) {
       const step = (this.recodeVolume - this.currentVolume) / this.adjustExecuteTimes
 
       const timer = setInterval(() => {
@@ -183,14 +183,29 @@ export default {
           clearInterval(timer)
           this.currentVolume = this.recodeVolume
           this.recodeVolume = null
+          callback && callback()
         }
       }, this.adjustStepTime)
     },
     togglePlay() {
       this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
     },
-    next() {
-      this.player.nextTrack().then(() => console.log('Skipped to next track!'))
+    nextTrack() {
+      const minimalVolumeBackup = this.minimalVolume
+      const adjustProcessTimeBackup = this.adjustProcessTime
+      this.minimalVolume = 0
+      this.adjustProcessTime = 2000
+
+      this.reducePlayerVolume(
+        this.player.nextTrack().then(() => {
+          console.log('Skipped to next track!')
+          this.resumePlayerVolume(() => {
+            this.minimalVolume = minimalVolumeBackup
+            this.adjustProcessTime = adjustProcessTimeBackup
+          })
+        })
+      )
+    },
     },
     activeThisDevice() {
       if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.$store.getters.token)
