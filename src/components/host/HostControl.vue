@@ -2,6 +2,14 @@
   <div>
     <button type="button" @click="togglePlay">togglePlay</button>
     <button type="button" @click="activeThisDevice">activeThisDevice</button>
+    <input
+      type="range"
+      :value="$store.getters.minimalValue"
+      step="0.05"
+      min="0"
+      max="1"
+      @change="$store.dispatch('updateMinimalVolume', $event.target.value)"
+    />
   </div>
 </template>
 <script>
@@ -11,7 +19,7 @@ export default {
     return {
       playerVolume: 0.5,
       recodeVolume: null,
-      minimalVolume: 0.1,
+      minimalVolume: this.$store.getters.minimalVolume,
       executeBeforeEndTime: 10000,
       adjustProcessTime: 5000,
       adjustStepTime: 100,
