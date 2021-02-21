@@ -165,25 +165,28 @@ export default {
       const step = (this.currentVolume - this.minimalVolume) / this.adjustExecuteTimes
 
       const timer = setInterval(() => {
-        this.currentVolume -= step
-        if (this.currentVolume < this.minimalVolume) {
+        const afterStep = this.currentVolume - step
+        if (afterStep < this.minimalVolume) {
           callback && callback()
           clearInterval(timer)
+          return
         }
+        this.currentVolume = afterStep
       }, this.adjustStepTime)
     },
     resumePlayerVolume(callback) {
       const step = (this.recodeVolume - this.currentVolume) / this.adjustExecuteTimes
 
       const timer = setInterval(() => {
-        this.currentVolume += step
-
-        if (this.currentVolume + step > this.recodeVolume) {
+        const afterStep = this.currentVolume + step
+        if (afterStep > this.recodeVolume) {
           clearInterval(timer)
           this.currentVolume = this.recodeVolume
           this.recodeVolume = null
           callback && callback()
+          return
         }
+        this.currentVolume = afterStep
       }, this.adjustStepTime)
     },
     togglePlay() {
@@ -204,7 +207,6 @@ export default {
           })
         })
       })
-    },
     },
     activeThisDevice() {
       if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.$store.getters.token)
