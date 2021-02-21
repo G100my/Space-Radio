@@ -73,6 +73,16 @@ export default {
         this.deviceId = device_id
       })
 
+      // 避免中途重啟 pending 會一直常駐，直到下一首歌曲取代目前的 pending
+      const checkPending = state => {
+        if (this.$store.getters.pendingQueue) {
+          if (state.track_window.next_tracks[0].id !== this.$store.getters.pendingQueue.id)
+            this.$store.dispatch('clearPendingQueue')
+        }
+        this.player.removeListener('player_state_changed', checkPending)
+      }
+      this.player.addListener('player_state_changed', checkPending)
+
       // Playback status updates
       this.player.addListener('player_state_changed', playerState => {
         console.log(playerState)
