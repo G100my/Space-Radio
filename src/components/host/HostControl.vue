@@ -18,8 +18,8 @@ export default {
       utterance: new window.SpeechSynthesisUtterance(),
       player: null,
       deviceId: null,
-      countDown: null,
-      sendNextQueueCoundDownTimer: null,
+      coundDownTimer: null,
+      lastTimestamp: null,
     }
   },
   computed: {
@@ -88,37 +88,36 @@ export default {
         if (currentNoteId !== this.$store.getters.currentPlayingTrackId) {
           const playingState = playerState.track_window.current_track
           this.$store.dispatch('updatePlayingTrack', { playingState })
+        }
+
+        // 避免極短時間內發出的 playerState
+        if (this.lastTimestamp && this.lastTimestamp + 1500 > playerState.timestamp) return
+
+        this.lastTimestamp = playerState.timestamp
+
+        if (playerState.position === 0) {
           // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
           if (this.$store.getters.pendingQueue && this.$store.getters.pendingQueue.id === currentNoteId) {
             this.$store.dispatch('previousPendingIsPlayed')
           }
         }
 
-        // fixme 每次隨機狀態出現就刷新秒數，避免曲目被快轉，但又必須防止剛換曲目時極短時間內重複出現的狀態...
-        if (this.sendNextQueueCoundDownTimer !== null) clearTimeout(this.sendNextQueueCoundDownTimer)
-        if (playerState.position >= 1000 && !playerState.paused) {
-          // 歌曲結束前 30 秒執行，超過就...下一次XD
-          const timeout = playerState.duration - playerState.position - 30000
-          if (this.$store.getters.leftQueueAmount !== 0 && timeout > 0) {
-            this.sendNextQueueCoundDownTimer = setTimeout(() => {
+        // 每次隨機狀態出現就刷新秒數，避免曲目被快轉
+        if (this.coundDownTimer) clearTimeout(this.coundDownTimer)
+
+        if (!playerState.paused) {
+          const bufferTime = playerState.duration - playerState.position - this.executeBeforeEndTime
+
+          // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
+          if (this.$store.getters.leftQueueAmount > 0 && bufferTime > 0) {
+            this.coundDownTimer = setTimeout(() => {
               console.log('準備下一首~')
               this.$store.dispatch('sendNextQueue')
-            }, timeout)
+
+              // 如果有 note 插入 TTS
+              this.hasNote2read && this.reduceVolume(this.TTS)
+            }, bufferTime)
           }
-        }
-
-        if (this.hasNote2read) {
-          if (playerState.position == 0) return
-
-          const bufferTimer = playerState.duration - playerState.position - this.executeBeforeEndTime
-          if (bufferTimer < 1000) return
-
-          if (this.countDown) clearTimeout(this.countDown)
-          this.countDown = setTimeout(() => {
-            console.warn('廣播時間')
-            this.reduceVolume(this.tts)
-            this.countDown = null
-          }, bufferTimer)
         }
       })
 
