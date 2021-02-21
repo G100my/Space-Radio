@@ -13,7 +13,7 @@
         <p>Release Time</p>
       </div>
       <div class="table-header track-feature">Feature</div>
-      <Track v-if="pendingQueue" :info="pendingQueue" :is-pending="true" />
+      <Track v-if="pendingQueue" :info="trackData['pending']" :is-pending="true" />
       <Track v-for="queueKey in urgentQueueKeys" :key="queueKey" :info="trackData[queueKey]" :is-urgent="true">
         <div class="feature-buttons">
           <button class="remove-button" type="button" @click="remove(queueKey, 'urgent')">
