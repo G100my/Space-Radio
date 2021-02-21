@@ -20,6 +20,7 @@ export default {
       deviceId: null,
       coundDownTimer: null,
       positionStateCounter: 0,
+      dislikeThreshold: 2,
     }
   },
   computed: {
@@ -29,11 +30,17 @@ export default {
     pendingQueue() {
       return this.$store.getters.pendingQueue
     },
+    dislike() {
+      return this.$store.getters.currentDislike
+    },
   },
   watch: {
     currentVolume(newValue) {
       this.player.setVolume(newValue)
       console.log(newValue)
+    },
+    dislike(newValue) {
+      if (newValue >= this.dislikeThreshold) this.nextTrack()
     },
   },
   created() {
