@@ -161,36 +161,36 @@ export default {
     },
     reducePlayerVolume() {
       return new Promise(success => {
-      this.recodeVolume = this.currentVolume
+        this.recodeVolume = this.currentVolume
 
-      const step = (this.currentVolume - this.minimalVolume) / this.adjustExecuteTimes
+        const step = (this.currentVolume - this.minimalVolume) / this.adjustExecuteTimes
 
-      const timer = setInterval(() => {
-        const afterStep = this.currentVolume - step
-        if (afterStep < this.minimalVolume) {
-          clearInterval(timer)
-          success()
-          return
-        }
-        this.currentVolume = afterStep
-      }, this.adjustStepTime)
+        const timer = setInterval(() => {
+          const afterStep = this.currentVolume - step
+          if (afterStep < this.minimalVolume) {
+            clearInterval(timer)
+            success()
+            return
+          }
+          this.currentVolume = afterStep
+        }, this.adjustStepTime)
       })
     },
     resumePlayerVolume() {
       return new Promise(success => {
-      const step = (this.recodeVolume - this.currentVolume) / this.adjustExecuteTimes
+        const step = (this.recodeVolume - this.currentVolume) / this.adjustExecuteTimes
 
-      const timer = setInterval(() => {
-        const afterStep = this.currentVolume + step
-        if (afterStep > this.recodeVolume) {
-          clearInterval(timer)
-          this.currentVolume = this.recodeVolume
-          this.recodeVolume = null
-          success()
-          return
-        }
-        this.currentVolume = afterStep
-      }, this.adjustStepTime)
+        const timer = setInterval(() => {
+          const afterStep = this.currentVolume + step
+          if (afterStep > this.recodeVolume) {
+            clearInterval(timer)
+            this.currentVolume = this.recodeVolume
+            this.recodeVolume = null
+            success()
+            return
+          }
+          this.currentVolume = afterStep
+        }, this.adjustStepTime)
       })
     },
     togglePlay() {
@@ -202,7 +202,7 @@ export default {
       this.minimalVolume = 0
       this.adjustProcessTime = 2000
 
-      this.reducePlayerVolume().then(()=>{
+      this.reducePlayerVolume().then(() => {
         this.player.nextTrack().then(() => {
           console.log('Skipped to next track!')
           this.resumePlayerVolume().then(() => {
@@ -210,8 +210,8 @@ export default {
             this.adjustProcessTime = adjustProcessTimeBackup
           })
         })
-        }
-      )},
+      })
+    },
     activeThisDevice() {
       if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.$store.getters.token)
       this.$spotifyAPI.transferMyPlayback([this.deviceId], { play: true }, error => {
