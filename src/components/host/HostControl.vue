@@ -167,7 +167,7 @@ export default {
       const timer = setInterval(() => {
         this.currentVolume -= step
         if (this.currentVolume < this.minimalVolume) {
-          callback()
+          callback && callback()
           clearInterval(timer)
         }
       }, this.adjustStepTime)
@@ -195,7 +195,7 @@ export default {
       this.minimalVolume = 0
       this.adjustProcessTime = 2000
 
-      this.reducePlayerVolume(
+      this.reducePlayerVolume(() => {
         this.player.nextTrack().then(() => {
           console.log('Skipped to next track!')
           this.resumePlayerVolume(() => {
@@ -203,7 +203,7 @@ export default {
             this.adjustProcessTime = adjustProcessTimeBackup
           })
         })
-      )
+      })
     },
     },
     activeThisDevice() {
