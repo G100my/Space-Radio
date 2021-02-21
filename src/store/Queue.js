@@ -44,11 +44,10 @@ function connect2FirebaseQueue(store) {
       store.commit('clearPreviousDeleted')
       console.log('YAYAYA')
       return
-    }
-
-    if (spotifyAPI.getAccessToken())
+    } else if (spotifyAPI.getAccessToken())
       spotifyAPI.getTrack(trackId).then(addedTrack => {
-        store.commit('refreshPending', addedTrack)
+        store.state[`pending_queue`] = snapshot.val()
+        store.state.Queue.trackData['pending'] = addedTrack
       })
   })
 }
@@ -187,7 +186,7 @@ const Queue = {
     normalEdit(_context, { queueKey, note }) {
       normal_queue_ref.child(queueKey).update({ note })
     },
-    sendNextQueue({ state, dispatch }) {
+    sendNextQueue({ state }) {
       const urgentQueueArray = Object.keys(state.urgent_queue)
       let nextQueueKey, level
       if (urgentQueueArray.length === 0) {
@@ -209,8 +208,15 @@ const Queue = {
       spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextQueueKey].id}`, error => {
         error && console.log(error)
         if (!error) {
-          pending_queue_ref.set(state[`${level}_queue`][nextQueueKey])
-          dispatch(`${level}Remove`, nextQueueKey)
+          const queue = state[`${level}_queue`][nextQueueKey]
+          firebase
+            .database()
+            .ref(`${level}_queue`)
+            .child(nextQueueKey)
+            .remove()
+            .then(() => {
+              pending_queue_ref.set(queue)
+            })
         }
       })
     },
