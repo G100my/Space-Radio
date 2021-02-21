@@ -19,7 +19,7 @@ export default {
       player: null,
       deviceId: null,
       coundDownTimer: null,
-      lastPositionTimestamp: null,
+      positionStateCounter: 0,
     }
   },
   computed: {
@@ -90,13 +90,17 @@ export default {
           this.$store.dispatch('updatePlayingTrack', { playingState })
         }
 
-        // 避免極短時間內發出的 playerState
         if (playerState.position === 0) {
-          if (this.lastPositionTimestamp && this.lastPositionTimestamp + 100 > playerState.timestamp) return
-          this.lastPositionTimestamp = playerState.timestamp
-          // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
-          if (this.$store.getters.pendingQueue && this.$store.getters.pendingQueue.id === currentNoteId) {
-            this.$store.dispatch('clearPendingQueue')
+          this.positionStateCounter++
+          if (this.positionStateCounter >= 2) {
+            this.positionStateCounter = 0
+
+            this.$store.dispatch('clearDislikeVote')
+
+            // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
+            if (this.$store.getters.pendingQueue && this.$store.getters.pendingQueue.id === currentNoteId) {
+              this.$store.dispatch('clearPendingQueue')
+            }
           }
         }
 
