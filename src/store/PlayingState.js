@@ -39,7 +39,7 @@ const initialQueue = {
 const PlayingState = {
   state: {
     volume: 0.3,
-    minVolume: 0.2,
+    minimalVolume: 0.2,
     dislike: 0,
     isVoted: false,
     info: {
@@ -60,6 +60,9 @@ const PlayingState = {
     currentPlayingTrackName(state) {
       return state.info.track.name
     },
+    minimalVolume(state) {
+      return state.minimalVolume
+    },
     currentVolume(state) {
       return state.currentVolume
     },
@@ -77,6 +80,9 @@ const PlayingState = {
     adjustDislike(state, value) {
       state.dislike = value
     },
+    adjustMinimalVolume(state, value) {
+      state.minimalVolume = value
+    },
   },
   actions: {
     turnUp({ state }) {
@@ -85,7 +91,7 @@ const PlayingState = {
     },
     turnDown({ state }) {
       const reduceResult = state.volume - volumeStep
-      if (reduceResult >= state.minVolume) playing_state_ref.update({ volume: reduceResult })
+      if (reduceResult >= state.minimalVolume) playing_state_ref.update({ volume: reduceResult })
     },
     reduceDislike({ state, rootState }) {
       const reduceResult = state.dislike - 1
@@ -129,6 +135,9 @@ const PlayingState = {
     },
     clearPlayingTrack() {
       playing_state_ref.child('info').update({ track: initialTrack, queue: initialQueue })
+    },
+    updateMinimalVolume(_context, value) {
+      playing_state_ref.child('minimalValume').set(value)
     },
   },
 }
