@@ -75,6 +75,9 @@ export default {
     },
   },
   created() {
+    window.onbeforeunload = () => {
+      this.$store.dispatch('clearPlayingTrack')
+    }
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
         name: 'Jukebox player',
