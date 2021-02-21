@@ -9,7 +9,7 @@
 export default {
   data() {
     return {
-      currentVolume: 1,
+      playerVolume: 0.5,
       recodeVolume: null,
       minimalVolume: 0.1,
       executeBeforeEndTime: 10000,
@@ -25,6 +25,9 @@ export default {
     }
   },
   computed: {
+    currentVolume() {
+      return this.$store.getters.currentVolume
+    },
     adjustExecuteTimes() {
       return this.adjustProcessTime / this.adjustStepTime
     },
@@ -36,9 +39,12 @@ export default {
     },
   },
   watch: {
-    currentVolume(newValue) {
+    playerVolume(newValue) {
       this.player.setVolume(newValue)
       console.log(newValue)
+    },
+    currentVolume(newValue) {
+      this.playerVolume = newValue
     },
     dislike(newValue) {
       if (this.dislikeCountDownTimer && newValue < this.dislikeThreshold) {
