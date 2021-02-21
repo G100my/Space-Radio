@@ -74,19 +74,19 @@ export default {
       })
 
       // Playback status updates
-      this.player.addListener('player_state_changed', state => {
-        console.log(state)
+      this.player.addListener('player_state_changed', playerState => {
+        console.log(playerState)
         // 斷開連結
-        if (state === null) {
+        if (playerState === null) {
           this.$store.dispatch('clearPlayingTrack')
           return
         }
 
-        const currentNoteId = state.track_window.current_track.id
+        const currentNoteId = playerState.track_window.current_track.id
 
         // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
         if (currentNoteId !== this.$store.getters.currentPlayingTrackId) {
-          const playingState = state.track_window.current_track
+          const playingState = playerState.track_window.current_track
           this.$store.dispatch('updatePlayingTrack', { playingState })
           // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
           if (this.$store.getters.pendingQueue && this.$store.getters.pendingQueue.id === currentNoteId) {
@@ -96,9 +96,9 @@ export default {
 
         // fixme 每次隨機狀態出現就刷新秒數，避免曲目被快轉，但又必須防止剛換曲目時極短時間內重複出現的狀態...
         if (this.sendNextQueueCoundDownTimer !== null) clearTimeout(this.sendNextQueueCoundDownTimer)
-        if (state.position >= 1000 && !state.paused) {
+        if (playerState.position >= 1000 && !playerState.paused) {
           // 歌曲結束前 30 秒執行，超過就...下一次XD
-          const timeout = state.duration - state.position - 30000
+          const timeout = playerState.duration - playerState.position - 30000
           if (this.$store.getters.leftQueueAmount !== 0 && timeout > 0) {
             this.sendNextQueueCoundDownTimer = setTimeout(() => {
               console.log('準備下一首~')
@@ -108,9 +108,9 @@ export default {
         }
 
         if (this.hasNote2read) {
-          if (state.position == 0) return
+          if (playerState.position == 0) return
 
-          const bufferTimer = state.duration - state.position - this.executeBeforeEndTime
+          const bufferTimer = playerState.duration - playerState.position - this.executeBeforeEndTime
           if (bufferTimer < 1000) return
 
           if (this.countDown) clearTimeout(this.countDown)
