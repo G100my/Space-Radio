@@ -204,15 +204,25 @@ export default {
       const minimalVolumeBackup = this.minimalVolume
       const adjustProcessTimeBackup = this.adjustProcessTime
       this.minimalVolume = 0
-      this.adjustProcessTime = 2000
+      this.adjustProcessTime = 3000
 
-      this.reducePlayerVolume().then(() => {
-        this.player.nextTrack().then(() => {
-          console.log('Skipped to next track!')
+      let counter = 0
+      const secondPositionStateHandler = ({ position }) => {
+        if (position === 0) counter++
+        // 觀察 state 行為，第二次 position == 0 的 state 發生後才會撥放
+        if (counter >= 2) {
+          this.player.removeListener('player_state_changed', secondPositionStateHandler)
           this.resumePlayerVolume().then(() => {
             this.minimalVolume = minimalVolumeBackup
             this.adjustProcessTime = adjustProcessTimeBackup
           })
+        }
+      }
+
+      this.reducePlayerVolume().then(() => {
+        this.player.nextTrack().then(() => {
+          console.log('Skipped to next track!')
+          this.player.addListener('player_state_changed', secondPositionStateHandler)
         })
       })
     },
