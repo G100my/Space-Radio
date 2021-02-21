@@ -19,25 +19,15 @@ export default {
       player: null,
       deviceId: null,
       coundDownTimer: null,
-      lastTimestamp: null,
+      lastPositionTimestamp: null,
     }
   },
   computed: {
-    hasNote2read() {
-      return Boolean(this.currentNote)
-    },
     adjustExecuteTimes() {
       return this.adjustProcessTime / this.adjustStepTime
     },
-    currentNote() {
-      return this.$store.getters.pendingNote
-    },
-    messageOutput() {
-      if (!this.currentNote) return '一袋米扛幾樓'
-
-      return `${this.currentNote.sender} 插播一首 ${this.currentNote.trackName} 給 ${
-        this.currentNote.recipient.trim() === '' ? '所有人' : this.currentNote.recipient
-      } ${this.currentNote.message}`
+    pendingQueue() {
+      return this.$store.getters.pendingQueue
     },
   },
   watch: {
@@ -101,11 +91,9 @@ export default {
         }
 
         // 避免極短時間內發出的 playerState
-        if (this.lastTimestamp && this.lastTimestamp + 1500 > playerState.timestamp) return
-
-        this.lastTimestamp = playerState.timestamp
-
         if (playerState.position === 0) {
+          if (this.lastPositionTimestamp && this.lastPositionTimestamp + 100 > playerState.timestamp) return
+          this.lastPositionTimestamp = playerState.timestamp
           // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
           if (this.$store.getters.pendingQueue && this.$store.getters.pendingQueue.id === currentNoteId) {
             this.$store.dispatch('clearPendingQueue')
@@ -119,13 +107,24 @@ export default {
           const bufferTime = playerState.duration - playerState.position - this.executeBeforeEndTime
 
           // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
-          if (this.$store.getters.leftQueueAmount > 0 && bufferTime > 0) {
+          if (bufferTime > 0) {
             this.coundDownTimer = setTimeout(() => {
-              console.log('準備下一首~')
-              this.$store.dispatch('sendNextQueue')
-
+              console.log('active coundDownTimer')
               // 如果有 note 插入 TTS
-              this.hasNote2read && this.reduceVolume(this.TTS)
+              if (this.pendingQueue && this.pendingQueue.note) {
+                const note = this.pendingQueue.note
+                const messageOutput = `${note.sender} 插播一首 ${this.$store.getters.trackData['pending'].name}} 給 ${
+                  note.recipient.trim() === '' ? '所有人' : note.recipient
+                } ${note.message}`
+
+                this.reducePlayerVolume(() => {
+                  this.TTS(messageOutput)
+                })
+              }
+
+              if (this.$store.getters.leftQueueAmount > 0) {
+                this.$store.dispatch('sendNextQueue')
+              }
             }, bufferTime)
           }
         }
