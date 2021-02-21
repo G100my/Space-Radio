@@ -145,19 +145,19 @@ export default {
       this.resumePlayerVolume()
     }
     speechSynthesis.onvoiceschanged = () => {
-      if (!this.utterance.voice) this.TTSsetVoice()
+      if (!this.utterance.voice) this.setTTSVoice()
     }
   },
   methods: {
-    TTSsetVoice() {
+    setTTSVoice() {
       const voice = speechSynthesis
         .getVoices()
         .find(item => item.name.includes('Google') && item.lang.includes('zh-TW'))
       if (voice !== null) this.utterance.voice = voice
     },
-    TTS() {
-      if (this.utterance.voice === null) this.TTSsetVoice()
-      this.utterance.text = this.currentNote.message
+    TTS(text) {
+      if (this.utterance.voice === null) this.setTTSVoice()
+      this.utterance.text = text
       speechSynthesis.speak(this.utterance)
     },
     reducePlayerVolume(callback) {
