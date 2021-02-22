@@ -88,8 +88,6 @@ export default {
 </script>
 <style lang="scss">
 .playing-state {
-  padding: 35px 20px 15px;
-  box-sizing: border-box;
   h1 {
     display: flex;
     align-items: center;
@@ -102,7 +100,6 @@ export default {
     }
   }
   .track-info {
-    margin-top: 30px;
     text-align: center;
   }
   .description {
@@ -136,17 +133,16 @@ export default {
     }
   }
 
+  .track-info,
+  .control-board {
+    margin: 20px 30px;
+  }
   .control-board {
     margin-top: 20px;
   }
   .terminate-control,
   .collect {
     margin-top: 15px;
-  }
-  .volumn-control,
-  .collect,
-  .terminate-control {
-    padding: 0 30px;
   }
   .volumn-control {
     display: flex;

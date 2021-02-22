@@ -168,9 +168,13 @@ export default {
       flex: 1;
     }
   }
-  .sidebar > div {
-    overflow-y: auto;
-    height: 100%;
+  .sidebar {
+    padding: 25px 20px 15px;
+    box-sizing: border-box;
+    > div {
+      overflow-y: auto;
+      height: 100%;
+    }
   }
 
   nav {
