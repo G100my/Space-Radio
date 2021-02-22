@@ -71,7 +71,11 @@ export default {
   },
   methods: {
     remove(queueKey, level) {
-      this.$store.dispatch(`${level}Remove`, queueKey)
+      this.$store.dispatch(`${level}Remove`, {
+        queueKey,
+        id: this.trackData[queueKey].id,
+        trackName: this.trackData[queueKey].name,
+      })
     },
     editNote(queueKey) {
       const trackName = this.trackData[queueKey].name
@@ -81,12 +85,21 @@ export default {
       this.$emit('activeNoteDialog', { queueKey, trackName, submitFunction })
     },
     urgent2normal(queueKey) {
-      this.$store.dispatch('urgent2normal', queueKey)
+      this.$store.dispatch('urgent2normal', {
+        queueKey,
+        id: this.trackData[queueKey].id,
+        trackName: this.trackData[queueKey].name,
+      })
     },
     normal2urgent(queueKey) {
       const trackName = this.trackData[queueKey].name
       const submitFunction = newNote => {
-        this.$store.dispatch('normal2urgent', { queueKey, note: newNote })
+        this.$store.dispatch('normal2urgent', {
+          queueKey,
+          note: newNote,
+          id: this.trackData[queueKey].id,
+          trackName,
+        })
       }
       this.$emit('activeNoteDialog', { queueKey, trackName, submitFunction })
     },

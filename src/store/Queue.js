@@ -145,14 +145,14 @@ const Queue = {
         orderKey,
       })
     },
-    urgentRemove(_context, queueKey) {
+    urgentRemove(_context, { queueKey }) {
       urgent_queue_ref.child(queueKey).remove()
     },
-    normalRemove(_context, queueKey) {
+    normalRemove(_context, { queueKey }) {
       normal_queue_ref.child(queueKey).remove()
     },
 
-    urgent2normal({ state }, queueKey) {
+    urgent2normal({ state }, { queueKey }) {
       const queue = { ...state.urgent_queue[queueKey] }
       queue.note = false
       const orderKey = queue.orderKey
