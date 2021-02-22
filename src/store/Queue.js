@@ -183,9 +183,6 @@ const Queue = {
     urgentEdit(_context, { queueKey, note }) {
       urgent_queue_ref.child(queueKey).update({ note })
     },
-    normalEdit(_context, { queueKey, note }) {
-      normal_queue_ref.child(queueKey).update({ note })
-    },
     sendNextQueue({ state }) {
       const urgentQueueArray = Object.keys(state.urgent_queue)
       let nextQueueKey, level
