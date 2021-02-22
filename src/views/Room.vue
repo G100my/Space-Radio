@@ -66,7 +66,6 @@ export default {
     if (!this.$spotifyAPI.getAccessToken()) {
       this.$spotifyAPI.setAccessToken(this.$store.getters.token)
     }
-    console.log(this.$store.getters.userId)
     if (this.$store.getters.userId === 'zhangLo') {
       this.hostToggler = 'HostControl'
     }

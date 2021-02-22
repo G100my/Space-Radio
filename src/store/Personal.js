@@ -1,5 +1,3 @@
-import { spotifyAPI } from '../plugin/spotify-web-api.js'
-
 const Personal = {
   state: {
     userId: 'zhangLo',

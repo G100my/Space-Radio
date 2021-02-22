@@ -150,11 +150,9 @@ function playingStateFirebasePlugin(store) {
     store.commit('refreshPlayingSatae', snapshot.val())
   })
   playing_state_ref.child('dislike').on('value', snapshot => {
-    console.log('dislike', snapshot.val())
     store.commit('adjustDislike', snapshot.val())
   })
   playing_state_ref.child('votedUsers').on('value', snapshot => {
-    console.log('votedUsers', snapshot)
     store.dispatch('adjustIsVoted', snapshot)
   })
 }
