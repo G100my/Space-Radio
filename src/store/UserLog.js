@@ -14,29 +14,71 @@ const UserLog = {
       },
     ],
   },
+  getters: {
+    userLog(state) {
+      return state.log
+    },
+  },
+  mutations: {
+    pushUserLog(state, snapshot) {
+      const logLength = state.log.unshift(snapshot)
+      if (logLength > 3) state.log.pop()
+    },
+  },
 }
-
-const verbMaker = storeTarget => (storeTarget === 'urgent' ? '插' : '點')
 
 function userLogFirebasePlugin(store) {
   const userId = store.getters.userId
 
-  const mutationHandlers = {
-    addQueueTrack({ payload }) {
-      const { storeTarget, addedTrack } = payload
-      const verb = verbMaker(storeTarget)
-      const { name: trackName, id: trackId } = addedTrack
-
-      const message = `${userId} ${verb}播了 ${trackName}`
-      return { option: trackId, message }
+  const afterHandlers = {
+    add({ payload }) {
+      const { id, trackName } = payload
+      const message = `${userId} 點播了 ${trackName}`
+      return { option: id, message }
     },
-    deleteQueueTrack({ payload }) {
-      const { storeTarget } = payload
-      const position = verbMaker(storeTarget)
-      const { name: trackName, id: trackId } = store.getters.previousDeleted
-
-      const message = `${userId} 從${position}播序列中移除 ${trackName}`
-      return { option: trackId, message }
+    jumpIn({ payload }) {
+      const { id, trackName } = payload
+      const message = `${userId} 插播了 ${trackName}`
+      return { option: id, message }
+    },
+    normalRemove({ payload }) {
+      const { id, trackName } = payload
+      const message = `${userId} 從點播序列移除了 ${trackName}`
+      return { option: id, message }
+    },
+    urgentRemove({ payload }) {
+      const { id, trackName } = payload
+      const message = `${userId} 從插播序列移除了 ${trackName}`
+      return { option: id, message }
+    },
+    normal2urgent({ payload }) {
+      const { id, trackName } = payload
+      const message = `${userId} 把 ${trackName} 從點播序列移到插播序列`
+      return { option: id, message }
+    },
+    urgent2normal({ payload }) {
+      const { id, trackName } = payload
+      const message = `${userId} 把 ${trackName} 從插播序列移到點播序列`
+      return { option: id, message }
+    },
+    // ====
+    turnUp(_action, state) {
+      const volume = state.PlayingState.volume
+      const message = `${userId} 調高音量: ${volume}`
+      return { option: volume, message }
+    },
+    turnDown(_action, state) {
+      const volume = state.PlayingState.volume
+      const message = `${userId} 調低音量: ${volume}`
+      return { option: volume, message }
+    },
+    reduceDislike(_action, state) {
+      const id = state.PlayingState.info.track.id
+      return { option: id, message: false }
+    },
+    increaseDislike(_action, state) {
+      const id = state.PlayingState.info.track.id
+      return { option: id, message: false }
     },
   }
 
@@ -47,13 +89,17 @@ function userLogFirebasePlugin(store) {
       timestamp: Date.now(),
     }
   }
-  store.subscribe(mutation => {
-    if (!Object.prototype.hasOwnProperty.call(mutationHandlers, mutation.type)) return
-    let log = { ...maker(mutation), ...mutationHandlers[mutation.type](mutation) }
-    console.log(log.message)
+
+  store.subscribeAction({
+    after: (action, state) => {
+      if (!Object.prototype.hasOwnProperty.call(afterHandlers, action.type)) return
+      let log = { ...maker(action), ...afterHandlers[action.type](action, state) }
+      user_log_ref.push(log)
+    },
   })
-  user_log_ref.on('child_added', snapshot => {
-    store.commit('addLog', snapshot.val())
+
+  user_log_ref.limitToLast(3).on('child_added', snapshot => {
+    store.commit('pushUserLog', snapshot.val())
   })
 }
 
