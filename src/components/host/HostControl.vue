@@ -98,10 +98,6 @@ export default {
     },
   },
   watch: {
-    playerVolume(newValue) {
-      this.player.setVolume(newValue / 100)
-      console.log(newValue)
-    },
     currentVolume(newValue) {
       this.playerVolume = newValue
     },
@@ -269,6 +265,7 @@ export default {
 
         const timer = setInterval(() => {
           const afterStep = this.playerVolume - step
+          this.player.setVolume(afterStep / 100)
           if (afterStep < this.minimalVolume) {
             clearInterval(timer)
             success()
@@ -284,6 +281,7 @@ export default {
 
         const timer = setInterval(() => {
           const afterStep = this.playerVolume + step
+          this.player.setVolume(afterStep / 100)
           if (afterStep > this.recodeVolume) {
             clearInterval(timer)
             this.playerVolume = this.recodeVolume
