@@ -116,7 +116,29 @@ export default {
     }
   }
   .track-info {
-    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    @media (min-width: 768px) {
+      justify-content: flex-end;
+      .cover {
+        margin: auto 0;
+      }
+    }
+  }
+  .cover {
+    font-size: 0;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    img {
+      max-width: 100%;
+    }
+    @media (min-width: 768px) {
+      img {
+        max-height: none;
+      }
+    }
   }
   .description {
     margin-top: 5px;
@@ -139,15 +161,6 @@ export default {
       }
     }
   }
-  .cover {
-    font-size: 0;
-    width: 80%;
-    margin: 0 auto;
-    img {
-      width: 100%;
-      max-width: 400px;
-    }
-  }
 
   > div {
     margin: 20px 30px 0;
@@ -155,6 +168,12 @@ export default {
   .terminate-control,
   .collect {
     margin-top: 15px;
+  }
+
+  .control-board {
+    & button {
+      color: var(--secondary-neutral);
+    }
   }
   .volumn-control {
     display: flex;
@@ -184,11 +203,12 @@ export default {
   }
   .bar {
     height: 6px;
-    padding: 3px;
-    background-color: lightslategray;
+    padding: 5px;
+    border: 1px solid var(--primary-highlight);
+    border-radius: var(--border-radius);
     p {
       height: 100%;
-      background-color: orange;
+      background-color: var(--primary-neutral);
       max-width: 100%;
       transition: width 0.3 ease-in-out;
     }
@@ -198,10 +218,11 @@ export default {
     align-items: center;
     justify-content: space-between;
     .sign {
+      border: 1px solid var(--primary-highlight);
+      border-radius: var(--border-radius);
       font-size: 0;
       display: inline-block;
       padding: 4px;
-      background-color: lightslategray;
       margin-right: 5px;
       span {
         display: inline-block;
@@ -217,7 +238,7 @@ export default {
     }
   }
   .active {
-    background-color: orange;
+    background-color: var(--primary-neutral);
   }
   .collect {
     button {

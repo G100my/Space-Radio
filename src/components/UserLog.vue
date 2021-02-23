@@ -18,6 +18,7 @@
         <span>{{ log.userId }}</span
         >調高音量至:<span>{{ log.option.volume }}</span>
       </p>
+      <p v-else-if="log.actionType === 'increaseDislike' || log.actionType === 'reduceDislike'">更新切歌投票數</p>
     </li>
   </ul>
 </template>
@@ -33,7 +34,6 @@ export default {
 <style lang="scss">
 .log-container {
   height: 100%;
-  padding: 10px 0;
   border: 1px solid var(--primary-highlight);
   background-color: var(--secondary-dark);
   border-radius: var(--border-radius);
