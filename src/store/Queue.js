@@ -42,7 +42,6 @@ function connect2FirebaseQueue(store) {
     if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
       store.commit('refreshPending', snapshot.val())
       store.commit('clearPreviousDeleted')
-      console.log('YAYAYA')
       return
     } else if (spotifyAPI.getAccessToken())
       spotifyAPI.getTrack(trackId).then(addedTrack => {
