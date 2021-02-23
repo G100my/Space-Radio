@@ -5,11 +5,12 @@
     <input
       type="range"
       :value="$store.getters.minimalValue"
-      step="0.05"
-      min="0"
-      max="1"
+      step="2"
+      :min="minimalVolume"
+      max="100"
       @change="$store.dispatch('updateMinimalVolume', $event.target.value)"
     />
+    <p>{{ playerVolume / 100 }}</p>
   </div>
 </template>
 <script>
@@ -17,7 +18,7 @@
 export default {
   data() {
     return {
-      playerVolume: 0.5,
+      playerVolume: 50,
       recodeVolume: null,
       minimalVolume: this.$store.getters.minimalVolume,
       executeBeforeEndTime: 10000,
@@ -48,7 +49,7 @@ export default {
   },
   watch: {
     playerVolume(newValue) {
-      this.player.setVolume(newValue)
+      this.player.setVolume(newValue / 100)
       console.log(newValue)
     },
     currentVolume(newValue) {
