@@ -9,8 +9,11 @@ const UserLog = {
         actionType: '',
         userId: '',
         timestamp: 0,
-        option: null,
-        message: '',
+        option: {
+          id: '',
+          trackName: '',
+          volume: 0,
+        },
       },
     ],
   },
@@ -33,52 +36,52 @@ function userLogFirebasePlugin(store) {
   const afterHandlers = {
     add({ payload }) {
       const { id, trackName } = payload
-      const message = `${userId} 點播了 ${trackName}`
-      return { option: id, message }
+      // const message = `${userId} 點播了 ${trackName}`
+      return { option: { id, trackName } }
     },
     jumpIn({ payload }) {
       const { id, trackName } = payload
-      const message = `${userId} 插播了 ${trackName}`
-      return { option: id, message }
+      // const message = `${userId} 插播了 ${trackName}`
+      return { option: { id, trackName } }
     },
     normalRemove({ payload }) {
       const { id, trackName } = payload
-      const message = `${userId} 從點播序列移除了 ${trackName}`
-      return { option: id, message }
+      // const message = `${userId} 從點播序列移除了 ${trackName}`
+      return { option: { id, trackName } }
     },
     urgentRemove({ payload }) {
       const { id, trackName } = payload
-      const message = `${userId} 從插播序列移除了 ${trackName}`
-      return { option: id, message }
+      // const message = `${userId} 從插播序列移除了 ${trackName}`
+      return { option: { id, trackName } }
     },
     normal2urgent({ payload }) {
       const { id, trackName } = payload
-      const message = `${userId} 把 ${trackName} 從點播序列移到插播序列`
-      return { option: id, message }
+      // const message = `${userId} 把 ${trackName} 從點播序列移到插播序列`
+      return { option: { id, trackName } }
     },
     urgent2normal({ payload }) {
       const { id, trackName } = payload
-      const message = `${userId} 把 ${trackName} 從插播序列移到點播序列`
-      return { option: id, message }
+      // const message = `${userId} 把 ${trackName} 從插播序列移到點播序列`
+      return { option: { id, trackName } }
     },
     // ====
     turnUp(_action, state) {
       const volume = state.PlayingState.volume
-      const message = `${userId} 調高音量: ${volume}`
-      return { option: volume, message }
+      // const message = `${userId} 調高音量: ${volume}`
+      return { option: { volume } }
     },
     turnDown(_action, state) {
       const volume = state.PlayingState.volume
-      const message = `${userId} 調低音量: ${volume}`
-      return { option: volume, message }
+      // const message = `${userId} 調低音量: ${volume}`
+      return { option: { volume } }
     },
     reduceDislike(_action, state) {
       const id = state.PlayingState.info.track.id
-      return { option: id, message: false }
+      return { option: { id } }
     },
     increaseDislike(_action, state) {
       const id = state.PlayingState.info.track.id
-      return { option: id, message: false }
+      return { option: { id } }
     },
   }
 
