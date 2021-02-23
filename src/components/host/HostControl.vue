@@ -335,6 +335,10 @@ export default {
 <style lang="scss">
 .host-control {
   margin-top: 15px;
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column-reverse;
+  }
   button {
     font-size: 0;
     color: var(--primary-neutral);
@@ -343,6 +347,9 @@ export default {
   .play-button {
     margin: 15px 0 15px;
     width: 100%;
+    @media (min-width: 768px) {
+      margin-top: 50px;
+    }
   }
   svg {
     width: 40px;
@@ -354,31 +361,54 @@ export default {
     right: 10px;
     display: flex;
     flex-direction: column;
-
-    .toggler {
-      border: none;
-      width: fit-content;
-      padding: 5px;
-      margin-left: auto;
-      svg {
-        width: 40px;
-        height: 40px;
+    @media (min-width: 768px) {
+      position: static;
+      .toggler {
+        display: none;
+      }
+      .float-board {
+        display: flex;
+        margin-top: 0;
+        padding: 10px;
       }
     }
-    .float-board {
-      margin-top: 5px;
-      overflow: hidden;
-      height: 60px;
-      background-color: rgba(0, 0, 0, 0.733);
-      border: 2px solid var(--primary-highlight);
-      border-radius: var(--border-radius);
-      display: none;
-      flex-direction: column;
-      justify-content: space-around;
-      p {
-        display: flex;
-        justify-content: space-between;
-      }
+  }
+  .toggler {
+    border: none;
+    width: fit-content;
+    padding: 5px;
+    margin-left: auto;
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  .float-board {
+    margin-top: 5px;
+    overflow: hidden;
+    height: 70px;
+    background-color: rgba(0, 0, 0, 0.733);
+    border: 2px solid var(--primary-highlight);
+    border-radius: var(--border-radius);
+    display: none;
+    flex-direction: column;
+    justify-content: space-evenly;
+    p {
+      display: flex;
+      justify-content: space-between;
+    }
+    span {
+      margin-left: 10px;
+    }
+    input {
+      width: 20px;
+      background-color: transparent;
+      color: var(--primary-light);
+      margin-left: 20px;
+      margin-right: 15px;
+      border: none;
+      border-bottom: 1px solid var(--ignore);
+      text-align: center;
     }
   }
   .float-board.active {

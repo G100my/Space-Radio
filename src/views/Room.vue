@@ -2,11 +2,9 @@
   <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
     <div ref="slideContainer" class="slide-container">
       <div class="sidebar slide-items">
-        <div>
-          <PlayingState>
-            <component :is="hostToggler" />
-          </PlayingState>
-        </div>
+        <PlayingState>
+          <component :is="hostToggler" />
+        </PlayingState>
       </div>
       <div class="view slide-items">
         <nav>
@@ -148,6 +146,9 @@ export default {
 .room {
   overflow: hidden;
   flex: 1;
+  @media (min-width: 768px) {
+    overflow-y: hidden;
+  }
 
   .slide-container {
     display: flex;
@@ -171,14 +172,16 @@ export default {
   .sidebar {
     padding: 0 20px;
     box-sizing: border-box;
-    > div {
-      overflow-y: auto;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      .playing-state {
-        flex: 1;
-      }
+    overflow-y: auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    .playing-state {
+      flex: 1;
+    }
+    @media (min-width: 768px) {
+      width: 400px;
+      padding-bottom: 40px;
     }
   }
 
@@ -208,13 +211,6 @@ export default {
         height: 100%;
         width: 100%;
       }
-    }
-  }
-
-  @media (min-width: 768px) {
-    overflow-y: initial;
-    .sidebar {
-      width: 300px;
     }
   }
 }
