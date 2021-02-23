@@ -42,14 +42,7 @@
       <div class="float-board" :class="{ active: isMinimalControlOpen }">
         <p>
           <span>Minimal volume:</span>
-          <input
-            type="number"
-            :value="$store.getters.minimalVolume"
-            step="2"
-            min="0"
-            max="50"
-            @change="minimalVolumeHandler"
-          />
+          <input type="number" :value="minimalVolume" step="2" min="0" max="50" @change="minimalVolumeHandler" />
         </p>
         <p>
           <span>Dislike vote threshold:</span>
@@ -60,13 +53,13 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 // 載入歌單  調節播放
 export default {
   data() {
     return {
       playerVolume: 50,
       recodeVolume: null,
-      minimalVolume: this.$store.getters.minimalVolume,
       executeBeforeEndTime: 10000,
       adjustProcessTime: 5000,
       adjustStepTime: 100,
@@ -84,24 +77,25 @@ export default {
     }
   },
   computed: {
-    currentVolume() {
-      return this.$store.getters.currentVolume
-    },
     adjustExecuteTimes() {
       return this.adjustProcessTime / this.adjustStepTime
     },
-    pendingQueue() {
-      return this.$store.getters.pendingQueue
-    },
-    dislike() {
-      return this.$store.getters.currentDislike
-    },
+    ...mapGetters([
+      'currentVolume',
+      'currentDislike',
+      'currentPlayingTrackId',
+      'leftQueueAmount',
+      'minimalVolume',
+      'pendingQueue',
+      'token',
+      'trackData',
+    ]),
   },
   watch: {
     pendingQueue(nextQueue) {
       if (nextQueue && nextQueue.note) {
         const note = nextQueue.note
-        const messageOutput = `${note.sender} 插播一首 ${this.$store.getters.trackData['pending'].name}} 給 ${
+        const messageOutput = `${note.sender} 插播一首 ${this.trackData['pending'].name}} 給 ${
           note.recipient.trim() === '' ? '所有人' : note.recipient
         } ${note.message}`
 
@@ -113,7 +107,7 @@ export default {
     currentVolume(newValue) {
       this.playerVolume = newValue
     },
-    dislike(newValue) {
+    currentDislike(newValue) {
       if (this.dislikeCountDownTimer && newValue < this.dislikeThreshold) {
         clearTimeout(this.dislikeCountDownTimer)
         this.dislikeCountDownTimer = null
@@ -141,7 +135,7 @@ export default {
       this.player = new window.Spotify.Player({
         name: 'Jukebox player',
         getOAuthToken: cb => {
-          cb(this.$store.getters.token)
+          cb(this.token)
         },
       })
       const eventArray = [
@@ -188,7 +182,7 @@ export default {
         const currentNoteId = playerState.track_window.current_track.id
 
         // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
-        if (currentNoteId !== this.$store.getters.currentPlayingTrackId) {
+        if (currentNoteId !== this.currentPlayingTrackId) {
           const playingState = playerState.track_window.current_track
           this.$store.dispatch('updatePlayingTrack', { playingState })
         }
@@ -207,7 +201,7 @@ export default {
           }
         }
 
-        if (!playerState.paused && this.$store.getters.leftQueueAmount > 0) {
+        if (!playerState.paused && this.leftQueueAmount > 0) {
           const bufferTime = playerState.duration - playerState.position - this.executeBeforeEndTime
           // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
           if (bufferTime > 0) {
@@ -313,7 +307,7 @@ export default {
       })
     },
     activeThisDevice() {
-      if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.$store.getters.token)
+      if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.token)
       this.$spotifyAPI.transferMyPlayback([this.deviceId], { play: true }, error => {
         error && console.log(error.response)
         if (!error) {
