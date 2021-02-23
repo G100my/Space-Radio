@@ -153,9 +153,8 @@ export default {
 
       // 避免中途重啟 pending 會一直常駐，直到下一首歌曲取代目前的 pending
       const checkPending = state => {
-        if (this.$store.getters.pendingQueue) {
-          if (state.track_window.next_tracks[0].id !== this.$store.getters.pendingQueue.id)
-            this.$store.dispatch('clearPendingQueue')
+        if (this.pendingQueue) {
+          if (state.track_window.next_tracks[0].id !== this.pendingQueue.id) this.$store.dispatch('clearPendingQueue')
         }
         this.player.removeListener('player_state_changed', checkPending)
       }
@@ -190,7 +189,7 @@ export default {
             this.$store.dispatch('clearDislikeVote')
 
             // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
-            if (this.$store.getters.pendingQueue && this.$store.getters.pendingQueue.id === currentNoteId) {
+            if (this.pendingQueue && this.pendingQueue.id === currentNoteId) {
               this.$store.dispatch('clearPendingQueue')
             }
           }
@@ -325,7 +324,7 @@ export default {
         error && console.log(error.response)
         if (!error) {
           this.deviceActived = true
-          if (!this.$store.getters.pendingQueue) {
+          if (!this.pendingQueue) {
             setTimeout(() => {
               this.$store.dispatch('sendNextQueue')
             }, 3000)
