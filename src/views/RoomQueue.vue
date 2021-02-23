@@ -155,12 +155,8 @@ export default {
     font-size: 0;
     > button {
       font-size: 0;
-      border-radius: var(--border-radius);
       display: inline-block;
-      background-color: inherit;
-      color: var(--primary-light);
-      border: 1px solid var(--primary-neutral);
-      padding: 4px;
+      border-color: var(--primary-neutral);
     }
     button + button {
       margin-left: 10px;

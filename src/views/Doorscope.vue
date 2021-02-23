@@ -166,8 +166,6 @@ export default {
       font-size: 23px;
       padding: 8px 20px;
       border-radius: 10px;
-      background-color: transparent;
-      border-color: var(--primary-highlight);
       color: var(--secondary-neutral);
       &:focus {
         outline: none;

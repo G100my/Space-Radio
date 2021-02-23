@@ -132,8 +132,6 @@ export default {
   button {
     flex: 0 0 40px;
     border-left: none;
-    color: var(--primary-light);
-    transform: translateX(-1px);
     padding: 0;
   }
   .cancel-search-button {
