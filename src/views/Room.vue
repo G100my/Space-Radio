@@ -3,8 +3,9 @@
     <div ref="slideContainer" class="slide-container">
       <div class="sidebar slide-items">
         <div>
-          <PlayingState />
-          <component :is="hostToggler" />
+          <PlayingState>
+            <component :is="hostToggler" />
+          </PlayingState>
         </div>
       </div>
       <div class="view slide-items">
@@ -168,11 +169,16 @@ export default {
     }
   }
   .sidebar {
-    padding: 25px 20px 15px;
+    padding: 0 20px;
     box-sizing: border-box;
     > div {
       overflow-y: auto;
       height: 100%;
+      display: flex;
+      flex-direction: column;
+      .playing-state {
+        flex: 1;
+      }
     }
   }
 
