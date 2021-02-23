@@ -33,58 +33,6 @@ const UserLog = {
 function userLogFirebasePlugin(store) {
   const userId = store.getters.userId
 
-  const afterHandlers = {
-    add({ payload }) {
-      const { id, trackName } = payload
-      // const message = `${userId} 點播了 ${trackName}`
-      return { option: { id, trackName } }
-    },
-    jumpIn({ payload }) {
-      const { id, trackName } = payload
-      // const message = `${userId} 插播了 ${trackName}`
-      return { option: { id, trackName } }
-    },
-    normalRemove({ payload }) {
-      const { id, trackName } = payload
-      // const message = `${userId} 從點播序列移除了 ${trackName}`
-      return { option: { id, trackName } }
-    },
-    urgentRemove({ payload }) {
-      const { id, trackName } = payload
-      // const message = `${userId} 從插播序列移除了 ${trackName}`
-      return { option: { id, trackName } }
-    },
-    normal2urgent({ payload }) {
-      const { id, trackName } = payload
-      // const message = `${userId} 把 ${trackName} 從點播序列移到插播序列`
-      return { option: { id, trackName } }
-    },
-    urgent2normal({ payload }) {
-      const { id, trackName } = payload
-      // const message = `${userId} 把 ${trackName} 從插播序列移到點播序列`
-      return { option: { id, trackName } }
-    },
-    // ====
-    turnUp(_action, state) {
-      const volume = state.PlayingState.volume
-      // const message = `${userId} 調高音量: ${volume}`
-      return { option: { volume } }
-    },
-    turnDown(_action, state) {
-      const volume = state.PlayingState.volume
-      // const message = `${userId} 調低音量: ${volume}`
-      return { option: { volume } }
-    },
-    reduceDislike(_action, state) {
-      const id = state.PlayingState.info.track.id
-      return { option: { id } }
-    },
-    increaseDislike(_action, state) {
-      const id = state.PlayingState.info.track.id
-      return { option: { id } }
-    },
-  }
-
   const maker = function ({ type }) {
     return {
       actionType: type,
@@ -95,9 +43,36 @@ function userLogFirebasePlugin(store) {
 
   store.subscribeAction({
     after: (action, state) => {
-      if (!Object.prototype.hasOwnProperty.call(afterHandlers, action.type)) return
-      let log = { ...maker(action), ...afterHandlers[action.type](action, state) }
-      user_log_ref.push(log)
+      let userLog
+
+      switch (action.type) {
+        case 'add':
+        case 'jumpIn':
+        case 'normalRemove':
+        case 'urgentRemove':
+        case 'normal2urgent':
+        case 'urgent2normal': {
+          const {
+            payload: { id, trackName },
+          } = action
+          userLog = { ...maker(action), option: { id, trackName } }
+          break
+        }
+
+        case 'turnUp':
+        case 'turnDown':
+          userLog = { ...maker(action), option: { volume: state.PlayingState.volume } }
+          break
+
+        case 'reduceDislike':
+        case 'increaseDislike':
+          userLog = { ...maker(action), option: { id: state.PlayingState.info.track.id } }
+          break
+
+        default:
+          return
+      }
+      user_log_ref.push(userLog)
     },
   })
 
