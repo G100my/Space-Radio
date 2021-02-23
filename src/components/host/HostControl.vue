@@ -351,11 +351,8 @@ export default {
 .host-control {
   margin-top: 15px;
   button {
-    background: none;
     font-size: 0;
     color: var(--primary-neutral);
-    border: 1px solid var(--primary-highlight);
-    border-radius: var(--border-radius);
     width: 100px;
   }
   .play-button {

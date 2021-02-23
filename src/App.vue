@@ -63,4 +63,11 @@ ul {
 li {
   list-style: none;
 }
+button {
+  background-color: inherit;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--primary-highlight);
+  color: var(--primary-light);
+  padding: 4px;
+}
 </style>

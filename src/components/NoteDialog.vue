@@ -193,11 +193,7 @@ export default {
     justify-content: flex-end;
     padding: 10px 0;
     button {
-      background: none;
-      border: 1px solid var(--primary-highlight);
-      border-radius: var(--border-radius);
       padding: 4px 15px;
-      color: var(--primary-light);
       margin-right: 10px;
     }
   }
