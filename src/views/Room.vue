@@ -2,9 +2,7 @@
   <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
     <div ref="slideContainer" class="slide-container">
       <div class="sidebar slide-items">
-        <PlayingState>
-          <HostControl v-if="hostToggler" />
-        </PlayingState>
+        <PlayingState />
       </div>
       <div class="view slide-items">
         <nav>
@@ -28,7 +26,6 @@
   </div>
 </template>
 <script>
-import { defineAsyncComponent } from 'vue'
 import PlayingState from '../components/PlayingState.vue'
 import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
 import SearchBar from '../components/SearchBar.vue'
@@ -39,11 +36,9 @@ export default {
     PlayingState,
     SearchBar,
     NoteDialog,
-    HostControl: defineAsyncComponent(() => import('../components/host/HostControl.vue')),
   },
   data() {
     return {
-      hostToggler: false,
       isMainSide: true,
       touchStartPosition: 0,
       isNoteDialogActive: false,
@@ -64,9 +59,6 @@ export default {
   created() {
     if (!this.$spotifyAPI.getAccessToken()) {
       this.$spotifyAPI.setAccessToken(this.$store.getters.token)
-    }
-    if (this.$store.getters.userId === 'zhangLo') {
-      this.hostToggler = true
     }
   },
   // for test

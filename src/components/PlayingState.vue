@@ -58,16 +58,23 @@
     <div class="log">
       <UserLog />
     </div>
-    <slot />
+    <HostControl v-if="hostToggler" />
   </div>
 </template>
 <script>
+import { defineAsyncComponent } from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import UserLog from './UserLog.vue'
 
 export default {
   components: {
     UserLog,
+    HostControl: defineAsyncComponent(() => import('../components/host/HostControl.vue')),
+  },
+  data() {
+    return {
+      hostToggler: false,
+    }
   },
   computed: {
     ...mapState({
@@ -81,6 +88,11 @@ export default {
       'currentVolume',
       'currentDislike',
     ]),
+  },
+  created() {
+    if (this.$store.getters.userId === 'zhangLo') {
+      this.hostToggler = true
+    }
   },
   methods: {
     turnUp() {
