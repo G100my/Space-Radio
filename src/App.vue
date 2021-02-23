@@ -69,5 +69,8 @@ button {
   border: 1px solid var(--primary-highlight);
   color: var(--primary-light);
   padding: 4px;
+  &:focus {
+    outline: none;
+  }
 }
 </style>
