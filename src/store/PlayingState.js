@@ -64,7 +64,7 @@ const PlayingState = {
       return state.minimalVolume
     },
     currentVolume(state) {
-      return state.currentVolume
+      return state.volume
     },
     currentDislike(state) {
       return state.dislike
