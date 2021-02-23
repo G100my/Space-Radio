@@ -58,6 +58,7 @@
     <div class="log">
       <UserLog />
     </div>
+    <slot />
   </div>
 </template>
 <script>
@@ -99,6 +100,10 @@ export default {
 </script>
 <style lang="scss">
 .playing-state {
+  position: relative;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
   h1 {
     display: flex;
     align-items: center;
@@ -144,9 +149,7 @@ export default {
     }
   }
 
-  .track-info,
-  .control-board,
-  .log {
+  > div {
     margin: 20px 30px 0;
   }
   .terminate-control,
