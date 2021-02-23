@@ -41,6 +41,8 @@ function userLogFirebasePlugin(store) {
     }
   }
 
+  let recordVolumeLogTimer = null
+
   store.subscribeAction({
     after: (action, state) => {
       let userLog
@@ -61,8 +63,12 @@ function userLogFirebasePlugin(store) {
 
         case 'turnUp':
         case 'turnDown':
-          userLog = { ...maker(action), option: { volume: state.PlayingState.volume } }
-          break
+          if (recordVolumeLogTimer) clearTimeout(recordVolumeLogTimer)
+          recordVolumeLogTimer = setTimeout(() => {
+            userLog = { ...maker(action), option: { volume: state.PlayingState.volume } }
+            user_log_ref.push(userLog)
+          }, 3000)
+          return
 
         case 'reduceDislike':
         case 'increaseDislike':
