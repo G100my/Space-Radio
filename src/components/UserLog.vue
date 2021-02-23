@@ -33,8 +33,8 @@ export default {
 </script>
 <style lang="scss">
 .log-container {
-  height: 100%;
-  border: 1px solid var(--primary-highlight);
+  padding: 5px;
+  border: 1px solid var(--ignore);
   background-color: var(--secondary-dark);
   border-radius: var(--border-radius);
   display: flex;
@@ -43,6 +43,7 @@ export default {
   p {
     text-align: center;
     color: var(--ignore);
+    font-size: 14px;
   }
   span {
     display: inline-block;

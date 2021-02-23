@@ -1,5 +1,5 @@
 <template>
-  <div class="host-control">
+  <div class="main-control">
     <button
       class="play-button"
       type="button"
@@ -28,28 +28,16 @@
         />
       </svg>
     </button>
-    <div class="minimal-control">
-      <button class="toggler" @click="isMinimalControlOpen = !isMinimalControlOpen">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-          <path
-            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
-          />
-          <path
-            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
-          />
-        </svg>
-      </button>
-      <div class="float-board" :class="{ active: isMinimalControlOpen }">
-        <p>
-          <span>Minimal volume:</span>
-          <input type="number" :value="minimalVolume" step="2" min="0" max="50" @change="minimalVolumeHandler" />
-        </p>
-        <p>
-          <span>Dislike vote threshold:</span>
-          <input v-model="dislikeThreshold" type="number" min="2" max="5" />
-        </p>
-      </div>
-    </div>
+  </div>
+  <div class="minimal-control">
+    <p>
+      <span>Minimal volume:</span>
+      <input type="number" :value="minimalVolume" step="2" min="0" max="50" @change="minimalVolumeHandler" />
+    </p>
+    <p>
+      <span>Dislike vote threshold:</span>
+      <input v-model="dislikeThreshold" type="number" min="2" max="5" />
+    </p>
   </div>
 </template>
 <script>
@@ -73,7 +61,6 @@ export default {
       deviceActived: false,
       paused: true,
       minimalVolumeDeferTimer: null,
-      isMinimalControlOpen: false,
     }
   },
   computed: {
@@ -333,86 +320,64 @@ export default {
 }
 </script>
 <style lang="scss">
-.host-control {
-  margin-top: 15px;
+.main-control {
   @media (min-width: 768px) {
     display: flex;
     flex-direction: column-reverse;
   }
-  button {
+  .play-button {
     font-size: 0;
     color: var(--primary-neutral);
-    width: 100px;
-  }
-  .play-button {
-    margin: 15px 0 15px;
     width: 100%;
     @media (min-width: 768px) {
-      margin-top: 50px;
+      margin: 25px 0;
     }
   }
   svg {
     width: 40px;
     height: 40px;
   }
-  .minimal-control {
-    position: fixed;
-    top: 10px;
-    right: 10px;
+}
+.minimal-control {
+  padding: 10px;
+  border: 1px solid var(--primary-highlight);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  p {
     display: flex;
-    flex-direction: column;
-    @media (min-width: 768px) {
-      position: static;
-      .toggler {
-        display: none;
-      }
-      .float-board {
-        display: flex;
-        margin-top: 0;
-        padding: 10px;
-      }
-    }
+    justify-content: space-between;
   }
-  .toggler {
-    border: none;
-    width: fit-content;
-    padding: 5px;
-    margin-left: auto;
-    svg {
-      width: 40px;
-      height: 40px;
-    }
-  }
-  .float-board {
+  p + p {
     margin-top: 5px;
-    overflow: hidden;
-    height: 70px;
-    background-color: rgba(0, 0, 0, 0.733);
-    border: 2px solid var(--primary-highlight);
-    border-radius: var(--border-radius);
-    display: none;
-    flex-direction: column;
-    justify-content: space-evenly;
-    p {
-      display: flex;
-      justify-content: space-between;
+  }
+  span {
+    margin-left: 10px;
+  }
+  input {
+    width: 25px;
+    background-color: transparent;
+    color: var(--primary-light);
+    margin-left: 20px;
+    margin-right: 15px;
+    border: none;
+    border-bottom: 1px solid var(--ignore);
+    text-align: center;
+  }
+  @media (min-width: 768px) {
+    position: static;
+    .toggler {
+      display: none;
     }
-    span {
-      margin-left: 10px;
+    .float-board {
+      display: flex;
+      margin-top: 0;
+      padding: 10px;
     }
     input {
-      width: 20px;
-      background-color: transparent;
-      color: var(--primary-light);
-      margin-left: 20px;
-      margin-right: 15px;
-      border: none;
-      border-bottom: 1px solid var(--ignore);
-      text-align: center;
+      width: 40px;
     }
-  }
-  .float-board.active {
-    display: flex;
   }
 }
 </style>

@@ -175,7 +175,7 @@ export default {
   }
 
   > div {
-    margin: 20px 30px 0;
+    margin: 15px 30px 0;
   }
   .terminate-control,
   .collect {
@@ -261,6 +261,12 @@ export default {
     flex: 0;
     .cover img {
       max-height: 150px;
+    }
+    @media (min-width: 768px) {
+      flex: 1;
+      .cover img {
+        max-height: none;
+      }
     }
   }
 }
