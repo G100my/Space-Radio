@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <button type="button" @click="togglePlay">togglePlay</button>
-    <button type="button" @click="activeThisDevice">activeThisDevice</button>
+  <div class="host-control">
+    <button type="button" @click="!deviceActived && activeThisDevice($event), deviceActived && togglePlay($event)">
+      activeThisDevice
+    </button>
+
     <input
       type="range"
       :value="$store.getters.minimalValue"
@@ -31,6 +33,7 @@ export default {
       positionStateCounter: 0,
       dislikeThreshold: 2,
       dislikeCountDownTimer: null,
+      deviceActived: false,
     }
   },
   computed: {
@@ -120,6 +123,7 @@ export default {
         console.log(playerState)
         // 斷開連結
         if (playerState === null) {
+          this.deviceActived = false
           this.$store.dispatch('clearPlayingTrack')
           return
         }
@@ -239,9 +243,6 @@ export default {
         }, this.adjustStepTime)
       })
     },
-    togglePlay() {
-      this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
-    },
     nextTrack() {
       const minimalVolumeBackup = this.minimalVolume
       const adjustProcessTimeBackup = this.adjustProcessTime
@@ -272,12 +273,18 @@ export default {
       if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.$store.getters.token)
       this.$spotifyAPI.transferMyPlayback([this.deviceId], { play: true }, error => {
         error && console.log(error.response)
-        if (!error && !this.$store.getters.pendingQueue) {
-          setTimeout(() => {
-            this.$store.dispatch('sendNextQueue')
-          }, 3000)
+        if (!error) {
+          this.deviceActived = true
+          if (!this.$store.getters.pendingQueue) {
+            setTimeout(() => {
+              this.$store.dispatch('sendNextQueue')
+            }, 3000)
+          }
         }
       })
+    },
+    togglePlay() {
+      this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
     },
   },
 }
