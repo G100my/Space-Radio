@@ -3,7 +3,7 @@
     <div ref="slideContainer" class="slide-container">
       <div class="sidebar slide-items">
         <PlayingState>
-          <component :is="hostToggler" />
+          <HostControl v-if="hostToggler" />
         </PlayingState>
       </div>
       <div class="view slide-items">
@@ -43,7 +43,7 @@ export default {
   },
   data() {
     return {
-      hostToggler: '',
+      hostToggler: false,
       isMainSide: true,
       touchStartPosition: 0,
       isNoteDialogActive: false,
@@ -66,7 +66,7 @@ export default {
       this.$spotifyAPI.setAccessToken(this.$store.getters.token)
     }
     if (this.$store.getters.userId === 'zhangLo') {
-      this.hostToggler = 'HostControl'
+      this.hostToggler = true
     }
   },
   // for test
