@@ -52,16 +52,18 @@
       </div>
     </div>
     <div class="log">
-      <ul>
-        <li />
-      </ul>
+      <UserLog />
     </div>
   </div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
+import UserLog from './UserLog.vue'
 
 export default {
+  components: {
+    UserLog,
+  },
   computed: {
     ...mapState({
       isVoted: state => state.PlayingState.isVoted,
@@ -139,11 +141,9 @@ export default {
   }
 
   .track-info,
-  .control-board {
-    margin: 20px 30px;
-  }
-  .control-board {
-    margin-top: 20px;
+  .control-board,
+  .log {
+    margin: 20px 30px 0;
   }
   .terminate-control,
   .collect {

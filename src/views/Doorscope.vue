@@ -26,9 +26,7 @@
           </p>
         </div>
         <div class="log">
-          <ul>
-            <li />
-          </ul>
+          <UserLog />
         </div>
         <div class="login">
           <button @click="getImplicitGrantToken">Spotify Login</button>
@@ -40,8 +38,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getImplicitGrantToken } from '../utility/Oauth.js'
+import UserLog from '../components/UserLog.vue'
 
 export default {
+  components: {
+    UserLog,
+  },
   computed: {
     ...mapGetters(['currentPlayingAlbum', 'currentPlayingArtists', 'currentPlayingTrackName']),
   },
@@ -154,8 +156,7 @@ export default {
     }
   }
   .log {
-    background-color: gray;
-    height: 120px;
+    height: 80px;
   }
   .login {
     margin-top: 20px;
