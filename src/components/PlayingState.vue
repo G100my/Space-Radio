@@ -64,7 +64,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      volumeValue: state => Number.parseInt(state.PlayingState.volume * 100),
+      volumeValue: state => state.PlayingState.volume,
       dislike: state => state.PlayingState.dislike,
       isVoted: state => state.PlayingState.isVoted,
     }),

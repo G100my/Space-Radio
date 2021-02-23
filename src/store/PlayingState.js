@@ -7,7 +7,7 @@ const transformURI2URL = uri => {
   const type = uri.split(':')[1]
   return uri.replace(`spotify:${type}:`, `https://open.spotify.com/${type}/`)
 }
-const volumeStep = 0.02
+const volumeStep = 2
 const initialTrack = {
   id: false,
   name: 'Jukebox',
@@ -38,8 +38,8 @@ const initialQueue = {
 }
 const PlayingState = {
   state: {
-    volume: 0.3,
-    minimalVolume: 0.2,
+    volume: 30,
+    minimalVolume: 20,
     dislike: 0,
     isVoted: false,
     info: {
@@ -87,7 +87,7 @@ const PlayingState = {
   actions: {
     turnUp({ state }) {
       const addResult = state.volume + volumeStep
-      if (addResult <= 1) playing_state_ref.update({ volume: addResult })
+      if (addResult <= 100) playing_state_ref.update({ volume: addResult })
     },
     turnDown({ state }) {
       const reduceResult = state.volume - volumeStep
