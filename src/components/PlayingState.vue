@@ -4,7 +4,7 @@
       <img src="../assets/vinyl-record.png" alt="" />
       <p>Jukebox</p>
     </h1>
-    <div class="track-info">
+    <div class="track-info" :class="{ smaller: hostToggler }">
       <div class="cover">
         <img :src="currentPlayingAlbum.imageURL" alt="" />
       </div>
@@ -255,6 +255,12 @@ export default {
   .collect {
     button {
       width: 100%;
+    }
+  }
+  .track-info.smaller {
+    flex: 0;
+    .cover img {
+      max-height: 150px;
     }
   }
 }
