@@ -27,10 +27,10 @@
         <img src="../assets/volume.svg" alt="" />
         <div class="progress">
           <div class="bar">
-            <p :style="{ width: `${volumeValue}%` }" />
+            <p :style="{ width: `${currentVolume}%` }" />
           </div>
         </div>
-        <p>{{ volumeValue }}</p>
+        <p>{{ currentVolume }}</p>
         <div class="buttons">
           <button type="button" @click="turnDown">-</button>
           <button type="button" @click="turnUp">+</button>
@@ -38,10 +38,10 @@
       </div>
       <div class="terminate-control">
         <div class="sign">
-          <span :class="{ active: dislike > 0 }" />
-          <span :class="{ active: dislike > 1 }" />
+          <span :class="{ active: currentDislike > 0 }" />
+          <span :class="{ active: currentDislike > 1 }" />
         </div>
-        <p>{{ dislike }}</p>
+        <p>{{ currentDislike }}</p>
         <div class="buttons">
           <button v-show="!isVoted" type="button" @click="increaseDislike">terminate</button>
           <button v-show="isVoted" type="button" @click="reduceDislike">cancel</button>
@@ -64,11 +64,16 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      volumeValue: state => state.PlayingState.volume,
-      dislike: state => state.PlayingState.dislike,
       isVoted: state => state.PlayingState.isVoted,
     }),
-    ...mapGetters(['currentPlayingAlbum', 'currentPlayingArtists', 'currentPlayingTrackId', 'currentPlayingTrackName']),
+    ...mapGetters([
+      'currentPlayingAlbum',
+      'currentPlayingArtists',
+      'currentPlayingTrackId',
+      'currentPlayingTrackName',
+      'currentVolume',
+      'currentDislike',
+    ]),
   },
   methods: {
     turnUp() {
