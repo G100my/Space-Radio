@@ -24,16 +24,23 @@
         />
       </svg>
     </button>
-
-    <input
-      type="range"
-      :value="$store.getters.minimalValue"
-      step="2"
-      :min="minimalVolume"
-      max="100"
-      @change="$store.dispatch('updateMinimalVolume', $event.target.value)"
-    />
-    <p>{{ playerVolume / 100 }}</p>
+    <div class="minimal-control">
+      <p>
+        <span>Minimal volume:</span>
+        <input
+          type="number"
+          :value="$store.getters.minimalVolume"
+          step="2"
+          min="0"
+          max="50"
+          @change="minimalVolumeHandler"
+        />
+      </p>
+      <p>
+        <span>Dislike vote threshold:</span>
+        <input v-model="dislikeThreshold" type="number" min="2" max="5" />
+      </p>
+    </div>
   </div>
 </template>
 <script>
@@ -56,6 +63,7 @@ export default {
       dislikeCountDownTimer: null,
       deviceActived: false,
       paused: true,
+      minimalVolumeDeferTimer: null,
     }
   },
   computed: {
@@ -310,6 +318,12 @@ export default {
     },
     togglePlay() {
       this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
+    },
+    minimalVolumeHandler(event) {
+      if (this.minimalVolumeDeferTimer) clearTimeout(this.minimalVolumeDeferTimer)
+      this.minimalVolumeDeferTimer = setTimeout(() => {
+        this.$store.dispatch('updateMinimalVolume', event.target.value)
+      }, 3000)
     },
   },
 }
