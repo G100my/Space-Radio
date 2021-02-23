@@ -98,6 +98,18 @@ export default {
     },
   },
   watch: {
+    pendingQueue(nextQueue) {
+      if (nextQueue && nextQueue.note) {
+        const note = nextQueue.note
+        const messageOutput = `${note.sender} 插播一首 ${this.$store.getters.trackData['pending'].name}} 給 ${
+          note.recipient.trim() === '' ? '所有人' : note.recipient
+        } ${note.message}`
+
+        this.reducePlayerVolume().then(() => {
+          this.TTS(messageOutput)
+        })
+      }
+    },
     currentVolume(newValue) {
       this.playerVolume = newValue
     },
@@ -195,33 +207,15 @@ export default {
           }
         }
 
-        // 每次隨機狀態出現就刷新秒數，避免曲目被快轉
-        if (this.coundDownTimer) clearTimeout(this.coundDownTimer)
-
-        if (!playerState.paused) {
+        if (!playerState.paused && this.$store.getters.leftQueueAmount > 0) {
           const bufferTime = playerState.duration - playerState.position - this.executeBeforeEndTime
-
           // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
           if (bufferTime > 0) {
+            // 每次隨機狀態出現就刷新秒數，避免曲目被快轉
+            if (this.coundDownTimer) clearTimeout(this.coundDownTimer)
             console.log('set coundDownTimer')
             this.coundDownTimer = setTimeout(() => {
-              console.log('active coundDownTimer')
-              // 如果有 note 插入 TTS
-              if (this.pendingQueue && this.pendingQueue.note) {
-                console.log('TTS')
-                const note = this.pendingQueue.note
-                const messageOutput = `${note.sender} 插播一首 ${this.$store.getters.trackData['pending'].name}} 給 ${
-                  note.recipient.trim() === '' ? '所有人' : note.recipient
-                } ${note.message}`
-
-                this.reducePlayerVolume().then(() => {
-                  this.TTS(messageOutput)
-                })
-              }
-
-              if (this.$store.getters.leftQueueAmount > 0) {
-                this.$store.dispatch('sendNextQueue')
-              }
+              this.$store.dispatch('sendNextQueue')
             }, bufferTime)
           }
         }
