@@ -263,35 +263,35 @@ export default {
     },
     reducePlayerVolume() {
       return new Promise(success => {
-        this.recodeVolume = this.currentVolume
+        this.recodeVolume = this.playerVolume
 
-        const step = (this.currentVolume - this.minimalVolume) / this.adjustExecuteTimes
+        const step = (this.playerVolume - this.minimalVolume) / this.adjustExecuteTimes
 
         const timer = setInterval(() => {
-          const afterStep = this.currentVolume - step
+          const afterStep = this.playerVolume - step
           if (afterStep < this.minimalVolume) {
             clearInterval(timer)
             success()
             return
           }
-          this.currentVolume = afterStep
+          this.playerVolume = afterStep
         }, this.adjustStepTime)
       })
     },
     resumePlayerVolume() {
       return new Promise(success => {
-        const step = (this.recodeVolume - this.currentVolume) / this.adjustExecuteTimes
+        const step = (this.recodeVolume - this.playerVolume) / this.adjustExecuteTimes
 
         const timer = setInterval(() => {
-          const afterStep = this.currentVolume + step
+          const afterStep = this.playerVolume + step
           if (afterStep > this.recodeVolume) {
             clearInterval(timer)
-            this.currentVolume = this.recodeVolume
+            this.playerVolume = this.recodeVolume
             this.recodeVolume = null
             success()
             return
           }
-          this.currentVolume = afterStep
+          this.playerVolume = afterStep
         }, this.adjustStepTime)
       })
     },
