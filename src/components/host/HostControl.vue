@@ -208,10 +208,12 @@ export default {
 
           // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
           if (bufferTime > 0) {
+            console.log('set coundDownTimer')
             this.coundDownTimer = setTimeout(() => {
               console.log('active coundDownTimer')
               // 如果有 note 插入 TTS
               if (this.pendingQueue && this.pendingQueue.note) {
+                console.log('TTS')
                 const note = this.pendingQueue.note
                 const messageOutput = `${note.sender} 插播一首 ${this.$store.getters.trackData['pending'].name}} 給 ${
                   note.recipient.trim() === '' ? '所有人' : note.recipient
