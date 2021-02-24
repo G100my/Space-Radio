@@ -113,7 +113,7 @@ export default {
 <style lang="scss">
 .playing-state {
   position: relative;
-  padding: 20px 0;
+  padding: 20px 0 10px;
   display: flex;
   flex-direction: column;
   h1 {
@@ -261,6 +261,29 @@ export default {
     flex: 0;
     .cover img {
       max-height: 150px;
+    }
+    .description {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-template-rows: 1fr 1fr;
+      grid-template-areas:
+        'track-name track-name'
+        'artists album';
+      row-gap: 5px;
+      column-gap: 10px;
+      width: fit-content;
+      margin: auto;
+      justify-items: flex-start;
+      .track-name {
+        grid-area: track-name;
+      }
+      .artists {
+        grid-area: artists;
+        margin: 0;
+      }
+      .album {
+        grid-area: album;
+      }
     }
     @media (min-width: 768px) {
       flex: 1;
