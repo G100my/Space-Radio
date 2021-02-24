@@ -1,24 +1,28 @@
 <template>
   <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
-    <div ref="slideContainer" class="slide-container">
-      <div class="sidebar slide-items">
-        <PlayingState />
-      </div>
-      <div class="view slide-items">
-        <nav>
-          <SearchBar @activeNoteDialog="activeNoteDialogHandler" />
-          <ul>
-            <li>
-              <!-- prettier-ignore -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
+    <nav>
+      <SearchBar @activeNoteDialog="activeNoteDialogHandler" />
+      <h1>
+        <img src="../assets/vinyl-record.png" alt="" />
+        <p>Jukebox</p>
+      </h1>
+      <ul>
+        <li>
+          <!-- prettier-ignore -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
                 <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
                 <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
                 <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
                 <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
               </svg>
-            </li>
-          </ul>
-        </nav>
+        </li>
+      </ul>
+    </nav>
+    <div ref="slideContainer" class="slide-container">
+      <div class="sidebar slide-items">
+        <PlayingState />
+      </div>
+      <div class="view slide-items">
         <router-view @activeNoteDialog="activeNoteDialogHandler" />
         <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
       </div>
@@ -137,7 +141,7 @@ export default {
 <style lang="scss">
 .room {
   overflow: hidden;
-  flex: 1;
+  flex: 0 0 fit-content;
   @media (min-width: 768px) {
     overflow-y: hidden;
   }
@@ -157,7 +161,6 @@ export default {
     }
   }
   .view.slide-items {
-    position: relative;
     display: flex;
     flex-direction: column;
     @media (min-width: 768px) {
@@ -181,33 +184,45 @@ export default {
       padding-top: 40px;
     }
   }
-
-  nav {
-    margin: 0 var(--edge-gap);
-    padding: var(--edge-gap) 0;
+}
+nav {
+  margin: 0 var(--edge-gap);
+  padding: var(--edge-gap) 0;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  h1 {
+    order: -1;
     display: flex;
-    position: relative;
+    align-items: center;
+    img {
+      width: 30px;
+      margin-right: 5px;
+    }
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
 
-    > ul {
-      display: flex;
+  > ul {
+    display: flex;
+    font-size: 0;
+    justify-content: flex-end;
+    li {
+      height: 45px;
+      width: 45px;
+      border: 2px solid var(--primary-highlight);
+      border-radius: 4px;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+    li + li {
       margin-left: 15px;
-      font-size: 0;
-      justify-content: flex-end;
-      li {
-        height: 45px;
-        width: 45px;
-        border: 2px solid var(--primary-highlight);
-        border-radius: 4px;
-        padding: 5px;
-        box-sizing: border-box;
-      }
-      li + li {
-        margin-left: 15px;
-      }
-      svg {
-        height: 100%;
-        width: 100%;
-      }
+    }
+    svg {
+      height: 100%;
+      width: 100%;
     }
   }
 }

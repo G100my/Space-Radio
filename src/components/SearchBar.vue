@@ -1,21 +1,15 @@
 <template>
   <div class="search" :class="{ active: isImmediatelyOpen }">
-    <input
-      v-model="searchText"
-      type="text"
-      autocomplete="off"
-      @keydown.prevent.enter="searchHandler"
-      @focus="isImmediatelyOpen = true"
-    />
-    <button type="button" @click="searchHandler">
+    <input v-model="searchText" type="text" autocomplete="off" @keydown.prevent.enter="searchHandler" />
+    <button class="submit-search-botton" type="button" @click="searchHandler($event), (isImmediatelyOpen = true)">
       <!-- prettier-ignore -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
       </svg>
     </button>
     <button class="cancel-search-button" type="button" @click="clearSearch">
       <!-- prettier-ignore -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
       </svg>
@@ -44,14 +38,14 @@
               <div class="buttons">
                 <button @click="addHandler(track.id, track.name)">
                   <!-- prettier-ignore -->
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                   </svg>
                 </button>
                 <button @click="jumpInHandler(track.id, track.name)">
                   <!-- prettier-ignore -->
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
                   </svg>
                 </button>
@@ -107,10 +101,9 @@ export default {
 </script>
 <style lang="scss">
 .search {
-  flex: 1;
-  box-sizing: border-box;
+  margin-left: 10px;
+  margin-right: 10px;
   display: flex;
-  align-items: stretch;
   border: 2px solid var(--primary-neutral);
   border-radius: var(--border-radius);
 
@@ -123,24 +116,53 @@ export default {
     }
   }
   input {
-    flex: 1;
-    width: 100%;
     color: var(--primary-light);
-    padding: 0 5px;
+    width: 0;
+    padding: 0;
     font-size: 1.3rem;
   }
-  button {
-    flex: 0 0 40px;
+
+  .submit-search-botton,
+  .cancel-search-button {
+    flex: 0 0 45px;
+    svg {
+      vertical-align: middle;
+    }
+  }
+  .submit-search-botton {
+    width: 45px;
+    height: 45px;
     border-left: none;
-    padding: 0;
+    svg {
+      width: 70%;
+      height: 70%;
+    }
   }
   .cancel-search-button {
-    transition: flex-basis 0.3s ease-in-out 0.2s;
-    flex-basis: 0;
     overflow: hidden;
+    padding: 0;
+    svg {
+      width: 60%;
+      height: 60%;
+    }
+  }
+
+  &,
+  .cancel-search-button {
+    transition: flex-basis 0.3s ease-in-out;
+    flex: 0 1 0;
+  }
+  input {
+    transition: flex 0.3s ease-in-out 0.2s;
   }
 }
+
 .search.active {
+  flex-basis: 100%;
+  .cancel-search-button {
+    flex-basis: 45px;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -151,19 +173,29 @@ export default {
     left: var(--edge-gap-n);
     display: block;
   }
-  .cancel-search-button {
-    flex-basis: 40px;
-  }
 }
-.search + ul {
+.search ~ ul,
+.search ~ h1 {
   overflow: hidden;
   transition: 0.2s ease-in-out;
-  transition-property: flex-basis, margin-left;
-  flex-basis: 105px;
+  transition-property: flex-basis;
 }
-.search.active + ul {
+.search ~ ul {
+  flex-basis: auto;
+}
+.search ~ h1 {
+  flex-basis: 130px;
+}
+.search.active {
+  input {
+    flex: 1;
+    transition-delay: 0;
+  }
+}
+.search.active ~ ul,
+.search.active ~ h1 {
   flex-basis: 0;
-  margin-left: 0;
+  transition-delay: 0.2s;
 }
 
 .immediately-result {
