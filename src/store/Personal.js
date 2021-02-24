@@ -1,8 +1,8 @@
 const Personal = {
   state: {
-    userId: '',
-    display_name: '',
-    imagesUrl: '',
+    userId: localStorage.getItem('jukebox_user_id') || null,
+    displayName: localStorage.getItem('jukebox_user_display_name') || null,
+    imagesUrl: localStorage.getItem('jukebox_user_images') || '',
     token: localStorage.getItem('jukebox_token') || null,
     expiredTime: Number(localStorage.getItem('jukebox_expired_time')) || null,
   },
@@ -18,6 +18,9 @@ const Personal = {
     userId(state) {
       return state.userId
     },
+    userName(state) {
+      return state.displayName
+    },
   },
   mutations: {
     refreshToken(state, { newToken, expiredTime }) {
@@ -28,8 +31,11 @@ const Personal = {
     },
     updateUserData(state, { id, display_name, images }) {
       state.userId = id
-      state.display_name = display_name
+      state.displayName = display_name
       state.imagesUrl = images[0].url
+      localStorage.setItem('jukebox_user_id', id)
+      localStorage.setItem('jukebox_user_display_name', display_name)
+      localStorage.setItem('jukebox_user_images', images[0].url)
     },
   },
 }

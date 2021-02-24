@@ -114,7 +114,7 @@ const PlayingState = {
       playing_state_ref.child('votedUsers').set(null)
     },
     adjustIsVoted({ state, rootState }, snapshot) {
-      if (rootState.Personal.userId !== '') state.isVoted = snapshot.hasChild(rootState.Personal.userId)
+      if (rootState.Personal.userId) state.isVoted = snapshot.hasChild(rootState.Personal.userId)
     },
     updatePlayingTrack(_context, { playingState }) {
       const track = {
