@@ -5,7 +5,7 @@ const getImplicitGrantToken = function () {
   var redirect_uri = 'http://localhost:3000/'
 
   // localStorage.setItem(stateKey);
-  var scope = `user-top-read user-read-private user-read-email user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming`
+  var scope = `user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming`
 
   // var state = window.location.hash
 
