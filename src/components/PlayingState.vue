@@ -216,7 +216,7 @@ export default {
   .bar {
     height: 6px;
     padding: 5px;
-    border: 1px solid var(--primary-highlight);
+    border: 1px solid var(--ignore);
     border-radius: var(--border-radius);
     p {
       height: 100%;
@@ -230,7 +230,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     .sign {
-      border: 1px solid var(--primary-highlight);
+      border: 1px solid var(--ignore);
       border-radius: var(--border-radius);
       font-size: 0;
       display: inline-block;
