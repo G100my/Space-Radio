@@ -36,6 +36,7 @@ main {
   color: var(--primary-light);
   @media (min-width: 768px) {
     display: flex;
+    min-height: 100vh;
   }
 }
 h1,
