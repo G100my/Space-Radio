@@ -57,6 +57,7 @@ export default {
   height: fit-content;
   padding: 30px 20px;
   box-sizing: content-box;
+  align-self: center;
 
   .title > h1 {
     font-size: 65px;
@@ -74,7 +75,7 @@ export default {
   }
   .cover {
     height: fit-content;
-    max-width: 300px;
+    max-width: 250px;
     font-size: 0;
     position: relative;
     // transform: skewX(-3deg) rotateY(10deg);
@@ -141,11 +142,11 @@ export default {
     flex-direction: column;
   }
   .track-info {
-    margin: 25px 0 40px;
+    margin: 20px 0 0;
     display: grid;
     grid-template-columns: auto 2fr;
     grid-template-rows: 1fr 1fr 1fr;
-    gap: 15px;
+    gap: 5px;
     align-items: flex-end;
 
     p:nth-child(2) {
@@ -156,10 +157,14 @@ export default {
     }
   }
   .log {
-    height: 80px;
+    display: none;
+    @media (min-width: 768px) {
+      margin-top: 30px;
+      display: block;
+    }
   }
   .login {
-    margin-top: 20px;
+    margin-top: 30px;
     display: flex;
     justify-content: center;
     button {
