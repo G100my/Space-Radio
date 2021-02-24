@@ -34,6 +34,7 @@ body {
 }
 main {
   color: var(--primary-light);
+  max-height: 100vh;
   @media (min-width: 768px) {
     display: flex;
     min-height: 100vh;

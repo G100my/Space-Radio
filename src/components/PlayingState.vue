@@ -113,22 +113,24 @@ export default {
 <style lang="scss">
 .playing-state {
   position: relative;
-  padding: 20px 0 10px;
   display: flex;
   flex-direction: column;
   h1 {
-    display: flex;
-    align-items: center;
-    img {
-      width: 40px;
-      margin-right: 15px;
-    }
-    p {
-      margin-right: auto;
+    display: none;
+    @media (min-width: 768px) {
+      display: flex;
+      align-items: center;
+      img {
+        width: 40px;
+        margin-right: 15px;
+      }
+      p {
+        margin-right: auto;
+      }
     }
   }
   .track-info {
-    flex: 1;
+    // flex: 1;
     display: flex;
     flex-direction: column;
     @media (min-width: 768px) {
@@ -145,9 +147,11 @@ export default {
     flex-direction: column;
     img {
       max-width: 100%;
+      max-height: 240px;
     }
     @media (min-width: 768px) {
       img {
+        max-height: none;
         max-height: none;
       }
     }
@@ -174,7 +178,14 @@ export default {
     }
   }
 
-  > div {
+  .track-info {
+    margin: 0 30px;
+    @media (min-width: 768px) {
+      margin: 15px 30px 0;
+    }
+  }
+  .control-board,
+  .log {
     margin: 15px 30px 0;
   }
   .terminate-control,
