@@ -103,7 +103,6 @@ export default {
 $icon-length: 35px;
 
 .search {
-  margin-left: auto;
   margin-right: 10px;
   display: flex;
   border: 2px solid var(--primary-neutral);
@@ -148,23 +147,42 @@ $icon-length: 35px;
       height: 60%;
     }
   }
+}
 
+.search {
   &,
   .cancel-search-button {
-    transition: flex-basis 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     flex: 0 1 0;
   }
   input {
-    transition: flex 0.3s ease-in-out 0.2s;
+    transition: all 0.3s ease-in-out 0.2s;
   }
+}
+
+.search ~ ul,
+.search ~ h1 {
+  overflow: hidden;
+  transition: 0.2s ease-in-out;
+  transition-property: all;
+}
+.search ~ ul {
+  flex-basis: auto;
+}
+.search ~ h1 {
+  margin-right: auto;
+  flex-basis: 130px;
 }
 
 .search.active {
   flex-basis: 100%;
+  input {
+    flex: 1;
+    transition-delay: 0;
+  }
   .cancel-search-button {
     flex-basis: $icon-length;
   }
-
   &::before {
     content: '';
     position: absolute;
@@ -174,24 +192,6 @@ $icon-length: 35px;
     top: 100%;
     left: -15px;
     display: block;
-  }
-}
-.search ~ ul,
-.search ~ h1 {
-  overflow: hidden;
-  transition: 0.2s ease-in-out;
-  transition-property: flex-basis;
-}
-.search ~ ul {
-  flex-basis: auto;
-}
-.search ~ h1 {
-  flex-basis: 130px;
-}
-.search.active {
-  input {
-    flex: 1;
-    transition-delay: 0;
   }
 }
 .search.active ~ ul,
