@@ -100,8 +100,10 @@ export default {
 }
 </script>
 <style lang="scss">
+$icon-length: 35px;
+
 .search {
-  margin-left: 10px;
+  margin-left: auto;
   margin-right: 10px;
   display: flex;
   border: 2px solid var(--primary-neutral);
@@ -124,14 +126,14 @@ export default {
 
   .submit-search-botton,
   .cancel-search-button {
-    flex: 0 0 45px;
+    flex: 0 0 $icon-length;
     svg {
       vertical-align: middle;
     }
   }
   .submit-search-botton {
-    width: 45px;
-    height: 45px;
+    width: $icon-length;
+    height: $icon-length;
     border-left: none;
     svg {
       width: 70%;
@@ -160,7 +162,7 @@ export default {
 .search.active {
   flex-basis: 100%;
   .cancel-search-button {
-    flex-basis: 45px;
+    flex-basis: $icon-length;
   }
 
   &::before {
@@ -203,7 +205,7 @@ export default {
   position: absolute;
   top: 100%;
   width: 100%;
-  height: calc(100vh - 45px - (var(--edge-gap) * 3));
+  height: calc(100vh - $icon-length - (var(--edge-gap) * 3));
   overflow-y: auto;
   p {
     overflow: hidden;

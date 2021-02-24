@@ -8,13 +8,24 @@
       </h1>
       <ul>
         <li>
-          <!-- prettier-ignore -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
-                <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
-                <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
-                <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
-                <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
-              </svg>
+          <button class="list-toggler">
+            <!-- prettier-ignore -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
+              <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+              <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
+              <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
+              <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+          </button>
+        </li>
+        <li class="user-name">
+          <p>
+            <!-- prettier-ignore -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+            <span>Lo Zhang</span>
+          </p>
         </li>
       </ul>
     </nav>
@@ -185,6 +196,8 @@ export default {
     }
   }
 }
+
+$icon-length: 35px;
 nav {
   margin: 0 var(--edge-gap);
   padding: var(--edge-gap) 0;
@@ -210,19 +223,33 @@ nav {
     font-size: 0;
     justify-content: flex-end;
     li {
-      height: 45px;
-      width: 45px;
       border: 2px solid var(--primary-highlight);
       border-radius: 4px;
-      padding: 5px;
-      box-sizing: border-box;
     }
-    li + li {
-      margin-left: 15px;
+    .list-toggler {
+      border: none;
+      height: $icon-length;
+      width: $icon-length;
+      svg {
+        height: 100%;
+        width: 100%;
+        vertical-align: bottom;
+      }
     }
-    svg {
-      height: 100%;
-      width: 100%;
+    .user-name {
+      margin-left: 10px;
+      font-size: 16px;
+      height: $icon-length;
+      display: flex;
+      align-items: center;
+      p {
+        margin: 0 5px;
+      }
+      svg {
+        vertical-align: bottom;
+        height: 20px;
+        width: 20px;
+      }
     }
   }
 }
