@@ -1,6 +1,7 @@
 <template>
   <!-- eslint-disable vue/html-self-closing eslint-disable vue/no-parsing-error-->
   <div class="room-queue">
+    <h2>Next On</h2>
     <div class="track-table">
       <div class="table-header track-cover">Cover</div>
       <div class="table-header track-name-artist">
@@ -113,6 +114,12 @@ export default {
   flex-direction: column;
   @media (min-width: 768px) {
     padding: 50px 7%;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    color: var(--primary-neutral);
+    margin-left: 5px;
   }
 
   .track-table {
