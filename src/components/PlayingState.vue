@@ -115,6 +115,7 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   h1 {
     display: none;
     @media (min-width: 768px) {
@@ -147,12 +148,10 @@ export default {
     flex-direction: column;
     img {
       max-width: 100%;
-      max-height: 240px;
     }
     @media (min-width: 768px) {
       img {
-        max-height: none;
-        max-height: none;
+        max-width: none;
       }
     }
   }
