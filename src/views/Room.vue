@@ -199,8 +199,8 @@ export default {
 
 $icon-length: 35px;
 nav {
-  margin: 0 var(--edge-gap);
-  padding: var(--edge-gap) 0;
+  margin: 0 15px;
+  padding: 15px 0;
   display: flex;
   position: absolute;
   top: 0;
