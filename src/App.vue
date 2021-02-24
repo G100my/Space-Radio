@@ -23,8 +23,6 @@ export default {}
   --ignore: #c0c0c0;
 
   --border-radius: 4px;
-  --edge-gap: 15px;
-  --edge-gap-n: -15px;
   font-size: 16px;
 }
 body {

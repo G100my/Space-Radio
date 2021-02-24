@@ -172,7 +172,7 @@ $icon-length: 35px;
     width: 100vw;
     background-color: var(--primary-dark);
     top: 100%;
-    left: var(--edge-gap-n);
+    left: -15px;
     display: block;
   }
 }
@@ -205,7 +205,7 @@ $icon-length: 35px;
   position: absolute;
   top: 100%;
   width: 100%;
-  height: calc(100vh - $icon-length - (var(--edge-gap) * 3));
+  height: calc(100vh - $icon-length - (15px * 3));
   overflow-y: auto;
   p {
     overflow: hidden;
