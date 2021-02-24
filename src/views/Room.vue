@@ -151,6 +151,10 @@ export default {
     height: 100vh;
     width: 100%;
     box-sizing: border-box;
+    padding: 80px 0 60px;
+    @media (min-width: 768px) {
+      padding: 0;
+    }
   }
   .view.slide-items {
     position: relative;
@@ -162,10 +166,10 @@ export default {
     }
   }
   .sidebar {
-    padding: 0 20px;
+    padding-right: 20px;
+    padding-left: 20px;
     box-sizing: border-box;
     overflow-y: auto;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     .playing-state {
@@ -174,6 +178,7 @@ export default {
     @media (min-width: 768px) {
       width: 400px;
       padding-bottom: 40px;
+      padding-top: 40px;
     }
   }
 
