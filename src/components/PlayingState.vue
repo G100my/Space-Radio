@@ -47,8 +47,8 @@
         </div>
         <p>{{ currentDislike }}</p>
         <div class="buttons">
-          <button v-show="!isVoted" type="button" @click="increaseDislike">terminate</button>
-          <button v-show="isVoted" type="button" @click="reduceDislike">cancel</button>
+          <button v-show="!isVoted" type="button" @click="increaseDislike">Terminate</button>
+          <button v-show="isVoted" type="button" @click="reduceDislike">Cancel</button>
         </div>
       </div>
       <div class="collect">
@@ -134,7 +134,7 @@ export default {
     @media (min-width: 768px) {
       justify-content: flex-end;
       .cover {
-        margin: auto 0;
+        margin: auto;
       }
     }
   }
@@ -288,7 +288,11 @@ export default {
     @media (min-width: 768px) {
       flex: 1;
       .cover img {
-        max-height: none;
+        max-height: 250px;
+        max-width: 250px;
+      }
+      .description {
+        display: flex;
       }
     }
   }

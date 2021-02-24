@@ -329,9 +329,6 @@ export default {
     font-size: 0;
     color: var(--primary-neutral);
     width: 100%;
-    @media (min-width: 768px) {
-      margin: 25px 0;
-    }
   }
   svg {
     width: 40px;
