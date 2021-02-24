@@ -40,6 +40,9 @@ router.beforeEach(to => {
     const newToken = hash.substring(hash.search(/(?<=access_token=)[\w+]/), hash.indexOf('&token_type'))
     store.commit('refreshToken', { newToken, expiredTime })
     spotifyAPI.setAccessToken(newToken)
+    spotifyAPI.getMe().then(result => {
+      store.commit('updateUserData', result)
+    })
     return { name: 'Room' }
   }
 

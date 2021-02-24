@@ -1,10 +1,10 @@
 const Personal = {
   state: {
-    userId: 'zhangLo',
+    userId: '',
+    display_name: '',
+    imagesUrl: '',
     token: localStorage.getItem('jukebox_token') || null,
     expiredTime: Number(localStorage.getItem('jukebox_expired_time')) || null,
-    playlists: null,
-    image: null,
   },
   getters: {
     token(state) {
@@ -25,6 +25,11 @@ const Personal = {
       state.expiredTime = expiredTime
       localStorage.setItem('jukebox_token', newToken)
       localStorage.setItem('jukebox_expired_time', expiredTime)
+    },
+    updateUserData(state, { id, display_name, images }) {
+      state.userId = id
+      state.display_name = display_name
+      state.imagesUrl = images[0].url
     },
   },
 }
