@@ -141,7 +141,7 @@ export default {
 <style lang="scss">
 .room {
   overflow: hidden;
-  flex: 0 0 fit-content;
+  flex: 0;
   @media (min-width: 768px) {
     overflow-y: hidden;
   }
@@ -155,7 +155,7 @@ export default {
     height: 100vh;
     width: 100%;
     box-sizing: border-box;
-    padding: 80px 0 60px;
+    padding: 80px 0 25px;
     @media (min-width: 768px) {
       padding: 0;
     }
