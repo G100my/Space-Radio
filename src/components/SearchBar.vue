@@ -205,28 +205,32 @@ $icon-length: 35px;
     flex-basis: $icon-length;
   }
 
-  // &::before {
-  //   content: '';
-  //   position: absolute;
-  //   height: 100vh;
-  //   width: 100vw;
-  //   background-color: var(--primary-dark);
-  //   top: 100%;
-  //   left: -15px;
-  //   display: block;
-  // }
+  &::before {
+    content: '';
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--primary-dark);
+    top: 100%;
+    left: 0;
+    display: block;
+  }
 }
 
 .immediately-result {
-  outline: 1px pink solid;
   position: absolute;
   top: 100%;
-  width: 100%;
-  height: calc(100vh - $icon-length - (15px * 3));
+  left: 0;
+  width: 100vw;
+  padding: 0 15px;
+  box-sizing: border-box;
   overflow-y: auto;
+
   p {
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--ignore);
+    padding: 10px 0;
   }
   span {
     font-size: 1rem;
