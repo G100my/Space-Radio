@@ -149,11 +149,6 @@ export default {
     img {
       max-width: 100%;
     }
-    @media (min-width: 768px) {
-      img {
-        max-width: none;
-      }
-    }
   }
   .description {
     margin-top: 5px;
