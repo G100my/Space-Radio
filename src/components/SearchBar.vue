@@ -122,17 +122,20 @@ $icon-length: 35px;
     padding: 0;
     font-size: 1.3rem;
   }
-
-  .submit-search-botton,
-  .cancel-search-button {
-    flex: 0 0 $icon-length;
-    svg {
-      vertical-align: middle;
-    }
+  .submit-search-botton svg,
+  .cancel-search-button svg,
+  input {
+    vertical-align: middle;
   }
+  .submit-search-botton,
+  .cancel-search-button,
+  input {
+    height: $icon-length;
+    font-size: 0;
+  }
+
   .submit-search-botton {
     width: $icon-length;
-    height: $icon-length;
     border-left: none;
     svg {
       width: 70%;
