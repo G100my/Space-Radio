@@ -199,13 +199,14 @@ export default {
 
 $icon-length: 35px;
 nav {
-  margin: 0 15px;
-  padding: 15px 0;
+  padding: 15px;
   display: flex;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 20;
+  width: 100%;
+  box-sizing: border-box;
   h1 {
     order: -1;
     display: flex;
@@ -245,6 +246,7 @@ nav {
       align-items: center;
       p {
         margin: 0 5px;
+        white-space: nowrap;
       }
       svg {
         vertical-align: bottom;
