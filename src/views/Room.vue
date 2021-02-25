@@ -154,7 +154,7 @@ export default {
   overflow: hidden;
   flex: 0;
   @media (min-width: 768px) {
-    overflow-y: hidden;
+    flex: 1;
   }
 
   .slide-container {
@@ -204,9 +204,18 @@ nav {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 20;
   width: 100%;
   box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    width: fit-content;
+    left: auto;
+    justify-content: flex-end;
+    width: 50vw;
+  }
+
   h1 {
     order: -1;
     display: flex;
@@ -217,6 +226,7 @@ nav {
     }
     @media (min-width: 768px) {
       display: none;
+      margin: 0;
     }
   }
 

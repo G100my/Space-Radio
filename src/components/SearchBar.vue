@@ -218,6 +218,15 @@ $icon-length: 35px;
     left: 0;
     display: block;
   }
+  @media (min-width: 768px) {
+    &::before {
+      width: 100%;
+      height: auto;
+    }
+    input {
+      flex-shrink: 0;
+    }
+  }
 }
 
 .immediately-result {
