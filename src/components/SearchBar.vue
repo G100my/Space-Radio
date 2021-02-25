@@ -14,48 +14,49 @@
         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
       </svg>
     </button>
-    <div v-show="isImmediatelyOpen" class="immediately-result">
-      <template v-if="tracksResult.length === 0">
-        <p class="no-result" @click="isImmediatelyOpen = false">No result</p>
-      </template>
-      <template v-else>
-        <ul>
-          <li v-for="track in tracksResult" :key="track.id">
-            <div class="result-track">
-              <img :src="track.album.images[track.album.images.length - 1].url" alt="" />
-              <div class="track-info">
-                <p>{{ track.name }}</p>
-                <p>
-                  <a
-                    v-for="(artist, index) in track.artists"
-                    :key="index"
-                    :href="artist.external_urls.spotify"
-                    target="_blank"
-                    >{{ artist.name }}</a
-                  >
-                </p>
-              </div>
-              <div class="buttons">
-                <button @click="addHandler(track.id, track.name)">
-                  <!-- prettier-ignore -->
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+  </div>
+  <div class="immediately-result">
+    <template v-if="tracksResult.length === 0">
+      <p class="no-result" @click="isImmediatelyOpen = false">No result</p>
+    </template>
+    <template v-else>
+      <ul class="results">
+        <li v-for="track in tracksResult" :key="track.id">
+          <div class="result-track">
+            <img :src="track.album.images[track.album.images.length - 1].url" alt="" />
+            <div class="track-info">
+              <p>{{ track.name }}</p>
+              <p>
+                <a
+                  v-for="(artist, index) in track.artists"
+                  :key="index"
+                  :href="artist.external_urls.spotify"
+                  target="_blank"
+                  >{{ artist.name }}</a
+                >
+              </p>
+            </div>
+            <div class="buttons">
+              <button @click="addHandler(track.id, track.name)">
+                <!-- prettier-ignore -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                   </svg>
-                </button>
-                <button @click="jumpInHandler(track.id, track.name)">
-                  <!-- prettier-ignore -->
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+              </button>
+              <button @click="jumpInHandler(track.id, track.name)">
+                <!-- prettier-ignore -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
                   </svg>
-                </button>
-              </div>
+              </button>
             </div>
-          </li>
-        </ul>
-      </template>
-    </div>
+          </div>
+        </li>
+      </ul>
+    </template>
   </div>
+  <div class="result-mask" />
 </template>
 <script>
 export default {
@@ -121,6 +122,7 @@ $icon-length: 35px;
     width: 0;
     padding: 0;
     font-size: 1.3rem;
+    height: $icon-length;
   }
   .submit-search-botton svg,
   .cancel-search-button svg,
@@ -128,8 +130,7 @@ $icon-length: 35px;
     vertical-align: middle;
   }
   .submit-search-botton,
-  .cancel-search-button,
-  input {
+  .cancel-search-button {
     height: $icon-length;
     font-size: 0;
   }
@@ -152,12 +153,14 @@ $icon-length: 35px;
   }
 }
 
-.search,
 .search .cancel-search-button,
 .search input,
 .search ~ ul,
 .search ~ h1 {
-  transition: all 0.3s ease-in-out;
+  transition: flex 0.3s ease-in-out;
+}
+.search {
+  transition: flex 0.3s ease-in-out;
 }
 
 .search,
@@ -201,28 +204,16 @@ $icon-length: 35px;
 .search.active {
   flex-basis: 100%;
   flex-shrink: 0;
+  margin-right: 0;
   input {
     flex-grow: 1;
+    padding-left: 10px;
   }
   .cancel-search-button {
     flex-basis: $icon-length;
   }
 
-  &::before {
-    content: '';
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    background-color: var(--primary-dark);
-    top: 100%;
-    left: 0;
-    display: block;
-  }
   @media (min-width: 768px) {
-    &::before {
-      width: 100%;
-      height: auto;
-    }
     input {
       flex-shrink: 0;
     }
@@ -230,28 +221,14 @@ $icon-length: 35px;
 }
 
 .immediately-result {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100vw;
-  padding: 0 15px;
-  box-sizing: border-box;
-  overflow-y: auto;
-
-  p {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--ignore);
-    padding: 10px 0;
-  }
   span {
     font-size: 1rem;
   }
-  ul {
+
+  .results {
     width: 100%;
   }
-  li + li,
-  ul + ul {
+  li + li {
     margin-top: 5px;
   }
 
@@ -259,6 +236,8 @@ $icon-length: 35px;
     height: 100%;
     width: 100%;
     text-align: center;
+    margin: 0;
+    overflow: hidden;
   }
 
   .result-track {
@@ -273,6 +252,10 @@ $icon-length: 35px;
     p {
       width: 100%;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--ignore);
+      padding: 10px 0;
     }
     span:not(span:last-child)::after {
       content: ',';
@@ -297,6 +280,60 @@ $icon-length: 35px;
       height: 25px;
       width: 25px;
     }
+  }
+}
+
+.result-mask,
+.immediately-result {
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  transition-property: width, height;
+  box-sizing: border-box;
+  position: absolute;
+  right: 0;
+  height: 0;
+}
+
+.result-mask {
+  background-color: var(--primary-dark);
+  top: 0;
+  width: 100vw;
+  z-index: -2;
+  opacity: 0.9;
+  @media (min-width: 768px) {
+    height: 100vh;
+  }
+}
+.immediately-result {
+  top: 100%;
+  left: 0;
+  width: 90vw;
+  z-index: -1;
+  overflow-y: auto;
+  margin: 0 auto;
+  box-sizing: border-box;
+  @media (min-width: 768px) {
+    margin: 0 0 0 auto;
+  }
+}
+.result-mask,
+.immediately-result {
+  @media (min-width: 768px) {
+    width: 0;
+  }
+}
+
+.active + .immediately-result {
+  height: calc(100vh - 70px - 30px);
+  @media (min-width: 768px) {
+    width: 100%;
+    padding: 15px;
+  }
+}
+.active ~ .result-mask {
+  height: 100vh;
+  @media (min-width: 768px) {
+    width: 100%;
   }
 }
 </style>
