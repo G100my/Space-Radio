@@ -155,6 +155,8 @@ export default {
   flex: 0;
   @media (min-width: 768px) {
     flex: 1;
+    max-height: 100vh;
+    width: 100vw;
   }
 
   .slide-container {
@@ -210,7 +212,6 @@ nav {
   box-sizing: border-box;
 
   @media (min-width: 768px) {
-    width: fit-content;
     left: auto;
     justify-content: flex-end;
     width: 50vw;
