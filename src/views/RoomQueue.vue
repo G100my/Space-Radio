@@ -112,6 +112,7 @@ export default {
   overflow: auto;
   display: flex;
   flex-direction: column;
+  height: 100%;
   @media (min-width: 768px) {
     padding: 50px 7%;
   }

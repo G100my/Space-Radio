@@ -1,7 +1,7 @@
 <template>
-  <div class="search" :class="{ active: isImmediatelyOpen }">
+  <div class="search">
     <input v-model="searchText" type="text" autocomplete="off" @keydown.prevent.enter="searchHandler" />
-    <button class="submit-search-botton" type="button" @click="searchHandler($event), (isImmediatelyOpen = true)">
+    <button class="submit-search-botton" type="button" @click="searchHandler($event), $emit('activeSearchStyle', true)">
       <!-- prettier-ignore -->
       <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
@@ -17,7 +17,7 @@
   </div>
   <div class="immediately-result">
     <template v-if="tracksResult.length === 0">
-      <p class="no-result" @click="isImmediatelyOpen = false">No result</p>
+      <p class="no-result" @click="$emit('activeSearchStyle', false)">No result</p>
     </template>
     <template v-else>
       <ul class="results">
@@ -60,21 +60,13 @@
 </template>
 <script>
 export default {
-  emits: ['activeNoteDialog'],
+  emits: ['activeNoteDialog', 'activeSearchStyle'],
   data() {
     return {
       searchText: '',
       result: [],
-      isImmediatelyOpen: false,
       tracksResult: [],
     }
-  },
-  watch: {
-    isImmediatelyOpen(value) {
-      if (!value) {
-        this.searchText = ''
-      }
-    },
   },
   methods: {
     searchHandler() {
@@ -94,7 +86,7 @@ export default {
       this.$emit('activeNoteDialog', { submitFunction })
     },
     clearSearch() {
-      this.isImmediatelyOpen = false
+      this.$emit('activeSearchStyle', false)
       if (this.tracksResult.length != 0) this.tracksResult = []
     },
   },
@@ -174,15 +166,17 @@ $icon-length: 35px;
   transition-delay: 0s;
 }
 
-.search.active,
-.search.active ~ ul,
-.search.active ~ h1 {
-  transition-delay: 0s;
-}
+.active-search {
+  .search,
+  .search ~ ul,
+  .search ~ h1 {
+    transition-delay: 0s;
+  }
 
-.search.active input,
-.search.active .cancel-search-button {
-  transition-delay: 0.3s;
+  .search input,
+  .search .cancel-search-button {
+    transition-delay: 0.3s;
+  }
 }
 
 .search {
@@ -201,7 +195,7 @@ $icon-length: 35px;
   }
 }
 
-.search.active {
+.active-search .search {
   flex-basis: 100%;
   flex-shrink: 0;
   margin-right: 0;
@@ -323,17 +317,19 @@ $icon-length: 35px;
   }
 }
 
-.active + .immediately-result {
-  height: calc(100vh - 70px - 30px);
-  @media (min-width: 768px) {
-    width: 100%;
-    padding: 15px;
+.active-search {
+  .immediately-result {
+    height: calc(100vh - 70px - 30px);
+    @media (min-width: 768px) {
+      width: 100%;
+      padding: 15px;
+    }
   }
-}
-.active ~ .result-mask {
-  height: 100vh;
-  @media (min-width: 768px) {
-    width: 100%;
+  .result-mask {
+    height: 100vh;
+    @media (min-width: 768px) {
+      width: 100%;
+    }
   }
 }
 </style>
