@@ -18,7 +18,7 @@
       <button type="button" @click="submitHandler">Submit</button>
       <button type="button" @click="$emit('finish')">Cancel</button>
     </div>
-    <p class="test">{{ output }}</p>
+    <p class="preview">{{ output }}</p>
   </div>
 </template>
 <script>
@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     output() {
-      return `${this.sender} 插播一首 ${this.trackName} 給 ${
+      return `${this.sender ? this.sender : this.$store.getters.userId} 插播一首 ${this.trackName} 給 ${
         this.recipient.trim() === '' ? '所有人' : this.recipient
       } \n ${this.message}`
     },
@@ -97,7 +97,7 @@ export default {
   border: 3px var(--secondary-neutral) solid;
   border-radius: var(--border-radius);
   z-index: 30;
-  background-clip: border-box;
+  background-color: var(--primary-dark);
   &.mask {
     display: block;
     position: absolute;
@@ -108,11 +108,6 @@ export default {
     z-index: 9;
   }
 
-  .dialog-header,
-  .dialog-body,
-  .dialog-footer {
-    background-color: var(--primary-dark);
-  }
   .dialog-header {
     font-size: 1.5rem;
     font-weight: 600;
@@ -196,6 +191,10 @@ export default {
       padding: 4px 15px;
       margin-right: 10px;
     }
+  }
+  .preview {
+    padding: 5px;
+    text-transform: capitalize;
   }
 }
 </style>
