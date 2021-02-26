@@ -6,12 +6,12 @@ const UserLog = {
   state: {
     log: [
       {
-        actionType: '',
-        userId: '',
+        action_type: '',
+        user_id: '',
         timestamp: 0,
         option: {
           id: '',
-          trackName: '',
+          track_name: '',
           volume: 0,
         },
       },
@@ -35,8 +35,8 @@ function userLogFirebasePlugin(store) {
 
   const maker = function ({ type }) {
     return {
-      actionType: type,
-      userId,
+      action_type: type,
+      user_id: userId,
       timestamp: Date.now(),
     }
   }
@@ -55,9 +55,9 @@ function userLogFirebasePlugin(store) {
         case 'normal2urgent':
         case 'urgent2normal': {
           const {
-            payload: { id, trackName },
+            payload: { id, track_name },
           } = action
-          userLog = { ...maker(action), option: { id, trackName } }
+          userLog = { ...maker(action), option: { id, track_name } }
           break
         }
 

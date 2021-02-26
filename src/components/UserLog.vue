@@ -1,24 +1,24 @@
 <template>
   <ul class="log-container">
     <li v-for="log in logs" :key="log.timestemp">
-      <p v-if="log.actionType === 'add' || log.actionType === 'jumpIn'">
-        <span>{{ log.userId }}</span
-        >{{ log.actionType === 'add' ? '點' : '插' }}播了<span>{{ log.option.trackName }}</span>
+      <p v-if="log.action_type === 'add' || log.action_type === 'jumpIn'">
+        <span>{{ log.user_id }}</span
+        >{{ log.action_type === 'add' ? '點' : '插' }}播了<span>{{ log.option.track_name }}</span>
       </p>
-      <p v-else-if="log.actionType === 'normalRemove' || log.actionType === 'urgentRemove'">
-        <span>{{ log.userId }}</span
-        >從{{ log.actionType === 'normalRemove' ? '點' : '插' }}播序列移除了<span>{{ log.option.trackName }}</span>
+      <p v-else-if="log.action_type === 'normalRemove' || log.action_type === 'urgentRemove'">
+        <span>{{ log.user_id }}</span
+        >從{{ log.action_type === 'normalRemove' ? '點' : '插' }}播序列移除了<span>{{ log.option.track_name }}</span>
       </p>
-      <p v-else-if="log.actionType === 'normal2urgent' || log.actionType === 'urgent2normal'">
-        <span>{{ log.userId }}</span
-        >把<span>{{ log.option.trackName }}</span
-        >移到{{ log.actionType === 'normal2urgent' ? '點' : '插' }}播序列
+      <p v-else-if="log.action_type === 'normal2urgent' || log.action_type === 'urgent2normal'">
+        <span>{{ log.user_id }}</span
+        >把<span>{{ log.option.track_name }}</span
+        >移到{{ log.action_type === 'normal2urgent' ? '點' : '插' }}播序列
       </p>
-      <p v-else-if="log.actionType === 'turnUp' || log.actionType === 'turnDown'">
-        <span>{{ log.userId }}</span
+      <p v-else-if="log.action_type === 'turnUp' || log.action_type === 'turnDown'">
+        <span>{{ log.user_id }}</span
         >調高音量至:<span>{{ log.option.volume }}</span>
       </p>
-      <p v-else-if="log.actionType === 'increaseDislike' || log.actionType === 'reduceDislike'">更新切歌投票數</p>
+      <p v-else-if="log.action_type === 'increaseDislike' || log.action_type === 'reduceDislike'">更新切歌投票數</p>
     </li>
   </ul>
 </template>

@@ -64,7 +64,7 @@ export default {
       isNoteDialogActive: false,
       editingNote: {
         queueKey: '',
-        trackName: '',
+        track_name: '',
         submitFunction: () => {},
       },
       isSearchActive: false,
@@ -95,7 +95,7 @@ export default {
       this.isNoteDialogActive = false
       this.editingNote = {
         queueKey: '',
-        trackName: '',
+        track_name: '',
         submitFunction: () => {},
       }
     },
