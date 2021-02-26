@@ -1,38 +1,38 @@
 const Personal = {
   state: {
-    userId: localStorage.getItem('jukebox_user_id') || null,
-    displayName: localStorage.getItem('jukebox_user_display_name') || null,
-    imagesUrl: localStorage.getItem('jukebox_user_images') || '',
+    user_id: localStorage.getItem('jukebox_user_id') || null,
+    display_name: localStorage.getItem('jukebox_user_display_name') || null,
+    image_url: localStorage.getItem('jukebox_user_images') || '',
     token: localStorage.getItem('jukebox_token') || null,
-    expiredTime: Number(localStorage.getItem('jukebox_expired_time')) || null,
+    expired_time: Number(localStorage.getItem('jukebox_expired_time')) || null,
   },
   getters: {
     token(state) {
       return state.token
     },
     isTokenValid(state) {
-      if (state.expiredTime === null) return false
+      if (state.expired_time === null) return false
       const now = Date.now()
-      return state.expiredTime > now
+      return state.expired_time > now
     },
     userId(state) {
-      return state.userId
+      return state.user_id
     },
     userName(state) {
-      return state.displayName
+      return state.display_name
     },
   },
   mutations: {
     refreshToken(state, { newToken, expiredTime }) {
       state.token = newToken
-      state.expiredTime = expiredTime
+      state.expired_time = expiredTime
       localStorage.setItem('jukebox_token', newToken)
       localStorage.setItem('jukebox_expired_time', expiredTime)
     },
     updateUserData(state, { id, display_name, images }) {
-      state.userId = id
-      state.displayName = display_name
-      state.imagesUrl = images[0].url
+      state.user_id = id
+      state.display_name = display_name
+      state.image_url = images[0].url
       localStorage.setItem('jukebox_user_id', id)
       localStorage.setItem('jukebox_user_display_name', display_name)
       localStorage.setItem('jukebox_user_images', images[0].url)

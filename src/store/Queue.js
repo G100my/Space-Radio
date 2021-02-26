@@ -118,10 +118,10 @@ const Queue = {
     },
   },
   actions: {
-    add({ rootState }, { id, note }) {
+    add({ getters }, { id, note }) {
       const now = Date.now()
       const parameter = {}
-      const userId = rootState.Personal.userId
+      const userId = getters.userId
       const orderKey = `${now}-${userId}`
       parameter[orderKey] = {
         id,
@@ -132,9 +132,9 @@ const Queue = {
       }
       normal_queue_ref.update(parameter)
     },
-    jumpIn({ rootState }, { id, note }) {
+    jumpIn({ getters }, { id, note }) {
       const now = Date.now()
-      const userId = rootState.Personal.userId
+      const userId = getters.userId
       const orderKey = `${now}-${userId}`
       urgent_queue_ref.push({
         id,
