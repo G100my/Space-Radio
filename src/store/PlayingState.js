@@ -38,11 +38,11 @@ const initialQueue = {
 const PlayingState = {
   state: {
     volume: 30,
-    minimalVolume: 20,
-    dislike: 0,
-    isVoted: false,
+    minimal_volume: 20,
     playing_track: { ...initialTrack },
     latest_queue: { ...initialQueue },
+    dislike: 0,
+    isVoted: false,
   },
   getters: {
     currentPlayingTrackId(state) {
@@ -58,7 +58,7 @@ const PlayingState = {
       return state.playing_track.name
     },
     currentMinimalVolume(state) {
-      return state.minimalVolume
+      return state.minimal_volume
     },
     currentVolume(state) {
       return state.volume
@@ -83,7 +83,7 @@ const PlayingState = {
       state.dislike = value
     },
     adjustMinimalVolume(state, value) {
-      state.minimalVolume = value
+      state.minimal_volume = value
     },
   },
   actions: {
@@ -93,13 +93,13 @@ const PlayingState = {
     },
     turnDown({ state }) {
       const reduceResult = state.volume - volumeStep
-      if (reduceResult >= state.minimalVolume) playing_state_ref.update({ volume: reduceResult })
+      if (reduceResult >= state.minimal_volume) playing_state_ref.update({ volume: reduceResult })
     },
     reduceDislike({ state, rootState }) {
       const reduceResult = state.dislike - 1
       if (reduceResult >= 0) {
         playing_state_ref.update({ dislike: reduceResult })
-        playing_state_ref.child(`votedUsers/${rootState.Personal.userId}`).remove()
+        playing_state_ref.child(`voted_users/${rootState.Personal.userId}`).remove()
       }
     },
     increaseDislike({ state, rootState }) {
@@ -108,12 +108,12 @@ const PlayingState = {
         playing_state_ref.update({ dislike: reduceResult })
         const parameter = {}
         parameter[rootState.Personal.userId] = true
-        playing_state_ref.child('votedUsers').update(parameter)
+        playing_state_ref.child('voted_users').update(parameter)
       }
     },
     clearDislikeVote() {
       playing_state_ref.child('dislike').set(0)
-      playing_state_ref.child('votedUsers').set(null)
+      playing_state_ref.child('voted_users').set(null)
     },
     adjustIsVoted({ state, rootState }, snapshot) {
       if (rootState.Personal.userId) state.isVoted = snapshot.hasChild(rootState.Personal.userId)
@@ -142,7 +142,7 @@ const PlayingState = {
       playing_state_ref.update({ playing_track: initialTrack, latest_queue: initialQueue })
     },
     updateMinimalVolume(_context, value) {
-      playing_state_ref.child('minimalValume').set(value)
+      playing_state_ref.child('minimal_volume').set(value)
     },
   },
 }
@@ -160,7 +160,7 @@ function playingStateFirebasePlugin(store) {
   playing_state_ref.child('dislike').on('value', snapshot => {
     store.commit('adjustDislike', snapshot.val())
   })
-  playing_state_ref.child('votedUsers').on('value', snapshot => {
+  playing_state_ref.child('voted_users').on('value', snapshot => {
     store.dispatch('adjustIsVoted', snapshot)
   })
 }
