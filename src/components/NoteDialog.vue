@@ -96,7 +96,7 @@ export default {
   overflow: visible;
   border: 3px var(--secondary-neutral) solid;
   border-radius: var(--border-radius);
-  z-index: 10;
+  z-index: 30;
   background-clip: border-box;
   &.mask {
     display: block;

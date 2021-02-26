@@ -185,6 +185,7 @@ export default {
     @media (min-width: 768px) {
       width: auto;
       flex: 1;
+      position: relative;
     }
   }
   .sidebar {
