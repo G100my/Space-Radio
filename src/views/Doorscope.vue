@@ -6,7 +6,7 @@
     <div class="content">
       <div class="cover-container">
         <div class="cover">
-          <img :src="currentPlayingAlbum.imageURL" alt="" />
+          <img :src="currentPlayingAlbum.image_url" alt="" />
         </div>
       </div>
       <div class="others">
