@@ -55,7 +55,7 @@ function userLogFirebasePlugin(store) {
         case 'normal2urgent':
         case 'urgent2normal': {
           const {
-            payload: { id, track_name },
+            payload: { id, trackNameForLog: track_name },
           } = action
           userLog = { ...maker(action), option: { id, track_name } }
           break
