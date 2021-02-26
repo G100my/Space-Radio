@@ -1,34 +1,37 @@
 <template>
   <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
-    <nav>
-      <SearchBar @activeNoteDialog="activeNoteDialogHandler" />
-      <h1>
-        <img src="../assets/vinyl-record.png" alt="" />
-        <p>Jukebox</p>
-      </h1>
-      <ul>
-        <li>
-          <button class="list-toggler">
-            <!-- prettier-ignore -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
+    <header :class="{ 'active-search': isSearchActive }">
+      <nav>
+        <SearchBar @activeNoteDialog="activeNoteDialogHandler" @activeSearchStyle="isSearchActive = $event" />
+        <h1>
+          <img src="../assets/vinyl-record.png" alt="" />
+          <p>Jukebox</p>
+        </h1>
+        <ul>
+          <li>
+            <button class="list-toggler">
+              <!-- prettier-ignore -->
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
               <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
               <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
               <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
               <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
             </svg>
-          </button>
-        </li>
-        <li class="user-name">
-          <p>
-            <!-- prettier-ignore -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+            </button>
+          </li>
+          <li class="user-name">
+            <p>
+              <!-- prettier-ignore -->
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
               <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
             </svg>
-            <span>{{ $store.getters.userName }}</span>
-          </p>
-        </li>
-      </ul>
-    </nav>
+              <span>{{ $store.getters.userName }}</span>
+            </p>
+          </li>
+        </ul>
+      </nav>
+      <Marquee />
+    </header>
     <div ref="slideContainer" class="slide-container">
       <div class="sidebar slide-items">
         <PlayingState />
@@ -45,12 +48,14 @@ import PlayingState from '../components/PlayingState.vue'
 import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
 import SearchBar from '../components/SearchBar.vue'
 import NoteDialog from '../components/NoteDialog.vue'
+import Marquee from '../components/Marquee.vue'
 
 export default {
   components: {
     PlayingState,
     SearchBar,
     NoteDialog,
+    Marquee,
   },
   data() {
     return {
@@ -62,6 +67,7 @@ export default {
         trackName: '',
         submitFunction: () => {},
       },
+      isSearchActive: false,
     }
   },
   beforeCreate() {
@@ -200,21 +206,27 @@ export default {
 }
 
 $icon-length: 35px;
-nav {
-  padding: 15px;
-  display: flex;
+header {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   z-index: 20;
-  width: 100%;
-  box-sizing: border-box;
-
   @media (min-width: 768px) {
     left: auto;
+    display: flex;
+    flex-direction: row-reverse;
+    width: calc(100% - 400px);
+  }
+}
+nav {
+  padding: 15px;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  @media (min-width: 768px) {
     justify-content: flex-end;
-    width: 50vw;
+    flex: 0;
   }
 
   h1 {
