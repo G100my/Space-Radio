@@ -76,12 +76,12 @@ export default {
         success && (this.tracksResult = success.tracks.items)
       })
     },
-    addHandler(trackId, trackName) {
-      this.$store.dispatch('add', { id: trackId, note: false, trackName })
+    addHandler(trackId, track_name) {
+      this.$store.dispatch('add', { id: trackId, note: false, track_name })
     },
-    jumpInHandler(trackId, trackName) {
+    jumpInHandler(trackId, track_name) {
       const submitFunction = newNote => {
-        this.$store.dispatch('jumpIn', { id: trackId, note: newNote, trackName })
+        this.$store.dispatch('jumpIn', { id: trackId, note: newNote, track_name })
       }
       this.$emit('activeNoteDialog', { submitFunction })
     },

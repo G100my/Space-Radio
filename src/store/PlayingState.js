@@ -95,19 +95,19 @@ const PlayingState = {
       const reduceResult = state.volume - volumeStep
       if (reduceResult >= state.minimal_volume) playing_state_ref.update({ volume: reduceResult })
     },
-    reduceDislike({ state, rootState }) {
+    reduceDislike({ state, getters }) {
       const reduceResult = state.dislike - 1
       if (reduceResult >= 0) {
         playing_state_ref.update({ dislike: reduceResult })
-        playing_state_ref.child(`voted_users/${rootState.Personal.userId}`).remove()
+        playing_state_ref.child(`voted_users/${getters.userId}`).remove()
       }
     },
-    increaseDislike({ state, rootState }) {
+    increaseDislike({ state, getters }) {
       const reduceResult = state.dislike + 1
       if (reduceResult <= 2) {
         playing_state_ref.update({ dislike: reduceResult })
         const parameter = {}
-        parameter[rootState.Personal.userId] = true
+        parameter[getters.userId] = true
         playing_state_ref.child('voted_users').update(parameter)
       }
     },
@@ -115,8 +115,8 @@ const PlayingState = {
       playing_state_ref.child('dislike').set(0)
       playing_state_ref.child('voted_users').set(null)
     },
-    adjustIsVoted({ state, rootState }, snapshot) {
-      if (rootState.Personal.userId) state.isVoted = snapshot.hasChild(rootState.Personal.userId)
+    adjustIsVoted({ state, getters }, snapshot) {
+      if (getters.userId) state.isVoted = snapshot.hasChild(getters.userId)
     },
     updatePlayingTrack(_context, newPlayingTrack) {
       const track = {
