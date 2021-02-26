@@ -128,7 +128,7 @@ const Queue = {
         added_time: now,
         added_by: userId,
         note,
-        orderKey,
+        order_key: orderKey,
       }
       normal_queue_ref.update(parameter)
     },
@@ -141,7 +141,7 @@ const Queue = {
         added_time: now,
         added_by: userId,
         note,
-        orderKey,
+        order_key: orderKey,
       })
     },
     urgentRemove(_context, { queueKey }) {
@@ -154,7 +154,7 @@ const Queue = {
     urgent2normal({ state }, { queueKey }) {
       const queue = { ...state.urgent_queue[queueKey] }
       queue.note = false
-      const orderKey = queue.orderKey
+      const orderKey = queue.order_key
 
       const parameter = {}
       parameter[orderKey] = queue

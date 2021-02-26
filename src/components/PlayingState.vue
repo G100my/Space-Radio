@@ -6,7 +6,7 @@
     </h1>
     <div class="track-info" :class="{ smaller: hostToggler }">
       <div class="cover">
-        <img :src="currentPlayingAlbum.imageURL" alt="" />
+        <img :src="currentPlayingAlbum.image_url" alt="" />
       </div>
       <section class="description">
         <p class="track-name">

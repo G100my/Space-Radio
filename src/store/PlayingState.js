@@ -20,7 +20,7 @@ const initialTrack = {
   album: {
     url: '##',
     name: 'Hakuna Matata',
-    imageURL: jukeboxLogo,
+    image_url: jukeboxLogo,
   },
   is_playable: true,
 }
@@ -32,8 +32,7 @@ const initialQueue = {
     message: '',
     recipient: '',
   },
-  // fixme 沒有用到的資訊
-  orderKey: null,
+  order_key: null,
   id: '',
 }
 const PlayingState = {
@@ -130,7 +129,7 @@ const PlayingState = {
         }),
         album: {
           name: newPlayingTrack.album.name,
-          imageURL: newPlayingTrack.album.images.find(item => item.height >= 300).url,
+          image_url: newPlayingTrack.album.images.find(item => item.height >= 300).url,
           url: transformURI2URL(newPlayingTrack.album.uri),
         },
       }
