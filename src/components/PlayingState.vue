@@ -6,19 +6,19 @@
     </h1>
     <div class="track-info" :class="{ smaller: hostToggler }">
       <div class="cover">
-        <img :src="currentPlayingAlbum.image_url" alt="" />
+        <img :src="playerPlayingAlbum.image_url" alt="" />
       </div>
       <section class="description">
         <p class="track-name">
-          <span>{{ currentPlayingTrackName }}</span>
+          <span>{{ playerPlayingTrackName }}</span>
         </p>
         <p class="artists">
-          <a v-for="(artists, index) in currentPlayingArtists" :key="index" target="_blank" :href="artists.url">
+          <a v-for="(artists, index) in playerPlayingArtists" :key="index" target="_blank" :href="artists.url">
             {{ artists.name }}
           </a>
         </p>
         <p class="album">
-          <a target="_blank" :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
+          <a target="_blank" :href="playerPlayingAlbum.url">{{ playerPlayingAlbum.name }}</a>
         </p>
       </section>
     </div>
@@ -81,10 +81,10 @@ export default {
       isVoted: state => state.PlayingState.isVoted,
     }),
     ...mapGetters([
-      'currentPlayingAlbum',
-      'currentPlayingArtists',
-      'currentPlayingTrackId',
-      'currentPlayingTrackName',
+      'playerPlayingAlbum',
+      'playerPlayingArtists',
+      'playerPlayingTrackId',
+      'playerPlayingTrackName',
       'currentVolume',
       'currentDislike',
     ]),

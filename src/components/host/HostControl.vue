@@ -32,7 +32,7 @@
   <div class="minimal-control">
     <p>
       <span>Minimal volume:</span>
-      <input type="number" :value="minimalVolume" step="2" min="0" max="50" @change="minimalVolumeHandler" />
+      <input type="number" :value="currentMinimalVolume" step="2" min="0" max="50" @change="minimalVolumeHandler" />
     </p>
     <p>
       <span>Dislike vote threshold:</span>
@@ -68,14 +68,14 @@ export default {
       return this.adjustProcessTime / this.adjustStepTime
     },
     ...mapGetters([
+      'playerPlayingTrackId',
       'currentVolume',
       'currentDislike',
-      'currentPlayingTrackId',
-      'leftQueueAmount',
-      'minimalVolume',
-      'pendingQueue',
-      'token',
+      'currentMinimalVolume',
       'trackData',
+      'pendingQueue',
+      'leftQueueAmount',
+      'token',
     ]),
   },
   watch: {
@@ -169,7 +169,7 @@ export default {
         const currentNoteId = playerState.track_window.current_track.id
 
         // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
-        if (currentNoteId !== this.currentPlayingTrackId) {
+        if (currentNoteId !== this.playerPlayingTrackId) {
           const playingTrack = playerState.track_window.current_track
           this.$store.dispatch('updatePlayingTrack', playingTrack)
         }
