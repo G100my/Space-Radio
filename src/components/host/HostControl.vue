@@ -170,8 +170,8 @@ export default {
 
         // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
         if (currentNoteId !== this.currentPlayingTrackId) {
-          const playingState = playerState.track_window.current_track
-          this.$store.dispatch('updatePlayingTrack', { playingState })
+          const playingTrack = playerState.track_window.current_track
+          this.$store.dispatch('updatePlayingTrack', playingTrack)
         }
 
         if (playerState.position === 0) {

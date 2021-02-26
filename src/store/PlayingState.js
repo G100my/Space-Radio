@@ -26,11 +26,11 @@ const initialTrack = {
 }
 const initialQueue = {
   added_time: '',
-  added_by: 'Gloomy',
+  added_by: 'G100',
   note: {
-    sender: '努力的 G100',
-    message: '一袋米扛幾樓',
-    recipient: '遠方的~你',
+    sender: '',
+    message: '',
+    recipient: '',
   },
   // fixme 沒有用到的資訊
   orderKey: null,
@@ -42,25 +42,23 @@ const PlayingState = {
     minimalVolume: 20,
     dislike: 0,
     isVoted: false,
-    info: {
-      track: { ...initialTrack },
-      queue: { ...initialQueue },
-    },
+    playing_track: { ...initialTrack },
+    latest_queue: { ...initialQueue },
   },
   getters: {
     currentPlayingTrackId(state) {
-      return state.info.track.id
+      return state.playing_track.id
     },
     currentPlayingArtists(state) {
-      return state.info.track.artists
+      return state.playing_track.artists
     },
     currentPlayingAlbum(state) {
-      return state.info.track.album
+      return state.playing_track.album
     },
     currentPlayingTrackName(state) {
-      return state.info.track.name
+      return state.playing_track.name
     },
-    minimalVolume(state) {
+    currentMinimalVolume(state) {
       return state.minimalVolume
     },
     currentVolume(state) {
@@ -71,8 +69,13 @@ const PlayingState = {
     },
   },
   mutations: {
-    refreshPlayingSatae(state, infoObject) {
-      state.info = infoObject
+    refreshPlayingSatae(state, newPlayingTrack) {
+      if (newPlayingTrack === null) state.playing_track = { ...initialTrack }
+      else state.playing_track = newPlayingTrack
+    },
+    refreshTheLatestQueue(state, newLatestQueue) {
+      if (newLatestQueue === null) state.latest_queue = { ...initialQueue }
+      else state.latest_queue = newLatestQueue
     },
     adjustVolume(state, value) {
       state.volume = value
@@ -116,25 +119,28 @@ const PlayingState = {
     adjustIsVoted({ state, rootState }, snapshot) {
       if (rootState.Personal.userId) state.isVoted = snapshot.hasChild(rootState.Personal.userId)
     },
-    updatePlayingTrack(_context, { playingState }) {
+    updatePlayingTrack(_context, newPlayingTrack) {
       const track = {
-        name: playingState.name,
-        id: playingState.id,
-        artists: playingState.artists.map(item => {
+        name: newPlayingTrack.name,
+        id: newPlayingTrack.id,
+        artists: newPlayingTrack.artists.map(item => {
           item.url = transformURI2URL(item.uri)
           delete item.uri
           return item
         }),
         album: {
-          name: playingState.album.name,
-          imageURL: playingState.album.images.find(item => item.height >= 300).url,
-          url: transformURI2URL(playingState.album.uri),
+          name: newPlayingTrack.album.name,
+          imageURL: newPlayingTrack.album.images.find(item => item.height >= 300).url,
+          url: transformURI2URL(newPlayingTrack.album.uri),
         },
       }
-      playing_state_ref.child('info/track').set(track)
+      playing_state_ref.child('playing_track').set(track)
+    },
+    updateTheLatestQueue(_context, newQueue) {
+      playing_state_ref.child('latest_queue').set(newQueue)
     },
     clearPlayingTrack() {
-      playing_state_ref.child('info').update({ track: initialTrack, queue: initialQueue })
+      playing_state_ref.update({ playing_track: initialTrack, latest_queue: initialQueue })
     },
     updateMinimalVolume(_context, value) {
       playing_state_ref.child('minimalValume').set(value)
@@ -146,8 +152,11 @@ function playingStateFirebasePlugin(store) {
   playing_state_ref.child('volume').on('value', snapshot => {
     store.commit('adjustVolume', snapshot.val())
   })
-  playing_state_ref.child('info').on('value', snapshot => {
+  playing_state_ref.child('playing_track').on('value', snapshot => {
     store.commit('refreshPlayingSatae', snapshot.val())
+  })
+  playing_state_ref.child('latest_queue').on('value', snapshot => {
+    store.commit('refreshTheLatestQueue', snapshot.val())
   })
   playing_state_ref.child('dislike').on('value', snapshot => {
     store.commit('adjustDislike', snapshot.val())
