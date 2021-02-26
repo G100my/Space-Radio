@@ -75,34 +75,34 @@ export default {
       this.$store.dispatch(`${level}Remove`, {
         queueKey,
         id: this.trackData[queueKey].id,
-        track_name: this.trackData[queueKey].name,
+        trackNameForLog: this.trackData[queueKey].name,
       })
     },
     editNote(queueKey) {
-      const track_name = this.trackData[queueKey].name
+      const trackNameForLog = this.trackData[queueKey].name
       const submitFunction = newNote => {
         this.$store.dispatch(`urgentEdit`, { queueKey, note: newNote })
       }
-      this.$emit('activeNoteDialog', { queueKey, track_name, submitFunction })
+      this.$emit('activeNoteDialog', { queueKey, trackNameForLog, submitFunction })
     },
     urgent2normal(queueKey) {
       this.$store.dispatch('urgent2normal', {
         queueKey,
         id: this.trackData[queueKey].id,
-        track_name: this.trackData[queueKey].name,
+        trackNameForLog: this.trackData[queueKey].name,
       })
     },
     normal2urgent(queueKey) {
-      const track_name = this.trackData[queueKey].name
+      const trackNameForLog = this.trackData[queueKey].name
       const submitFunction = newNote => {
         this.$store.dispatch('normal2urgent', {
           queueKey,
           note: newNote,
           id: this.trackData[queueKey].id,
-          track_name,
+          trackNameForLog,
         })
       }
-      this.$emit('activeNoteDialog', { queueKey, track_name, submitFunction })
+      this.$emit('activeNoteDialog', { queueKey, trackNameForLog, submitFunction })
     },
   },
 }
