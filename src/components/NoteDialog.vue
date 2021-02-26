@@ -4,7 +4,7 @@
     <p class="dialog-header">Write your message.</p>
     <div class="dialog-body">
       <input v-model="sender" class="sender" :placeholder="$store.getters.userId" />插播一首<span class="track-name">{{
-        trackName
+        trackNameForLog
       }}</span
       >給<input v-model="recipient" class="recipient" type="text" placeholder="everyone" />，<br /><textarea
         v-model="message"
@@ -28,7 +28,7 @@ export default {
       type: String,
       required: true,
     },
-    trackName: {
+    trackNameForLog: {
       type: String,
       required: true,
     },
@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     output() {
-      return `${this.sender ? this.sender : this.$store.getters.userId} 插播一首 ${this.trackName} 給 ${
+      return `${this.sender ? this.sender : this.$store.getters.userId} 插播一首 ${this.trackNameForLog} 給 ${
         this.recipient.trim() === '' ? '所有人' : this.recipient
       } \n ${this.message}`
     },
