@@ -6,23 +6,23 @@
     <div class="content">
       <div class="cover-container">
         <div class="cover">
-          <img :src="currentPlayingAlbum.image_url" alt="" />
+          <img :src="playerPlayingAlbum.image_url" alt="" />
         </div>
       </div>
       <div class="others">
         <h2>Now playing:</h2>
         <div class="track-info">
           <p>Track Name:</p>
-          <p>{{ currentPlayingTrackName }}</p>
+          <p>{{ playerPlayingTrackName }}</p>
           <p>Artists:</p>
           <p>
-            <a v-for="(artist, index) in currentPlayingArtists" :key="index" target="_blank" :href="artist.url">{{
+            <a v-for="(artist, index) in playerPlayingArtists" :key="index" target="_blank" :href="artist.url">{{
               artist.name
             }}</a>
           </p>
           <p>Album:</p>
           <p>
-            <a target="_blank" :href="currentPlayingAlbum.url">{{ currentPlayingAlbum.name }}</a>
+            <a target="_blank" :href="playerPlayingAlbum.url">{{ playerPlayingAlbum.name }}</a>
           </p>
         </div>
         <div class="log">
@@ -45,7 +45,7 @@ export default {
     UserLog,
   },
   computed: {
-    ...mapGetters(['currentPlayingAlbum', 'currentPlayingArtists', 'currentPlayingTrackName']),
+    ...mapGetters(['playerPlayingAlbum', 'playerPlayingArtists', 'playerPlayingTrackName']),
   },
   methods: {
     getImplicitGrantToken,

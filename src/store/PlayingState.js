@@ -45,30 +45,33 @@ const PlayingState = {
     isVoted: false,
   },
   getters: {
-    currentPlayingTrackId(state) {
+    playerPlayingTrackId(state) {
       return state.playing_track.id
     },
-    currentPlayingArtists(state) {
+    playerPlayingArtists(state) {
       return state.playing_track.artists
     },
-    currentPlayingAlbum(state) {
+    playerPlayingAlbum(state) {
       return state.playing_track.album
     },
-    currentPlayingTrackName(state) {
+    playerPlayingTrackName(state) {
       return state.playing_track.name
-    },
-    currentMinimalVolume(state) {
-      return state.minimal_volume
     },
     currentVolume(state) {
       return state.volume
     },
+    currentMinimalVolume(state) {
+      return state.minimal_volume
+    },
     currentDislike(state) {
       return state.dislike
     },
+    latestQueue(state) {
+      return state.latest_queue
+    },
   },
   mutations: {
-    refreshPlayingSatae(state, newPlayingTrack) {
+    refreshPlayerState(state, newPlayingTrack) {
       if (newPlayingTrack === null) state.playing_track = { ...initialTrack }
       else state.playing_track = newPlayingTrack
     },
@@ -152,7 +155,7 @@ function playingStateFirebasePlugin(store) {
     store.commit('adjustVolume', snapshot.val())
   })
   playing_state_ref.child('playing_track').on('value', snapshot => {
-    store.commit('refreshPlayingSatae', snapshot.val())
+    store.commit('refreshPlayerState', snapshot.val())
   })
   playing_state_ref.child('latest_queue').on('value', snapshot => {
     store.commit('refreshTheLatestQueue', snapshot.val())
