@@ -209,7 +209,7 @@ export default {
       this.player.connect()
     }
 
-    import('../../utility/spotify-player-SDK.js')
+    import('../utility/spotify-player-SDK.js')
 
     this.utterance.pitch = 1
     this.utterance.rate = 1

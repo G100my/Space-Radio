@@ -69,7 +69,7 @@ import UserLog from './UserLog.vue'
 export default {
   components: {
     UserLog,
-    HostControl: defineAsyncComponent(() => import('../components/host/HostControl.vue')),
+    HostControl: defineAsyncComponent(() => import('../components/HostControl.vue')),
   },
   data() {
     return {
