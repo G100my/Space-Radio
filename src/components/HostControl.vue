@@ -121,6 +121,7 @@ export default {
   created() {
     window.onbeforeunload = () => {
       this.$store.dispatch('clearPlayingTrack')
+      this.$store.dispatch('clearPendingQueue')
     }
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
@@ -310,11 +311,6 @@ export default {
         error && console.log(error.response)
         if (!error) {
           this.deviceActived = true
-          if (!this.pendingQueue) {
-            setTimeout(() => {
-              this.$store.dispatch('sendNextQueue')
-            }, 3000)
-          }
         }
       })
     },
