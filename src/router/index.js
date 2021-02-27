@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 import store from '../store/'
-import RoomQueue from '../views/RoomQueue.vue'
+import RoomQueue from '../components/RoomQueue.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
 
