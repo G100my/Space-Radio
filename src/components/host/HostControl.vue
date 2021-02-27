@@ -235,12 +235,12 @@ export default {
       return new Promise(success => {
         this.recodeVolume = this.playerVolume
 
-        const step = (this.playerVolume - this.minimalVolume) / this.adjustExecuteTimes
+        const step = (this.playerVolume - this.currentMinimalVolume) / this.adjustExecuteTimes
 
         const timer = setInterval(() => {
           const afterStep = this.playerVolume - step
           this.player.setVolume(afterStep / 100)
-          if (afterStep < this.minimalVolume) {
+          if (afterStep < this.currentMinimalVolume) {
             clearInterval(timer)
             success()
             return
