@@ -97,9 +97,6 @@ export default {
           })
       }
     },
-    currentVolume(newValue) {
-      this.playerVolume = newValue
-    },
     currentDislike(newValue) {
       if (this.dislikeCountDownTimer && newValue < this.dislikeThreshold) {
         clearTimeout(this.dislikeCountDownTimer)
@@ -209,7 +206,14 @@ export default {
         }
       })
 
-      this.player.connect()
+      this.player.connect().then(success => {
+        if (!success) return
+        this.$watch('currentVolume', newValue => {
+          console.log('currentVolume')
+          this.playerVolume = newValue
+          if (this.player !== null) this.player.setVolume(newValue / 100)
+        })
+      })
     }
 
     import('../utility/spotify-player-SDK.js')
