@@ -86,6 +86,8 @@ export default {
           note.recipient.trim() === '' ? '所有人' : note.recipient
         } ${note.message}`
 
+        this.$store.dispatch('updateTheLatestQueue', nextQueue)
+
         this.reducePlayerVolume()
           .then(() => {
             this.TTS(messageOutput)
