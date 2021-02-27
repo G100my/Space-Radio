@@ -90,7 +90,7 @@ export default {
     ]),
   },
   created() {
-    if (this.$store.getters.userId === 'zhangLo') {
+    if (this.$store.getters.userId === 'zhanglo') {
       this.hostToggler = true
     }
   },
@@ -179,7 +179,9 @@ export default {
     }
   }
   .control-board,
-  .log {
+  .log,
+  .main-control,
+  .minimal-control {
     margin: 15px 30px 0;
   }
   .terminate-control,
