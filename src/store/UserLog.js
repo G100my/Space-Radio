@@ -1,6 +1,6 @@
 import firebase from './firebase.js'
 
-const userLog_ref = firebase.database().ref('userLog')
+const userLog_ref = firebase.database().ref('user_log')
 
 const UserLog = {
   state: {
