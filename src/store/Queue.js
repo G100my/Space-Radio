@@ -40,13 +40,14 @@ function connect2FirebaseQueue(store) {
 
     const trackId = snapshot.val().id
     if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
-      store.commit('refreshPending', snapshot.val())
+      store.commit('refreshPendingTrack', store.getters.previousDeleted)
+      store.commit('refreshPendingQueue', snapshot.val())
       store.commit('clearPreviousDeleted')
       return
     } else if (spotifyAPI.getAccessToken())
       spotifyAPI.getTrack(trackId).then(addedTrack => {
-        store.state[`pending_queue`] = snapshot.val()
-        store.state.Queue.trackData['pending'] = addedTrack
+        store.commit('refreshPendingTrack', addedTrack)
+        store.commit('refreshPendingQueue', snapshot.val())
       })
   })
 }
@@ -56,7 +57,9 @@ const Queue = {
     normal_queue: {},
     urgent_queue: {},
     pending_queue: null,
-    trackData: {},
+    trackData: {
+      pending: null,
+    },
     previousDeleted: null,
   },
   getters: {
@@ -96,6 +99,7 @@ const Queue = {
     },
     clearPendingQueue(state) {
       state.pending_queue = null
+      delete state.trackData.pending
     },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
       const queueKey = oldChildSnapshot.key
@@ -112,9 +116,11 @@ const Queue = {
       const queueKey = childSnapshot.key
       state[`${storeTarget}_queue`][queueKey] = childSnapshot.val()
     },
-    refreshPending(state, queue) {
+    refreshPendingQueue(state, queue) {
       state.pending_queue = queue
-      state.trackData['pending'] = state.previousDeleted
+    },
+    refreshPendingTrack(state, track) {
+      state.trackData.pending = track
     },
   },
   actions: {
