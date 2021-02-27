@@ -114,7 +114,7 @@ export default {
   flex-direction: column;
   height: 100%;
   @media (min-width: 768px) {
-    padding: 50px 7%;
+    padding: 0 7%;
   }
 
   h2 {
