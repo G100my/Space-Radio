@@ -1,19 +1,11 @@
 <template>
   <!-- eslint-disable vue/html-self-closing eslint-disable vue/no-parsing-error-->
   <div class="room-queue">
-    <h2>Next On</h2>
-    <div class="track-table">
-      <div class="table-header track-cover">Cover</div>
-      <div class="table-header track-name-artist">
-        <p>Track</p>
-        <p>Artists</p>
-      </div>
-      <div class="table-header track-album">Album</div>
-      <div class="table-header track-time-data">
-        <p>Duration Time</p>
-        <p>Release Time</p>
-      </div>
-      <div class="table-header track-feature">Feature</div>
+    <TrackListShell>
+    <template #header>
+      <h2>Next On</h2>
+    </template>
+    <template #body>
       <Track v-if="pendingQueue" :info="trackData['pending']" :is-pending="true" />
       <Track v-for="queueKey in urgentQueueKeys" :key="queueKey" :info="trackData[queueKey]" :is-urgent="true">
         <div class="feature-buttons">
@@ -55,16 +47,19 @@
           </button>
         </div>
       </Track>
-    </div>
+    </template>
+    </TrackListShell>
   </div>
 </template>
 <script>
 import Track from '../components/Track.vue'
+import TrackListShell from '../components/TrackListShell.vue'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     Track,
+    TrackListShell,
   },
   emits: ['activeNoteDialog'],
   computed: {
@@ -121,42 +116,6 @@ export default {
     font-size: 2.5rem;
     color: var(--primary-neutral);
     margin-left: 5px;
-  }
-
-  .track-table {
-    padding: 15px;
-    display: grid;
-    grid-template-columns: min-content minmax(50px, 1fr) max-content;
-    gap: 10px 10px;
-    font-size: 0.7rem;
-    @media (min-width: 768px) {
-      grid-template-columns: min-content 2fr repeat(2, max-content) minmax(max-content, 1fr);
-      gap: 25px 35px;
-    }
-    .table-header {
-      > p {
-        overflow: initial;
-        text-overflow: initial;
-      }
-    }
-    .table-header:not(.track-feature) {
-      justify-self: start;
-    }
-    .table-header.track-name-artist {
-      flex-direction: row;
-      p:last-child::before {
-        content: '/';
-        margin-left: 5px;
-        margin-right: 5px;
-      }
-    }
-    > div:nth-child(-n + 3),
-    > div:nth-child(5) {
-      font-size: 1.2rem;
-    }
-    > div:nth-child(4) {
-      text-align: right;
-    }
   }
 
   .feature-buttons {
