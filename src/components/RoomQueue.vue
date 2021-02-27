@@ -1,13 +1,17 @@
 <template>
-  <!-- eslint-disable vue/html-self-closing eslint-disable vue/no-parsing-error-->
   <div class="room-queue">
-    <TrackListShell>
+    <TrackGridShell>
       <template #header>
         <h2>Next On</h2>
       </template>
       <template #body>
-        <Track v-if="pendingQueue" :info="trackData['pending']" :is-pending="true" />
-        <Track v-for="queueKey in urgentQueueKeys" :key="queueKey" :info="trackData[queueKey]" :is-urgent="true">
+        <TrackGridItem v-if="pendingQueue" :info="trackData['pending']" :is-pending="true" />
+        <TrackGridItem
+          v-for="queueKey in urgentQueueKeys"
+          :key="queueKey"
+          :info="trackData[queueKey]"
+          :is-urgent="true"
+        >
           <div class="feature-buttons">
             <button class="remove-button" type="button" @click="remove(queueKey, 'urgent')">
               <!-- prettier-ignore -->
@@ -29,8 +33,8 @@
               </svg>
             </button>
           </div>
-        </Track>
-        <Track v-for="queueKey in normalQueueKeys" :key="queueKey" :info="trackData[queueKey]">
+        </TrackGridItem>
+        <TrackGridItem v-for="queueKey in normalQueueKeys" :key="queueKey" :info="trackData[queueKey]">
           <div class="feature-buttons">
             <button class="remove-button" type="button" @click="remove(queueKey, 'normal')">
               <!-- prettier-ignore -->
@@ -46,20 +50,20 @@
               </svg>
             </button>
           </div>
-        </Track>
+        </TrackGridItem>
       </template>
-    </TrackListShell>
+    </TrackGridShell>
   </div>
 </template>
 <script>
-import Track from '../components/template/Track.vue'
-import TrackListShell from '../components/template/TrackListShell.vue'
+import TrackGridItem from '../components/template/TrackGridItem.vue'
+import TrackGridShell from '../components/template/TrackGridShell.vue'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    Track,
-    TrackListShell,
+    TrackGridItem,
+    TrackGridShell,
   },
   emits: ['activeNoteDialog'],
   computed: {
