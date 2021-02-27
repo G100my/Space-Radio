@@ -321,14 +321,22 @@ $icon-length: 35px;
   .immediately-result {
     height: calc(100vh - 70px - 30px);
     @media (min-width: 768px) {
-      width: 100%;
+      width: 50vw;
       padding: 15px;
     }
   }
   .result-mask {
     height: 100vh;
     @media (min-width: 768px) {
-      width: 100%;
+      width: 50vw;
+    }
+  }
+  ul {
+    flex: 0;
+  }
+  .search {
+    @media (min-width: 768px) {
+      max-width: calc(50vw - 30px);
     }
   }
 }
