@@ -332,4 +332,14 @@ $icon-length: 35px;
     }
   }
 }
+
+.active-search {
+  .marquee {
+    transition: flex-grow 0.3s ease-in-out;
+    flex: 0;
+  }
+  nav {
+    flex: 1;
+  }
+}
 </style>
