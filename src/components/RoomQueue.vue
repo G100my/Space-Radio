@@ -52,8 +52,8 @@
   </div>
 </template>
 <script>
-import Track from '../components/Track.vue'
-import TrackListShell from '../components/TrackListShell.vue'
+import Track from '../components/template/Track.vue'
+import TrackListShell from '../components/template/TrackListShell.vue'
 import { mapGetters } from 'vuex'
 
 export default {

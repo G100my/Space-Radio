@@ -30,7 +30,7 @@
   </div>
 </template>
 <script>
-import logo from '../assets/vinyl-record.png'
+import logo from '../../assets/vinyl-record.png'
 export default {
   props: {
     info: {
