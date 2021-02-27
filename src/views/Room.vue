@@ -174,7 +174,7 @@ export default {
     height: 100vh;
     width: 100%;
     box-sizing: border-box;
-    padding: 80px 0 25px;
+    padding: 90px 10px 10px;
     @media (min-width: 768px) {
       padding: 0;
     }
@@ -186,11 +186,10 @@ export default {
       width: auto;
       flex: 1;
       position: relative;
+      padding: 100px 0 30px;
     }
   }
-  .sidebar {
-    padding-right: 20px;
-    padding-left: 20px;
+  .sidebar.slide-items {
     box-sizing: border-box;
     overflow-y: auto;
     display: flex;
@@ -200,8 +199,7 @@ export default {
     }
     @media (min-width: 768px) {
       width: 400px;
-      padding-bottom: 40px;
-      padding-top: 40px;
+      padding: 40px 0 20px 20px;
     }
   }
 }
