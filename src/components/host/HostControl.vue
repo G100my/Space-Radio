@@ -86,9 +86,13 @@ export default {
           note.recipient.trim() === '' ? '所有人' : note.recipient
         } ${note.message}`
 
-        this.reducePlayerVolume().then(() => {
-          this.TTS(messageOutput)
-        })
+        this.reducePlayerVolume()
+          .then(() => {
+            this.TTS(messageOutput)
+          })
+          .catch(error => {
+            console.error(error)
+          })
       }
     },
     currentVolume(newValue) {
@@ -213,7 +217,9 @@ export default {
     this.utterance.lang = 'zh-TW'
     this.utterance.onend = () => {
       console.log('utterance end')
-      this.resumePlayerVolume()
+      this.resumePlayerVolume().catch(error => {
+        console.error(error)
+      })
     }
     speechSynthesis.onvoiceschanged = () => {
       if (!this.utterance.voice) this.setTTSVoice()
@@ -279,18 +285,23 @@ export default {
         // 觀察 state 行為，第二次 position == 0 的 state 發生後才會撥放
         if (counter >= 2) {
           this.player.removeListener('player_state_changed', secondPositionStateHandler)
-          this.resumePlayerVolume().then(() => {
-            this.minimalVolume = minimalVolumeBackup
-            this.adjustProcessTime = adjustProcessTimeBackup
-          })
+          this.resumePlayerVolume()
+            .then(() => {
+              this.minimalVolume = minimalVolumeBackup
+              this.adjustProcessTime = adjustProcessTimeBackup
+            })
+            .catch(error => console.error(error))
         }
       }
 
       this.reducePlayerVolume().then(() => {
-        this.player.nextTrack().then(() => {
-          console.log('Skipped to next track!')
-          this.player.addListener('player_state_changed', secondPositionStateHandler)
-        })
+        this.player
+          .nextTrack()
+          .then(() => {
+            console.log('Skipped to next track!')
+            this.player.addListener('player_state_changed', secondPositionStateHandler)
+          })
+          .catch(error => console.error(error))
       })
     },
     activeThisDevice() {
