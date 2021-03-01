@@ -20,34 +20,21 @@
       <p class="no-result" @click="$emit('activeSearchStyle', false)">No result</p>
     </template>
     <template v-else>
-      <ul class="results">
-        <li v-for="track in tracksResult" :key="track.id">
-          <div class="result-track">
-            <img :src="track.album.images[track.album.images.length - 1].url" alt="" />
-            <div class="track-info">
-              <p>{{ track.name }}</p>
-              <p>
-                <a
-                  v-for="(artist, index) in track.artists"
-                  :key="index"
-                  :href="artist.external_urls.spotify"
-                  target="_blank"
-                  >{{ artist.name }}</a
-                >
-              </p>
-            </div>
-            <div class="buttons">
-              <AddButton :track-id="track.id" :track-name="track.name" />
-              <JumpInButton :track-id="track.id" :track-name="track.name" />
-            </div>
-          </div>
-        </li>
-      </ul>
+      <TrackGridShell>
+        <template #body>
+          <TrackGridItem v-for="track in tracksResult" :key="track.id" :info="track">
+            <AddButton :track-id="track.id" :track-name="track.name" />
+            <JumpInButton :track-id="track.id" :track-name="track.name" />
+          </TrackGridItem>
+        </template>
+      </TrackGridShell>
     </template>
   </div>
   <div class="result-mask" />
 </template>
 <script>
+import TrackGridItem from './template/TrackGridItem.vue'
+import TrackGridShell from './template/TrackGridShell.vue'
 import AddButton from './featureButtons/AddButton.vue'
 import JumpInButton from './featureButtons/JumpInButton.vue'
 
@@ -55,6 +42,8 @@ export default {
   components: {
     AddButton,
     JumpInButton,
+    TrackGridItem,
+    TrackGridShell,
   },
   emits: ['activeNoteDialog', 'activeSearchStyle'],
   data() {
