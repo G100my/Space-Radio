@@ -42,6 +42,11 @@ h1,
 h2 {
   margin: 0;
 }
+h2 {
+  font-size: 2.5rem;
+  color: var(--primary-neutral);
+  margin-left: 5px;
+}
 p {
   margin: 0;
 }
