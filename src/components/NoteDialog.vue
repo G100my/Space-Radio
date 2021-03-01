@@ -26,7 +26,7 @@ export default {
   props: {
     queueKey: {
       type: String,
-      required: true,
+      default: '',
     },
     trackNameForLog: {
       type: String,
