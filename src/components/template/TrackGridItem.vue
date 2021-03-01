@@ -127,15 +127,9 @@ export default {
       flex: 1;
     }
   }
-  > a,
-  > p {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
   .name {
     margin-bottom: 3px;
     > a {
-      white-space: nowrap;
       font-size: 1.5em;
       font-weight: 600;
     }

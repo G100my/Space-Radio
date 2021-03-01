@@ -24,13 +24,14 @@
   gap: 10px 10px;
   font-size: 0.7rem;
   @media (min-width: 768px) {
-    grid-template-columns: min-content 2fr repeat(2, max-content) minmax(max-content, 1fr);
+    grid-template-columns: min-content 1fr 1fr max-content minmax(max-content, 1fr);
     gap: 25px 35px;
   }
   .table-header {
     > p {
       overflow: initial;
       text-overflow: initial;
+      white-space: nowrap;
     }
   }
   .table-header:not(.track-feature) {

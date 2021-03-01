@@ -254,13 +254,6 @@ $icon-length: 35px;
       padding: 0;
       font-size: 0;
     }
-    button + button {
-      margin-left: 5px;
-    }
-    svg {
-      height: 25px;
-      width: 25px;
-    }
   }
 }
 

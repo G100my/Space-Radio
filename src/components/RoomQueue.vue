@@ -108,18 +108,11 @@ export default {
 </script>
 <style lang="scss">
 .room-queue {
+  transition: flex 0.3s ease-in-out;
+  flex: 1;
   overflow: auto;
   display: flex;
   flex-direction: column;
   height: 100%;
-  @media (min-width: 768px) {
-    padding: 0 7%;
-  }
-
-  h2 {
-    font-size: 2.5rem;
-    color: var(--primary-neutral);
-    margin-left: 5px;
-  }
 }
 </style>
