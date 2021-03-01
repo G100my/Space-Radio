@@ -121,24 +121,5 @@ export default {
     color: var(--primary-neutral);
     margin-left: 5px;
   }
-
-  .feature-buttons {
-    font-size: 0;
-    > button {
-      font-size: 0;
-      display: inline-block;
-      border-color: var(--primary-neutral);
-    }
-    button + button {
-      margin-left: 10px;
-    }
-    @media (min-width: 768px) {
-      padding-left: 10px;
-      padding-right: 10px;
-      button + button {
-        margin-left: 15px;
-      }
-    }
-  }
 }
 </style>
