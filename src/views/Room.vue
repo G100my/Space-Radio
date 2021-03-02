@@ -2,8 +2,16 @@
   <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
     <header :class="{ 'active-search': isSearchActive }">
       <nav>
-        <NavAdditionDisplay :source="additionDisplaySource" @activeNoteDialog="activeNoteDialogHandler" />
-        <SearchBar @activeSearchStyle="isSearchActive = $event" @updateDisplaySource="additionDisplaySource = $event" />
+        <NavAdditionDisplay
+          :source="additionDisplaySource"
+          @activeNoteDialog="activeNoteDialogHandler"
+          @disactiveSearchStyle="isSearchActive = false"
+        />
+        <SearchBar
+          @activeSearchStyle="isSearchActive = true"
+          @disactiveSearchStyle="isSearchActive = false"
+          @updateDisplaySource="additionDisplaySource = $event"
+        />
         <h1>
           <img src="../assets/vinyl-record.png" alt="" />
           <p>Jukebox</p>

@@ -1,7 +1,7 @@
 <template>
   <div class="immediately-result">
     <template v-if="source.length === 0">
-      <p class="no-result" @click="$emit('activeSearchStyle', false)">No result</p>
+      <p class="no-result" @click="$emit('disactiveSearchStyle')">No result</p>
     </template>
     <template v-else>
       <TrackGridShell>
@@ -35,7 +35,7 @@ export default {
       default: () => [],
     },
   },
-  emits: ['activeSearchStyle'],
+  emits: ['disactiveSearchStyle'],
   created() {
     console.log(this.$attrs)
   },
