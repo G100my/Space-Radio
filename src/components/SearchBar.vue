@@ -15,6 +15,7 @@
       </svg>
     </button>
   </div>
+
   <div class="immediately-result">
     <template v-if="tracksResult.length === 0">
       <p class="no-result" @click="$emit('activeSearchStyle', false)">No result</p>
@@ -190,60 +191,12 @@ $icon-length: 35px;
   }
 }
 
-.immediately-result {
-  span {
-    font-size: 1rem;
-  }
-
-  .results {
-    width: 100%;
-  }
-  li + li {
-    margin-top: 5px;
-  }
-
-  .no-result {
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    margin: 0;
-    overflow: hidden;
-  }
-
-  .result-track {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    outline: 1px pink dashed;
-  }
-  .track-info {
-    margin-left: 10px;
-    max-width: calc(100% - 70px - 85px - 13px);
-    p {
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: var(--ignore);
-      padding: 10px 0;
-    }
-    span:not(span:last-child)::after {
-      content: ',';
-      margin-right: 5px;
-    }
-  }
-  .buttons {
-    flex: 0;
-    display: flex;
-    margin-left: auto;
-    button {
-      height: 40px;
-      width: 40px;
-      flex: 0 0 40px;
-      padding: 0;
-      font-size: 0;
-    }
-  }
+.no-result {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  overflow: hidden;
 }
 
 .result-mask,
