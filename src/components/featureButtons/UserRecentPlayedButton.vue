@@ -13,18 +13,26 @@
 </template>
 <script>
 export default {
-  emits: ['updateDisplaySource', 'activeRecentDisplay'],
+  emits: ['triggerAdditionDisplay', 'updateAdditionDisplaySource'],
+  data() {
+    return {
+      trigger: false,
+    }
+  },
   methods: {
     fetchDataHandler() {
-      this.$spotifyAPI.getMyRecentlyPlayedTracks({ limit: 50 }).then(result => {
-        if (!result.error) {
-          this.$emit(
-            'updateDisplaySource',
-            result.items.map(item => item.track)
-          )
-          this.$emit('activeRecentDisplay')
-        }
-      })
+      this.trigger = !this.trigger
+      if (this.trigger) {
+        this.$spotifyAPI.getMyRecentlyPlayedTracks({ limit: 50 }).then(result => {
+          if (!result.error) {
+            this.$emit(
+              'updateAdditionDisplaySource',
+              result.items.map(item => item.track)
+            )
+          }
+        })
+      }
+      this.$emit('triggerAdditionDisplay', this.trigger)
     },
   },
 }

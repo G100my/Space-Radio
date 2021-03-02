@@ -4,14 +4,14 @@
       <nav>
         <NavAdditionDisplay
           :source="additionDisplaySource"
-          :display-active="isSearchActive || isRecentActive"
+          :display-active="additionDisplayToggler"
           @activeNoteDialog="activeNoteDialogHandler"
           @disactiveSearchStyle="isSearchActive = false"
         />
         <SearchBar
-          @activeSearchStyle="isSearchActive = true"
-          @disactiveSearchStyle="isSearchActive = false"
-          @updateDisplaySource="additionDisplaySource = $event"
+          @triggerSearchStyle="isSearchActive = $event"
+          @triggerAdditionDisplay="additionDisplayToggler = $event"
+          @updateAdditionDisplaySource="additionDisplaySource = $event"
         />
         <h1>
           <img src="../assets/vinyl-record.png" alt="" />
@@ -20,8 +20,8 @@
         <ul>
           <li>
             <UserRecentPlayedButton
-              @activeRecentDisplay="activeRecentDisplayHandler"
-              @updateDisplaySource="additionDisplaySource = $event"
+              @triggerAdditionDisplay="additionDisplayToggler = $event"
+              @updateAdditionDisplaySource="additionDisplaySource = $event"
             />
           </li>
           <li class="user-name">
@@ -37,7 +37,7 @@
       </nav>
       <Marquee />
     </header>
-    <div ref="slideContainer" class="slide-container" :class="{ 'recent-active': isRecentActive }">
+    <div ref="slideContainer" class="slide-container">
       <div class="sidebar slide-items">
         <PlayingState />
       </div>
@@ -80,16 +80,9 @@ export default {
         submitFunction: () => {},
       },
       isSearchActive: false,
-      isRecentActive: false,
+      additionDisplayToggler: false,
       additionDisplaySource: [],
     }
-  },
-  watch: {
-    isSearchActive(newValue) {
-      if (newValue) {
-        this.isRecentActive = false
-      }
-    },
   },
   beforeCreate() {
     if (!this.$store.hasModule('Queue')) {
@@ -108,12 +101,6 @@ export default {
     // this.sliderToggler('slide2left')
   },
   methods: {
-    activeRecentDisplayHandler() {
-      if (this.isRecentActive) {
-        this.additionDisplaySource = []
-      }
-      this.isRecentActive = !this.isRecentActive
-    },
     activeNoteDialogHandler(note) {
       this.editingNote = { ...note }
       this.isNoteDialogActive = true
