@@ -46,6 +46,7 @@ export default {
     clearSearch() {
       this.trigger = false
       this.searchText = ''
+      this.$emit('updateAdditionDisplaySource', [])
       this.$emit('triggerSearchStyle', false)
       this.$emit('triggerAdditionDisplay', false)
     },
