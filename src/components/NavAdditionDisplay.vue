@@ -8,7 +8,7 @@
         <template #body>
           <TrackGridItem v-for="track in source" :key="track.id" :info="track">
             <AddButton :track-id="track.id" :track-name="track.name" />
-            <JumpInButton :track-id="track.id" :track-name="track.name" />
+            <JumpInButton :track-id="track.id" :track-name="track.name" v-bind="$attrs" />
           </TrackGridItem>
         </template>
       </TrackGridShell>
@@ -50,34 +50,18 @@ export default {
   overflow: hidden;
 }
 
+.result-mask,
 .immediately-result {
   transition-duration: 0.3s;
   transition-timing-function: ease-in-out;
   transition-property: width, height;
   box-sizing: border-box;
   position: absolute;
-  top: 100%;
-  left: 0;
   right: 0;
   height: 0;
-  width: 90vw;
-  z-index: -1;
-  overflow-y: auto;
-  margin: 0 auto;
-  @media (min-width: 768px) {
-    margin: 0 0 0 auto;
-    width: 0;
-  }
 }
 
 .result-mask {
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  transition-property: width, height;
-  box-sizing: border-box;
-  position: absolute;
-  right: 0;
-  height: 0;
   background-color: var(--primary-dark);
   top: 0;
   width: 100vw;
@@ -85,21 +69,39 @@ export default {
   opacity: 0.9;
   @media (min-width: 768px) {
     height: 100vh;
+  }
+}
+.immediately-result {
+  top: 100%;
+  left: 0;
+  width: 90vw;
+  z-index: -1;
+  overflow-y: auto;
+  margin: 0 auto;
+  box-sizing: border-box;
+  @media (min-width: 768px) {
+    margin: 0 0 0 auto;
+  }
+}
+.result-mask,
+.immediately-result {
+  @media (min-width: 768px) {
     width: 0;
   }
 }
+
 .active-search {
-  &.result-mask {
-    height: 100vh;
-    @media (min-width: 768px) {
-      width: 50vw;
-    }
-  }
-  & .immediately-result {
+  .immediately-result {
     height: calc(100vh - 70px - 30px);
     @media (min-width: 768px) {
       width: 50vw;
       padding: 15px;
+    }
+  }
+  .result-mask {
+    height: 100vh;
+    @media (min-width: 768px) {
+      width: 50vw;
     }
   }
 }
