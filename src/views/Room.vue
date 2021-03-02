@@ -1,6 +1,7 @@
 <template>
   <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
     <header :class="{ 'active-search': isSearchActive }">
+      <Marquee />
       <nav>
         <NavAdditionDisplay
           :source="additionDisplaySource"
@@ -35,7 +36,6 @@
           </li>
         </ul>
       </nav>
-      <Marquee />
     </header>
     <div ref="slideContainer" class="slide-container">
       <div class="sidebar slide-items">
@@ -226,7 +226,6 @@ header {
   @media (min-width: 768px) {
     left: auto;
     display: flex;
-    flex-direction: row-reverse;
     align-items: center;
     width: calc(100% - 400px);
   }
@@ -238,7 +237,8 @@ nav {
   box-sizing: border-box;
   @media (min-width: 768px) {
     justify-content: flex-end;
-    flex: 0;
+    transition: flex 0.3s ease-in-out;
+    flex: 0 0 0;
   }
 
   h1 {

@@ -151,7 +151,6 @@ $icon-length: 35px;
   ~ h1 {
     flex-shrink: 1;
     overflow: hidden;
-    max-width: 200px;
   }
 }
 
@@ -175,23 +174,11 @@ $icon-length: 35px;
 }
 
 .active-search {
-  ul {
-    flex: 0;
-  }
-  .search {
-    @media (min-width: 768px) {
-      max-width: calc(50vw - 30px);
-    }
-  }
-}
-
-.active-search {
   .marquee {
-    transition: flex-grow 0.3s ease-in-out;
     flex: 0;
   }
   nav {
-    flex: 1;
+    flex: 1 1 100%;
   }
 }
 </style>
