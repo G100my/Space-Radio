@@ -118,6 +118,19 @@ export default {
   }
 }
 
+.track-album,
+.track-name-artist {
+  p,
+  a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    @media (min-width: 768px) {
+      white-space: initial;
+    }
+  }
+}
+
 .track-name-artist {
   display: flex;
   flex-direction: column;
@@ -141,8 +154,14 @@ export default {
       content: ',';
       margin-right: 5px;
     }
+
     @media (min-width: 768px) {
       flex-direction: row;
+      flex-wrap: wrap;
+
+      > a {
+        white-space: nowrap;
+      }
     }
   }
 }
@@ -150,6 +169,12 @@ export default {
 .track-time-data {
   font-size: smaller;
   text-align: right;
+}
+
+.track-feature {
+  button + button {
+    margin-left: 10px;
+  }
 }
 
 .urgent {
