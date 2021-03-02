@@ -4,8 +4,9 @@
       <Marquee />
       <nav>
         <NavAdditionDisplay
+          v-if="mobileMode"
+          v-show="additionDisplayToggler"
           :source="additionDisplaySource"
-          :display-active="additionDisplayToggler"
           @activeNoteDialog="activeNoteDialogHandler"
           @disactiveSearchStyle="isSearchActive = false"
         />
@@ -44,6 +45,13 @@
       <div class="view slide-items">
         <router-view @activeNoteDialog="activeNoteDialogHandler" />
         <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
+        <NavAdditionDisplay
+          v-if="!mobileMode"
+          v-show="additionDisplayToggler"
+          :source="additionDisplaySource"
+          @activeNoteDialog="activeNoteDialogHandler"
+          @disactiveSearchStyle="isSearchActive = false"
+        />
       </div>
     </div>
   </div>
@@ -80,6 +88,11 @@ export default {
       additionDisplayToggler: false,
       additionDisplaySource: [],
     }
+  },
+  computed: {
+    mobileMode() {
+      return window.innerWidth < 768 ? true : false
+    },
   },
   beforeCreate() {
     if (!this.$store.hasModule('Queue')) {
@@ -196,6 +209,7 @@ export default {
       flex: 1;
       position: relative;
       padding: 100px 3% 30px;
+      width: 0;
     }
   }
   .sidebar.slide-items {
