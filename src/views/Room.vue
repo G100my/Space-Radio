@@ -44,7 +44,6 @@
       <div class="view slide-items">
         <router-view @activeNoteDialog="activeNoteDialogHandler" />
         <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
-        <UserRecentPlayed />
       </div>
     </div>
   </div>
@@ -55,7 +54,6 @@ import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
 import SearchBar from '../components/SearchBar.vue'
 import NoteDialog from '../components/NoteDialog.vue'
 import Marquee from '../components/Marquee.vue'
-import UserRecentPlayed from '../components/UserRecentPlayed.vue'
 import NavAdditionDisplay from '../components/NavAdditionDisplay.vue'
 import UserRecentPlayedButton from '../components/featureButtons/UserRecentPlayedButton.vue'
 
@@ -65,7 +63,6 @@ export default {
     SearchBar,
     NoteDialog,
     Marquee,
-    UserRecentPlayed,
     NavAdditionDisplay,
     UserRecentPlayedButton,
   },
