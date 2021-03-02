@@ -29,6 +29,7 @@ export default {
     TrackGridItem,
     TrackGridShell,
   },
+  inheritAttrs: false,
   props: {
     displayActive: {
       type: Boolean,
