@@ -29,10 +29,12 @@ export default {
               'updateAdditionDisplaySource',
               result.items.map(item => item.track)
             )
+            this.$emit('triggerAdditionDisplay', this.trigger)
           }
         })
+      } else {
+        this.$emit('triggerAdditionDisplay', this.trigger)
       }
-      this.$emit('triggerAdditionDisplay', this.trigger)
     },
   },
 }
