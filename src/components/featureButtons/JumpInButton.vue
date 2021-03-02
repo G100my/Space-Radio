@@ -1,5 +1,5 @@
 <template>
-  <button @click="jumpInHandler">
+  <button type="button" @click="jumpInHandler">
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
       <path
         fill-rule="evenodd"

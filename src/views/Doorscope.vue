@@ -29,7 +29,7 @@
           <UserLog />
         </div>
         <div class="login">
-          <button @click="getImplicitGrantToken">Spotify Login</button>
+          <button type="button" @click="getImplicitGrantToken">Spotify Login</button>
         </div>
       </div>
     </div>
