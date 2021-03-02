@@ -20,12 +20,13 @@ export default {
       required: true,
     },
   },
+  emits: ['activeNoteDialog'],
   methods: {
     jumpInHandler() {
       const submitFunction = newNote => {
         this.$store.dispatch('jumpIn', { id: this.trackId, note: newNote, trackNameForLog: this.trackName })
       }
-      this.$parent.$emit('activeNoteDialog', { trackNameForLog: this.trackName, submitFunction })
+      this.$emit('activeNoteDialog', { trackNameForLog: this.trackName, submitFunction })
     },
   },
 }
