@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <input v-model="searchText" type="text" autocomplete="off" @keydown.prevent.enter="searchHandler" />
-    <button class="submit-search-botton" type="button" @click="searchHandler($event), $emit('activeSearchStyle')">
+    <button class="submit-search-botton" type="button" @click="searchHandler">
       <!-- prettier-ignore -->
       <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
@@ -18,23 +18,36 @@
 </template>
 <script>
 export default {
-  emits: ['updateDisplaySource', 'activeSearchStyle', 'disactiveSearchStyle'],
+  emits: ['triggerAdditionDisplay', 'triggerSearchStyle', 'updateAdditionDisplaySource'],
   data() {
     return {
       searchText: '',
+      searchResult: [],
+      trigger: false,
     }
   },
   methods: {
     searchHandler() {
-      if (this.searchText === '') return
-      this.$spotifyAPI.search(this.searchText, ['track'], { market: 'from_token', limit: 10 }, (error, success) => {
-        error && console.log(error.response)
-        success && this.$emit('updateDisplaySource', success.tracks.items)
-      })
+      console.log(this.trigger)
+      if (this.trigger) {
+        if (this.searchText === '') return
+        this.$spotifyAPI.search(this.searchText, ['track'], { market: 'from_token', limit: 10 }, (error, success) => {
+          error && console.log(error.response)
+          if (success) {
+            this.$emit('updateAdditionDisplaySource', success.tracks.items)
+            this.$emit('triggerAdditionDisplay', true)
+          }
+        })
+      } else {
+        this.trigger = true
+        this.$emit('triggerSearchStyle', this.trigger)
+      }
     },
     clearSearch() {
-      this.$emit('disactiveSearchStyle')
-      this.$emit('updateDisplaySource', [])
+      this.trigger = false
+      this.searchText = ''
+      this.$emit('triggerSearchStyle', false)
+      this.$emit('triggerAdditionDisplay', false)
     },
   },
 }
