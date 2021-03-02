@@ -72,7 +72,7 @@ export default {
 }
 .addition-display-leave-active,
 .addition-display-enter-active {
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   @media (min-width: 768px) {
     transition: flex-grow 0.3s ease-in-out;
     transform: translateZ(0);
@@ -80,14 +80,14 @@ export default {
 }
 .addition-display-enter-to,
 .addition-display-leave-from {
-  transform: translateY(0);
+  transform: translateX(0);
   @media (min-width: 768px) {
     flex-grow: 1;
   }
 }
 .addition-display-enter-from,
 .addition-display-leave-to {
-  transform: translateY(-100%);
+  transform: translateX(100%);
   @media (min-width: 768px) {
     flex-grow: 0;
   }
