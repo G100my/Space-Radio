@@ -51,6 +51,7 @@ export default {
   overflow: hidden;
   display: flex;
   align-items: center;
+  transition: flex 0.3s ease-in-out;
 
   .container {
     width: 100%;
