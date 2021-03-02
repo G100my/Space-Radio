@@ -4,7 +4,7 @@
       <nav>
         <NavAdditionDisplay
           :source="additionDisplaySource"
-          :display-active="isSearchActive"
+          :display-active="isSearchActive || isRecentActive"
           @activeNoteDialog="activeNoteDialogHandler"
           @disactiveSearchStyle="isSearchActive = false"
         />
@@ -19,15 +19,10 @@
         </h1>
         <ul>
           <li>
-            <button class="list-toggler" @click="isRecentActive = !isRecentActive">
-              <!-- prettier-ignore -->
-              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
-                <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
-                <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
-                <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
-                <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
-              </svg>
-            </button>
+            <UserRecentPlayedButton
+              @activeRecentDisplay="activeRecentDisplayHandler"
+              @updateDisplaySource="additionDisplaySource = $event"
+            />
           </li>
           <li class="user-name">
             <p>
@@ -62,6 +57,7 @@ import NoteDialog from '../components/NoteDialog.vue'
 import Marquee from '../components/Marquee.vue'
 import UserRecentPlayed from '../components/UserRecentPlayed.vue'
 import NavAdditionDisplay from '../components/NavAdditionDisplay.vue'
+import UserRecentPlayedButton from '../components/featureButtons/UserRecentPlayedButton.vue'
 
 export default {
   components: {
@@ -71,6 +67,7 @@ export default {
     Marquee,
     UserRecentPlayed,
     NavAdditionDisplay,
+    UserRecentPlayedButton,
   },
   data() {
     return {
@@ -86,6 +83,13 @@ export default {
       isRecentActive: false,
       additionDisplaySource: [],
     }
+  },
+  watch: {
+    isSearchActive(newValue) {
+      if (newValue) {
+        this.isRecentActive = false
+      }
+    },
   },
   beforeCreate() {
     if (!this.$store.hasModule('Queue')) {
@@ -104,6 +108,12 @@ export default {
     // this.sliderToggler('slide2left')
   },
   methods: {
+    activeRecentDisplayHandler() {
+      if (this.isRecentActive) {
+        this.additionDisplaySource = []
+      }
+      this.isRecentActive = !this.isRecentActive
+    },
     activeNoteDialogHandler(note) {
       this.editingNote = { ...note }
       this.isNoteDialogActive = true
