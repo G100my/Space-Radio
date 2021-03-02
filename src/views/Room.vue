@@ -4,6 +4,7 @@
       <nav>
         <NavAdditionDisplay
           :source="additionDisplaySource"
+          :display-active="isSearchActive"
           @activeNoteDialog="activeNoteDialogHandler"
           @disactiveSearchStyle="isSearchActive = false"
         />
