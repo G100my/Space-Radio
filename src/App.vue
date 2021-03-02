@@ -25,6 +25,21 @@ export default {}
   --border-radius: 4px;
   font-size: 16px;
 }
+
+div {
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 6px;
+  }
+}
+div:hover {
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-neutral);
+  }
+}
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
