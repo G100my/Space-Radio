@@ -41,9 +41,6 @@ export default {
     },
   },
   emits: ['disactiveSearchStyle'],
-  created() {
-    console.log(this.$attrs)
-  },
 }
 </script>
 <style lang="scss">
