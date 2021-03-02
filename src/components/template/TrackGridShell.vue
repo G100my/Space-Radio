@@ -24,7 +24,7 @@
   gap: 10px 10px;
   font-size: 0.7rem;
   @media (min-width: 768px) {
-    grid-template-columns: min-content 1fr 1fr max-content minmax(max-content, 1fr);
+    grid-template-columns: min-content repeat(2, minmax(min-content, 1fr)) max-content max-content;
     gap: 25px 35px;
   }
   .table-header {
