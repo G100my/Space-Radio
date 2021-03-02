@@ -2,7 +2,8 @@
   <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
     <header :class="{ 'active-search': isSearchActive }">
       <nav>
-        <SearchBar @activeNoteDialog="activeNoteDialogHandler" @activeSearchStyle="isSearchActive = $event" />
+        <NavAdditionDisplay :source="additionDisplaySource" @activeNoteDialog="activeNoteDialogHandler" />
+        <SearchBar @activeSearchStyle="isSearchActive = $event" @updateDisplaySource="additionDisplaySource = $event" />
         <h1>
           <img src="../assets/vinyl-record.png" alt="" />
           <p>Jukebox</p>
@@ -51,6 +52,7 @@ import SearchBar from '../components/SearchBar.vue'
 import NoteDialog from '../components/NoteDialog.vue'
 import Marquee from '../components/Marquee.vue'
 import UserRecentPlayed from '../components/UserRecentPlayed.vue'
+import NavAdditionDisplay from '../components/NavAdditionDisplay.vue'
 
 export default {
   components: {
@@ -59,6 +61,7 @@ export default {
     NoteDialog,
     Marquee,
     UserRecentPlayed,
+    NavAdditionDisplay,
   },
   data() {
     return {
@@ -72,6 +75,7 @@ export default {
       },
       isSearchActive: false,
       isRecentActive: false,
+      additionDisplaySource: [],
     }
   },
   beforeCreate() {
