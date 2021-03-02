@@ -99,21 +99,4 @@ button {
     vertical-align: middle;
   }
 }
-.feature-buttons {
-  font-size: 0;
-  > button {
-    font-size: 0;
-    border-color: var(--primary-neutral);
-  }
-  button + button {
-    margin-left: 10px;
-  }
-  @media (min-width: 768px) {
-    padding-left: 10px;
-    padding-right: 10px;
-    button + button {
-      margin-left: 15px;
-    }
-  }
-}
 </style>
