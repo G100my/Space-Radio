@@ -149,11 +149,11 @@ export default {
       this.touchStartPosition = event.touches[0].clientX
     },
     touchendHandler(event) {
-      const endPosition = event.changedTouches[0].clientX
-
-      if (this.touchStartPosition - endPosition > 70) {
+      const currentDistance = this.touchStartPosition - event.changedTouches[0].clientX
+      if (Math.abs(currentDistance) < 30) return
+      if (currentDistance > 70) {
         this.sliderToggler('slide2left')
-      } else if (endPosition - this.touchStartPosition > 70) {
+      } else if (currentDistance < 70) {
         this.sliderToggler('slide2right')
       } else {
         this.sliderToggler('resume')
@@ -162,14 +162,15 @@ export default {
     touchmoveHandler(event) {
       // left: -,   right: +
       const currentDistance = event.touches[0].clientX - this.touchStartPosition
+      if (Math.abs(currentDistance) < 30) return
       if (this.isMainSide) {
-        if (currentDistance > 30) {
+        if (currentDistance > 50) {
           return
         } else {
           this.$refs.slideContainer.style.transform = `translate(${currentDistance}px, 0)`
         }
       } else {
-        if (currentDistance < -30) {
+        if (currentDistance < -50) {
           return
         } else {
           this.$refs.slideContainer.style.transform = `translate(${-window.innerWidth + currentDistance}px, 0)`
