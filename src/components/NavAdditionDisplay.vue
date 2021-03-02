@@ -1,5 +1,5 @@
 <template>
-  <div class="immediately-result">
+  <div class="immediately-result" :class="{ 'display-active': displayActive }">
     <template v-if="source.length === 0">
       <p class="no-result" @click="$emit('disactiveSearchStyle')">No result</p>
     </template>
@@ -14,7 +14,7 @@
       </TrackGridShell>
     </template>
   </div>
-  <div class="result-mask" :class="{ active }" />
+  <div class="result-mask" :class="{ 'display-active': displayActive }" />
 </template>
 <script>
 import TrackGridItem from './template/TrackGridItem.vue'
@@ -30,6 +30,10 @@ export default {
     TrackGridShell,
   },
   props: {
+    displayActive: {
+      type: Boolean,
+      default: false,
+    },
     source: {
       type: Array,
       default: () => [],
@@ -90,19 +94,17 @@ export default {
   }
 }
 
-.active-search {
-  .immediately-result {
-    height: calc(100vh - 70px - 30px);
-    @media (min-width: 768px) {
-      width: 50vw;
-      padding: 15px;
-    }
+.display-active.immediately-result {
+  height: calc(100vh - 70px - 30px);
+  @media (min-width: 768px) {
+    width: 50vw;
+    padding: 15px;
   }
-  .result-mask {
-    height: 100vh;
-    @media (min-width: 768px) {
-      width: 50vw;
-    }
+}
+.display-active.result-mask {
+  height: 100vh;
+  @media (min-width: 768px) {
+    width: 50vw;
   }
 }
 </style>
