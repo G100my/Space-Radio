@@ -4,6 +4,7 @@ import store from '../store/'
 import RoomQueue from '../components/RoomQueue.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
+import { fetchAccessToken } from '../utility/PKCE.js'
 
 const routes = [
   {
@@ -31,19 +32,32 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(to => {
-  if (to.fullPath.includes('access_token')) {
-    const hash = to.fullPath
-    const expires_in = Number(hash.slice(hash.search(/(?<=expires_in=)[\w+]/))) * 1000
-    const expiredTime = expires_in + Date.now()
+router.beforeEach(async to => {
+  if (window.location.search !== '') {
+    const authorizationCode = window.location.href.substring(
+      window.location.href.search(/(?<=code=)[\w+]/),
+      window.location.href.indexOf('#/')
+    )
+    if (!authorizationCode) return
 
-    const newToken = hash.substring(hash.search(/(?<=access_token=)[\w+]/), hash.indexOf('&token_type'))
-    store.commit('refreshToken', { newToken, expiredTime })
-    spotifyAPI.setAccessToken(newToken)
-    spotifyAPI.getMe().then(result => {
-      store.commit('updateUserData', result)
+    await fetchAccessToken(authorizationCode).then(result => {
+      const { access_token, expires_in, refresh_token } = result
+
+      const expiredTime = expires_in * 1000 + Date.now()
+      store.commit('refreshToken', { access_token, expiredTime, refresh_token })
+
+      spotifyAPI.setAccessToken(access_token)
+      spotifyAPI.getMe().then(result => {
+        store.commit('updateUserData', result)
+        window.history.replaceState(null, '', '/')
+      })
+      // spotify 在 PKCE 驗證流程中把資料放在 location.search 的地方，
+      // http://somewhere/?code=something...#/
+      // 造成 vue router webHashHistory mode 無法如預期運作，
+      // to, from 都會是 '/'，因此手動清除。
+      window.location.href = window.origin + '/#/room'
+      return { name: 'Room' }
     })
-    return { name: 'Room' }
   }
 
   if (!to.meta.requiresAuth && store.getters.isTokenValid) {
@@ -51,6 +65,7 @@ router.beforeEach(to => {
   }
 
   if (to.meta.requiresAuth && !store.getters.isTokenValid) {
+    console.log(store.getters.isTokenValid)
     return { name: 'Doorscope' }
   }
 })

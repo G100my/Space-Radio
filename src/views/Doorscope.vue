@@ -29,7 +29,7 @@
           <UserLog />
         </div>
         <div class="login">
-          <button type="button" @click="getImplicitGrantToken">Spotify Login</button>
+          <button type="button" @click="PKCE">Spotify Login</button>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getImplicitGrantToken } from '../utility/Oauth.js'
+import { PKCE } from '../utility/PKCE.js'
 import UserLog from '../components/UserLog.vue'
 
 export default {
@@ -48,7 +48,7 @@ export default {
     ...mapGetters(['playerPlayingAlbum', 'playerPlayingArtists', 'playerPlayingTrackName']),
   },
   methods: {
-    getImplicitGrantToken,
+    PKCE,
   },
 }
 </script>

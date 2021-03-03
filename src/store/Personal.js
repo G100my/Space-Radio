@@ -5,6 +5,7 @@ const Personal = {
     image_url: localStorage.getItem('jukebox_user_images') || '',
     token: localStorage.getItem('jukebox_token') || null,
     expired_time: Number(localStorage.getItem('jukebox_expired_time')) || null,
+    refresh_token: localStorage.getItem('jukebox_refresh_token') || null,
   },
   getters: {
     token(state) {
@@ -23,11 +24,14 @@ const Personal = {
     },
   },
   mutations: {
-    refreshToken(state, { newToken, expiredTime }) {
-      state.token = newToken
+    refreshToken(state, { access_token, expiredTime, refresh_token }) {
+      state.token = access_token
       state.expired_time = expiredTime
-      localStorage.setItem('jukebox_token', newToken)
+      state.refresh_token = refresh_token
+
+      localStorage.setItem('jukebox_token', access_token)
       localStorage.setItem('jukebox_expired_time', expiredTime)
+      localStorage.setItem('jukebox_refresh_token', refresh_token)
     },
     updateUserData(state, { id, display_name, images }) {
       state.user_id = id
