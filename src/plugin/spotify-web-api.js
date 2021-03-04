@@ -1989,7 +1989,20 @@ var SpotifyWebApi = (function () {
 //   module.exports = SpotifyWebApi;
 // }
 
-const spotifyAPI = new SpotifyWebApi()
+import store from '../store'
+import { refreshAccessToken } from '../utility/PKCE.js'
+
+const spotifyAPI = new Proxy(new SpotifyWebApi(), {
+  get: function (target, property) {
+    if (property === 'getAccessToken' || property === 'setAccessToken') {
+      return target[property]
+    }
+    if (!store.getters.isTokenValid) {
+      return (...theArguments) => refreshAccessToken().then(() => target[property](...theArguments))
+    }
+    return target[property]
+  },
+})
 
 export default {
   install: app => {
