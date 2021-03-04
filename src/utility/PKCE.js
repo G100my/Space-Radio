@@ -1,3 +1,5 @@
+import store from '../store'
+
 function dec2hex(dec) {
   return ('0' + dec.toString(16)).substr(-2)
 }
@@ -61,13 +63,40 @@ async function fetchAccessToken(code) {
 
   return fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
-    headers: new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded',
-    }),
+    headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
     body,
   })
-    .then(resolve => resolve.json())
-    .catch(error => console.log(error))
+    .then(response => {
+      if (response.ok) return response.json()
+      else console.error('something wrong in fetchAccessToken', response)
+    })
+    .then(result => {
+      const { access_token, expires_in, refresh_token } = result
+      const expiredTime = expires_in * 1000 + Date.now()
+      store.commit('refreshToken', { access_token, expiredTime, refresh_token })
+    })
 }
 
-export { PKCE, fetchAccessToken }
+async function refreshAccessToken() {
+  let body = 'client_id=' + client_id
+  body += '&grant_type=refresh_token'
+  body += '&refresh_token=' + store.getters.refreshToken
+
+  return fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+    body,
+  })
+    .then(response => {
+      if (response.ok) return response.json()
+      else console.error('something wrong in refreshAccessToken', response)
+    })
+    .then(result => {
+      const { access_token, expires_in, refresh_token } = result
+      const expiredTime = expires_in * 1000 + Date.now()
+      store.commit('refreshToken', { access_token, expiredTime, refresh_token })
+    })
+}
+window.refreshAccessToken = refreshAccessToken
+
+export { PKCE, fetchAccessToken, refreshAccessToken }

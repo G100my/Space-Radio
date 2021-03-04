@@ -22,6 +22,9 @@ const Personal = {
     userName(state) {
       return state.display_name
     },
+    refreshToken(state) {
+      return state.refresh_token
+    },
   },
   mutations: {
     refreshToken(state, { access_token, expiredTime, refresh_token }) {
