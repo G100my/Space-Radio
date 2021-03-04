@@ -33,7 +33,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async to => {
-  if (window.location.search !== '') {
+  if (window.location.search.startsWith('?code=')) {
     const authorizationCode = window.location.href.substring(
       window.location.href.search(/(?<=code=)[\w+]/),
       window.location.href.indexOf('#/')
@@ -58,6 +58,11 @@ router.beforeEach(async to => {
       window.location.href = window.origin + '/#/room'
       return { name: 'Room' }
     })
+  }
+
+  if (window.location.search.startsWith('?error=')) {
+    window.location.href = window.origin + '/'
+    return { name: 'Doorscope' }
   }
 
   if (!to.meta.requiresAuth && store.getters.isTokenValid) {
