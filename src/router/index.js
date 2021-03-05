@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { spotifyAPI } from '../plugin/spotify-web-api.js'
 import store from '../store/'
 import RoomQueue from '../components/RoomQueue.vue'
 import Room from '../views/Room.vue'
@@ -41,11 +40,6 @@ router.beforeEach(async to => {
     if (!authorizationCode) return
 
     await fetchAccessToken(authorizationCode)
-
-    spotifyAPI.getMe().then(result => {
-      store.commit('updateUserData', result)
-      window.history.replaceState(null, '', '/')
-    })
     // spotify 在 PKCE 驗證流程中把資料放在 location.search 的地方，
     // http://somewhere/?code=something...#/
     // 造成 vue router webHashHistory mode 無法如預期運作，

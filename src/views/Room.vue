@@ -105,6 +105,11 @@ export default {
     if (!this.$spotifyAPI.getAccessToken()) {
       this.$spotifyAPI.setAccessToken(this.$store.getters.token)
     }
+    this.$spotifyAPI.getMe().then(result => {
+      console.log(result)
+      this.$store.commit('updateUserData', result)
+      window.history.replaceState(null, '', '/')
+    })
   },
   // for test
   mounted() {
