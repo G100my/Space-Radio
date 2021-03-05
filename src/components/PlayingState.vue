@@ -71,12 +71,10 @@ export default {
     UserLog,
     HostControl: defineAsyncComponent(() => import('../components/HostControl.vue')),
   },
-  data() {
-    return {
-      hostToggler: false,
-    }
-  },
   computed: {
+    hostToggler() {
+      return this.$store.getters.userId === 'zhanglo'
+    },
     ...mapState({
       isVoted: state => state.PlayingState.isVoted,
     }),
@@ -88,11 +86,6 @@ export default {
       'currentVolume',
       'currentDislike',
     ]),
-  },
-  created() {
-    if (this.$store.getters.userId === 'zhanglo') {
-      this.hostToggler = true
-    }
   },
   methods: {
     turnUp() {
