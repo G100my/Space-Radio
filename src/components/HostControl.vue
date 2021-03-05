@@ -42,6 +42,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { refreshAccessToken } from '../utility/PKCE.js'
 // 載入歌單  調節播放
 export default {
   data() {
@@ -125,8 +126,13 @@ export default {
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
         name: 'Jukebox player',
-        getOAuthToken: cb => {
-          cb(this.token)
+        volume: this.currentVolume / 100,
+        getOAuthToken: callback => {
+          if (this.$store.getters.isTokenValid) {
+            callback(this.token)
+          } else {
+            refreshAccessToken().then(callback(this.token))
+          }
         },
       })
       const eventArray = [
