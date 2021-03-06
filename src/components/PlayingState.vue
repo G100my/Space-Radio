@@ -143,7 +143,7 @@ export default {
       }
     }
   }
-  
+
   .description {
     margin-top: 5px;
     display: flex;
@@ -249,7 +249,7 @@ export default {
       margin-left: 5px;
     }
   }
-  .active {
+  .sign > .active {
     background-color: var(--primary-neutral);
   }
   .collect {
