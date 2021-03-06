@@ -29,13 +29,13 @@ export default {
   methods: {
     searchHandler() {
       console.log(this.trigger)
+      this.$emit('triggerAdditionDisplay', true)
       if (this.trigger) {
         if (this.searchText === '') return
         this.$spotifyAPI.search(this.searchText, ['track'], { market: 'from_token', limit: 10 }, (error, success) => {
           error && console.log(error.response)
           if (success) {
             this.$emit('updateAdditionDisplaySource', success.tracks.items)
-            this.$emit('triggerAdditionDisplay', true)
           }
         })
       } else {
@@ -107,12 +107,13 @@ $icon-length: 35px;
 }
 
 .search .cancel-search-button,
-.search input,
-.search ~ ul,
-.search ~ h1 {
-  transition: flex 0.3s ease-in-out;
-}
 .search {
+  transition: flex 0.3s ease-in-out, margin-right 0.3s ease-in-out;
+}
+.search input {
+  transition: flex 0.3s ease-in-out, padding-left 0.3s ease-in-out;
+}
+.search ~ h1 {
   transition: flex 0.3s ease-in-out;
 }
 
@@ -150,7 +151,6 @@ $icon-length: 35px;
   }
   ~ ul,
   ~ h1 {
-    flex-shrink: 1;
     overflow: hidden;
   }
 }
@@ -159,6 +159,7 @@ $icon-length: 35px;
   flex-basis: 100%;
   flex-shrink: 0;
   margin-right: 0;
+
   input {
     flex-grow: 1;
     padding-left: 10px;
@@ -166,20 +167,14 @@ $icon-length: 35px;
   .cancel-search-button {
     flex-basis: $icon-length;
   }
-
-  @media (min-width: 768px) {
-    input {
-      flex-shrink: 0;
-    }
-  }
 }
 
 .active-search {
-  .marquee {
-    flex: 0;
-  }
   nav {
-    flex: 1 1 100%;
+    flex-basis: 100%;
+    @media (min-width: 768px) {
+      flex-basis: 50%;
+    }
   }
 }
 </style>
