@@ -99,9 +99,6 @@ export default {
       this.$store.registerModule('Queue', QueueStore)
       connect2FirebaseQueue(this.$store)
     }
-  },
-  // for test
-  created() {
     if (!this.$spotifyAPI.getAccessToken()) {
       this.$spotifyAPI.setAccessToken(this.$store.getters.token)
     }
@@ -110,10 +107,6 @@ export default {
       this.$store.commit('updateUserData', result)
       window.history.replaceState(null, '', '/')
     })
-  },
-  // for test
-  mounted() {
-    // this.sliderToggler('slide2left')
   },
   methods: {
     activeNoteDialogHandler(note) {
