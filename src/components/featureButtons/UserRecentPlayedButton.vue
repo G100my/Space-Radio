@@ -16,25 +16,18 @@ export default {
   emits: ['triggerAdditionDisplay', 'updateAdditionDisplaySource'],
   data() {
     return {
-      trigger: false,
+      recentData: [],
     }
   },
   methods: {
     fetchDataHandler() {
-      this.trigger = !this.trigger
-      if (this.trigger) {
-        this.$spotifyAPI.getMyRecentlyPlayedTracks({ limit: 50 }).then(result => {
-          if (!result.error) {
-            this.$emit(
-              'updateAdditionDisplaySource',
-              result.items.map(item => item.track)
-            )
-            this.$emit('triggerAdditionDisplay', this.trigger)
-          }
-        })
-      } else {
-        this.$emit('triggerAdditionDisplay', this.trigger)
-      }
+      this.$spotifyAPI.getMyRecentlyPlayedTracks({ limit: 50 }).then(result => {
+        if (!result.error) {
+          this.recentData = result.items.map(item => item.track)
+          this.$emit('updateAdditionDisplaySource', this.recentData)
+          this.$emit('triggerAdditionDisplay')
+        }
+      })
     },
   },
 }

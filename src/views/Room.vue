@@ -22,7 +22,7 @@
         <ul>
           <li>
             <UserRecentPlayedButton
-              @triggerAdditionDisplay="additionDisplayToggler = $event"
+              @triggerAdditionDisplay="additionDisplayToggler = !additionDisplayToggler"
               @updateAdditionDisplaySource="additionDisplaySource = $event"
             />
           </li>

@@ -30,12 +30,14 @@ export default {
     searchHandler() {
       console.log(this.trigger)
       this.$emit('triggerAdditionDisplay', true)
+      this.$emit('updateAdditionDisplaySource', this.searchResult)
       if (this.trigger) {
         if (this.searchText === '') return
         this.$spotifyAPI.search(this.searchText, ['track'], { market: 'from_token', limit: 10 }, (error, success) => {
           error && console.log(error.response)
+          this.searchResult = success.tracks.items
           if (success) {
-            this.$emit('updateAdditionDisplaySource', success.tracks.items)
+            this.$emit('updateAdditionDisplaySource', this.searchResult)
           }
         })
       } else {
@@ -46,7 +48,6 @@ export default {
     clearSearch() {
       this.trigger = false
       this.searchText = ''
-      this.$emit('updateAdditionDisplaySource', [])
       this.$emit('triggerSearchStyle', false)
       this.$emit('triggerAdditionDisplay', false)
     },
