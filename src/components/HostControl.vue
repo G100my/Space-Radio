@@ -32,11 +32,11 @@
   <div class="minimal-control">
     <p>
       <span>Minimal volume:</span>
-      <input ref="minimalVolumeInput" type="number" step="2" min="10" max="50" />
+      <input ref="minimalVolumeInput" :value="currentMinimalVolume" type="number" step="2" min="10" max="50" />
     </p>
     <p>
       <span>Dislike vote threshold:</span>
-      <input ref="dislikeThresholdInput" type="number" min="2" max="5" />
+      <input ref="dislikeThresholdInput" :value="currentDislikeThreshold" type="number" min="2" max="5" />
     </p>
     <div class="buttons">
       <button type="button" @click="submitHandler">submit</button>
@@ -126,13 +126,6 @@ export default {
         }, 1000)
       }
     },
-  },
-  mounted() {
-    // 載入 firebase 所儲存的 minimalVolume
-    this.minimalVolume = this.currentMinimalVolume
-    this.dislikeThreshold = this.currentDislikeThreshold
-    this.$refs.minimalVolumeInput.value = this.minimalVolume
-    this.$refs.dislikeThresholdInput.value = this.dislikeThreshold
   },
   created() {
     window.onbeforeunload = () => {
@@ -346,12 +339,14 @@ export default {
       this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
     },
     submitHandler() {
-      if (this.minimalVolume !== this.$refs.minimalVolumeInput.value) {
-        this.minimalVolume = this.$refs.minimalVolumeInput.value
+      const editedMinimalVolume = Number.parseInt(this.$refs.minimalVolumeInput.value)
+      if (this.minimalVolume !== editedMinimalVolume) {
+        this.minimalVolume = editedMinimalVolume
         this.$store.dispatch('updateMinimalVolume', this.minimalVolume)
       }
-      if (this.dislikeThreshold !== this.$refs.dislikeThresholdInput.value) {
-        this.dislikeThreshold = this.$refs.dislikeThresholdInput.value
+      const editedDislikeThreshold = Number.parseInt(this.$refs.dislikeThresholdInput.value)
+      if (this.dislikeThreshold !== editedDislikeThreshold) {
+        this.dislikeThreshold = editedDislikeThreshold
         this.$store.dispatch('updateDislikeThreshold', this.dislikeThreshold)
       }
     },
