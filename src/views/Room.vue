@@ -298,6 +298,16 @@ nav {
         height: 20px;
         width: 20px;
       }
+      span {
+        display: inline-block;
+        max-width: 80px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        vertical-align: bottom;
+        @media (min-width: 768px) {
+          max-width: none;
+        }
+      }
     }
   }
 }

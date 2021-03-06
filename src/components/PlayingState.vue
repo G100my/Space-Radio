@@ -4,7 +4,7 @@
       <img src="../assets/vinyl-record.png" alt="" />
       <p>Jukebox</p>
     </h1>
-    <div class="track-info" :class="{ smaller: hostToggler }">
+    <div class="track-info">
       <div class="cover">
         <img :src="playerPlayingAlbum.image_url" alt="" />
       </div>
@@ -127,6 +127,15 @@ export default {
     // flex: 1;
     display: flex;
     flex-direction: column;
+    .cover {
+      font-size: 0;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      img {
+        max-height: 30vh;
+      }
+    }
     @media (min-width: 768px) {
       justify-content: flex-end;
       .cover {
@@ -134,15 +143,7 @@ export default {
       }
     }
   }
-  .cover {
-    font-size: 0;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    img {
-      max-width: 100%;
-    }
-  }
+  
   .description {
     margin-top: 5px;
     display: flex;
@@ -254,43 +255,6 @@ export default {
   .collect {
     button {
       width: 100%;
-    }
-  }
-  .track-info.smaller {
-    .cover img {
-      max-height: 150px;
-    }
-    .description {
-      display: grid;
-      grid-template-columns: auto auto;
-      grid-template-rows: 1fr 1fr;
-      grid-template-areas:
-        'track-name track-name'
-        'artists album';
-      row-gap: 5px;
-      column-gap: 10px;
-      width: fit-content;
-      margin: auto;
-      justify-items: flex-start;
-      .track-name {
-        grid-area: track-name;
-      }
-      .artists {
-        grid-area: artists;
-        margin: 0;
-      }
-      .album {
-        grid-area: album;
-      }
-    }
-    @media (min-width: 768px) {
-      .cover img {
-        max-height: 250px;
-        max-width: 250px;
-      }
-      .description {
-        display: flex;
-      }
     }
   }
 }
