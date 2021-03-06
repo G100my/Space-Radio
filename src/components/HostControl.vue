@@ -152,6 +152,13 @@ export default {
       this.player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id)
         this.deviceId = device_id
+        // 等 player 準備完成才 watch playerVolume
+        this.$watch('currentVolume', newValue => {
+          console.log('currentVolume')
+          this.playerVolume = newValue
+          console.log(this.player)
+          if (this.player !== null) this.player.setVolume(newValue / 100)
+        })
       })
 
       // 避免中途重啟 pending 會一直常駐，直到下一首歌曲取代目前的 pending
@@ -212,14 +219,7 @@ export default {
         }
       })
 
-      this.player.connect().then(success => {
-        if (!success) return
-        this.$watch('currentVolume', newValue => {
-          console.log('currentVolume')
-          this.playerVolume = newValue
-          if (this.player !== null) this.player.setVolume(newValue / 100)
-        })
-      })
+      this.player.connect()
     }
 
     import('../utility/spotify-player-SDK.js')
