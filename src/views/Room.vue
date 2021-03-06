@@ -213,7 +213,6 @@ export default {
   }
   .sidebar.slide-items {
     box-sizing: border-box;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     .playing-state {
@@ -221,7 +220,7 @@ export default {
     }
     @media (min-width: 768px) {
       width: 400px;
-      padding: 40px 0 20px 20px;
+      padding: 40px 0 40px 20px;
     }
   }
 }

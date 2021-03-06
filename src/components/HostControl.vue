@@ -28,19 +28,29 @@
         />
       </svg>
     </button>
-  </div>
-  <div class="minimal-control">
-    <p>
-      <span>Minimal volume:</span>
-      <input ref="minimalVolumeInput" :value="currentMinimalVolume" type="number" step="2" min="10" max="50" />
-    </p>
-    <p>
-      <span>Dislike vote threshold:</span>
-      <input ref="dislikeThresholdInput" :value="currentDislikeThreshold" type="number" min="2" max="5" />
-    </p>
-    <div class="buttons">
-      <button type="button" @click="submitHandler">submit</button>
-      <button type="button" @click="resetHandler">reset</button>
+    <button class="setting-button" type="button" @click="isShowMinimalControlBoard = !isShowMinimalControlBoard">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+        <path
+          d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+        />
+        <path
+          d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+        />
+      </svg>
+    </button>
+    <div v-show="isShowMinimalControlBoard" class="minimal-control">
+      <p>
+        <span>Minimal volume:</span>
+        <input ref="minimalVolumeInput" :value="currentMinimalVolume" type="number" step="2" min="10" max="50" />
+      </p>
+      <p>
+        <span>Dislike vote threshold:</span>
+        <input ref="dislikeThresholdInput" :value="currentDislikeThreshold" type="number" min="2" max="5" />
+      </p>
+      <div class="buttons">
+        <button type="button" @click="submitHandler">submit</button>
+        <button type="button" @click="resetHandler">reset</button>
+      </div>
     </div>
   </div>
 </template>
@@ -70,6 +80,8 @@ export default {
       dislikeCountDownTimer: null,
       minimalVolume: 50,
       minimalVolumeDeferTimer: null,
+
+      isShowMinimalControlBoard: false,
     }
   },
   computed: {
@@ -359,10 +371,12 @@ export default {
 </script>
 <style lang="scss">
 .main-control {
-  @media (min-width: 768px) {
-    display: flex;
-    flex-direction: column-reverse;
+  position: relative;
+  display: flex;
+  button + button {
+    margin-left: 15px;
   }
+  .setting-button,
   .play-button {
     font-size: 0;
     color: var(--primary-neutral);
@@ -374,8 +388,14 @@ export default {
   }
 }
 .minimal-control {
+  background-color: var(--secondary-dark);
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
+  bottom: calc(100% + 15px);
   padding: 10px;
-  border: 1px solid var(--primary-highlight);
+  border: 1px solid var(--primary-neutral);
   border-radius: var(--border-radius);
   display: flex;
   flex-direction: column;
@@ -409,15 +429,10 @@ export default {
     }
   }
   @media (min-width: 768px) {
-    position: static;
-    .toggler {
-      display: none;
-    }
-    .float-board {
-      display: flex;
-      margin-top: 0;
-      padding: 10px;
-    }
+    left: 105%;
+    bottom: 0;
+    width: max-content;
+
     input {
       width: 40px;
     }

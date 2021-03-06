@@ -173,8 +173,7 @@ export default {
   }
   .control-board,
   .log,
-  .main-control,
-  .minimal-control {
+  .main-control {
     margin: 15px 30px 0;
   }
   .terminate-control,
@@ -258,7 +257,6 @@ export default {
     }
   }
   .track-info.smaller {
-    flex: 0;
     .cover img {
       max-height: 150px;
     }
@@ -286,7 +284,6 @@ export default {
       }
     }
     @media (min-width: 768px) {
-      flex: 1;
       .cover img {
         max-height: 250px;
         max-width: 250px;
