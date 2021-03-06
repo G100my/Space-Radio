@@ -1998,7 +1998,11 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
       return target[property]
     }
     if (!store.getters.isTokenValid) {
-      return (...theArguments) => refreshAccessToken().then(() => target[property](...theArguments))
+      return (...theArguments) =>
+        refreshAccessToken().then(() => {
+          spotifyAPI.setAccessToken(store.getters.token)
+          target[property](...theArguments)
+        })
     }
     return target[property]
   },
