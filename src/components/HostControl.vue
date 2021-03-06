@@ -32,12 +32,16 @@
   <div class="minimal-control">
     <p>
       <span>Minimal volume:</span>
-      <input type="number" :value="currentMinimalVolume" step="2" min="0" max="50" @change="minimalVolumeHandler" />
+      <input ref="minimalVolumeInput" type="number" step="2" min="10" max="50" />
     </p>
     <p>
       <span>Dislike vote threshold:</span>
-      <input v-model="dislikeThreshold" type="number" min="2" max="5" />
+      <input ref="dislikeThresholdInput" type="number" min="2" max="5" />
     </p>
+    <div class="buttons">
+      <button type="button" @click="submitHandler">submit</button>
+      <button type="button" @click="resetHandler">reset</button>
+    </div>
   </div>
 </template>
 <script>
@@ -47,20 +51,24 @@ import { refreshAccessToken } from '../utility/PKCE.js'
 export default {
   data() {
     return {
+      player: null,
+      deviceId: null,
       playerVolume: 50,
+      deviceActived: false,
+      paused: true,
+
+      positionStateCounter: 0,
+      coundDownTimer: null,
+
+      utterance: new window.SpeechSynthesisUtterance(),
       recodeVolume: null,
       executeBeforeEndTime: 10000,
       adjustProcessTime: 5000,
       adjustStepTime: 100,
-      utterance: new window.SpeechSynthesisUtterance(),
-      player: null,
-      deviceId: null,
-      coundDownTimer: null,
-      positionStateCounter: 0,
+
       dislikeThreshold: 2,
       dislikeCountDownTimer: null,
-      deviceActived: false,
-      paused: true,
+      minimalVolume: 50,
       minimalVolumeDeferTimer: null,
     }
   },
@@ -117,6 +125,13 @@ export default {
         }, 1000)
       }
     },
+  },
+  mounted() {
+    // 載入 firebase 所儲存的 minimalVolume
+    this.minimalVolume = this.currentMinimalVolume
+    console.log(this.$refs.minimalVolumeInput)
+    this.$refs.minimalVolumeInput.value = this.minimalVolume
+    this.$refs.dislikeThresholdInput.value = this.dislikeThreshold
   },
   created() {
     window.onbeforeunload = () => {
@@ -329,11 +344,15 @@ export default {
     togglePlay() {
       this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
     },
-    minimalVolumeHandler(event) {
-      if (this.minimalVolumeDeferTimer) clearTimeout(this.minimalVolumeDeferTimer)
-      this.minimalVolumeDeferTimer = setTimeout(() => {
-        this.$store.dispatch('updateMinimalVolume', event.target.value)
-      }, 3000)
+    submitHandler() {
+      this.minimalVolume = this.$refs.minimalVolumeInput.value
+      this.dislikeThreshold = this.$refs.dislikeThresholdInput.value
+      this.$store.dispatch('updateMinimalVolume', this.minimalVolume)
+      this.dislikeThreshold = this.$refs.dislikeThresholdInput.value
+    },
+    resetHandler() {
+      this.$refs.minimalVolumeInput.value = this.minimalVolume
+      this.$refs.dislikeThresholdInput.value = this.dislikeThreshold
     },
   },
 }
@@ -380,6 +399,14 @@ export default {
     border: none;
     border-bottom: 1px solid var(--ignore);
     text-align: center;
+  }
+  .buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    button + button {
+      margin-left: 15px;
+    }
   }
   @media (min-width: 768px) {
     position: static;

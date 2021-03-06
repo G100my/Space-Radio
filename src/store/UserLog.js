@@ -74,7 +74,12 @@ function userLogFirebasePlugin(store) {
         case 'increaseDislike':
           userLog = { ...maker(action), option: { id: state.PlayingState.playing_track.id } }
           break
-
+        case 'updateMinimalVolume':
+          userLog = {
+            ...maker(action),
+            option: { id: state.PlayingState.playing_track.id, minimal_volume: state.PlayingState.minimal_volume },
+          }
+          break
         default:
           return
       }

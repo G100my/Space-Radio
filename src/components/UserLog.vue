@@ -19,6 +19,10 @@
         >調高音量至:<span>{{ log.option.volume }}</span>
       </p>
       <p v-else-if="log.action_type === 'increaseDislike' || log.action_type === 'reduceDislike'">更新切歌投票數</p>
+      <p v-else-if="log.action_type === 'updateMinimalVolume'">
+        <span>{{ log.user_id }}</span
+        >將最小撥放音量調整為<span>{{ log.option.minimal_volume }}</span>
+      </p>
     </li>
   </ul>
 </template>

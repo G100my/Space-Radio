@@ -166,6 +166,9 @@ function playingStateFirebasePlugin(store) {
   playing_state_ref.child('voted_users').on('value', snapshot => {
     store.dispatch('adjustIsVoted', snapshot)
   })
+  playing_state_ref.child('minimal_volume').on('value', snapshot => {
+    store.commit('adjustMinimalVolume', snapshot.val())
+  })
 }
 
 export { PlayingState, playingStateFirebasePlugin }
