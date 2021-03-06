@@ -42,8 +42,7 @@
       </div>
       <div class="terminate-control">
         <div class="sign">
-          <span :class="{ active: currentDislike > 0 }" />
-          <span :class="{ active: currentDislike > 1 }" />
+          <span v-for="(i, index) in currentDislikeThreshold" :key="i" :class="{ active: currentDislike > index }" />
         </div>
         <p>{{ currentDislike }}</p>
         <div class="buttons">
@@ -85,6 +84,7 @@ export default {
       'playerPlayingTrackName',
       'currentVolume',
       'currentDislike',
+      'currentDislikeThreshold',
     ]),
   },
   methods: {
