@@ -24,7 +24,7 @@
     <p>{{ release }}</p>
   </div>
   <div class="track-feature" :class="{ urgent: isUrgent, pending: isPending }">
-    <slot/>
+    <slot />
   </div>
 </template>
 <script>
