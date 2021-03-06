@@ -98,6 +98,7 @@ export default {
       'pendingQueue',
       'leftQueueAmount',
       'token',
+      'isTokenValid',
     ]),
   },
   watch: {
@@ -149,10 +150,12 @@ export default {
         name: 'Jukebox player',
         volume: this.currentVolume / 100,
         getOAuthToken: callback => {
-          if (this.$store.getters.isTokenValid) {
+          if (this.isTokenValid) {
             callback(this.token)
           } else {
-            refreshAccessToken().then(callback(this.token))
+            refreshAccessToken().then(() => {
+              callback(this.token)
+            })
           }
         },
       })
