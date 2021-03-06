@@ -75,11 +75,11 @@ const Queue = {
     pendingQueue(state) {
       return state.pending_queue
     },
-    normalQueueKeys(state) {
-      return Object.keys(state.normal_queue)
+    normalQueue(state) {
+      return state.normal_queue
     },
-    urgentQueueKeys(state) {
-      return Object.keys(state.urgent_queue)
+    urgentQueue(state) {
+      return state.urgent_queue
     },
     previousDeleted(state) {
       return state.previousDeleted
