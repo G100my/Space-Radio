@@ -42,6 +42,7 @@ const PlayingState = {
     playing_track: { ...initialTrack },
     latest_queue: { ...initialQueue },
     dislike: 0,
+    dislike_threshold: 2,
     isVoted: false,
   },
   getters: {
@@ -62,6 +63,9 @@ const PlayingState = {
     },
     currentMinimalVolume(state) {
       return state.minimal_volume
+    },
+    currentDislikeThreshold(state) {
+      return state.dislike_threshold
     },
     currentDislike(state) {
       return state.dislike
@@ -87,6 +91,9 @@ const PlayingState = {
     },
     adjustMinimalVolume(state, value) {
       state.minimal_volume = value
+    },
+    adjustDislikeThreshold(state, value) {
+      state.dislike_threshold = value
     },
   },
   actions: {
@@ -147,6 +154,9 @@ const PlayingState = {
     updateMinimalVolume(_context, value) {
       playing_state_ref.child('minimal_volume').set(value)
     },
+    updateDislikeThreshold(_context, value) {
+      playing_state_ref.child('dislike_threshold').set(value)
+    },
   },
 }
 
@@ -168,6 +178,9 @@ function playingStateFirebasePlugin(store) {
   })
   playing_state_ref.child('minimal_volume').on('value', snapshot => {
     store.commit('adjustMinimalVolume', snapshot.val())
+  })
+  playing_state_ref.child('dislike_threshold').on('value', snapshot => {
+    store.commit('adjustDislikeThreshold', snapshot.val())
   })
 }
 

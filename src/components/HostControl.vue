@@ -79,8 +79,9 @@ export default {
     ...mapGetters([
       'playerPlayingTrackId',
       'currentVolume',
-      'currentDislike',
       'currentMinimalVolume',
+      'currentDislike',
+      'currentDislikeThreshold',
       'trackData',
       'pendingQueue',
       'leftQueueAmount',
@@ -129,7 +130,7 @@ export default {
   mounted() {
     // 載入 firebase 所儲存的 minimalVolume
     this.minimalVolume = this.currentMinimalVolume
-    console.log(this.$refs.minimalVolumeInput)
+    this.dislikeThreshold = this.currentDislikeThreshold
     this.$refs.minimalVolumeInput.value = this.minimalVolume
     this.$refs.dislikeThresholdInput.value = this.dislikeThreshold
   },
@@ -345,10 +346,14 @@ export default {
       this.player.togglePlay(this.deviceId).then(() => console.log('toggle play'))
     },
     submitHandler() {
-      this.minimalVolume = this.$refs.minimalVolumeInput.value
-      this.dislikeThreshold = this.$refs.dislikeThresholdInput.value
-      this.$store.dispatch('updateMinimalVolume', this.minimalVolume)
-      this.dislikeThreshold = this.$refs.dislikeThresholdInput.value
+      if (this.minimalVolume !== this.$refs.minimalVolumeInput.value) {
+        this.minimalVolume = this.$refs.minimalVolumeInput.value
+        this.$store.dispatch('updateMinimalVolume', this.minimalVolume)
+      }
+      if (this.dislikeThreshold !== this.$refs.dislikeThresholdInput.value) {
+        this.dislikeThreshold = this.$refs.dislikeThresholdInput.value
+        this.$store.dispatch('updateDislikeThreshold', this.dislikeThreshold)
+      }
     },
     resetHandler() {
       this.$refs.minimalVolumeInput.value = this.minimalVolume

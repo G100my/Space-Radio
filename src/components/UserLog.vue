@@ -23,6 +23,10 @@
         <span>{{ log.user_id }}</span
         >將最小撥放音量調整為<span>{{ log.option.minimal_volume }}</span>
       </p>
+      <p v-else-if="log.action_type === 'updateDislikeThreshold'">
+        <span>{{ log.user_id }}</span
+        >將最小投票數調整為<span>{{ log.option.dislike_threshold }}</span>
+      </p>
     </li>
   </ul>
 </template>
