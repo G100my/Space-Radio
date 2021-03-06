@@ -39,10 +39,14 @@ const Personal = {
     updateUserData(state, { id, display_name, images }) {
       state.user_id = id
       state.display_name = display_name
-      state.image_url = images[0].url
       localStorage.setItem('jukebox_user_id', id)
       localStorage.setItem('jukebox_user_display_name', display_name)
-      localStorage.setItem('jukebox_user_images', images[0].url)
+      console.log(images)
+
+      if (images.length > 0) {
+        state.image_url = images[0].url
+        localStorage.setItem('jukebox_user_images', images[0].url)
+      }
     },
   },
 }
