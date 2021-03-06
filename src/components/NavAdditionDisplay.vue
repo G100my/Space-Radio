@@ -8,7 +8,7 @@
         <template v-else>
           <TrackGridShell>
             <template #body>
-              <TrackGridItem v-for="track in source" :key="track.id" :info="track">
+              <TrackGridItem v-for="(track, index) in source" :key="track.id + index" :info="track">
                 <AddButton :track-id="track.id" :track-name="track.name" />
                 <JumpInButton :track-id="track.id" :track-name="track.name" v-bind="$attrs" />
               </TrackGridItem>
