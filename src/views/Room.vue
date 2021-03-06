@@ -3,7 +3,7 @@
     <header :class="{ 'active-search': isSearchActive }">
       <Marquee />
       <nav>
-        <NavAdditionDisplay
+        <AdditionDisplay
           v-if="mobileMode"
           v-show="additionDisplayToggler"
           :source="additionDisplaySource"
@@ -44,7 +44,7 @@
       </div>
       <div class="view slide-items">
         <router-view @activeNoteDialog="activeNoteDialogHandler" />
-        <NavAdditionDisplay
+        <AdditionDisplay
           v-if="!mobileMode"
           v-show="additionDisplayToggler"
           :source="additionDisplaySource"
@@ -62,7 +62,7 @@ import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
 import SearchBar from '../components/SearchBar.vue'
 import NoteDialog from '../components/NoteDialog.vue'
 import Marquee from '../components/Marquee.vue'
-import NavAdditionDisplay from '../components/NavAdditionDisplay.vue'
+import AdditionDisplay from '../components/AdditionDisplay.vue'
 import UserRecentPlayedButton from '../components/featureButtons/UserRecentPlayedButton.vue'
 
 export default {
@@ -71,7 +71,7 @@ export default {
     SearchBar,
     NoteDialog,
     Marquee,
-    NavAdditionDisplay,
+    AdditionDisplay,
     UserRecentPlayedButton,
   },
   data() {
