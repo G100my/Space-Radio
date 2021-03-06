@@ -43,7 +43,7 @@
         <PlayingState />
       </div>
       <div class="view slide-items">
-        <router-view @activeNoteDialog="activeNoteDialogHandler" />
+        <RoomQueue @activeNoteDialog="activeNoteDialogHandler" />
         <AdditionDisplay
           v-if="!mobileMode"
           v-show="additionDisplayToggler"
@@ -64,10 +64,12 @@ import NoteDialog from '../components/NoteDialog.vue'
 import Marquee from '../components/Marquee.vue'
 import AdditionDisplay from '../components/AdditionDisplay.vue'
 import UserRecentPlayedButton from '../components/featureButtons/UserRecentPlayedButton.vue'
+import RoomQueue from '../components/RoomQueue.vue'
 
 export default {
   components: {
     PlayingState,
+    RoomQueue,
     SearchBar,
     NoteDialog,
     Marquee,

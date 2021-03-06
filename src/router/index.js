@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import store from '../store/'
-import RoomQueue from '../components/RoomQueue.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
@@ -14,15 +13,9 @@ const routes = [
   },
   {
     path: '/room',
+    name: 'Room',
     component: Room,
     meta: { requiresAuth: true },
-    children: [
-      {
-        path: '',
-        name: 'Room',
-        component: RoomQueue,
-      },
-    ],
   },
 ]
 
