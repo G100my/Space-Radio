@@ -99,6 +99,7 @@ export default {
   z-index: 30;
   background-color: var(--primary-dark);
   &.mask {
+    box-sizing: border-box;
     display: block;
     position: absolute;
     height: 100vh;

@@ -44,7 +44,6 @@
       </div>
       <div class="view slide-items">
         <router-view @activeNoteDialog="activeNoteDialogHandler" />
-        <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
         <NavAdditionDisplay
           v-if="!mobileMode"
           v-show="additionDisplayToggler"
@@ -54,6 +53,7 @@
         />
       </div>
     </div>
+    <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
   </div>
 </template>
 <script>
