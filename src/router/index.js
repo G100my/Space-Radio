@@ -25,24 +25,23 @@ const router = createRouter({
 })
 
 router.beforeEach(async to => {
-  if (window.location.search.startsWith('?code=')) {
+  if (window.location.search.includes('?code=')) {
     const authorizationCode = window.location.href.substring(
       window.location.href.search(/(?<=code=)[\w+]/),
       window.location.href.indexOf('#/')
     )
     if (!authorizationCode) return
-
+    window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
     await fetchAccessToken(authorizationCode)
     // spotify 在 PKCE 驗證流程中把資料放在 location.search 的地方，
     // http://somewhere/?code=something...#/
     // 造成 vue router webHashHistory mode 無法如預期運作，
     // to, from 都會是 '/'，因此手動清除。
-    window.location.href = window.origin + '/#/room'
     return { name: 'Room' }
   }
 
-  if (window.location.search.startsWith('?error=')) {
-    window.location.href = window.origin + '/'
+  if (window.location.search.includes('?error=')) {
+    window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
     return { name: 'Doorscope' }
   }
 

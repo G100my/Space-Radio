@@ -107,7 +107,6 @@ export default {
     this.$spotifyAPI.getMe().then(result => {
       console.log(result)
       this.$store.commit('updateUserData', result)
-      window.history.replaceState(null, '', '/')
     })
   },
   methods: {
