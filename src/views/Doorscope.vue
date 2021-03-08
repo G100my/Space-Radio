@@ -6,7 +6,7 @@
     <div class="content">
       <div class="cover-container">
         <div class="cover">
-          <img :src="playerPlayingAlbum.image_url" alt="" />
+          <img :src="playerPlayingAlbum.image_url ? playerPlayingAlbum.image_url : logo" alt="" />
         </div>
       </div>
       <div class="others">
@@ -39,10 +39,14 @@
 import { mapGetters } from 'vuex'
 import { PKCE } from '../utility/PKCE.js'
 import UserLog from '../components/UserLog.vue'
+import logo from '../assets/vinyl-record.png'
 
 export default {
   components: {
     UserLog,
+  },
+  data() {
+    return { logo }
   },
   computed: {
     ...mapGetters(['playerPlayingAlbum', 'playerPlayingArtists', 'playerPlayingTrackName']),

@@ -1,5 +1,4 @@
 import firebase from './firebase.js'
-import jukeboxLogo from '../assets/vinyl-record.png'
 
 const playing_state_ref = firebase.database().ref('playing_state')
 const transformURI2URL = uri => {
@@ -20,7 +19,7 @@ const initialTrack = {
   album: {
     url: '##',
     name: 'Hakuna Matata',
-    image_url: jukeboxLogo,
+    image_url: '',
   },
   is_playable: true,
 }

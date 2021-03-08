@@ -6,7 +6,7 @@
     </h1>
     <div class="track-info">
       <div class="cover">
-        <img :src="playerPlayingAlbum.image_url" alt="" />
+        <img :src="playerPlayingAlbum.image_url ? playerPlayingAlbum.image_url : logo" alt="" />
       </div>
       <section class="description">
         <p class="track-name">
@@ -64,11 +64,17 @@
 import { defineAsyncComponent } from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import UserLog from './UserLog.vue'
+import logo from '../assets/vinyl-record.png'
 
 export default {
   components: {
     UserLog,
     HostControl: defineAsyncComponent(() => import('../components/HostControl.vue')),
+  },
+  data() {
+    return {
+      logo,
+    }
   },
   computed: {
     hostToggler() {
