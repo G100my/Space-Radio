@@ -44,14 +44,14 @@
         <div class="sign">
           <span v-for="(i, index) in currentDislikeThreshold" :key="i" :class="{ active: currentDislike > index }" />
         </div>
-        <p>{{ currentDislike }}</p>
+        <p class="currentDislike">{{ currentDislike }}</p>
         <div class="buttons">
           <button v-show="!isVoted" type="button" @click="increaseDislike">Terminate</button>
           <button v-show="isVoted" type="button" @click="reduceDislike">Cancel</button>
         </div>
       </div>
       <div class="collect">
-        <button type="button">collect</button>
+        <button type="button">Collect</button>
       </div>
     </div>
     <div class="log">
@@ -233,11 +233,9 @@ export default {
       border: 1px solid var(--ignore);
       border-radius: var(--border-radius);
       font-size: 0;
-      display: inline-block;
+      display: inline-flex;
       padding: 4px;
-      margin-right: 5px;
       span {
-        display: inline-block;
         height: 20px;
         width: 35px;
       }
@@ -247,6 +245,9 @@ export default {
     }
     button + button {
       margin-left: 5px;
+    }
+    .currentDislike {
+      margin: 0 5px;
     }
   }
   .sign > .active {

@@ -302,7 +302,7 @@ nav {
       }
       span {
         display: inline-block;
-        max-width: 80px;
+        max-width: 55px;
         text-overflow: ellipsis;
         overflow: hidden;
         vertical-align: bottom;
