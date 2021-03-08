@@ -173,7 +173,7 @@ export default {
       ]
       eventArray.forEach(event => {
         this.player.addListener(event, message => {
-          console.log(message)
+          console.log(event, message)
         })
       })
 
