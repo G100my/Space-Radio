@@ -337,8 +337,9 @@ export default {
       }
 
       this.reducePlayerVolume().then(() => {
+        // 神秘的 reason 參數，並沒有出現在文件，起初不給 string 也沒事...
         this.player
-          .nextTrack()
+          .nextTrack('just wanna listen next one')
           .then(() => {
             console.log('Skipped to next track!')
             this.player.addListener('player_state_changed', secondPositionStateHandler)
