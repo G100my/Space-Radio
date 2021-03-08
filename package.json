@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "demo": "vite build & git add docs/ & git commit -m demo & git push origin playground:demo -f & git reset head^"
   },
   "dependencies": {
     "firebase": "^8.2.10",
