@@ -43,6 +43,7 @@ const PlayingState = {
     dislike: 0,
     dislike_threshold: 2,
     isVoted: false,
+    dislike_countdown: false,
   },
   getters: {
     playerPlayingTrackId(state) {
@@ -69,6 +70,9 @@ const PlayingState = {
     currentDislike(state) {
       return state.dislike
     },
+    currentDislikeCountDown(state) {
+      return state.dislike_countdown
+    },
     latestQueue(state) {
       return state.latest_queue
     },
@@ -93,6 +97,9 @@ const PlayingState = {
     },
     adjustDislikeThreshold(state, value) {
       state.dislike_threshold = value
+    },
+    adjustDislikeCountdown(state, value) {
+      state.dislike_countdown = value
     },
   },
   actions: {
@@ -156,6 +163,9 @@ const PlayingState = {
     updateDislikeThreshold(_context, value) {
       playing_state_ref.child('dislike_threshold').set(value)
     },
+    updateDislikeCountdown(_context, value) {
+      playing_state_ref.child('dislike_countdown').set(value)
+    },
   },
 }
 
@@ -180,6 +190,9 @@ function playingStateFirebasePlugin(store) {
   })
   playing_state_ref.child('dislike_threshold').on('value', snapshot => {
     store.commit('adjustDislikeThreshold', snapshot.val())
+  })
+  playing_state_ref.child('dislike_countdown').on('value', snapshot => {
+    store.commit('adjustDislikeCountdown', snapshot.val())
   })
 }
 

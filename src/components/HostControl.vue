@@ -134,11 +134,13 @@ export default {
         let counter = 10
         this.dislikeCountDownTimer = setInterval(() => {
           counter -= 1
-          // fixme
+          this.$store.dispatch('updateDislikeCountdown', counter)
           console.log(counter)
           if (counter <= 0) {
             this.nextTrack()
             clearInterval(this.dislikeCountDownTimer)
+            this.$store.dispatch('clearDislikeVote')
+            this.$store.dispatch('updateDislikeCountdown', false)
             this.dislikeCountDownTimer = null
           }
         }, 1000)
@@ -224,8 +226,6 @@ export default {
           this.positionStateCounter++
           if (this.positionStateCounter >= 2) {
             this.positionStateCounter = 0
-
-            this.$store.dispatch('clearDislikeVote')
 
             // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
             if (this.pendingQueue && this.pendingQueue.id === currentNoteId) {

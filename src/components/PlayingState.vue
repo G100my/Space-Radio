@@ -41,10 +41,15 @@
         </div>
       </div>
       <div class="terminate-control">
-        <div class="sign">
-          <span v-for="(i, index) in currentDislikeThreshold" :key="i" :class="{ active: currentDislike > index }" />
-        </div>
-        <p class="currentDislike">{{ currentDislike }}</p>
+        <template v-if="currentDislikeCountDown">
+          <p>將於 {{ currentDislikeCountDown }} 秒後跳過目前歌曲</p>
+        </template>
+        <template v-else>
+          <div class="sign">
+            <span v-for="(i, index) in currentDislikeThreshold" :key="i" :class="{ active: currentDislike > index }" />
+          </div>
+          <p class="currentDislike">{{ currentDislike }}</p>
+        </template>
         <div class="buttons">
           <button v-show="!isVoted" type="button" @click="increaseDislike">Terminate</button>
           <button v-show="isVoted" type="button" @click="reduceDislike">Cancel</button>
@@ -91,6 +96,7 @@ export default {
       'currentVolume',
       'currentDislike',
       'currentDislikeThreshold',
+      'currentDislikeCountDown',
     ]),
   },
   methods: {
