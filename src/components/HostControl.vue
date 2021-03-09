@@ -82,7 +82,7 @@ export default {
       adjustStepTime: 100,
 
       dislikeThreshold: 2,
-      dislikeCountDownTimer: null,
+      dislikeCountdownTimer: null,
       minimalVolume: 50,
       minimalVolumeDeferTimer: null,
 
@@ -126,22 +126,22 @@ export default {
       }
     },
     currentDislike(newValue) {
-      if (this.dislikeCountDownTimer && newValue < this.dislikeThreshold) {
-        clearTimeout(this.dislikeCountDownTimer)
-        this.dislikeCountDownTimer = null
+      if (this.dislikeCountdownTimer && newValue < this.dislikeThreshold) {
+        clearTimeout(this.dislikeCountdownTimer)
+        this.dislikeCountdownTimer = null
       }
       if (newValue >= this.dislikeThreshold) {
         let counter = 10
-        this.dislikeCountDownTimer = setInterval(() => {
+        this.dislikeCountdownTimer = setInterval(() => {
           counter -= 1
           this.$store.dispatch('updateDislikeCountdown', counter)
           console.log(counter)
           if (counter <= 0) {
             this.nextTrack()
-            clearInterval(this.dislikeCountDownTimer)
+            clearInterval(this.dislikeCountdownTimer)
             this.$store.dispatch('clearDislikeVote')
             this.$store.dispatch('updateDislikeCountdown', false)
-            this.dislikeCountDownTimer = null
+            this.dislikeCountdownTimer = null
           }
         }, 1000)
       }

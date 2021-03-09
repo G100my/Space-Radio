@@ -70,7 +70,7 @@ const PlayingState = {
     currentDislike(state) {
       return state.dislike
     },
-    currentDislikeCountDown(state) {
+    currentDislikeCountdown(state) {
       return state.dislike_countdown
     },
     latestQueue(state) {

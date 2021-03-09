@@ -41,8 +41,8 @@
         </div>
       </div>
       <div class="terminate-control">
-        <template v-if="currentDislikeCountDown">
-          <p>將於 {{ currentDislikeCountDown }} 秒後跳過目前歌曲</p>
+        <template v-if="currentDislikeCountdown">
+          <p>將於 {{ currentDislikeCountdown }} 秒後跳過目前歌曲</p>
         </template>
         <template v-else>
           <div class="sign">
@@ -96,7 +96,7 @@ export default {
       'currentVolume',
       'currentDislike',
       'currentDislikeThreshold',
-      'currentDislikeCountDown',
+      'currentDislikeCountdown',
     ]),
   },
   methods: {
