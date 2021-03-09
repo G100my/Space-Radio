@@ -257,11 +257,13 @@ export default {
     this.utterance.rate = 1
     this.utterance.volume = 1
     this.utterance.lang = 'zh-TW'
+    this.utterance.onerror = error => {
+      console.log('utterance error', error)
+      this.resumePlayerVolume()
+    }
     this.utterance.onend = () => {
       console.log('utterance end')
-      this.resumePlayerVolume().catch(error => {
-        console.error(error)
-      })
+      this.resumePlayerVolume()
     }
     speechSynthesis.onvoiceschanged = () => {
       if (!this.utterance.voice) this.setTTSVoice()
