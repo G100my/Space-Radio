@@ -56,7 +56,21 @@
         </div>
       </div>
       <div class="collect">
-        <button type="button">Collect</button>
+        <form>
+          <label for="playlist">收集到</label>
+          <select id="playlist" @change="selectedPlaylistKey = $event.target.value">
+            <option
+              v-for="(playlist, index) in userPlaylists"
+              :key="playlist.id"
+              :value="playlist.id"
+              :selected="index === 0"
+              :label="playlist.name"
+            />
+          </select>
+        </form>
+        <button :disabled="!playerPlayingTrackId" type="button" class="collect-button" @click="collectHandler">
+          Collect
+        </button>
       </div>
     </div>
     <div class="log">
@@ -79,6 +93,8 @@ export default {
   data() {
     return {
       logo,
+      userPlaylists: [],
+      selectedPlaylistKey: null,
     }
   },
   computed: {
@@ -97,7 +113,13 @@ export default {
       'currentDislike',
       'currentDislikeThreshold',
       'currentDislikeCountdown',
+      'userId',
     ]),
+  },
+  beforeCreate() {
+    this.$spotifyAPI.getUserPlaylists(this.userId, { limit: 50 }).then(result => {
+      this.userPlaylists = result.items
+    })
   },
   methods: {
     turnUp() {
@@ -111,6 +133,11 @@ export default {
     },
     reduceDislike() {
       this.$store.dispatch('reduceDislike')
+    },
+    collectHandler() {
+      this.$spotifyAPI
+        .addTracksToPlaylist(this.selectedPlaylistKey, [`spotify:track:${this.playerPlayingTrackId}`])
+        .then(result => console.log(result))
     },
   },
 }
@@ -266,8 +293,28 @@ export default {
     background-color: var(--primary-neutral);
   }
   .collect {
-    button {
+    form {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0;
+    }
+    select {
+      color: var(--primary-light);
+      background-color: var(--secondary-dark);
+      padding: 2px;
+      border-radius: var(--border-radius);
+      border-color: var(--primary-highlight);
+    }
+    option {
+      background-color: var(--secondary-dark);
+      color: var(--primary-light);
+    }
+    .collect-button {
       width: 100%;
+      &:disabled {
+        text-decoration: line-through;
+        color: var(--ignore);
+      }
     }
   }
 }

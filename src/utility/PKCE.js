@@ -34,7 +34,7 @@ async function generateCodeChallengeFromVerifier(codeVerifier) {
 // ===
 const client_id = import.meta.env.VITE_CLIENT_ID
 const redirect_uri = import.meta.env.VITE_REDIRECT_URI
-const scope = `user-read-recently-played user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming user-read-email user-read-private`
+const scope = `playlist-modify-public playlist-modify-private user-read-recently-played user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming user-read-email user-read-private`
 
 async function PKCE() {
   const code_verifier = generateCodeVerifier()
