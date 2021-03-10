@@ -128,7 +128,6 @@ const Queue = {
         added_time: now,
         added_by: userId,
         note,
-        order_key: orderKey,
         track_name,
       }
       normal_queue_ref.update(parameter)
@@ -136,13 +135,11 @@ const Queue = {
     jumpIn({ getters }, { id, note, trackNameForLog: track_name }) {
       const now = Date.now()
       const userId = getters.userId
-      const orderKey = `${now}-${userId}`
       urgent_queue_ref.push({
         id,
         added_time: now,
         added_by: userId,
         note,
-        order_key: orderKey,
         track_name,
       })
     },
@@ -156,7 +153,7 @@ const Queue = {
     urgent2normal({ state }, { queueKey }) {
       const queue = { ...state.urgent_queue[queueKey] }
       queue.note = false
-      const orderKey = queue.order_key
+      const orderKey = `${queue.added_time}-${queue.added_by}`
 
       const parameter = {}
       parameter[orderKey] = queue
