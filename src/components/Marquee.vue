@@ -12,7 +12,7 @@
 export default {
   data() {
     return {
-      message: 'Share you like, enjoy your life.',
+      defaultMessage: 'Share you like, enjoy your life.',
       isFilled: false,
     }
   },
@@ -21,7 +21,7 @@ export default {
       return this.$store.getters.latestQueue
     },
     messageOutput() {
-      if (!this.latestQueue || this.latestQueue.added_by === 'G100') return ''
+      if (!this.latestQueue.note) return this.defaultMessage
 
       const note = this.latestQueue.note
       return `${note.sender} 插播一首 ${this.$store.getters.playerPlayingTrackName} 給 ${

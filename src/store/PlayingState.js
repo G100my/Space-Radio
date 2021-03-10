@@ -25,12 +25,8 @@ const initialTrack = {
 }
 const initialQueue = {
   added_time: '',
-  added_by: 'G100',
-  note: {
-    sender: '',
-    message: '',
-    recipient: '',
-  },
+  added_by: '',
+  note: false,
   order_key: null,
   id: '',
 }
