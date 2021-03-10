@@ -150,6 +150,7 @@ export default {
     window.onbeforeunload = () => {
       this.$store.dispatch('clearPlayingTrack')
       this.$store.dispatch('clearPendingQueue')
+      if (this.deviceActived) this.player.disconnect()
     }
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
