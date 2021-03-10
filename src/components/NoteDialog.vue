@@ -3,11 +3,11 @@
   <div class="dialog">
     <p class="dialog-header">Write your message.</p>
     <div class="dialog-body">
-      <input v-model="sender" class="sender" :placeholder="$store.getters.userId" />插播一首<span class="track-name">{{
-        trackNameForLog
-      }}</span
-      >給<input v-model="recipient" class="recipient" type="text" placeholder="everyone" />，<br /><textarea
-        v-model="message"
+      <input v-model="currentNote.sender" class="sender" :placeholder="$store.getters.userName" />插播一首<span
+        class="track-name"
+        >{{ trackNameForLog }}</span
+      >給<input v-model="currentNote.recipient" class="recipient" type="text" placeholder="everyone" />，<br /><textarea
+        v-model="currentNote.message"
         class="message"
         cols="25"
         rows="3"
@@ -42,21 +42,16 @@ export default {
   emits: ['finish'],
   data() {
     return {
-      sender: '',
-      recipient: '',
-      message: '',
+      currentNote: {
+        sender: '',
+        recipient: '',
+        message: '',
+      },
     }
   },
   computed: {
     output() {
-      return messageOutputMaker(
-        {
-          sender: this.sender,
-          recipient: this.recipient,
-          message: this.message,
-        },
-        this.trackNameForLog
-      )
+      return messageOutputMaker(this.currentNote, this.trackNameForLog)
     },
   },
   created() {
@@ -64,26 +59,25 @@ export default {
       this.queueKey !== '' &&
       Object.prototype.hasOwnProperty.call(this.$store.state.Queue.urgent_queue, this.queueKey)
     ) {
-      const note = this.$store.state.Queue.urgent_queue[this.queueKey].note
-      if (note) {
-        if (note.recipient) this.recipient = note.recipient
-        if (note.message) this.message = note.message
-        if (note.sender) this.sender = note.sender
+      const editedNote = this.$store.state.Queue.urgent_queue[this.queueKey].note
+      if (editedNote) {
+        this.currentNote = { ...editedNote }
       } else {
         const previousSenderName = localStorage.getItem('jukebox_senderName')
-        this.sender = previousSenderName ? previousSenderName : this.$store.getters.userId
+        this.currentNote.sender = previousSenderName ? previousSenderName : this.$store.getters.userName
       }
     }
   },
   beforeUnmount() {
-    if (this.sender.length !== 0) localStorage.setItem('jukebox_senderName', this.sender)
+    if (this.currentNote.sender.length !== 0) localStorage.setItem('jukebox_senderName', this.currentNote.sender)
   },
   methods: {
     submitHandler() {
+      const { sender, recipient, message } = this.currentNote
       this.submitFunction({
-        sender: this.sender === '' ? this.$store.getters.userId : this.sender,
-        recipient: this.recipient,
-        message: this.message,
+        sender: sender ? sender : this.$store.getters.userName,
+        recipient,
+        message,
       })
       this.$emit('finish')
     },
