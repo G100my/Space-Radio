@@ -22,8 +22,8 @@ export default {
       return this.$store.getters.latestQueue
     },
     messageOutput() {
-      if (!this.latestQueue || !this.latestQueue.note) return this.defaultMessage
-      return messageOutputMaker(this.latestQueue.note, this.$store.pendingQueue.name)
+      const trackName = this.$store.pendingQueue ? this.$store.pendingQueue.name : null
+      return messageOutputMaker(this.latestQueue.note, trackName)
     },
   },
   watch: {
