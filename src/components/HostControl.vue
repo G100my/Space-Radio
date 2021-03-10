@@ -3,7 +3,7 @@
     <button
       class="play-button"
       type="button"
-      @click="!deviceActived && activeThisDevice($event), deviceActived && togglePlay($event)"
+      @click="!deviceActived && player.connect(), deviceActived && togglePlay($event)"
     >
       <svg
         v-show="paused"
@@ -182,6 +182,13 @@ export default {
       this.player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id)
         this.deviceId = device_id
+        // 把目前 host 帳號可能在其他地方播放的音樂轉移到 player，並且直接撥放
+        this.$spotifyAPI.transferMyPlayback([this.deviceId], { play: true }, error => {
+          error && console.log(error.response)
+          if (!error) {
+            this.deviceActived = true
+          }
+        })
         // 等 player 準備完成才 watch playerVolume
         this.$watch('currentVolume', newValue => {
           console.log('currentVolume')
@@ -246,8 +253,6 @@ export default {
           }
         }
       })
-
-      this.player.connect()
     }
 
     import('../utility/spotify-player-SDK.js')
@@ -349,15 +354,6 @@ export default {
             })
             .catch(error => console.error(error))
         })
-      })
-    },
-    activeThisDevice() {
-      if (!this.$spotifyAPI.getAccessToken()) this.$spotifyAPI.setAccessToken(this.token)
-      this.$spotifyAPI.transferMyPlayback([this.deviceId], { play: true }, error => {
-        error && console.log(error.response)
-        if (!error) {
-          this.deviceActived = true
-        }
       })
     },
     togglePlay() {
