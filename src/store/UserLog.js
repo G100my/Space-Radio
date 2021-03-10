@@ -31,14 +31,11 @@ const UserLog = {
 }
 
 function userLogFirebasePlugin(store) {
-  const user_id = store.getters.userId
-  const user_name = store.getters.userId
-
   const maker = function ({ type }) {
     return {
       action_type: type,
-      user_id,
-      user_name,
+      user_id: store.getters.userId,
+      user_name: store.getters.userName,
       timestamp: Date.now(),
     }
   }
