@@ -27,8 +27,9 @@ export default {
     },
   },
   watch: {
-    latestQueue() {
-      this.isFilled = false
+    // when latestQueue exist, play animation
+    latestQueue(newValue) {
+      if (newValue) this.isFilled = true
     },
   },
   methods: {
