@@ -198,7 +198,7 @@ export default {
     height: 100vh;
     width: 100%;
     box-sizing: border-box;
-    padding: 90px 10px 10px;
+    padding: 90px 10px 20px;
     @media (min-width: 768px) {
       padding: 0;
     }

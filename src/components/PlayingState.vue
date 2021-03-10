@@ -172,7 +172,7 @@ export default {
       display: flex;
       flex-direction: column;
       img {
-        max-height: 30vh;
+        max-height: 20vh;
       }
     }
     @media (min-width: 768px) {
