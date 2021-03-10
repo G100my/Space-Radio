@@ -233,9 +233,11 @@ header {
   left: 0;
   right: 0;
   z-index: 20;
+  display: flex;
+  flex-direction: column-reverse;
   @media (min-width: 768px) {
     left: auto;
-    display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: flex-end;
     width: calc(100% - 400px);
