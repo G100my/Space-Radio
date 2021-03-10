@@ -1,7 +1,3 @@
-import firebase from './firebase.js'
-
-const userLog_ref = firebase.database().ref('user_log')
-
 const UserLog = {
   state: {
     log: [
@@ -65,7 +61,7 @@ function userLogFirebasePlugin(store) {
           if (recordVolumeLogTimer) clearTimeout(recordVolumeLogTimer)
           recordVolumeLogTimer = setTimeout(() => {
             userLog = { ...maker(action), option: { volume: state.PlayingState.volume } }
-            userLog_ref.push(userLog)
+            store.getters.user_log_ref.push(userLog)
           }, 3000)
           return
 
@@ -90,11 +86,11 @@ function userLogFirebasePlugin(store) {
         default:
           return
       }
-      userLog_ref.push(userLog)
+      store.getters.user_log_ref.push(userLog)
     },
   })
 
-  userLog_ref.limitToLast(3).on('child_added', snapshot => {
+  store.getters.user_log_ref.limitToLast(3).on('child_added', snapshot => {
     store.commit('pushUserLog', snapshot.val())
   })
 }
