@@ -33,7 +33,7 @@ export default {
       this.$emit('updateAdditionDisplaySource', this.searchResult)
       if (this.trigger) {
         if (this.searchText === '') return
-        this.$spotifyAPI.search(this.searchText, ['track'], { market: 'from_token', limit: 10 }, (error, success) => {
+        this.$spotifyAPI.search(this.searchText, ['track'], { market: 'from_token', limit: 50 }, (error, success) => {
           error && console.log(error.response)
           this.searchResult = success.tracks.items
           if (success) {
