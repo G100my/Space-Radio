@@ -22,8 +22,10 @@ export default {
       return this.$store.getters.latestQueue
     },
     messageOutput() {
-      const trackName = this.$store.pendingQueue ? this.$store.pendingQueue.name : null
-      return messageOutputMaker(this.latestQueue.note, trackName)
+      // fixme, latestQueue shoud be empty after current playing queue finish
+      const trackName = this.latestQueue ? this.latestQueue.track_name : null
+      const note = this.latestQueue ? this.latestQueue.note : false
+      return messageOutputMaker(note, trackName)
     },
   },
   watch: {
