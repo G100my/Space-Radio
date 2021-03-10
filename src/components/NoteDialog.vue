@@ -47,9 +47,9 @@ export default {
   },
   computed: {
     output() {
-      return `${this.sender ? this.sender : this.$store.getters.userId} 插播一首 ${this.trackNameForLog} 給 ${
-        this.recipient.trim() === '' ? '所有人' : this.recipient
-      } \n ${this.message}`
+      const sender = this.sender ? this.sender : this.$store.getters.userId
+      const recipient = this.recipient.trim() === '' ? '所有人' : this.recipient
+      return `${sender} 插播一首 ${this.trackNameForLog} 給 ${recipient}, ${this.message}`
     },
   },
   created() {

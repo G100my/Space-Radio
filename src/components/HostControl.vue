@@ -110,9 +110,8 @@ export default {
     pendingQueue(nextQueue) {
       if (nextQueue && nextQueue.note) {
         const note = nextQueue.note
-        const messageOutput = `${note.sender} 插播一首 ${this.trackData['pending'].name}} 給 ${
-          note.recipient.trim() === '' ? '所有人' : note.recipient
-        } ${note.message}`
+        const recipient = note.recipient && note.recipient.trim() === '' ? '所有人' : note.recipient
+        const messageOutput = `${note.sender} 插播一首 ${this.trackData['pending'].name}} 給 ${recipient}, ${note.message}`
 
         this.$store.dispatch('updateTheLatestQueue', nextQueue)
 
