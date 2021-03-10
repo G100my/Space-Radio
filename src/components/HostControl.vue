@@ -241,8 +241,10 @@ export default {
           }
         }
 
-        if (!playerState.paused && this.leftQueueAmount > 0) {
-          const bufferTime = playerState.duration - playerState.position - this.executeBeforeEndTime
+        if (!playerState.paused && this.leftQueueAmount > 0 && !this.pendingQueue) {
+          // 防止開啟多個頁面且登入同樣的 host account 還都執行撥放，造成短時間內重複 dispatch sendNextQueue
+          const randomTime = Math.floor(Math.random() * 5) * 5 * 1000
+          const bufferTime = playerState.duration - playerState.position - this.executeBeforeEndTime - randomTime
           // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
           if (bufferTime > 0) {
             // 每次隨機狀態出現就刷新秒數，避免曲目被快轉
