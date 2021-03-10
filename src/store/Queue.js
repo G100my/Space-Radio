@@ -63,12 +63,6 @@ const Queue = {
     previousDeleted: null,
   },
   getters: {
-    // fixme
-    getRoomQueueURIArray(state) {
-      const normal = Object.values(state.normal_queue).map(item => 'spotify:track:'.concat(item))
-      const urgent = Object.values(state.urgentQueueArray).map(item => 'spotify:track:'.concat(item))
-      return urgent.concat(normal)
-    },
     trackData(state) {
       return state.trackData
     },
@@ -124,7 +118,7 @@ const Queue = {
     },
   },
   actions: {
-    add({ getters }, { id, note }) {
+    add({ getters }, { id, note, trackNameForLog: track_name }) {
       const now = Date.now()
       const parameter = {}
       const userId = getters.userId
@@ -135,10 +129,11 @@ const Queue = {
         added_by: userId,
         note,
         order_key: orderKey,
+        track_name,
       }
       normal_queue_ref.update(parameter)
     },
-    jumpIn({ getters }, { id, note }) {
+    jumpIn({ getters }, { id, note, trackNameForLog: track_name }) {
       const now = Date.now()
       const userId = getters.userId
       const orderKey = `${now}-${userId}`
@@ -148,6 +143,7 @@ const Queue = {
         added_by: userId,
         note,
         order_key: orderKey,
+        track_name,
       })
     },
     urgentRemove(_context, { queueKey }) {
