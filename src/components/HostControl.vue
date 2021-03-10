@@ -111,13 +111,13 @@ export default {
     pendingQueue(nextQueue) {
       if (nextQueue && nextQueue.note) {
         const note = nextQueue.note
-        const messageOutput = messageOutputMaker(note, this.pendingQueue.name)
+        const messageOutput4TTS = messageOutputMaker(note, nextQueue.track_name)
 
         this.$store.dispatch('updateTheLatestQueue', nextQueue)
 
         this.reducePlayerVolume()
           .then(() => {
-            this.TTS(messageOutput)
+            this.TTS(messageOutput4TTS)
           })
           .catch(error => {
             console.error(error)
