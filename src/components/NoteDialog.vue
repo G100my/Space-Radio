@@ -22,6 +22,8 @@
   </div>
 </template>
 <script>
+import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+
 export default {
   props: {
     queueKey: {
@@ -47,9 +49,14 @@ export default {
   },
   computed: {
     output() {
-      const sender = this.sender ? this.sender : this.$store.getters.userId
-      const recipient = this.recipient.trim() === '' ? '所有人' : this.recipient
-      return `${sender} 插播一首 ${this.trackNameForLog} 給 ${recipient}, ${this.message}`
+      return messageOutputMaker(
+        {
+          sender: this.sender,
+          recipient: this.recipient,
+          message: this.message,
+        },
+        this.trackNameForLog
+      )
     },
   },
   created() {

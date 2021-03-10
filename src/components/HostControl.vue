@@ -62,7 +62,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import { refreshAccessToken } from '../utility/PKCE.js'
-// 載入歌單  調節播放
+import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+
 export default {
   data() {
     return {
@@ -110,8 +111,7 @@ export default {
     pendingQueue(nextQueue) {
       if (nextQueue && nextQueue.note) {
         const note = nextQueue.note
-        const recipient = note.recipient && note.recipient.trim() === '' ? '所有人' : note.recipient
-        const messageOutput = `${note.sender} 插播一首 ${this.trackData['pending'].name}} 給 ${recipient}, ${note.message}`
+        const messageOutput = messageOutputMaker(note, this.pendingQueue.name)
 
         this.$store.dispatch('updateTheLatestQueue', nextQueue)
 

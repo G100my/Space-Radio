@@ -9,10 +9,11 @@
   </div>
 </template>
 <script>
+import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+
 export default {
   data() {
     return {
-      defaultMessage: 'Share you like, enjoy your life.',
       isFilled: false,
     }
   },
@@ -21,12 +22,8 @@ export default {
       return this.$store.getters.latestQueue
     },
     messageOutput() {
-      if (!this.latestQueue.note) return this.defaultMessage
-
-      const note = this.latestQueue.note
-      return `${note.sender} 插播一首 ${this.$store.getters.playerPlayingTrackName} 給 ${
-        note.recipient.trim() === '' ? '所有人' : note.recipient
-      } ${note.message}`
+      if (!this.latestQueue || !this.latestQueue.note) return this.defaultMessage
+      return messageOutputMaker(this.latestQueue.note, this.$store.pendingQueue.name)
     },
   },
   watch: {
