@@ -1999,10 +1999,14 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
     }
     if (!store.getters.isTokenValid) {
       return (...theArguments) =>
-        refreshAccessToken().then(() => {
-          spotifyAPI.setAccessToken(store.getters.token)
-          target[property](...theArguments)
-        })
+        refreshAccessToken()
+          .then(() => {
+            spotifyAPI.setAccessToken(store.getters.token)
+            target[property](...theArguments)
+          })
+          .catch(error => {
+            console.log('error when refreshAccessToken', error)
+          })
     }
     return target[property]
   },
