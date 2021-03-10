@@ -181,7 +181,7 @@ const Queue = {
     urgentEdit(_context, { queueKey, note }) {
       urgent_queue_ref.child(queueKey).update({ note })
     },
-    sendNextQueue({ state }) {
+    sendNextQueue({ state }, callback) {
       const urgentQueueArray = Object.keys(state.urgent_queue)
       let nextQueueKey, level
       if (urgentQueueArray.length === 0) {
@@ -212,6 +212,7 @@ const Queue = {
             .then(() => {
               pending_queue_ref.set(queue)
             })
+          if (callback) callback()
         }
       })
     },
