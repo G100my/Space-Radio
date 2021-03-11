@@ -3,6 +3,7 @@ import store from '../store/'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
+import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
 const routes = [
   {
@@ -37,7 +38,12 @@ router.beforeEach(async to => {
     // 造成 vue router webHashHistory mode 無法如預期運作，
     // to, from 都會是 '/'，因此手動清除。
     window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
-    await fetchAccessToken(authorizationCode, '#' + hashPath)
+    await fetchAccessToken(authorizationCode, '#' + hashPath).then(() => {
+      spotifyAPI.getMe().then(result => {
+        console.log(result)
+        store.commit('updateUserData', result)
+      })
+    })
   }
 
   if (window.location.search.includes('?error=')) {
