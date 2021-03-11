@@ -54,6 +54,7 @@ async function PKCE(redirectHash) {
 
 async function fetchAccessToken(code, redirectHash) {
   const code_verifier = localStorage.getItem('jukebox_code_verifier')
+  localStorage.removeItem('jukebox_code_verifier')
 
   let body = 'client_id=' + client_id
   body += '&grant_type=authorization_code'
