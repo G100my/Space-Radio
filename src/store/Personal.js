@@ -1,3 +1,5 @@
+import { spotifyAPI } from '../plugin/spotify-web-api.js'
+
 const Personal = {
   state: {
     user_id: localStorage.getItem('jukebox_user_id') || null,
@@ -35,6 +37,8 @@ const Personal = {
       localStorage.setItem('jukebox_token', access_token)
       localStorage.setItem('jukebox_expired_time', expiredTime)
       localStorage.setItem('jukebox_refresh_token', refresh_token)
+
+      spotifyAPI.setAccessToken(access_token)
     },
     updateUserData(state, { id, display_name, images }) {
       state.user_id = id

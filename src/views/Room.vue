@@ -105,9 +105,6 @@ export default {
       this.$store.registerModule('Queue', QueueStore)
       queueConnect2firebase(this.$store)
     }
-    if (!this.$spotifyAPI.getAccessToken()) {
-      this.$spotifyAPI.setAccessToken(this.$store.getters.token)
-    }
   },
   methods: {
     activeNoteDialogHandler(note) {
