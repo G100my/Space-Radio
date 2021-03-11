@@ -357,8 +357,8 @@ export default {
   .collect {
     form {
       display: flex;
-      justify-content: space-between;
       margin: 15px 0;
+      justify-content: space-between;
     }
     select {
       color: var(--secondary-neutral);
@@ -366,6 +366,11 @@ export default {
       padding: 2px;
       border-radius: var(--border-radius);
       border-color: var(--primary-highlight);
+      width: 100%;
+      @media (min-width: 768px) {
+        max-width: 180px;
+        width: min-content;
+      }
     }
     option {
       background-color: var(--secondary-dark);
@@ -373,6 +378,12 @@ export default {
     }
     .selected {
       color: var(--secondary-neutral);
+    }
+    label {
+      display: none;
+      @media (min-width: 768px) {
+        display: initial;
+      }
     }
 
     .buttons {

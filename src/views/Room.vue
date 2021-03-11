@@ -216,6 +216,7 @@ export default {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
     .playing-state {
       flex: 1;
     }
@@ -235,12 +236,14 @@ header {
   z-index: 20;
   display: flex;
   flex-direction: column-reverse;
+  background-color: var(--primary-dark);
   @media (min-width: 768px) {
     left: auto;
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
     width: calc(100% - 400px);
+    background-color: initial;
   }
 }
 nav {
