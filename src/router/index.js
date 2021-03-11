@@ -41,7 +41,6 @@ router.beforeEach(async to => {
   }
 
   if (window.location.search.includes('?error=')) {
-    window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
     return { name: 'Doorscope' }
   }
 
