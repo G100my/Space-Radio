@@ -57,20 +57,54 @@
       </div>
       <div class="collect">
         <form>
-          <label for="playlist">收集到</label>
-          <select id="playlist" @change="selectedPlaylistKey = $event.target.value">
+          <label for="playlist">收集到播放清單:</label>
+          <select id="playlist" v-model="selectedPlaylistKey">
             <option
               v-for="(playlist, index) in userPlaylists"
               :key="playlist.id"
               :value="playlist.id"
               :selected="index === 0"
               :label="playlist.name"
+              :class="{ selected: playlist.id === selectedPlaylistKey }"
             />
           </select>
         </form>
-        <button :disabled="!playerPlayingTrackId" type="button" class="collect-button" @click="collectHandler">
-          Collect
-        </button>
+        <div class="buttons">
+          <button
+            :disabled="!playerPlayingTrackId"
+            type="button"
+            class="heart-button"
+            @click="!isTrackSaved && add2savedHandler($event), isTrackSaved && removeFromSavedHandler($event)"
+          >
+            <svg
+              v-show="!isTrackSaved"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              class="bi bi-heart"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+              />
+            </svg>
+            <svg
+              v-show="isTrackSaved"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              class="bi bi-heart-fill"
+              viewBox="0 0 16 16"
+            >
+              <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+            </svg>
+          </button>
+          <button :disabled="!playerPlayingTrackId" type="button" class="collect-button" @click="collectHandler">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-save" viewBox="0 0 16 16">
+              <path
+                d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
     <div class="log">
@@ -95,6 +129,7 @@ export default {
       logo,
       userPlaylists: [],
       selectedPlaylistKey: null,
+      isTrackSaved: false,
     }
   },
   computed: {
@@ -116,9 +151,17 @@ export default {
       'userId',
     ]),
   },
+  watch: {
+    playerPlayingTrackId(newTrackId) {
+      if (!newTrackId) return
+      this.checkSavedTrackState(newTrackId)
+    },
+  },
   beforeCreate() {
     this.$spotifyAPI.getUserPlaylists(this.userId, { limit: 50 }).then(result => {
       this.userPlaylists = result.items
+
+      this.selectedPlaylistKey = localStorage.getItem('jukebox_previous_playlise_key') || this.userPlaylists[0].id
     })
   },
   methods: {
@@ -135,9 +178,28 @@ export default {
       this.$store.dispatch('reduceDislike')
     },
     collectHandler() {
+      console.log()
       this.$spotifyAPI
         .addTracksToPlaylist(this.selectedPlaylistKey, [`spotify:track:${this.playerPlayingTrackId}`])
-        .then(result => console.log(result))
+        .then(result => {
+          console.log(result)
+          localStorage.setItem('jukebox_previous_playlise_key', this.selectedPlaylistKey)
+        })
+    },
+    add2savedHandler() {
+      this.$spotifyAPI.addToMySavedTracks([this.playerPlayingTrackId]).then(() => {
+        this.checkSavedTrackState(this.playerPlayingTrackId)
+      })
+    },
+    removeFromSavedHandler() {
+      this.$spotifyAPI.removeFromMySavedTracks([this.playerPlayingTrackId]).then(() => {
+        this.checkSavedTrackState(this.playerPlayingTrackId)
+      })
+    },
+    checkSavedTrackState(trackId) {
+      this.$spotifyAPI.containsMySavedTracks([trackId]).then(result => {
+        this.isTrackSaved = result[0]
+      })
     },
   },
 }
@@ -299,7 +361,7 @@ export default {
       margin: 15px 0;
     }
     select {
-      color: var(--primary-light);
+      color: var(--secondary-neutral);
       background-color: var(--secondary-dark);
       padding: 2px;
       border-radius: var(--border-radius);
@@ -309,11 +371,25 @@ export default {
       background-color: var(--secondary-dark);
       color: var(--primary-light);
     }
-    .collect-button {
-      width: 100%;
-      &:disabled {
-        text-decoration: line-through;
-        color: var(--ignore);
+    .selected {
+      color: var(--secondary-neutral);
+    }
+
+    .buttons {
+      display: flex;
+      button {
+        flex: 1;
+        padding: 8px 0;
+        &:disabled {
+          color: darkgray;
+        }
+      }
+      button + button {
+        margin-left: 15px;
+      }
+      svg {
+        height: 25px;
+        width: 25px;
       }
     }
   }
