@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import store from '../store/'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
+import CreateRoom from '../views/CreateRoom.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
@@ -16,6 +17,12 @@ const routes = [
     path: '/room',
     name: 'Room',
     component: Room,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/create',
+    name: 'Create',
+    component: CreateRoom,
     meta: { requiresAuth: true },
   },
 ]

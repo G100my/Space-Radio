@@ -30,6 +30,7 @@
         </div>
         <div class="login">
           <button type="button" @click="PKCE('#room')">Spotify Login</button>
+          <button type="button" @click="PKCE('#create')">Create Room</button>
         </div>
       </div>
     </div>
