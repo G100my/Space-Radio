@@ -105,6 +105,10 @@ export default {
       this.$store.registerModule('Queue', QueueStore)
       queueConnect2firebase(this.$store)
     }
+    // avoid user refresh page
+    if (!this.$spotifyAPI.getAccessToken() && this.$store.getters.isTokenValid) {
+      this.$spotifyAPI.setAccessToken(this.$store.getters.token)
+    }
   },
   methods: {
     activeNoteDialogHandler(note) {
