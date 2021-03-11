@@ -54,6 +54,10 @@
       </div>
     </div>
     <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
+    <div class="slide-navigation">
+      <span class="sidebar-navigation" :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
+      <span class="view-navigation" :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
+    </div>
   </div>
 </template>
 <script>
@@ -315,6 +319,29 @@ nav {
         }
       }
     }
+  }
+}
+.slide-navigation {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--primary-dark);
+  padding-top: 5px;
+  span {
+    box-sizing: border-box;
+    height: 4px;
+    width: 15%;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--ignore);
+  }
+  .view-navigation {
+    margin-left: 5px;
+  }
+  .active {
+    background-color: var(--secondary-neutral);
+    border: none;
   }
 }
 </style>
