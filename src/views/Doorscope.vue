@@ -29,7 +29,7 @@
           <UserLog />
         </div>
         <div class="login">
-          <button type="button" @click="PKCE">Spotify Login</button>
+          <button type="button" @click="PKCE('#room')">Spotify Login</button>
         </div>
       </div>
     </div>

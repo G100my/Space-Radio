@@ -36,7 +36,7 @@ const client_id = import.meta.env.VITE_CLIENT_ID
 const redirect_uri = import.meta.env.VITE_REDIRECT_URI
 const scope = `user-library-modify user-library-read playlist-modify-public playlist-modify-private user-read-recently-played user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming user-read-email user-read-private`
 
-async function PKCE() {
+async function PKCE(redirectHash) {
   const code_verifier = generateCodeVerifier()
   localStorage.setItem('jukebox_code_verifier', code_verifier)
 
@@ -44,7 +44,7 @@ async function PKCE() {
   let url = 'https://accounts.spotify.com/authorize'
   url += '?response_type=code'
   url += '&client_id=' + encodeURIComponent(client_id)
-  url += '&redirect_uri=' + encodeURIComponent(redirect_uri)
+  url += '&redirect_uri=' + encodeURIComponent(redirect_uri + redirectHash)
   url += '&scope=' + encodeURIComponent(scope)
   url += '&code_challenge_method=S256'
   url += '&code_challenge=' + code_challenge
@@ -52,13 +52,13 @@ async function PKCE() {
   window.location = url
 }
 
-async function fetchAccessToken(code) {
+async function fetchAccessToken(code, redirectHash) {
   const code_verifier = localStorage.getItem('jukebox_code_verifier')
 
   let body = 'client_id=' + client_id
   body += '&grant_type=authorization_code'
   body += '&code=' + code
-  body += '&redirect_uri=' + redirect_uri
+  body += '&redirect_uri=' + redirect_uri + redirectHash
   body += '&code_verifier=' + code_verifier
 
   return fetch('https://accounts.spotify.com/api/token', {
