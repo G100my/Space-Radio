@@ -26,7 +26,7 @@ const UserLog = {
   },
 }
 
-function userLogFirebasePlugin(store) {
+function userLogConnect2firebase(store) {
   const maker = function ({ type }) {
     return {
       action_type: type,
@@ -95,4 +95,4 @@ function userLogFirebasePlugin(store) {
   })
 }
 
-export { UserLog, userLogFirebasePlugin }
+export { UserLog, userLogConnect2firebase }

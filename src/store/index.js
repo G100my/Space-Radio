@@ -1,7 +1,7 @@
 import { createStore, createLogger } from 'vuex'
-import { PlayingState, playingStateFirebasePlugin } from './PlayingState.js'
+import { PlayingState, playingStateConnect2firebase } from './PlayingState.js'
 import { Personal } from './Personal.js'
-import { UserLog, userLogFirebasePlugin } from './UserLog.js'
+import { UserLog, userLogConnect2firebase } from './UserLog.js'
 import { FirebaseRef } from './FirebaseRef.js'
 
 const store = createStore({
@@ -11,7 +11,7 @@ const store = createStore({
     PlayingState,
     UserLog,
   },
-  plugins: [createLogger(), playingStateFirebasePlugin, userLogFirebasePlugin],
+  plugins: [createLogger(), playingStateConnect2firebase, userLogConnect2firebase],
 })
 
 export default store

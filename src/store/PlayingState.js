@@ -162,7 +162,7 @@ const PlayingState = {
   },
 }
 
-function playingStateFirebasePlugin(store) {
+function playingStateConnect2firebase(store) {
   store.getters.playing_state_ref.child('volume').on('value', snapshot => {
     store.commit('adjustVolume', snapshot.val())
   })
@@ -189,4 +189,4 @@ function playingStateFirebasePlugin(store) {
   })
 }
 
-export { PlayingState, playingStateFirebasePlugin }
+export { PlayingState, playingStateConnect2firebase }

@@ -62,7 +62,7 @@
 </template>
 <script>
 import PlayingState from '../components/PlayingState.vue'
-import { Queue as QueueStore, connect2FirebaseQueue } from '../store/Queue.js'
+import { Queue as QueueStore, queueConnect2firebase } from '../store/Queue.js'
 import SearchBar from '../components/SearchBar.vue'
 import NoteDialog from '../components/NoteDialog.vue'
 import Marquee from '../components/Marquee.vue'
@@ -103,7 +103,7 @@ export default {
   beforeCreate() {
     if (!this.$store.hasModule('Queue')) {
       this.$store.registerModule('Queue', QueueStore)
-      connect2FirebaseQueue(this.$store)
+      queueConnect2firebase(this.$store)
     }
     if (!this.$spotifyAPI.getAccessToken()) {
       this.$spotifyAPI.setAccessToken(this.$store.getters.token)

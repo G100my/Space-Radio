@@ -25,7 +25,7 @@ function bindListener(target, storeTarget, store) {
   })
 }
 
-function connect2FirebaseQueue(store) {
+function queueConnect2firebase(store) {
   bindListener(store.getters.normal_queue_ref, 'normal', store)
   bindListener(store.getters.urgent_queue_ref, 'urgent', store)
   store.getters.pending_queue_ref.on('value', snapshot => {
@@ -218,4 +218,4 @@ const Queue = {
   },
 }
 
-export { Queue, connect2FirebaseQueue }
+export { Queue, queueConnect2firebase }
