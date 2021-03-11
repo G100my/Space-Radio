@@ -385,6 +385,9 @@ export default {
 .main-control {
   position: relative;
   display: flex;
+  button {
+    padding: 8px 0;
+  }
   button + button {
     margin-left: 15px;
   }
@@ -401,8 +404,8 @@ export default {
     color: var(--secondary-highlight);
   }
   svg {
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
   }
 }
 .minimal-control {
