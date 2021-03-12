@@ -9,6 +9,12 @@ import { spotifyAPI } from '../plugin/spotify-web-api.js'
 const routes = [
   {
     path: '/',
+    name: 'Lobby',
+    meta: { requiresAuth: false },
+    component: Doorscope,
+  },
+  {
+    path: '/doorscope/:roomKey',
     name: 'Doorscope',
     meta: { requiresAuth: false },
     component: Doorscope,
