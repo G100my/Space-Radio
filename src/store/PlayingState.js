@@ -71,7 +71,7 @@ const PlayingState = {
     },
   },
   mutations: {
-    refreshPlayerState(state, newPlayingTrack) {
+    refreshPlayerTrack(state, newPlayingTrack) {
       if (newPlayingTrack === null) state.playing_track = { ...initialTrack }
       else state.playing_track = newPlayingTrack
     },
@@ -167,7 +167,7 @@ function playingStateConnect2firebase(store) {
     store.commit('adjustVolume', snapshot.val())
   })
   store.getters.playing_state_ref.child('playing_track').on('value', snapshot => {
-    store.commit('refreshPlayerState', snapshot.val())
+    store.commit('refreshPlayerTrack', snapshot.val())
   })
   store.getters.playing_state_ref.child('latest_queue').on('value', snapshot => {
     store.commit('refreshTheLatestQueue', snapshot.val())
