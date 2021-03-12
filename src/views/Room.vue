@@ -61,8 +61,11 @@
   </div>
 </template>
 <script>
-import PlayingState from '../components/PlayingState.vue'
 import { Queue as QueueStore, queueConnect2firebase } from '../store/Queue.js'
+import { playingStateConnect2firebase } from '../store/PlayingState.js'
+import { userLogConnect2firebase } from '../store/UserLog.js'
+
+import PlayingState from '../components/PlayingState.vue'
 import SearchBar from '../components/SearchBar.vue'
 import NoteDialog from '../components/NoteDialog.vue'
 import Marquee from '../components/Marquee.vue'
@@ -103,12 +106,16 @@ export default {
   beforeCreate() {
     if (!this.$store.hasModule('Queue')) {
       this.$store.registerModule('Queue', QueueStore)
-      queueConnect2firebase(this.$store)
     }
     // avoid user refresh page
     if (!this.$spotifyAPI.getAccessToken() && this.$store.getters.isTokenValid) {
       this.$spotifyAPI.setAccessToken(this.$store.getters.token)
     }
+  },
+  mounted() {
+    queueConnect2firebase(this.$store)
+    playingStateConnect2firebase(this.$store)
+    userLogConnect2firebase(this.$store)
   },
   methods: {
     activeNoteDialogHandler(note) {
