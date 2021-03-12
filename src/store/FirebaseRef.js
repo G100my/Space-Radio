@@ -2,11 +2,11 @@ import firebase from './firebase.js'
 
 const FirebaseRef = {
   state: {
-    playing_state_ref: firebase.database().ref('plyaing_state'),
-    user_log_ref: firebase.database().ref('user_log'),
-    urgent_queue_ref: firebase.database().ref('urgent_queue'),
-    normal_queue_ref: firebase.database().ref('normal_queue'),
-    pending_queue_ref: firebase.database().ref('pending_queue'),
+    playing_state_ref: null,
+    user_log_ref: null,
+    urgent_queue_ref: null,
+    normal_queue_ref: null,
+    pending_queue_ref: null,
   },
   getters: {
     playing_state_ref(state) {
@@ -23,6 +23,13 @@ const FirebaseRef = {
     },
     pending_queue_ref(state) {
       return state.pending_queue_ref
+    },
+  },
+  mutations: {
+    setRootRef(state, roomKey) {
+      for (let ref in state) {
+        state[ref] = firebase.database().ref(`${roomKey}/${ref.slice(0, -4)}`)
+      }
     },
   },
 }
