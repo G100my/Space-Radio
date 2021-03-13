@@ -28,6 +28,7 @@
         >將最小投票數調整為<span>{{ log.option.dislike_threshold }}</span>
       </p>
     </li>
+    <li v-if="logs.length === 0"><p>- - No logs - -</p></li>
   </ul>
 </template>
 <script>

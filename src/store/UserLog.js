@@ -1,16 +1,16 @@
 const UserLog = {
   state: {
     log: [
-      {
-        action_type: '',
-        user_id: '',
-        timestamp: 0,
-        option: {
-          id: '',
-          track_name: '',
-          volume: 0,
-        },
-      },
+      // {
+      //   action_type: '',
+      //   user_id: '',
+      //   timestamp: 0,
+      //   option: {
+      //     id: '',
+      //     track_name: '',
+      //     volume: 0,
+      //   },
+      // },
     ],
   },
   getters: {
