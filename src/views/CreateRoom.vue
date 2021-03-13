@@ -78,9 +78,11 @@ export default {
       const room = firebase.database().ref(this.roomKey)
       room
         .set({
-          host_id: this.userId,
-          room_name: this.roomName,
-          room_key: this.roomKey,
+          basic: {
+            host_id: this.userId,
+            room_name: this.roomName,
+            room_key: this.roomKey,
+          },
           playing_state: {
             volume: this.volume,
             minimal_volume: this.minimalVolume,

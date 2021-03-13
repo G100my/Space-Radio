@@ -135,7 +135,6 @@ export default {
     },
     fetchRoomBasicInfo(roomKey) {
       const room_ref = firebase.database().ref(roomKey)
-      room_ref.get().then(item => console.log(item))
       room_ref
         .child('playing_state')
         .get()
@@ -144,7 +143,7 @@ export default {
           this.$store.commit('refreshPlayerTrack', playingTrack)
         })
       room_ref
-        .child('room_name')
+        .child('basic/room_name')
         .get()
         .then(snapshot => {
           this.targetRoomName = snapshot.val()
