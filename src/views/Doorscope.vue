@@ -140,7 +140,8 @@ export default {
         .child('playing_state')
         .get()
         .then(snapshot => {
-          this.$store.commit('refreshPlayerTrack', snapshot.val()['playing_track'])
+          const playingTrack = snapshot.val()['playing_track']
+          this.$store.commit('refreshPlayerTrack', playingTrack)
         })
       room_ref
         .child('room_name')
