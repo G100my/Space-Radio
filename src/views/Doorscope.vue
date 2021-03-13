@@ -15,7 +15,7 @@
           <h2 :class="{ ignore: !targetRoomName }">{{ targetRoomName ? targetRoomName : '- - -' }}</h2>
         </div>
         <div class="track-info">
-          <h3>Now playing:</h3>
+          <h3>Now playing</h3>
           <p>Track Name:</p>
           <p>{{ playerPlayingTrackName }}</p>
           <p>Artists:</p>
@@ -40,7 +40,12 @@
         <div class="feature">
           <p>Please enter room key or room name</p>
           <div class="search-room">
-            <input v-model="searchKeyWordInput" type="text" placeholder="search room key or name" />
+            <input
+              v-model="searchKeyWordInput"
+              type="text"
+              placeholder="search room key or name"
+              @keydown.prevent.enter="searchRoomKey"
+            />
             <button type="button" @click="searchRoomKey">
               <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                 <path
@@ -50,7 +55,7 @@
             </button>
           </div>
           <div class="buttons">
-            <button class="login-botton" :disabled="!targetRoomKey" type="button" @click="PKCE('#room')">
+            <button class="login-botton" :disabled="!targetRoomName" type="button" @click="PKCE('#room')">
               Spotify Login
             </button>
             <button v-if="!$route.params.roomKey" type="button" @click="PKCE('#create')">Create Room</button>
@@ -75,7 +80,6 @@ export default {
     return {
       logo,
       targetRoomName: '',
-      targetRoomKey: '',
       roomListObject: {},
       searchKeyWordInput: '',
     }
@@ -253,14 +257,18 @@ export default {
     justify-content: space-evenly;
 
     h3 {
-      margin: 5px 0 0;
+      margin-top: 0;
+      margin-bottom: 5px;
       font-size: 1rem;
       grid-column: 1/3;
+      color: var(--primary-neutral);
     }
   }
   .room-name {
     display: flex;
     flex-wrap: wrap;
+    font-weight: bold;
+    font-size: 1.2rem;
     h2 {
       color: var(--primary-highlight);
       display: inline;
@@ -277,7 +285,7 @@ export default {
     margin-top: 5px;
     display: grid;
     grid-template-columns: minmax(auto, 1fr) 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
     column-gap: 20px;
     align-items: flex-end;
     p {
@@ -286,7 +294,7 @@ export default {
       overflow: hidden;
     }
 
-    p:nth-child(2n + 1) {
+    p:nth-child(2n) {
       color: var(--primary-neutral);
     }
   }
@@ -306,7 +314,7 @@ export default {
     .search-room {
       display: flex;
       margin-top: 3px;
-      height: 37px;
+      height: 35px;
       input {
         color: white;
         padding-left: 10px;
@@ -332,7 +340,7 @@ export default {
       flex-direction: column;
 
       button {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         padding: 5px 15px;
         border-radius: 10px;
         color: var(--secondary-neutral);
