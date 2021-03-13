@@ -28,7 +28,11 @@ const FirebaseRef = {
   mutations: {
     setRootRef(state, roomKey) {
       for (let ref in state) {
-        state[ref] = firebase.database().ref(`${roomKey}/${ref.slice(0, -4)}`)
+        if (ref === 'user_log_ref') {
+          state[ref] = firebase.database().ref(`user_log/${roomKey}`)
+        } else {
+          state[ref] = firebase.database().ref(`${roomKey}/${ref.slice(0, -4)}`)
+        }
       }
     },
   },
