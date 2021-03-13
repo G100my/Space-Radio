@@ -116,5 +116,8 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
+  h2 {
+    font-size: 2.5rem;
+  }
 }
 </style>

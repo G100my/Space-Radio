@@ -9,9 +9,13 @@
           <img :src="playerPlayingAlbum.image_url ? playerPlayingAlbum.image_url : logo" alt="" />
         </div>
       </div>
-      <div class="others">
-        <h2>Now playing:</h2>
+      <div class="room-info">
+        <div class="room-name">
+          <p>Room name:</p>
+          <h2 :class="{ ignore: !targetRoomName }">{{ targetRoomName ? targetRoomName : '- - -' }}</h2>
+        </div>
         <div class="track-info">
+          <h3>Now playing:</h3>
           <p>Track Name:</p>
           <p>{{ playerPlayingTrackName }}</p>
           <p>Artists:</p>
@@ -28,9 +32,24 @@
         <div class="log">
           <UserLog />
         </div>
-        <div class="login">
-          <button type="button" @click="PKCE('#room')">Spotify Login</button>
-          <button type="button" @click="PKCE('#create')">Create Room</button>
+        <div class="feature">
+          <p>Please enter room key or room name</p>
+          <div class="search-room">
+            <input v-model="searchKeyWordInput" type="text" placeholder="search room key or name" />
+            <button type="button" @click="searchRoomKey">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="buttons">
+            <button class="login-botton" :disabled="!targetRoomKey" type="button" @click="PKCE('#room')">
+              Spotify Login
+            </button>
+            <button v-if="!$route.params.roomKey" type="button" @click="PKCE('#create')">Create Room</button>
+          </div>
         </div>
       </div>
     </div>
@@ -51,6 +70,7 @@ export default {
     return {
       logo,
       targetRoomName: '',
+      targetRoomKey: '',
       roomListObject: {},
       searchKeyWordInput: 'goodideas',
     }
@@ -99,6 +119,9 @@ export default {
         this.fetchRoomBasicInfo(targetRoomKey)
       } else {
         console.log('no result')
+        localStorage.setItem('jukebox_room_key', targetRoomKey)
+        this.$store.commit('refreshPlayerTrack', null)
+        this.targetRoomName = ''
       }
     },
     fetchRoomBasicInfo(roomKey) {
@@ -123,27 +146,39 @@ export default {
 <style lang="scss">
 .doorscope {
   height: fit-content;
-  padding: 30px 20px;
+  padding: 5px 20px;
   box-sizing: content-box;
   align-self: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
 
-  .title > h1 {
-    font-size: 65px;
-    text-align: center;
+  .title {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    > h1 {
+      font-size: 3rem;
+      text-align: center;
+    }
   }
+
   .content {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    flex: 4;
   }
   .cover-container {
     display: flex;
-    align-items: center;
-    padding: 30px;
+    justify-content: center;
+    padding: 15px;
   }
   .cover {
     height: fit-content;
-    max-width: 250px;
+    max-width: 27vh;
     font-size: 0;
     position: relative;
     // transform: skewX(-3deg) rotateY(10deg);
@@ -198,28 +233,54 @@ export default {
       );
     }
     &::after {
+      $length: 20%;
       border: 10px solid black;
-      --length: 20%;
-      width: var(--length);
-      height: var(--length);
+      width: $length;
+      height: $length;
       background: radial-gradient(circle at center, white 0 13%, rgba(51, 146, 255, 0.625) 15% 100%);
     }
   }
-  .others {
+  .room-info {
+    padding: 0 30px;
     display: flex;
     flex-direction: column;
+    flex: 1;
+    justify-content: space-evenly;
+
+    h3 {
+      margin: 5px 0 0;
+      font-size: 1rem;
+      grid-column: 1/3;
+    }
+  }
+  .room-name {
+    display: flex;
+    flex-wrap: wrap;
+    h2 {
+      color: var(--primary-highlight);
+      display: inline;
+      text-align: center;
+      margin-left: auto;
+    }
+    h2.ignore {
+      color: var(--ignore);
+      font-size: 1rem;
+      text-align: right;
+    }
   }
   .track-info {
-    margin: 20px 0 0;
+    margin-top: 5px;
     display: grid;
-    grid-template-columns: auto 2fr;
+    grid-template-columns: minmax(auto, 1fr) 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    gap: 5px;
+    column-gap: 20px;
     align-items: flex-end;
-
-    p:nth-child(2) {
-      font-size: larger;
+    p {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
+
     p:nth-child(2n + 1) {
       color: var(--primary-neutral);
     }
@@ -231,17 +292,55 @@ export default {
       display: block;
     }
   }
-  .login {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    button {
-      font-size: 23px;
-      padding: 8px 20px;
-      border-radius: 10px;
-      color: var(--secondary-neutral);
-      &:focus {
-        outline: none;
+  .feature {
+    margin-top: 15px;
+    p {
+      font-size: 0.5rem;
+      color: var(--ignore);
+    }
+    .search-room {
+      display: flex;
+      margin-top: 3px;
+      height: 37px;
+      input {
+        color: white;
+        padding-left: 10px;
+        flex: 1;
+        background-color: inherit;
+        border: 1px solid var(--primary-highlight);
+        border-right: none;
+        border-top-left-radius: var(--border-radius);
+        border-bottom-left-radius: var(--border-radius);
+        &:focus {
+          outline: none;
+        }
+      }
+      button {
+        border-left: none;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+    .buttons {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+
+      button {
+        font-size: 1.3rem;
+        padding: 5px 15px;
+        border-radius: 10px;
+        color: var(--secondary-neutral);
+        &:focus {
+          outline: none;
+        }
+      }
+
+      button + button {
+        margin-top: 10px;
+      }
+      .login-botton:disabled {
+        color: var(--ignore);
       }
     }
   }
@@ -263,7 +362,7 @@ export default {
       flex-direction: row;
       flex-flow: wrap;
     }
-    .others {
+    .room-info {
       flex: 1 1 auto;
     }
     .cover-container {
