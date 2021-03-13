@@ -61,6 +61,8 @@
   </div>
 </template>
 <script>
+import firebase from '../store/firebase.js'
+
 import { Queue as QueueStore, queueConnect2firebase } from '../store/Queue.js'
 import { playingStateConnect2firebase } from '../store/PlayingState.js'
 import { userLogConnect2firebase } from '../store/UserLog.js'
@@ -111,6 +113,14 @@ export default {
     if (!this.$spotifyAPI.getAccessToken() && this.$store.getters.isTokenValid) {
       this.$spotifyAPI.setAccessToken(this.$store.getters.token)
     }
+    const roomKey = localStorage.getItem('jukebox_room_key')
+    firebase
+      .database()
+      .ref(`${roomKey}/basic`)
+      .get()
+      .then(snapshot => {
+        this.$store.commit('setRoomBasicInfo', snapshot.val())
+      })
   },
   mounted() {
     queueConnect2firebase(this.$store)

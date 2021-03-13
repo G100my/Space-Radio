@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     hostToggler() {
-      return this.$store.getters.userId === 'zhanglo'
+      return this.userId === this.hostId
     },
     ...mapState({
       isVoted: state => state.PlayingState.isVoted,
@@ -149,6 +149,7 @@ export default {
       'currentDislikeThreshold',
       'currentDislikeCountdown',
       'userId',
+      'hostId',
     ]),
   },
   watch: {
