@@ -350,9 +350,9 @@ export default {
       max-width: 1000px;
       margin: 60px auto;
       border: 8px outset var(--secondary-neutral);
-      box-sizing: border-box;
       padding: 40px 65px 40px;
       flex: 1;
+      min-height: fit-content;
     }
     .title > h1 {
       text-align: left;
@@ -371,6 +371,12 @@ export default {
     }
     .cover {
       max-width: 350px;
+    }
+    .track-info {
+      grid-template-columns: minmax(auto, 1fr) 2fr;
+      p:nth-child(2n + 1) {
+        justify-self: flex-end;
+      }
     }
   }
 }
