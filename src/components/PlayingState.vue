@@ -2,7 +2,7 @@
   <div class="playing-state">
     <h1>
       <img src="../assets/vinyl-record.png" alt="" />
-      <p>Jukebox</p>
+      <p>{{ roomName }}</p>
     </h1>
     <div class="track-info">
       <div class="cover">
@@ -150,6 +150,7 @@ export default {
       'currentDislikeCountdown',
       'userId',
       'hostId',
+      'roomName',
     ]),
   },
   watch: {
@@ -222,6 +223,9 @@ export default {
       }
       p {
         margin-right: auto;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
   }

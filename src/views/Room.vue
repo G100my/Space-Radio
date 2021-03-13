@@ -17,7 +17,7 @@
         />
         <h1>
           <img src="../assets/vinyl-record.png" alt="" />
-          <p>Jukebox</p>
+          <p>{{ $store.getters.roomName }}</p>
         </h1>
         <ul>
           <li>
@@ -282,6 +282,12 @@ nav {
     img {
       width: 30px;
       margin-right: 5px;
+    }
+    p {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 100px;
+      overflow: hidden;
     }
     @media (min-width: 768px) {
       display: none;
