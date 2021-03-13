@@ -38,6 +38,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
 import UserLog from '../components/UserLog.vue'
 import logo from '../assets/vinyl-record.png'
@@ -47,13 +48,75 @@ export default {
     UserLog,
   },
   data() {
-    return { logo }
+    return {
+      logo,
+      targetRoomName: '',
+      roomListObject: {},
+      searchKeyWordInput: 'goodideas',
+    }
   },
   computed: {
     ...mapGetters(['playerPlayingAlbum', 'playerPlayingArtists', 'playerPlayingTrackName']),
   },
+  beforeCreate() {
+    const pathRoomKey = this.$route.params.roomKey
+    firebase
+      .database()
+      .ref('room_list')
+      .get()
+      .then(snapshot => {
+        this.roomListObject = snapshot.val()
+
+        if (pathRoomKey) {
+          const hasRoom = Object.prototype.hasOwnProperty.call(this.roomListObject, pathRoomKey)
+
+          if (hasRoom) {
+            this.fetchRoomBasicInfo(pathRoomKey)
+            localStorage.setItem('jukebox_room_key', pathRoomKey)
+          } else {
+            this.$router.push({ name: 'Lobby' })
+          }
+        }
+      })
+  },
   methods: {
     PKCE,
+    searchRoomKey() {
+      let targetRoomKey
+      // 可以搜尋 room key 或者搜尋 room name
+      if (Object.prototype.hasOwnProperty.call(this.roomListObject, this.searchKeyWordInput)) {
+        targetRoomKey = this.searchKeyWordInput
+      } else {
+        for (let key in this.roomListObject) {
+          if (this.roomListObject[key] === this.searchKeyWordInput) {
+            targetRoomKey = key
+            break
+          }
+        }
+      }
+      if (targetRoomKey) {
+        localStorage.setItem('jukebox_room_key', targetRoomKey)
+        this.fetchRoomBasicInfo(targetRoomKey)
+      } else {
+        console.log('no result')
+      }
+    },
+    fetchRoomBasicInfo(roomKey) {
+      const room_ref = firebase.database().ref(roomKey)
+      room_ref.get().then(item => console.log(item))
+      room_ref
+        .child('playing_state')
+        .get()
+        .then(snapshot => {
+          this.$store.commit('refreshPlayerTrack', snapshot.val()['playing_track'])
+        })
+      room_ref
+        .child('room_name')
+        .get()
+        .then(snapshot => {
+          this.targetRoomName = snapshot.val()
+        })
+    },
   },
 }
 </script>
