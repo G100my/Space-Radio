@@ -113,7 +113,7 @@ const PlayingState = {
     },
     increaseDislike({ state, getters }) {
       const reduceResult = state.dislike + 1
-      if (reduceResult <= 2) {
+      if (reduceResult <= state.dislike_threshold) {
         getters.playing_state_ref.update({ dislike: reduceResult })
         const parameter = {}
         parameter[getters.userId] = true
