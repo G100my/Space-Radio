@@ -35,8 +35,8 @@ const PlayingState = {
     latest_queue: { ...initialQueue },
     dislike: 0,
     dislike_threshold: 2,
-    isVoted: false,
     dislike_countdown: false,
+    isVoted: false,
   },
   getters: {
     playerPlayingTrackId(state) {
@@ -72,7 +72,7 @@ const PlayingState = {
   },
   mutations: {
     refreshPlayerTrack(state, newPlayingTrack) {
-      if (newPlayingTrack === null) state.playing_track = { ...initialTrack }
+      if (!newPlayingTrack) state.playing_track = { ...initialTrack }
       else state.playing_track = newPlayingTrack
     },
     refreshTheLatestQueue(state, newLatestQueue) {
