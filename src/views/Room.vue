@@ -363,5 +363,8 @@ nav {
     background-color: var(--secondary-neutral);
     border: none;
   }
+  @media (min-width: 768px) {
+    display: none;
+  }
 }
 </style>
