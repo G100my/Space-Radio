@@ -26,7 +26,12 @@
           </p>
           <p>Album:</p>
           <p>
-            <a target="_blank" :href="playerPlayingAlbum.url">{{ playerPlayingAlbum.name }}</a>
+            <a
+              target="_blank"
+              :class="{ 'link-disable': playerPlayingAlbum.url === '' }"
+              :href="playerPlayingAlbum.url"
+              >{{ playerPlayingAlbum.name }}</a
+            >
           </p>
         </div>
         <div class="log">
@@ -72,7 +77,7 @@ export default {
       targetRoomName: '',
       targetRoomKey: '',
       roomListObject: {},
-      searchKeyWordInput: 'goodideas',
+      searchKeyWordInput: '',
     }
   },
   computed: {
@@ -378,6 +383,9 @@ export default {
         justify-self: flex-end;
       }
     }
+  }
+  .link-disable {
+    pointer-events: none;
   }
 }
 </style>

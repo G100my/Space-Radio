@@ -6,16 +6,16 @@ const transformURI2URL = uri => {
 const volumeStep = 2
 const initialTrack = {
   id: false,
-  name: 'Jukebox',
+  name: '---',
   artists: [
     {
       name: 'G100',
-      url: '##',
+      url: 'https://github.com/G100my/Jukebox',
     },
   ],
   album: {
-    url: '##',
-    name: 'Hakuna Matata',
+    url: '',
+    name: '---',
     image_url: '',
   },
   is_playable: true,
