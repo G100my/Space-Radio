@@ -120,6 +120,11 @@ export default {
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
+  margin: auto;
+  @media (min-width: 768px) {
+    flex: 1;
+    max-width: 50%;
+  }
 
   form {
     flex: 1;
