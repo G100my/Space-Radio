@@ -210,9 +210,14 @@ const Queue = {
         error && console.log(error)
         if (!error) {
           const queue = state[`${level}_queue`][nextQueueKey]
-          firebase
-            .database()
-            .ref(`${level}_queue`)
+
+          let targetQueue
+          if (level === 'urgent') {
+            targetQueue = urgent_queue_ref
+          } else {
+            targetQueue = normal_queue_ref
+          }
+          targetQueue
             .child(nextQueueKey)
             .remove()
             .then(() => {
