@@ -150,6 +150,9 @@ $icon-length: 35px;
   ~ h1 {
     margin-right: auto;
   }
+  ~ ul {
+    flex-shrink: 0;
+  }
   ~ ul,
   ~ h1 {
     overflow: hidden;
@@ -167,6 +170,9 @@ $icon-length: 35px;
   }
   .cancel-search-button {
     flex-basis: $icon-length;
+  }
+  ~ ul {
+    flex-shrink: 1;
   }
 }
 

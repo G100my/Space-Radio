@@ -286,7 +286,6 @@ nav {
     p {
       white-space: nowrap;
       text-overflow: ellipsis;
-      max-width: 100px;
       overflow: hidden;
     }
     @media (min-width: 768px) {
