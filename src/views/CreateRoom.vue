@@ -12,7 +12,7 @@
       </p>
       <p class="room-name">
         <label for="room-name">Room name : </label>
-        <input id="room-name" v-model="roomName" type="text" maxlength="50" autocomplete="off" />
+        <input id="room-name" v-model.trim="roomName" type="text" maxlength="50" autocomplete="off" />
         <span :class="{ active: errorMessage }" class="warnning">{{ errorMessage }}</span>
       </p>
       <p>
