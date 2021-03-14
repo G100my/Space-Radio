@@ -1,6 +1,10 @@
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 import firebase from './firebase.js'
 
+const urgent_queue_ref = firebase.database().ref('urgent_queue')
+const normal_queue_ref = firebase.database().ref('normal_queue')
+const pending_queue_ref = firebase.database().ref('pending_queue')
+
 function bindListener(target, storeTarget, store) {
   target.on('child_removed', oldChildSnapshot => {
     store.commit('deleteQueueTrack', { storeTarget, oldChildSnapshot })
@@ -26,9 +30,9 @@ function bindListener(target, storeTarget, store) {
 }
 
 function queueConnect2firebase(store) {
-  bindListener(store.getters.normal_queue_ref, 'normal', store)
-  bindListener(store.getters.urgent_queue_ref, 'urgent', store)
-  store.getters.pending_queue_ref.on('value', snapshot => {
+  bindListener(normal_queue_ref, 'normal', store)
+  bindListener(urgent_queue_ref, 'urgent', store)
+  pending_queue_ref.on('value', snapshot => {
     if (!snapshot.val()) {
       store.commit('clearPendingQueue')
       return
@@ -126,12 +130,12 @@ const Queue = {
         note,
         track_name,
       }
-      getters.normal_queue_ref.update(parameter)
+      normal_queue_ref.update(parameter)
     },
     jumpIn({ getters }, { id, note, trackNameForLog: track_name }) {
       const now = Date.now()
       const userId = getters.userId
-      getters.urgent_queue_ref.push({
+      urgent_queue_ref.push({
         id,
         added_time: now,
         added_by: userId,
@@ -139,14 +143,14 @@ const Queue = {
         track_name,
       })
     },
-    urgentRemove({ getters }, { queueKey }) {
-      getters.urgent_queue_ref.child(queueKey).remove()
+    urgentRemove(_context, { queueKey }) {
+      urgent_queue_ref.child(queueKey).remove()
     },
-    normalRemove({ getters }, { queueKey }) {
-      getters.normal_queue_ref.child(queueKey).remove()
+    normalRemove(_context, { queueKey }) {
+      normal_queue_ref.child(queueKey).remove()
     },
 
-    urgent2normal({ state, getters }, { queueKey }) {
+    urgent2normal({ state }, { queueKey }) {
       const queue = { ...state.urgent_queue[queueKey] }
       queue.note = false
       const orderKey = `${queue.added_time}-${queue.added_by}`
@@ -154,30 +158,30 @@ const Queue = {
       const parameter = {}
       parameter[orderKey] = queue
 
-      getters.urgent_queue_ref
+      urgent_queue_ref
         .child(queueKey)
         .remove()
         .then(() => {
-          getters.normal_queue_ref.update(parameter)
+          normal_queue_ref.update(parameter)
         })
     },
 
-    normal2urgent({ state, getters }, { queueKey, note }) {
+    normal2urgent({ state }, { queueKey, note }) {
       const queue = { ...state.normal_queue[queueKey] }
       queue.note = note
 
-      getters.normal_queue_ref
+      normal_queue_ref
         .child(queueKey)
         .remove()
         .then(() => {
-          getters.urgent_queue_ref.push(queue)
+          urgent_queue_ref.push(queue)
         })
     },
 
-    urgentEdit({ getters }, { queueKey, note }) {
-      getters.urgent_queue_ref.child(queueKey).update({ note })
+    urgentEdit(_context, { queueKey, note }) {
+      urgent_queue_ref.child(queueKey).update({ note })
     },
-    sendNextQueue({ state, getters }, callback) {
+    sendNextQueue({ state }, callback) {
       const urgentQueueArray = Object.keys(state.urgent_queue)
       let nextQueueKey, level
       if (urgentQueueArray.length === 0) {
@@ -185,7 +189,7 @@ const Queue = {
         if (normalQueneArray.length === 0) {
           console.warn('已經沒有任何點播了~~')
           // set it 'false' to keep it exist
-          getters.pending_queue_ref.set(null)
+          pending_queue_ref.set(null)
           return
         } else {
           nextQueueKey = normalQueneArray[0]
@@ -206,14 +210,14 @@ const Queue = {
             .child(nextQueueKey)
             .remove()
             .then(() => {
-              getters.pending_queue_ref.set(queue)
+              pending_queue_ref.set(queue)
             })
           if (callback) callback()
         }
       })
     },
-    clearPendingQueue({ getters }) {
-      getters.pending_queue_ref.set(null)
+    clearPendingQueue() {
+      pending_queue_ref.set(null)
     },
   },
 }

@@ -1,3 +1,6 @@
+import firebase from './firebase.js'
+
+const playing_state_ref = firebase.database().ref('playing_state')
 const transformURI2URL = uri => {
   if (typeof uri !== 'string') return ''
   const type = uri.split(':')[1]
@@ -96,38 +99,38 @@ const PlayingState = {
     },
   },
   actions: {
-    turnUp({ state, getters }) {
+    turnUp({ state }) {
       const addResult = state.volume + volumeStep
-      if (addResult <= 100) getters.playing_state_ref.update({ volume: addResult })
+      if (addResult <= 100) playing_state_ref.update({ volume: addResult })
     },
-    turnDown({ state, getters }) {
+    turnDown({ state }) {
       const reduceResult = state.volume - volumeStep
-      if (reduceResult >= state.minimal_volume) getters.playing_state_ref.update({ volume: reduceResult })
+      if (reduceResult >= state.minimal_volume) playing_state_ref.update({ volume: reduceResult })
     },
     reduceDislike({ state, getters }) {
       const reduceResult = state.dislike - 1
       if (reduceResult >= 0) {
-        getters.playing_state_ref.update({ dislike: reduceResult })
-        getters.playing_state_ref.child(`voted_users/${getters.userId}`).remove()
+        playing_state_ref.update({ dislike: reduceResult })
+        playing_state_ref.child(`voted_users/${getters.userId}`).remove()
       }
     },
     increaseDislike({ state, getters }) {
       const reduceResult = state.dislike + 1
       if (reduceResult <= state.dislike_threshold) {
-        getters.playing_state_ref.update({ dislike: reduceResult })
+        playing_state_ref.update({ dislike: reduceResult })
         const parameter = {}
         parameter[getters.userId] = true
-        getters.playing_state_ref.child('voted_users').update(parameter)
+        playing_state_ref.child('voted_users').update(parameter)
       }
     },
-    clearDislikeVote({ getters }) {
-      getters.playing_state_ref.child('dislike').set(0)
-      getters.playing_state_ref.child('voted_users').set(null)
+    clearDislikeVote() {
+      playing_state_ref.child('dislike').set(0)
+      playing_state_ref.child('voted_users').set(null)
     },
     adjustIsVoted({ state, getters }, snapshot) {
       if (getters.userId) state.isVoted = snapshot.hasChild(getters.userId)
     },
-    updatePlayingTrack({ getters }, newPlayingTrack) {
+    updatePlayingTrack(_context, newPlayingTrack) {
       const track = {
         name: newPlayingTrack.name,
         id: newPlayingTrack.id,
@@ -142,49 +145,49 @@ const PlayingState = {
           url: transformURI2URL(newPlayingTrack.album.uri),
         },
       }
-      getters.playing_state_ref.child('playing_track').set(track)
+      playing_state_ref.child('playing_track').set(track)
     },
-    updateTheLatestQueue({ getters }, newQueue) {
-      getters.playing_state_ref.child('latest_queue').set(newQueue)
+    updateTheLatestQueue(_context, newQueue) {
+      playing_state_ref.child('latest_queue').set(newQueue)
     },
-    clearPlayingTrack({ getters }) {
-      getters.playing_state_ref.update({ playing_track: initialTrack, latest_queue: initialQueue })
+    clearPlayingTrack() {
+      playing_state_ref.update({ playing_track: initialTrack, latest_queue: initialQueue })
     },
-    updateMinimalVolume({ getters }, value) {
-      getters.playing_state_ref.child('minimal_volume').set(value)
+    updateMinimalVolume(_context, value) {
+      playing_state_ref.child('minimal_volume').set(value)
     },
-    updateDislikeThreshold({ getters }, value) {
-      getters.playing_state_ref.child('dislike_threshold').set(value)
+    updateDislikeThreshold(_context, value) {
+      playing_state_ref.child('dislike_threshold').set(value)
     },
-    updateDislikeCountdown({ getters }, value) {
-      getters.playing_state_ref.child('dislike_countdown').set(value)
+    updateDislikeCountdown(_context, value) {
+      playing_state_ref.child('dislike_countdown').set(value)
     },
   },
 }
 
 function playingStateConnect2firebase(store) {
-  store.getters.playing_state_ref.child('volume').on('value', snapshot => {
+  playing_state_ref.child('volume').on('value', snapshot => {
     store.commit('adjustVolume', snapshot.val())
   })
-  store.getters.playing_state_ref.child('playing_track').on('value', snapshot => {
+  playing_state_ref.child('playing_track').on('value', snapshot => {
     store.commit('refreshPlayerTrack', snapshot.val())
   })
-  store.getters.playing_state_ref.child('latest_queue').on('value', snapshot => {
+  playing_state_ref.child('latest_queue').on('value', snapshot => {
     store.commit('refreshTheLatestQueue', snapshot.val())
   })
-  store.getters.playing_state_ref.child('dislike').on('value', snapshot => {
+  playing_state_ref.child('dislike').on('value', snapshot => {
     store.commit('adjustDislike', snapshot.val())
   })
-  store.getters.playing_state_ref.child('voted_users').on('value', snapshot => {
+  playing_state_ref.child('voted_users').on('value', snapshot => {
     store.dispatch('adjustIsVoted', snapshot)
   })
-  store.getters.playing_state_ref.child('minimal_volume').on('value', snapshot => {
+  playing_state_ref.child('minimal_volume').on('value', snapshot => {
     store.commit('adjustMinimalVolume', snapshot.val())
   })
-  store.getters.playing_state_ref.child('dislike_threshold').on('value', snapshot => {
+  playing_state_ref.child('dislike_threshold').on('value', snapshot => {
     store.commit('adjustDislikeThreshold', snapshot.val())
   })
-  store.getters.playing_state_ref.child('dislike_countdown').on('value', snapshot => {
+  playing_state_ref.child('dislike_countdown').on('value', snapshot => {
     store.commit('adjustDislikeCountdown', snapshot.val())
   })
 }
