@@ -1,9 +1,9 @@
 import firebase from './firebase.js'
 
-let userLog_ref
+let user_log_ref
 
 function setUserLogRef(roomKey) {
-  userLog_ref = firebase.database().ref(`user_log/${roomKey}`)
+  user_log_ref = firebase.database().ref(`user_log/${roomKey}`)
 }
 
 const UserLog = {
@@ -69,7 +69,7 @@ function userLogConnect2firebase(store) {
           if (recordVolumeLogTimer) clearTimeout(recordVolumeLogTimer)
           recordVolumeLogTimer = setTimeout(() => {
             userLog = { ...maker(action), option: { volume: state.PlayingState.volume } }
-            userLog_ref.push(userLog)
+            user_log_ref.push(userLog)
           }, 3000)
           return
 
@@ -94,11 +94,11 @@ function userLogConnect2firebase(store) {
         default:
           return
       }
-      userLog_ref.push(userLog)
+      user_log_ref.push(userLog)
     },
   })
 
-  userLog_ref.limitToLast(3).on('child_added', snapshot => {
+  user_log_ref.limitToLast(3).on('child_added', snapshot => {
     store.commit('pushUserLog', snapshot.val())
   })
 }
