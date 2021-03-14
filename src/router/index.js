@@ -70,12 +70,12 @@ router.beforeEach(async to => {
   }
 
   if (window.location.search.includes('?error=')) {
-    return { name: 'Doorscope' }
+    return { name: 'Lobby' }
   }
 
   if (to.meta.requiresAuth && !store.getters.isTokenValid) {
     console.log(store.getters.isTokenValid)
-    return { name: 'Doorscope' }
+    return { name: 'Lobby' }
   }
 })
 
