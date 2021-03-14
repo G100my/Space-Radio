@@ -1,6 +1,11 @@
 import firebase from './firebase.js'
 
-const playing_state_ref = firebase.database().ref('playing_state')
+let playing_state_ref
+
+function setPlayingStateRef(roomKey) {
+  playing_state_ref = firebase.database().ref(`${roomKey}/playing_state`)
+}
+
 const transformURI2URL = uri => {
   if (typeof uri !== 'string') return ''
   const type = uri.split(':')[1]
@@ -192,4 +197,4 @@ function playingStateConnect2firebase(store) {
   })
 }
 
-export { PlayingState, playingStateConnect2firebase }
+export { PlayingState, playingStateConnect2firebase, setPlayingStateRef }

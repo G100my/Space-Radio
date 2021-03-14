@@ -6,6 +6,10 @@ import CreateRoom from '../views/CreateRoom.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
+import { setPlayingStateRef } from '../store/PlayingState.js'
+import { setUserLogRef } from '../store/UserLog.js'
+import { setQueueRef } from '../store/Queue.js'
+
 const routes = [
   {
     path: '/',
@@ -24,6 +28,12 @@ const routes = [
     name: 'Room',
     component: Room,
     meta: { requiresAuth: true },
+    beforeEnter: () => {
+      const roomKey = localStorage.getItem('jukebox_room_key')
+      setPlayingStateRef(roomKey)
+      setUserLogRef(roomKey)
+      setQueueRef(roomKey)
+    },
   },
   {
     path: '/create',

@@ -1,6 +1,10 @@
 import firebase from './firebase.js'
 
-const userLog_ref = firebase.database().ref('user_log')
+let userLog_ref
+
+function setUserLogRef(roomKey) {
+  userLog_ref = firebase.database().ref(`user_log/${roomKey}`)
+}
 
 const UserLog = {
   state: {
@@ -99,4 +103,4 @@ function userLogConnect2firebase(store) {
   })
 }
 
-export { UserLog, userLogConnect2firebase }
+export { UserLog, userLogConnect2firebase, setUserLogRef }

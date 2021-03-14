@@ -1,9 +1,15 @@
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 import firebase from './firebase.js'
 
-const urgent_queue_ref = firebase.database().ref('urgent_queue')
-const normal_queue_ref = firebase.database().ref('normal_queue')
-const pending_queue_ref = firebase.database().ref('pending_queue')
+let urgent_queue_ref
+let normal_queue_ref
+let pending_queue_ref
+
+function setQueueRef(roomKey) {
+  urgent_queue_ref = firebase.database().ref(`${roomKey}/urgent_queue`)
+  normal_queue_ref = firebase.database().ref(`${roomKey}/normal_queue`)
+  pending_queue_ref = firebase.database().ref(`${roomKey}/pending_queue`)
+}
 
 function bindListener(target, storeTarget, store) {
   target.on('child_removed', oldChildSnapshot => {
@@ -222,4 +228,4 @@ const Queue = {
   },
 }
 
-export { Queue, queueConnect2firebase }
+export { Queue, queueConnect2firebase, setQueueRef }
