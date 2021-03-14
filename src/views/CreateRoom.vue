@@ -12,8 +12,8 @@
       </p>
       <p class="room-name">
         <label for="room-name">Room name : </label>
-        <input id="room-name" v-model="roomName" type="text" maxlength="50" />
-        <span :class="{ active: hasSameRoomName }" class="warnning">already has room name: {{ roomName }}</span>
+        <input id="room-name" v-model="roomName" type="text" maxlength="50" autocomplete="off" />
+        <span :class="{ active: errorMessage }" class="warnning">{{ errorMessage }}</span>
       </p>
       <p>
         <label for="init-volume"
@@ -65,9 +65,17 @@ export default {
     hasSameRoomName() {
       return this.roomNameArray.includes(this.roomName)
     },
+    errorMessage() {
+      if (this.hasSameRoomName) {
+        return `already has room name: ${this.roomName}`
+      } else if (this.roomName === '') {
+        return `please enter your room name`
+      } else {
+        return false
+      }
+    },
   },
   created() {
-    this.roomName = this.userName + "'s Jukebox"
     firebase.database().ref('room_list').on('value', this.roomListOnHandler)
   },
   methods: {
