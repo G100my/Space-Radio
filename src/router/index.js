@@ -24,10 +24,6 @@ const routes = [
     name: 'Room',
     component: Room,
     meta: { requiresAuth: true },
-    beforeEnter: () => {
-      const roomKey = localStorage.getItem('jukebox_room_key')
-      store.commit('setRootRef', roomKey)
-    },
   },
   {
     path: '/create',
