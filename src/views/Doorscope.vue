@@ -188,11 +188,10 @@ export default {
     padding: 15px;
   }
   .cover {
-    height: fit-content;
-    max-width: 27vh;
+    height: 25vh;
+    width: 25vh;
     font-size: 0;
     position: relative;
-    // transform: skewX(-3deg) rotateY(10deg);
     filter: drop-shadow(15px 15px 8px black);
 
     img {
@@ -376,6 +375,7 @@ export default {
       margin-top: 45px;
       flex-direction: row;
       flex-flow: wrap;
+      justify-content: center;
     }
     .room-info {
       flex: 1 1 auto;
@@ -385,7 +385,8 @@ export default {
       padding-right: 80px;
     }
     .cover {
-      max-width: 350px;
+      height: 300px;
+      width: 300px;
     }
     .track-info {
       grid-template-columns: minmax(auto, 1fr) 2fr;
