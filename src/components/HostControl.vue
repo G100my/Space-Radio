@@ -111,8 +111,8 @@ export default {
     pendingQueue(nextQueue) {
       if (nextQueue && nextQueue.note) {
         const note = nextQueue.note
-        const messageOutput4TTS = messageOutputMaker(note, nextQueue.track_name)
-
+        let messageOutput4TTS = messageOutputMaker(note, nextQueue.track_name)
+        messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
         this.$store.dispatch('updateTheLatestQueue', nextQueue)
 
         this.reducePlayerVolume()
