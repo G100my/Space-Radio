@@ -1,3 +1,5 @@
+import { resumePlayerVolume } from '../composables/useSpotifyPlayer.js'
+
 const utterance = new window.SpeechSynthesisUtterance()
 utterance.pitch = 1
 utterance.rate = 0.85
@@ -12,6 +14,14 @@ function setTTSVoice() {
 speechSynthesis.onvoiceschanged = () => {
   if (!utterance.voice) setTTSVoice()
 }
+utterance.onerror = error => {
+  console.log('utterance error: ', error)
+  resumePlayerVolume()
+}
+utterance.onend = () => {
+  console.log('utterance end')
+  resumePlayerVolume()
+}
 
 function TTS(text) {
   if (utterance.voice === null) setTTSVoice()
@@ -19,15 +29,4 @@ function TTS(text) {
   speechSynthesis.speak(utterance)
 }
 
-function setTTScallback(callback) {
-  utterance.onerror = error => {
-    console.log('utterance error: ', error)
-    callback()
-  }
-  utterance.onend = () => {
-    console.log('utterance end')
-    callback()
-  }
-}
-
-export { TTS, setTTScallback }
+export { TTS }
