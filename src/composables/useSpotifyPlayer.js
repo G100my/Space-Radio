@@ -4,7 +4,7 @@ import { refreshAccessToken } from '../utility/PKCE.js'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
 import { TTS } from '../utility/tts.js'
 
-let player
+let spotifyPlayer
 const pendingQueue = computed(() => store.getters.pendingQueue)
 const currentVolume = computed(() => store.getters.currentVolume)
 const isTokenValid = computed(() => store.getters.isTokenValid)
@@ -51,7 +51,7 @@ function reducePlayerVolume() {
 
     const timer = setInterval(() => {
       const afterStep = playerVolume - step
-      player.setVolume(afterStep / 100)
+      spotifyPlayer.setVolume(afterStep / 100)
       if (afterStep < currentMinimalVolume.value) {
         clearInterval(timer)
         success()
@@ -67,7 +67,7 @@ function resumePlayerVolume() {
 
     const timer = setInterval(() => {
       const afterStep = playerVolume + step
-      player.setVolume(afterStep / 100)
+      spotifyPlayer.setVolume(afterStep / 100)
       if (afterStep > recodeVolume) {
         clearInterval(timer)
         playerVolume = recodeVolume
@@ -90,7 +90,7 @@ function nextTrack(minimalVolume) {
     if (position === 0) counter++
     // 觀察 state 行為，第二次 position == 0 的 state 發生後才會撥放
     if (counter >= 2) {
-      player.removeListener('player_state_changed', secondPositionStateHandler)
+      spotifyPlayer.removeListener('player_state_changed', secondPositionStateHandler)
       resumePlayerVolume()
         .then(() => {
           minimalVolume = minimalVolumeBackup
@@ -104,11 +104,11 @@ function nextTrack(minimalVolume) {
     store.dispatch('sendNextQueue', () => {
       // 神秘的 reason 參數，並沒有出現在文件，
       // 但是不給會有 error: parameter 'reason' is required
-      player
+      spotifyPlayer
         .nextTrack('just wanna listen next one')
         .then(() => {
           console.log('Skipped to next track!')
-          player.addListener('player_state_changed', secondPositionStateHandler)
+          spotifyPlayer.addListener('player_state_changed', secondPositionStateHandler)
         })
         .catch(error => console.error(error))
     })
@@ -116,7 +116,7 @@ function nextTrack(minimalVolume) {
 }
 
 window.onSpotifyWebPlaybackSDKReady = () => {
-  player = new window.Spotify.Player({
+  spotifyPlayer = new window.Spotify.Player({
     name: 'Jukebox player',
     volume: currentVolume.value / 100,
     getOAuthToken: callback => {
@@ -131,13 +131,13 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   })
   const eventArray = ['initialization_error', 'account_error', 'playback_error', 'authentication_error', 'not_ready']
   eventArray.forEach(event => {
-    player.addListener(event, message => {
+    spotifyPlayer.addListener(event, message => {
       console.log(event, message)
     })
   })
 
   // Ready
-  player.addListener('ready', ({ device_id }) => {
+  spotifyPlayer.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id)
     deviceId.value = device_id
     // 把目前 host 帳號可能在其他地方播放的音樂轉移到 player，並且直接撥放
@@ -152,8 +152,8 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     watch(currentVolume, newValue => {
       console.log('currentVolume')
       playerVolume = newValue
-      console.log(player)
-      if (player !== null) player.setVolume(newValue / 100)
+      console.log(spotifyPlayer)
+      if (spotifyPlayer !== null) spotifyPlayer.setVolume(newValue / 100)
     })
   })
 
@@ -162,12 +162,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     if (pendingQueue.value) {
       if (state.track_window.next_tracks[0].id !== pendingQueue.value.id) store.dispatch('clearPendingQueue')
     }
-    player.removeListener('player_state_changed', checkPending)
+    spotifyPlayer.removeListener('player_state_changed', checkPending)
   }
-  player.addListener('player_state_changed', checkPending)
+  spotifyPlayer.addListener('player_state_changed', checkPending)
 
   // Playback status updates
-  player.addListener('player_state_changed', playerState => {
+  spotifyPlayer.addListener('player_state_changed', playerState => {
     console.log(playerState)
     // 當不是這個裝置撥放時，斷開連結
     if (playerState === null) {
@@ -215,15 +215,15 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     }
   })
 
-  player.connect()
+  spotifyPlayer.connect()
 }
 
 window.onbeforeunload = () => {
   store.dispatch('clearPlayingTrack')
   store.dispatch('clearPendingQueue')
-  if (deviceActived.value) player.disconnect()
+  if (deviceActived.value) spotifyPlayer.disconnect()
 }
 
 import('../utility/spotify-player-SDK.js')
 
-export { player, deviceActived, resumePlayerVolume, reducePlayerVolume, nextTrack, paused, deviceId }
+export { spotifyPlayer, deviceActived, resumePlayerVolume, reducePlayerVolume, nextTrack, paused, deviceId }
