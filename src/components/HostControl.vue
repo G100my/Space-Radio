@@ -1,6 +1,6 @@
 <template>
   <div class="main-control">
-    <button class="play-button" type="button" @click="togglePlay">
+    <button class="play-button" type="button" :disabled="currentActiveDeviceId !== spotifyPlayerId" @click="togglePlay">
       <svg
         v-show="isSpotifyPlayerPaused"
         xmlns="http://www.w3.org/2000/svg"
@@ -45,8 +45,8 @@
       </p>
       <p>
         <label for="">Available Devices:</label>
-        <select :value="currentActiveDeviceId" @change="ChangeSelectValueHandler">
-          <option v-for="device in availableDevice" :key="device.id" :value="device.id">{{ device.name }}</option>
+        <select v-model="selectedDeviceId">
+          <option v-for="device in availableDevices" :key="device.id" :value="device.id">{{ device.name }}</option>
         </select>
       </p>
       <p class="buttons">
@@ -70,7 +70,13 @@
 <script>
 import { ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
-import { spotifyPlayer, nextTrack, isSpotifyPlayerPaused, deviceActived } from '../composables/useSpotifyPlayer.js'
+import {
+  spotifyPlayer,
+  nextTrack,
+  isSpotifyPlayerPaused,
+  isSpotifyPlayerActived,
+  spotifyPlayerId,
+} from '../composables/useSpotifyPlayer.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
 export default {
@@ -89,7 +95,8 @@ export default {
     let dislikeCountdownTimer
 
     const isShowMinimalControlBoard = ref(false)
-    const availableDevice = ref([])
+    const availableDevices = ref([])
+    const selectedDeviceId = ref(null)
     const currentActiveDeviceId = ref(null)
     const currentActiveDeviceName = ref(null)
 
@@ -118,6 +125,7 @@ export default {
       if (!result) return
       currentActiveDeviceId.value = result.device.id
       currentActiveDeviceName.value = result.device.name
+      selectedDeviceId.value = result.device.id
     })
 
     function togglePlay() {
@@ -127,7 +135,7 @@ export default {
       isShowMinimalControlBoard.value = !isShowMinimalControlBoard.value
       if (isShowMinimalControlBoard.value === true) {
         spotifyAPI.getMyDevices().then(result => {
-          availableDevice.value = result.devices
+          availableDevices.value = result.devices
         })
       }
     }
@@ -148,21 +156,21 @@ export default {
       minimalVolumeInput.value = minimalVolume
       dislikeThresholdInput.value = dislikeThreshold
     }
-    function ChangeSelectValueHandler(event) {
-      currentActiveDeviceId.value = event.target.value
-      availableDevice.value.forEach(item => {
+    function transfer2targetDeviceHandler() {
+      currentActiveDeviceId.value = selectedDeviceId.value
+      availableDevices.value.forEach(item => {
         if (item.id === currentActiveDeviceId.value) {
           currentActiveDeviceName.value = item.name
+          return
         }
       })
-    }
-    function transfer2targetDeviceHandler() {
       spotifyAPI.transferMyPlayback([currentActiveDeviceId.value], { play: true }, error => {
         error && console.log(error.response)
         if (!error) {
-          deviceActived.value = true
+          isSpotifyPlayerActived.value = true
         }
       })
+      isShowMinimalControlBoard.value = false
     }
 
     return {
@@ -170,19 +178,20 @@ export default {
       dislikeThresholdInput,
 
       isSpotifyPlayerPaused,
+      spotifyPlayerId,
+      selectedDeviceId,
       currentActiveDeviceId,
       currentActiveDeviceName,
       isShowMinimalControlBoard,
       currentMinimalVolume,
       currentDislikeThreshold,
-      availableDevice,
+      availableDevices,
 
       togglePlay,
       openSettingHandler,
       submitHandler,
       resetHandler,
       transfer2targetDeviceHandler,
-      ChangeSelectValueHandler,
     }
   },
 }
@@ -202,6 +211,9 @@ export default {
     font-size: 0;
     color: var(--primary-neutral);
     width: 100%;
+  }
+  .play-button:disabled {
+    color: var(--ignore);
   }
   .setting-button {
     transition: color 0.3s ease-in;
