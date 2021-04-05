@@ -3,7 +3,7 @@ import store from '../store'
 import { spotifyAPI as $spotifyAPI } from '../plugin/spotify-web-api.js'
 import { refreshAccessToken } from '../utility/PKCE.js'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
-import { TTS } from '../composables/useUtterance.js'
+import { TTS } from '../utility/tts.js'
 
 let player
 const pendingQueue = computed(() => store.getters.pendingQueue)
