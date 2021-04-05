@@ -1,6 +1,5 @@
 import { ref, computed, watch } from 'vue'
 import store from '../store'
-import { spotifyAPI as $spotifyAPI } from '../plugin/spotify-web-api.js'
 import { refreshAccessToken } from '../utility/PKCE.js'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
 import { TTS } from '../utility/tts.js'
@@ -14,18 +13,18 @@ const token = computed(() => store.getters.token)
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
 
 const paused = ref(true)
+const deviceId = ref(null)
+const deviceActived = ref(false)
 
 let positionStateCounter = 0
 const executeBeforeEndTime = 10000
 let coundDownTimer
-let deviceId
-let deviceActived = false
 let playerVolume = 50
 let recodeVolume
-const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
-const adjustExecuteTimes = computed(() => adjustProcessTime / adjustStepTime)
 let adjustProcessTime = 5000
 let adjustStepTime = 100
+const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
+const adjustExecuteTimes = computed(() => adjustProcessTime / adjustStepTime)
 
 watch(pendingQueue, nextQueue => {
   if (nextQueue && nextQueue.note) {
@@ -44,9 +43,6 @@ watch(pendingQueue, nextQueue => {
   }
 })
 
-function togglePlay() {
-  player.togglePlay(deviceId).then(() => console.log('toggle play'))
-}
 function reducePlayerVolume() {
   return new Promise(success => {
     recodeVolume = playerVolume
@@ -143,7 +139,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   // Ready
   player.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id)
-    deviceId = device_id
+    deviceId.value = device_id
     // 把目前 host 帳號可能在其他地方播放的音樂轉移到 player，並且直接撥放
     // $spotifyAPI.transferMyPlayback([deviceId.value], { play: false }, error => {
     //   error && console.log(error.response)
@@ -174,12 +170,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   player.addListener('player_state_changed', playerState => {
     console.log(playerState)
     // 當不是這個裝置撥放時，斷開連結
-    // if (playerState === null) {
-    //   deviceActived.value = false
-    //   paused.value = true
-    //   store.dispatch('clearPlayingTrack')
-    //   return
-    // }
+    if (playerState === null) {
+      deviceActived.value = false
+      paused.value = true
+      store.dispatch('clearPlayingTrack')
+      return
+    }
 
     paused.value = playerState.paused
 
@@ -225,9 +221,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 window.onbeforeunload = () => {
   store.dispatch('clearPlayingTrack')
   store.dispatch('clearPendingQueue')
-  if (deviceActived) player.disconnect()
+  if (deviceActived.value) player.disconnect()
 }
 
 import('../utility/spotify-player-SDK.js')
 
-export { player, togglePlay, deviceActived, resumePlayerVolume, reducePlayerVolume, nextTrack, paused }
+export { player, deviceActived, resumePlayerVolume, reducePlayerVolume, nextTrack, paused, deviceId }
