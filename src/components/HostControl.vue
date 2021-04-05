@@ -110,6 +110,7 @@ export default {
         dislikeThreshold = editedDislikeThreshold
         store.dispatch('updateDislikeThreshold', dislikeThreshold)
       }
+      isShowMinimalControlBoard.value = false
     }
     function resetHandler() {
       minimalVolumeInput.value = minimalVolume
