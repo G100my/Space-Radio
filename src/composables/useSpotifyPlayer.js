@@ -173,13 +173,13 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   // Playback status updates
   player.addListener('player_state_changed', playerState => {
     console.log(playerState)
-    // 斷開連結
-    if (playerState === null) {
-      deviceActived = false
-      paused.value = true
-      store.dispatch('clearPlayingTrack')
-      return
-    }
+    // 當不是這個裝置撥放時，斷開連結
+    // if (playerState === null) {
+    //   deviceActived.value = false
+    //   paused.value = true
+    //   store.dispatch('clearPlayingTrack')
+    //   return
+    // }
 
     paused.value = playerState.paused
 
