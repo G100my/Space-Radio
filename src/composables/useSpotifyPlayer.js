@@ -1,7 +1,9 @@
 import { ref, computed, watch } from 'vue'
+import store from '../store'
 import { spotifyAPI as $spotifyAPI } from '../plugin/spotify-web-api.js'
 import { refreshAccessToken } from '../utility/PKCE.js'
-import store from '../store'
+import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+import { TTS } from '../composables/useUtterance.js'
 
 let player
 const pendingQueue = computed(() => store.getters.pendingQueue)
@@ -24,6 +26,23 @@ const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
 const adjustExecuteTimes = computed(() => adjustProcessTime / adjustStepTime)
 let adjustProcessTime = 5000
 let adjustStepTime = 100
+
+watch(pendingQueue, nextQueue => {
+  if (nextQueue && nextQueue.note) {
+    const note = nextQueue.note
+    let messageOutput4TTS = messageOutputMaker(note, nextQueue.track_name)
+    messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
+    store.dispatch('updateTheLatestQueue', nextQueue)
+
+    reducePlayerVolume()
+      .then(() => {
+        TTS(messageOutput4TTS)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+})
 
 function togglePlay() {
   player.togglePlay(deviceId).then(() => console.log('toggle play'))
@@ -200,6 +219,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   })
 
   player.connect()
+}
+
+window.onbeforeunload = () => {
+  store.dispatch('clearPlayingTrack')
+  store.dispatch('clearPendingQueue')
+  if (deviceActived) player.disconnect()
 }
 
 import('../utility/spotify-player-SDK.js')

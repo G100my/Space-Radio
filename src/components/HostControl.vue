@@ -58,18 +58,7 @@
 <script>
 import { ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
-
-import { messageOutputMaker } from '../utility/messageOutputMaker.js'
-import { utterance, setTTSVoice } from '../composables/useUtterance.js'
-import {
-  player,
-  togglePlay,
-  deviceActived,
-  resumePlayerVolume,
-  reducePlayerVolume,
-  nextTrack,
-  paused,
-} from '../composables/useSpotifyPlayer.js'
+import { togglePlay, nextTrack, paused } from '../composables/useSpotifyPlayer.js'
 
 export default {
   setup() {
@@ -77,7 +66,6 @@ export default {
     const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
     const currentDislike = computed(() => store.getters.currentDislike)
     const currentDislikeThreshold = computed(() => store.getters.currentDislikeThreshold)
-    const pendingQueue = computed(() => store.getters.pendingQueue)
 
     // DOM element ref
     const dislikeThresholdInput = ref(null)
@@ -88,43 +76,6 @@ export default {
     let dislikeCountdownTimer
 
     const isShowMinimalControlBoard = ref(false)
-
-    window.onbeforeunload = () => {
-      store.dispatch('clearPlayingTrack')
-      store.dispatch('clearPendingQueue')
-      if (deviceActived) player.disconnect()
-    }
-
-    utterance.onerror = error => {
-      console.log('utterance error: ', error)
-      resumePlayerVolume()
-    }
-    utterance.onend = () => {
-      console.log('utterance end')
-      resumePlayerVolume()
-    }
-    function TTS(text) {
-      if (utterance.voice === null) setTTSVoice()
-      utterance.text = text
-      speechSynthesis.speak(utterance)
-    }
-
-    watch(pendingQueue, nextQueue => {
-      if (nextQueue && nextQueue.note) {
-        const note = nextQueue.note
-        let messageOutput4TTS = messageOutputMaker(note, nextQueue.track_name)
-        messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
-        store.dispatch('updateTheLatestQueue', nextQueue)
-
-        reducePlayerVolume()
-          .then(() => {
-            TTS(messageOutput4TTS)
-          })
-          .catch(error => {
-            console.error(error)
-          })
-      }
-    })
 
     watch(currentDislike, newValue => {
       if (dislikeCountdownTimer && newValue < dislikeThreshold) {
@@ -166,8 +117,6 @@ export default {
     }
 
     return {
-      deviceActived,
-      player,
       togglePlay,
       paused,
       isShowMinimalControlBoard,
