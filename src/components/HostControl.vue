@@ -61,6 +61,7 @@ import { useStore } from 'vuex'
 import { spotifyAPI as $spotifyAPI } from '../plugin/spotify-web-api.js'
 import { refreshAccessToken } from '../utility/PKCE.js'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+import { utterance, setTTSVoice } from '../composables/useUtterance.js'
 
 export default {
   setup() {
@@ -211,11 +212,6 @@ export default {
 
     import('../utility/spotify-player-SDK.js')
 
-    const utterance = new window.SpeechSynthesisUtterance()
-    utterance.pitch = 1
-    utterance.rate = 1
-    utterance.volume = 1
-    utterance.lang = 'zh-TW'
     utterance.onerror = error => {
       console.log('utterance error: ', error)
       resumePlayerVolume()
@@ -224,9 +220,10 @@ export default {
       console.log('utterance end')
       resumePlayerVolume()
     }
-
-    speechSynthesis.onvoiceschanged = () => {
-      if (!utterance.voice) setTTSVoice()
+    function TTS(text) {
+      if (utterance.voice === null) setTTSVoice()
+      utterance.text = text
+      speechSynthesis.speak(utterance)
     }
 
     const pendingQueue = computed(() => store.getters.pendingQueue)
@@ -270,17 +267,6 @@ export default {
       }
     })
 
-    function setTTSVoice() {
-      const voice = speechSynthesis
-        .getVoices()
-        .find(item => item.name.includes('Google') && item.lang.includes('zh-TW'))
-      if (voice !== null) utterance.voice = voice
-    }
-    function TTS(text) {
-      if (utterance.voice === null) setTTSVoice()
-      utterance.text = text
-      speechSynthesis.speak(utterance)
-    }
     function reducePlayerVolume() {
       return new Promise(success => {
         recodeVolume = playerVolume
