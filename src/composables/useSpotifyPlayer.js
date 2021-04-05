@@ -103,6 +103,10 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       }
     }
   }
+  function updateProgressTimeHandler(playerState) {
+    const { timestamp, duration, position } = playerState
+    if (position !== 0) store.dispatch('updateProgress', { timestamp, duration, position })
+  }
   // Playback status updates
   spotifyPlayer.addListener('player_state_changed', playerState => {
     console.log(playerState)
@@ -117,6 +121,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
     clearPendingQueueHandler(playerState)
     setNextQueueTimeout(playerState)
+    updateProgressTimeHandler(playerState)
   })
   spotifyPlayer.connect()
 }

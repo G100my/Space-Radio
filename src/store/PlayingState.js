@@ -45,6 +45,11 @@ const PlayingState = {
     dislike_threshold: 2,
     dislike_countdown: false,
     isVoted: false,
+    playing_progress: {
+      timestamp: 0,
+      duration: 0,
+      position: 0,
+    },
   },
   getters: {
     playerPlayingTrackId(state) {
@@ -74,6 +79,9 @@ const PlayingState = {
     currentDislikeCountdown(state) {
       return state.dislike_countdown
     },
+    currentProgress(state) {
+      return state.playing_progress
+    },
     latestQueue(state) {
       return state.latest_queue
     },
@@ -86,6 +94,9 @@ const PlayingState = {
     refreshTheLatestQueue(state, newLatestQueue) {
       if (newLatestQueue === null) state.latest_queue = { ...initialQueue }
       else state.latest_queue = newLatestQueue
+    },
+    refreshProgress(state, newProgress) {
+      state.playing_progress = newProgress
     },
     adjustVolume(state, value) {
       state.volume = value
@@ -167,6 +178,9 @@ const PlayingState = {
     updateDislikeCountdown(_context, value) {
       playing_state_ref.child('dislike_countdown').set(value)
     },
+    updateProgress(_context, value) {
+      playing_state_ref.child('playing_progress').set(value)
+    },
   },
 }
 
@@ -179,6 +193,9 @@ function playingStateConnect2firebase(store) {
   })
   playing_state_ref.child('latest_queue').on('value', snapshot => {
     store.commit('refreshTheLatestQueue', snapshot.val())
+  })
+  playing_state_ref.child('playing_progress').on('value', snapshot => {
+    store.commit('refreshProgress', snapshot.val())
   })
   playing_state_ref.child('dislike').on('value', snapshot => {
     store.commit('adjustDislike', snapshot.val())
