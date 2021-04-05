@@ -13,8 +13,8 @@ const token = computed(() => store.getters.token)
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
 
 const isSpotifyPlayerPaused = ref(true)
-const deviceId = ref(null)
-const deviceActived = ref(false)
+const spotifyPlayerId = ref(null)
+const isSpotifyPlayerActived = ref(false)
 
 let positionStateCounter = 0
 const executeBeforeEndTime = 10000
@@ -139,7 +139,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   // Ready
   spotifyPlayer.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id)
-    deviceId.value = device_id
+    spotifyPlayerId.value = device_id
     // 把目前 host 帳號可能在其他地方播放的音樂轉移到 player，並且直接撥放
     // $spotifyAPI.transferMyPlayback([deviceId.value], { play: false }, error => {
     //   error && console.log(error.response)
@@ -171,7 +171,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     console.log(playerState)
     // 當不是這個裝置撥放時，斷開連結
     if (playerState === null) {
-      deviceActived.value = false
+      isSpotifyPlayerActived.value = false
       isSpotifyPlayerPaused.value = true
       store.dispatch('clearPlayingTrack')
       return
@@ -221,17 +221,17 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 window.onbeforeunload = () => {
   store.dispatch('clearPlayingTrack')
   store.dispatch('clearPendingQueue')
-  if (deviceActived.value) spotifyPlayer.disconnect()
+  if (isSpotifyPlayerActived.value) spotifyPlayer.disconnect()
 }
 
 import('../utility/spotify-player-SDK.js')
 
 export {
   spotifyPlayer,
-  deviceActived,
+  isSpotifyPlayerActived,
   resumePlayerVolume,
   reducePlayerVolume,
   nextTrack,
   isSpotifyPlayerPaused,
-  deviceId,
+  spotifyPlayerId,
 }
