@@ -12,7 +12,7 @@ const leftQueueAmount = computed(() => store.getters.leftQueueAmount)
 const token = computed(() => store.getters.token)
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
 
-const paused = ref(true)
+const isSpotifyPlayerPaused = ref(true)
 const deviceId = ref(null)
 const deviceActived = ref(false)
 
@@ -172,12 +172,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     // 當不是這個裝置撥放時，斷開連結
     if (playerState === null) {
       deviceActived.value = false
-      paused.value = true
+      isSpotifyPlayerPaused.value = true
       store.dispatch('clearPlayingTrack')
       return
     }
 
-    paused.value = playerState.paused
+    isSpotifyPlayerPaused.value = playerState.paused
 
     const currentNoteId = playerState.track_window.current_track.id
 
@@ -226,4 +226,12 @@ window.onbeforeunload = () => {
 
 import('../utility/spotify-player-SDK.js')
 
-export { spotifyPlayer, deviceActived, resumePlayerVolume, reducePlayerVolume, nextTrack, paused, deviceId }
+export {
+  spotifyPlayer,
+  deviceActived,
+  resumePlayerVolume,
+  reducePlayerVolume,
+  nextTrack,
+  isSpotifyPlayerPaused,
+  deviceId,
+}

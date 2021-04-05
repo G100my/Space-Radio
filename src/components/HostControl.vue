@@ -2,7 +2,7 @@
   <div class="main-control">
     <button class="play-button" type="button" @click="togglePlay">
       <svg
-        v-show="paused"
+        v-show="isSpotifyPlayerPaused"
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
         class="bi bi-play-fill"
@@ -13,7 +13,7 @@
         />
       </svg>
       <svg
-        v-show="!paused"
+        v-show="!isSpotifyPlayerPaused"
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
         class="bi bi-pause-fill"
@@ -70,7 +70,7 @@
 <script>
 import { ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
-import { nextTrack, paused, deviceActived } from '../composables/useSpotifyPlayer.js'
+import { nextTrack, isSpotifyPlayerPaused, deviceActived } from '../composables/useSpotifyPlayer.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
 export default {
@@ -169,7 +169,7 @@ export default {
       minimalVolumeInput,
       dislikeThresholdInput,
 
-      paused,
+      isSpotifyPlayerPaused,
       currentActiveDeviceId,
       currentActiveDeviceName,
       isShowMinimalControlBoard,
