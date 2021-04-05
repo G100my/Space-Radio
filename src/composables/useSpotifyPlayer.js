@@ -145,12 +145,13 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     console.log('Ready with Device ID', device_id)
     deviceId = device_id
     // 把目前 host 帳號可能在其他地方播放的音樂轉移到 player，並且直接撥放
-    $spotifyAPI.transferMyPlayback([deviceId], { play: false }, error => {
-      error && console.log(error.response)
-      if (!error) {
-        deviceActived = true
-      }
-    })
+    // $spotifyAPI.transferMyPlayback([deviceId.value], { play: false }, error => {
+    //   error && console.log(error.response)
+    //   if (!error) {
+    //     deviceActived.value = true
+    //   }
+    // })
+
     // 等 player 準備完成才 watch playerVolume
     watch(currentVolume, newValue => {
       console.log('currentVolume')
