@@ -70,7 +70,7 @@
 <script>
 import { ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
-import { nextTrack, isSpotifyPlayerPaused, deviceActived } from '../composables/useSpotifyPlayer.js'
+import { spotifyPlayer, nextTrack, isSpotifyPlayerPaused, deviceActived } from '../composables/useSpotifyPlayer.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
 export default {
@@ -121,7 +121,7 @@ export default {
     })
 
     function togglePlay() {
-      spotifyAPI.play()
+      spotifyPlayer.togglePlay()
     }
     function openSettingHandler() {
       isShowMinimalControlBoard.value = !isShowMinimalControlBoard.value
