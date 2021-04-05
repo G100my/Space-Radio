@@ -28,7 +28,7 @@
       class="setting-button"
       type="button"
       :class="{ active: isShowMinimalControlBoard }"
-      @click="isShowMinimalControlBoard = !isShowMinimalControlBoard"
+      @click="openSettingHandler"
     >
       <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
         <path
@@ -41,11 +41,23 @@
     </button>
     <div v-show="isShowMinimalControlBoard" class="minimal-control">
       <p>
-        <span>Minimal volume:</span>
+        <label>Current Device: </label><span>{{ currentActiveDeviceName }}</span>
+      </p>
+      <p>
+        <label for="">Available Devices:</label>
+        <select :value="currentActiveDeviceId" @change="ChangeSelectValueHandler">
+          <option v-for="device in availableDevice" :key="device.id" :value="device.id">{{ device.name }}</option>
+        </select>
+      </p>
+      <p class="buttons">
+        <button type="button" @click="transfer2targetDeviceHandler">transfer to target device</button>
+      </p>
+      <p>
+        <label>Minimal volume:</label>
         <input ref="minimalVolumeInput" :value="currentMinimalVolume" type="number" step="2" min="10" max="50" />
       </p>
       <p>
-        <span>Dislike vote threshold:</span>
+        <label>Dislike vote threshold:</label>
         <input ref="dislikeThresholdInput" :value="currentDislikeThreshold" type="number" min="2" max="5" />
       </p>
       <div class="buttons">
@@ -58,7 +70,8 @@
 <script>
 import { ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
-import { togglePlay, nextTrack, paused } from '../composables/useSpotifyPlayer.js'
+import { nextTrack, paused, deviceActived } from '../composables/useSpotifyPlayer.js'
+import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
 export default {
   setup() {
@@ -76,6 +89,9 @@ export default {
     let dislikeCountdownTimer
 
     const isShowMinimalControlBoard = ref(false)
+    const availableDevice = ref([])
+    const currentActiveDeviceId = ref(null)
+    const currentActiveDeviceName = ref(null)
 
     watch(currentDislike, newValue => {
       if (dislikeCountdownTimer && newValue < dislikeThreshold) {
@@ -98,7 +114,23 @@ export default {
         }, 1000)
       }
     })
+    spotifyAPI.getMyCurrentPlaybackState().then(result => {
+      if (!result) return
+      currentActiveDeviceId.value = result.device.id
+      currentActiveDeviceName.value = result.device.name
+    })
 
+    function togglePlay() {
+      spotifyAPI.play()
+    }
+    function openSettingHandler() {
+      isShowMinimalControlBoard.value = !isShowMinimalControlBoard.value
+      if (isShowMinimalControlBoard.value === true) {
+        spotifyAPI.getMyDevices().then(result => {
+          availableDevice.value = result.devices
+        })
+      }
+    }
     function submitHandler() {
       const editedMinimalVolume = Number.parseInt(minimalVolumeInput.value.value)
       if (minimalVolume !== editedMinimalVolume) {
@@ -116,17 +148,41 @@ export default {
       minimalVolumeInput.value = minimalVolume
       dislikeThresholdInput.value = dislikeThreshold
     }
+    function ChangeSelectValueHandler(event) {
+      currentActiveDeviceId.value = event.target.value
+      availableDevice.value.forEach(item => {
+        if (item.id === currentActiveDeviceId.value) {
+          currentActiveDeviceName.value = item.name
+        }
+      })
+    }
+    function transfer2targetDeviceHandler() {
+      spotifyAPI.transferMyPlayback([currentActiveDeviceId.value], { play: true }, error => {
+        error && console.log(error.response)
+        if (!error) {
+          deviceActived.value = true
+        }
+      })
+    }
 
     return {
-      togglePlay,
+      minimalVolumeInput,
+      dislikeThresholdInput,
+
       paused,
+      currentActiveDeviceId,
+      currentActiveDeviceName,
       isShowMinimalControlBoard,
       currentMinimalVolume,
       currentDislikeThreshold,
+      availableDevice,
+
+      togglePlay,
+      openSettingHandler,
       submitHandler,
       resetHandler,
-      minimalVolumeInput,
-      dislikeThresholdInput,
+      transfer2targetDeviceHandler,
+      ChangeSelectValueHandler,
     }
   },
 }
