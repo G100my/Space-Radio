@@ -104,8 +104,11 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     }
   }
   function updateProgressTimeHandler(playerState) {
-    const { timestamp, duration, position } = playerState
-    if (position !== 0) store.dispatch('updateProgress', { timestamp, duration, position })
+    const { timestamp, duration, position, paused } = playerState
+    if (position !== 0 && !paused) store.dispatch('updateProgress', { timestamp, duration, position })
+    else if (paused) {
+      store.dispatch('updatePauseProgress')
+    }
   }
   // Playback status updates
   spotifyPlayer.addListener('player_state_changed', playerState => {

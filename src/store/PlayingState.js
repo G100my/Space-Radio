@@ -186,6 +186,9 @@ const PlayingState = {
     updateProgress(_context, value) {
       playing_state_ref.child('playing_progress').set(value)
     },
+    updatePauseProgress() {
+      playing_state_ref.child('playing_progress').update({ timestamp: 'paused' })
+    },
   },
 }
 

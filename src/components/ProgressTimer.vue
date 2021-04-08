@@ -44,12 +44,15 @@ export default {
     watch(currentProgress, newProgress => {
       clearInterval(progressTimer.value)
       let { timestamp, duration, position } = newProgress
+
+      if (timestamp === 'paused') return
+
       // FIXME
       timestamp = typeCheck(timestamp)
       duration = typeCheck(duration)
       position = typeCheck(position)
 
-      if (timestamp !== 0 && timestamp - lastTimeStamp > 5000 && duration - position > 2000) {
+      if (timestamp !== 0 && timestamp - lastTimeStamp > 500 && duration - position > 2000) {
         lastTimeStamp = timestamp
 
         durationMin.value = Math.floor(duration / 1000 / 60)
