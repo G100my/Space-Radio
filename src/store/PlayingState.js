@@ -35,6 +35,11 @@ const initialQueue = {
   order_key: null,
   id: '',
 }
+const initProgress = {
+  timestamp: 0,
+  duration: 0,
+  position: 0,
+}
 const PlayingState = {
   state: {
     volume: 30,
@@ -45,11 +50,7 @@ const PlayingState = {
     dislike_threshold: 2,
     dislike_countdown: false,
     isVoted: false,
-    playing_progress: {
-      timestamp: 0,
-      duration: 0,
-      position: 0,
-    },
+    playing_progress: { ...initProgress },
   },
   getters: {
     playerPlayingTrackId(state) {
@@ -167,7 +168,11 @@ const PlayingState = {
       playing_state_ref.child('latest_queue').set(newQueue)
     },
     clearPlayingTrack() {
-      playing_state_ref.update({ playing_track: initialTrack, latest_queue: initialQueue })
+      playing_state_ref.update({
+        playing_track: initialTrack,
+        latest_queue: initialQueue,
+        playing_progress: initProgress,
+      })
     },
     updateMinimalVolume(_context, value) {
       playing_state_ref.child('minimal_volume').set(value)
