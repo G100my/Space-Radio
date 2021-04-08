@@ -20,6 +20,9 @@
         <p class="album">
           <a target="_blank" :href="playerPlayingAlbum.url">{{ playerPlayingAlbum.name }}</a>
         </p>
+        <p>
+          <ProgressTimer />
+        </p>
       </section>
     </div>
     <div class="control-board">
@@ -118,10 +121,12 @@ import { defineAsyncComponent } from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import UserLog from './UserLog.vue'
 import logo from '../assets/vinyl-record.png'
+import ProgressTimer from '../components/ProgressTimer.vue'
 
 export default {
   components: {
     UserLog,
+    ProgressTimer,
     HostControl: defineAsyncComponent(() => import('../components/HostControl.vue')),
   },
   data() {
@@ -256,10 +261,6 @@ export default {
     flex-direction: column;
     text-align: center;
 
-    span + span::before {
-      content: '/';
-      margin: 0 10px;
-    }
     .track-name {
       font-size: larger;
     }
