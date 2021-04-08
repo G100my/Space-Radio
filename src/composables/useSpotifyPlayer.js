@@ -103,10 +103,14 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       }
     }
   }
+  let lastTimestamp = 0
   function updateProgressTimeHandler(playerState) {
-    const { timestamp, duration, position, paused } = playerState
-    if (position !== 0 && !paused) store.dispatch('updateProgress', { timestamp, duration, position })
-    else if (paused) {
+    const { paused, duration, position, timestamp } = playerState
+    if (timestamp - lastTimestamp < 1500) {
+      lastTimestamp = timestamp
+    } else if (position !== 0 && !paused) {
+      store.dispatch('updateProgress', { paused, duration, position })
+    } else if (paused) {
       store.dispatch('updatePauseProgress')
     }
   }

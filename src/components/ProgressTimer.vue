@@ -13,7 +13,6 @@ import { useStore } from 'vuex'
 export default {
   setup() {
     const interval = 1000
-    let lastTimeStamp = 0
 
     const store = useStore()
     const currentProgress = computed(() => store.getters.currentProgress)
@@ -43,34 +42,30 @@ export default {
 
     watch(currentProgress, newProgress => {
       clearInterval(progressTimer.value)
-      let { timestamp, duration, position } = newProgress
+      let { paused, duration, position } = newProgress
 
-      if (timestamp === 'paused') return
+      if (duration === 0) {
+        clearTimeDisplay()
+        return
+      }
+      if (paused) return
 
-      // FIXME
-      timestamp = typeCheck(timestamp)
       duration = typeCheck(duration)
       position = typeCheck(position)
 
-      if (timestamp !== 0 && timestamp - lastTimeStamp > 500 && duration - position > 2000) {
-        lastTimeStamp = timestamp
+      durationMin.value = Math.floor(duration / 1000 / 60)
+      durationSec.value = zeroFormatter(Math.floor((duration / 1000) % 60))
 
-        durationMin.value = Math.floor(duration / 1000 / 60)
-        durationSec.value = zeroFormatter(Math.floor((duration / 1000) % 60))
-
-        progressTimer.value = setInterval(() => {
-          position += 1000
-          if (position > duration) {
-            clearInterval(progressTimer.value)
-            clearTimeDisplay()
-          } else {
-            positionMin.value = Math.floor(position / 1000 / 60)
-            positionSec.value = zeroFormatter(Math.floor((position / 1000) % 60))
-          }
-        }, interval)
-      } else if (timestamp === 0) {
-        clearTimeDisplay()
-      }
+      progressTimer.value = setInterval(() => {
+        position += 1000
+        if (position > duration) {
+          clearInterval(progressTimer.value)
+          clearTimeDisplay()
+        } else {
+          positionMin.value = Math.floor(position / 1000 / 60)
+          positionSec.value = zeroFormatter(Math.floor((position / 1000) % 60))
+        }
+      }, interval)
     })
     return {
       durationMin,

@@ -36,7 +36,7 @@ const initialQueue = {
   id: '',
 }
 const initProgress = {
-  timestamp: 0,
+  paused: false,
   duration: 0,
   position: 0,
 }
@@ -187,7 +187,7 @@ const PlayingState = {
       playing_state_ref.child('playing_progress').set(value)
     },
     updatePauseProgress() {
-      playing_state_ref.child('playing_progress').update({ timestamp: 'paused' })
+      playing_state_ref.child('playing_progress').update({ paused: true })
     },
   },
 }
