@@ -1,6 +1,6 @@
 <template>
   <ul class="log-container">
-    <li v-for="log in logs" :key="log.timestemp">
+    <li v-for="log in logs" :key="log.timestamp">
       <p v-if="log.action_type === 'add' || log.action_type === 'jumpIn'">
         <span>{{ log.user_name }}</span
         >{{ log.action_type === 'add' ? '點' : '插' }}播了<span>{{ log.option.track_name }}</span>
