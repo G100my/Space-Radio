@@ -1,7 +1,5 @@
 <template>
-  <main>
-    <router-view />
-  </main>
+  <router-view />
 </template>
 <script>
 export default {}
@@ -45,11 +43,14 @@ body {
   font-family: 'Roboto', sans-serif;
   background-color: var(--primary-dark);
 }
-main {
+main#app {
   color: var(--primary-light);
-  max-height: 100vh;
+  min-height: 90vh;
+  display: flex;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
   @media (min-width: 768px) {
-    display: flex;
     min-height: 100vh;
   }
 }
