@@ -1,17 +1,33 @@
 <template>
   <div class="doorscope">
-    <div class="title">
-      <h1>Jukebox</h1>
+    <div class="doorscope-container">
+      <div class="header">
+        <h1>Jukebox</h1>
+      </div>
+      <div class="content">
+        <label for="search-room-input">Room Name or Room Key</label>
+        <input id="search-room-input" type="text" />
+        <button type="button" @click="searchRoomKey">Next</button>
+      </div>
+      <div class="footer" :to="{ name: 'CreateRoom' }">
+        <router-link to="">Having no room? Create one!</router-link>
+      </div>
     </div>
-    <div class="content" />
   </div>
+  <BaseModal>
+    <div />
+  </BaseModal>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
+import BaseModal from '../components/base/BaseModal.vue'
 
 export default {
+  components: {
+    BaseModal,
+  },
   data() {
     return {
       targetRoomName: '',
