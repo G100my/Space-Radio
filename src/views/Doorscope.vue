@@ -89,31 +89,28 @@ export default {
 </script>
 <style lang="scss">
 .doorscope {
-  height: fit-content;
-  padding: 5px 20px;
-  box-sizing: content-box;
-  align-self: center;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex: 1;
   box-sizing: border-box;
+  background: gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .title {
+  &-container {
+    width: 60%;
+  }
+  .header {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     > h1 {
       font-size: 3rem;
-      text-align: center;
     }
   }
-
   .content {
     display: flex;
     flex-direction: column;
-    flex: 4;
   }
 }
 </style>
