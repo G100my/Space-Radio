@@ -14,7 +14,7 @@ const transformURI2URL = uri => {
 const volumeStep = 2
 const initialTrack = {
   id: false,
-  name: '---',
+  name: '',
   artists: [
     {
       name: 'G100',
