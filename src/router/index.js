@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import store from '../store/'
+import Hall from '../views/Hall.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
 import CreateRoom from '../views/CreateRoom.vue'
@@ -13,9 +14,9 @@ import { setQueueRef } from '../store/Queue.js'
 const routes = [
   {
     path: '/',
-    name: 'Lobby',
+    name: 'Hall',
     meta: { requiresAuth: false },
-    component: Doorscope,
+    component: Hall,
   },
   {
     path: '/doorscope/:roomKey',
