@@ -74,5 +74,5 @@ export default {
 }
 </script>
 <style lang="scss">
-@use "../style/base.scss" as base;
+@use "../style/hall.scss";
 </style>
