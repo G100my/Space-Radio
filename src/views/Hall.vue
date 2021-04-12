@@ -24,11 +24,13 @@
 </template>
 <script>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
 
 export default {
   setup() {
+    const router = useRouter()
     const searchKeyWordInput = ref('')
     const isErrorMessageShow = ref(false)
 
@@ -42,20 +44,21 @@ export default {
       })
 
     function searchRoom() {
-      let targetRoomKey
+      let roomKey
       // 可以搜尋 room key 或者搜尋 room name
       if (Object.prototype.hasOwnProperty.call(roomListObject, searchKeyWordInput)) {
-        targetRoomKey = searchKeyWordInput
+        roomKey = searchKeyWordInput
       } else {
         for (let key in roomListObject) {
           if (roomListObject[key] === searchKeyWordInput.value) {
-            targetRoomKey = key
+            roomKey = key
             break
           }
         }
       }
-      if (targetRoomKey) {
-        localStorage.setItem('jukebox_room_key', targetRoomKey)
+      if (roomKey) {
+        localStorage.setItem('jukebox_room_key', roomKey)
+        router.push({ name: 'Doorscope', params: { roomKey } })
       } else {
         isErrorMessageShow.value = true
       }
