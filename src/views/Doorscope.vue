@@ -58,6 +58,4 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-@use "../style/hall.scss";
-</style>
+<style lang="scss"></style>
