@@ -1,5 +1,8 @@
 # Jukebox
 
+[![hackmd-github-sync-badge](https://hackmd.io/KgDx3q1DSm6xyr6oBVDK0Q/badge)](https://hackmd.io/KgDx3q1DSm6xyr6oBVDK0Q)
+
+
 ---
 
 ### 基於 Spotify 音樂串流服務的**區域性空間公共點歌台**。
