@@ -2,6 +2,7 @@
 
 [![hackmd-github-sync-badge](https://hackmd.io/KgDx3q1DSm6xyr6oBVDK0Q/badge)](https://hackmd.io/KgDx3q1DSm6xyr6oBVDK0Q)
 
+###### tags: `Jukebox`
 
 ---
 
@@ -42,3 +43,20 @@
 1. 創建共播音樂房間
 1. 將正在播放的音樂加入最愛、加入指定的使用者私人播放清單
 1. 作為 host 的使用者可以設定最小音量、投票切歌門檻人數
+
+---
+
+## v1 demo
+
+![](https://i.imgur.com/rh3Iowq.png =1000x)
+
+![](https://i.imgur.com/YdXO4pN.png =1000x)
+
+![](https://i.imgur.com/7SzwwfS.png =350x)
+![](https://i.imgur.com/7T0mFjJ.png =350x)
+![](https://i.imgur.com/LMe8AgY.png =350x)
+
+
+- 預定功能全部實現，多加入"使用者操作 Log"功能
+- 為無 UX/UI、設計稿的手刻排版
+- 手機版為左右滑動，切換"正在撥放/功能按鈕"與"待播清單"
