@@ -20,6 +20,7 @@
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-vue": "^7.7.0",
     "postcss": "^8.2.10",
+    "postcss-nesting": "^7.0.1",
     "prettier": "^2.2.1",
     "sass": "^1.32.8",
     "tailwindcss": "^2.1.1",
