@@ -1,22 +1,31 @@
 <template>
   <HallShell>
-    <div class="header">
-      <h1>Jukebox</h1>
-    </div>
-    <div class="content">
-      <label for="search-room-input">Room Name or Room Key</label>
-      <input
-        id="search-room-input"
-        v-model="searchKeyWordInput"
-        type="text"
-        @focus="isErrorMessageShow = false"
-        @keydown.prevent.enter="searchRoom"
-      />
-      <p v-if="isErrorMessageShow" class="error-message">Invalid Room Name or Room Key</p>
-      <button type="button" @click="searchRoom">Next</button>
-    </div>
-    <div class="footer">
-      <button type="button" @click="PKCE('#create')">Having no room? Create one!</button>
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-subtitle font-semibold mb-4">Enter Room</h2>
+      <label class="text-gray-400 mb-5">
+        <p>Room Name or Room Key</p>
+        <input
+          id="search-room-input"
+          v-model="searchKeyWordInput"
+          class="p-3 w-full border-2 border-black"
+          type="text"
+          @focus="isErrorMessageShow = false"
+          @keydown.prevent.enter="searchRoom"
+        />
+        <p class="text-red-600" :style="{ visibility: isErrorMessageShow ? 'visible' : 'hidden' }">
+          Invalid Room Name or Room Key
+        </p>
+      </label>
+      <button
+        class="mb-2 text-spotify font-medium p-2 border-2 border-current rounded active:text-white active:bg-spotify active:border-spotify"
+        type="button"
+        @click="searchRoom"
+      >
+        Next
+      </button>
+      <button class="text-left hover:underline" type="button" @click="PKCE('#create')">
+        Having no room? Create one!
+      </button>
     </div>
   </HallShell>
 </template>
@@ -75,4 +84,3 @@ export default {
   },
 }
 </script>
-<style lang="scss"></style>
