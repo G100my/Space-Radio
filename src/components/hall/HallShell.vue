@@ -1,34 +1,8 @@
 <template>
-  <div class="hall">
-    <div class="hall-container">
+  <div class="h-full flex flex-col items-center">
+    <div class="h-full max-w-xs w-full mx-auto pt-[10vh] pb-9 lg:pb-[10vh] flex flex-col justify-evenly">
+      <h1 class="text-header font-semibold text-center">Jukebox</h1>
       <slot />
     </div>
   </div>
 </template>
-<style lang="scss">
-.hall {
-  flex: 1;
-  box-sizing: border-box;
-  background: gray;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &-container {
-    width: 60%;
-  }
-  .header {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    > h1 {
-      font-size: 3rem;
-    }
-  }
-  .content {
-    display: flex;
-    flex-direction: column;
-  }
-}
-</style>
