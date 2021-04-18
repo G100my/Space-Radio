@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-undef
 module.exports = {
   mode: 'jit',
-  purge: ['src/index.css', './src/**/*.{js,jsx,ts,tsx,vue}'],
+  purge: ['src/index.css', './src/**/*.vue'],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
@@ -23,10 +23,10 @@ module.exports = {
         spotify: '#1DB954',
       },
       fontSize: {
-        header: ['2.5rem', { letterSpacing: '-0.02rem', lineHeight: 0.92 }],
-        subtitle: ['1.5rem'],
-        body: ['1rem', { lineHeight: 1.4 }],
-        small: ['0.875rem', { letterSpacing: '-0.03rem' }],
+        header: ['2.5rem', { letterSpacing: '-0.02rem', lineHeight: 0.92 }], //40px
+        subtitle: ['1.5rem'], // 24px
+        body: ['1rem', { lineHeight: 1.4 }], // 16px
+        small: ['0.875rem', { letterSpacing: '-0.03rem' }], // 14px
       },
     },
   },
