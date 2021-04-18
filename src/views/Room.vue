@@ -199,6 +199,62 @@ export default {
 </script>
 <style lang="scss">
 .room {
+  --primary-dark: #13192c;
+  --secondary-dark: #0c0f1c;
+
+  --primary-light: #f2f3f7;
+  --secondary-light: #ffffff;
+
+  --primary-highlight: #dd6e42;
+  --secondary-highlight: #cf5626;
+
+  --primary-neutral: #4b90c2;
+  --secondary-neutral: #5aa4da;
+
+  --ignore: #c0c0c0;
+
+  --border-radius: 4px;
+  a {
+    color: var(--primary-light);
+    text-decoration: none;
+    text-decoration-color: var(--primary-neutral);
+    &:visited {
+      color: var(--ignore);
+    }
+    &:hover {
+      color: var(--primary-neutral);
+    }
+  }
+  button {
+    background-color: inherit;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary-highlight);
+    color: var(--primary-light);
+    &:focus {
+      outline: none;
+    }
+  }
+  svg {
+    height: 16px;
+    width: 16px;
+    vertical-align: middle;
+  }
+  div {
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border-radius: 6px;
+    }
+  }
+  div:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--secondary-neutral);
+    }
+  }
+  color: var(--primary-light);
+  background-color: var(--primary-dark);
   overflow: hidden;
   flex: 0;
   @media (min-width: 768px) {
