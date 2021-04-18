@@ -1,5 +1,5 @@
 <template>
-  <div class="create-room">
+  <div class="">
     <h1>Create Room</h1>
     <form>
       <p>
@@ -10,10 +10,9 @@
         <label>Room Key : </label>
         <span style="color: var(--ignore)">{{ roomKey }}</span>
       </p>
-      <p class="room-name">
+      <p class="">
         <label for="room-name">Room name : </label>
         <input id="room-name" v-model.trim="roomName" type="text" maxlength="50" autocomplete="off" />
-        <span :class="{ active: errorMessage }" class="warnning">{{ errorMessage }}</span>
       </p>
       <p>
         <label for="init-volume"
@@ -34,12 +33,7 @@
         >
         <input id="dislike-threshold" v-model="dislikeThreshold" min="1" max="5" type="range" />
       </p>
-      <button
-        type="button"
-        class="create-button"
-        :disabled="hasSameRoomName || roomName.length == 0"
-        @click="createRoom"
-      >
+      <button type="button" class="" :disabled="hasSameRoomName || roomName.length == 0" @click="createRoom">
         Create room
       </button>
     </form>
@@ -113,72 +107,3 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.create-room {
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  @media (min-width: 768px) {
-    flex: 1;
-    max-width: 50%;
-  }
-
-  form {
-    flex: 1;
-    display: inherit;
-    flex-direction: inherit;
-    justify-content: space-around;
-  }
-
-  p {
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
-    flex-wrap: wrap;
-    width: 100%;
-    > span {
-      text-align: right;
-    }
-    &:nth-child(1),
-    &:nth-child(2) {
-      border-bottom: 2px solid var(--secondary-neutral);
-    }
-  }
-  label {
-    white-space: nowrap;
-    width: 100%;
-  }
-  input {
-    margin-top: 7px;
-  }
-  input[type='text'] {
-    text-align: right;
-    background-color: inherit;
-    border: none;
-    border-bottom: 2px solid var(--secondary-neutral);
-    color: var(--primary-highlight);
-    font-size: 1.2rem;
-    &:focus {
-      outline: none;
-    }
-  }
-  .warnning {
-    color: transparent;
-    font-size: 10px;
-  }
-  .warnning.active {
-    color: red;
-  }
-  .create-button {
-    color: var(--secondary-neutral);
-  }
-  .create-button:disabled {
-    text-decoration: line-through;
-    color: var(--ignore);
-    border-color: var(--ignore);
-  }
-}
-</style>
