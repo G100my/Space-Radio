@@ -31,7 +31,8 @@
   </HallShell>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 import firebase from '../../store/firebase.js'
 import HallShell from '../../components/hall/HallShell.vue'
 
@@ -39,66 +40,38 @@ export default {
   components: {
     HallShell,
   },
-  data() {
-    return {
-      roomKey: Array.from(window.crypto.getRandomValues(new Uint32Array(2)), item => item.toString(16)).join(''),
-      roomName: '',
-      volume: 50,
-      minimalVolume: 10,
-      dislikeThreshold: 2,
-      roomNameArray: [],
-    }
-  },
-  computed: {
-    ...mapGetters(['userId', 'userName']),
-    hasSameRoomName() {
-      return this.roomNameArray.includes(this.roomName)
-    },
-    errorMessage() {
-      if (this.hasSameRoomName) {
-        return `already has room name: ${this.roomName}`
-      } else if (this.roomName === '') {
+  setup() {
+    const roomKey = Array.from(window.crypto.getRandomValues(new Uint32Array(2)), item => item.toString(16)).join('')
+    const userId = computed(() => useStore().getters.userId)
+    const roomName = ref('')
+
+    let roomNameArray = []
+
+    firebase
+      .database()
+      .ref('room_list')
+      .on('value', snapshot => (roomNameArray = Object.values(snapshot.val())))
+
+    const hasSameRoomName = computed(() => roomNameArray.includes(roomName))
+    const errorMessage = computed(() => {
+      if (hasSameRoomName.value) {
+        return `already has room name: ${roomName.value}`
+      } else if (roomName.value === '') {
         return `please enter your room name`
       } else {
         return false
       }
-    },
-  },
-  created() {
-    firebase.database().ref('room_list').on('value', this.roomListOnHandler)
-  },
-  methods: {
-    roomListOnHandler(snapshot) {
-      this.roomNameArray = Object.values(snapshot.val())
-    },
-    createRoom() {
-      const room = firebase.database().ref(this.roomKey)
-      room
-        .set({
-          basic: {
-            host_id: this.userId,
-            room_name: this.roomName,
-            room_key: this.roomKey,
-          },
-          playing_state: {
-            volume: this.volume,
-            minimal_volume: this.minimalVolume,
-            dislike_threshold: this.dislikeThreshold,
-            dislike: 0,
-          },
-        })
-        .then(() => {
-          const room_list_ref = firebase.database().ref('room_list')
-          room_list_ref.off('value', this.roomListOnHandler)
+    })
 
-          const roomListObject = {}
-          roomListObject[this.roomKey] = this.roomName
-          room_list_ref.update(roomListObject)
+    return {
+      userId,
+      roomKey,
+      roomName,
 
-          localStorage.setItem('jukebox_room_key', this.roomKey)
-          this.$router.push({ name: 'Room' })
-        })
-    },
+      hasSameRoomName,
+      errorMessage,
+      roomNameArray,
+    }
   },
 }
 </script>
