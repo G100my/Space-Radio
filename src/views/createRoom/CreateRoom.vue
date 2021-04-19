@@ -23,7 +23,9 @@
         >
           Create room
         </button>
-        <button type="button" class="tracking-tighter underline">Enter an existing room!</button>
+        <button type="button" class="tracking-tighter underline" @click="$router.push({ name: 'Hall' })">
+          Enter an existing room!
+        </button>
       </form>
     </div>
   </HallShell>
