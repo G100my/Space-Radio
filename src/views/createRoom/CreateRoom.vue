@@ -30,8 +30,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import firebase from '../store/firebase.js'
-import HallShell from '../components/hall/HallShell.vue'
+import firebase from '../../store/firebase.js'
+import HallShell from '../../components/hall/HallShell.vue'
 
 export default {
   components: {

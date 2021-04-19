@@ -3,7 +3,7 @@ import store from '../store/'
 import Hall from '../views/Hall.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
-import CreateRoom from '../views/CreateRoom.vue'
+import CreateRoom from '../views/CreateRoom/CreateRoom.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
