@@ -7,6 +7,7 @@
     "demo": "vite build & git add docs/ & git commit -m demo & git push origin playground:demo -f & git reset head^"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.0.0",
     "firebase": "^8.2.10",
     "vue": "^3.0.7",
     "vue-router": "^4.0.4",
