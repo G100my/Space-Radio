@@ -13,13 +13,25 @@
         </p>
         <p>
           <label for="room-name">Room name : </label>
-          <input id="room-name" v-model.trim="roomName" type="text" maxlength="50" autocomplete="off" />
+          <input
+            id="room-name"
+            v-model.trim="roomName"
+            type="text"
+            maxlength="50"
+            autocomplete="off"
+            class="ring-red-600 ring-offset-2"
+            :class="{ 'ring-2': !isVaild }"
+            @blur="checkRoomNameHandler"
+            @input="checkRoomNameHandler"
+          />
+          <span class="text-red-500 font-semibold" :style="{ visibility: isVaild ? 'hidden' : 'visible' }">{{
+            errorMessage
+          }}</span>
         </p>
         <button
           type="button"
           class="w-full p-2 text-spotify border-2 border-spotify rounded active:border-spotify active:bg-spotify active:text-white"
-          :disabled="hasSameRoomName || roomName.length == 0"
-          @click="createRoom"
+          @click="nextHandler"
         >
           Create room
         </button>
@@ -44,6 +56,7 @@ export default {
     const roomKey = Array.from(window.crypto.getRandomValues(new Uint32Array(2)), item => item.toString(16)).join('')
     const userId = computed(() => useStore().getters.userId)
     const roomName = ref('')
+    const isVaild = ref(true)
 
     let roomNameArray = []
 
@@ -52,7 +65,8 @@ export default {
       .ref('room_list')
       .on('value', snapshot => (roomNameArray = Object.values(snapshot.val())))
 
-    const hasSameRoomName = computed(() => roomNameArray.includes(roomName))
+    const hasSameRoomName = computed(() => roomNameArray.includes(roomName.value))
+
     const errorMessage = computed(() => {
       if (hasSameRoomName.value) {
         return `already has room name: ${roomName.value}`
@@ -63,14 +77,32 @@ export default {
       }
     })
 
+    function checkRoomNameHandler() {
+      if (hasSameRoomName.value || roomName.value === '') {
+        isVaild.value = false
+      } else {
+        isVaild.value = true
+      }
+    }
+
+    function nextHandler() {
+      checkRoomNameHandler()
+      if (isVaild.value) {
+        console.log('router push')
+      }
+    }
+
     return {
       userId,
       roomKey,
       roomName,
 
+      isVaild,
       hasSameRoomName,
       errorMessage,
       roomNameArray,
+      nextHandler,
+      checkRoomNameHandler,
     }
   },
 }
