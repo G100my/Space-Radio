@@ -15,13 +15,7 @@
         Invalid Room Name or Room Key
       </p>
     </label>
-    <button
-      class="mb-2 text-spotify font-medium p-2 border-2 border-current rounded active:text-white active:bg-spotify active:border-spotify"
-      type="button"
-      @click="searchRoom"
-    >
-      Next
-    </button>
+    <button class="btn btn-spotify-bg-white mb-2" type="button" @click="searchRoom">Next</button>
     <button class="text-left hover:underline" type="button" @click="PKCE('#create')">
       Having no room? Create one!
     </button>

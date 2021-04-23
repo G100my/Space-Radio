@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   div::-webkit-scrollbar {
     width: 3px;
@@ -8,5 +9,19 @@
   div::-webkit-scrollbar-thumb {
     background-color: transparent;
     border-radius: 6px;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply p-2 border-2 rounded;
+  }
+
+  .btn-spotify-bg-white {
+    @apply text-spotify border-spotify active:border-spotify active:bg-spotify active:text-white;
+  }
+
+  .btn-spotify-bg-green {
+    @apply bg-spotify border-spotify text-white active:border-green-600 active:bg-green-600;
   }
 }

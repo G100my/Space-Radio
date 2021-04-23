@@ -27,13 +27,7 @@
           errorMessage
         }}</span>
       </p>
-      <button
-        type="button"
-        class="w-full p-2 text-spotify border-2 border-spotify rounded active:border-spotify active:bg-spotify active:text-white"
-        @click="nextHandler"
-      >
-        Create room
-      </button>
+      <button type="button" class="btn btn-spotify-bg-green w-full" @click="nextHandler">Create room</button>
       <button type="button" class="tracking-tighter underline" @click="$router.push({ name: 'Hall' })">
         Enter an existing room!
       </button>
