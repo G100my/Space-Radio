@@ -72,7 +72,7 @@ import SearchBar from '../components/SearchBar.vue'
 import NoteDialog from '../components/NoteDialog.vue'
 import Marquee from '../components/Marquee.vue'
 import AdditionDisplay from '../components/AdditionDisplay.vue'
-import UserRecentPlayedButton from '../components/featureButtons/UserRecentPlayedButton.vue'
+import UserRecentPlayedButton from '../components/feature-buttons/UserRecentPlayedButton.vue'
 import RoomQueue from '../components/RoomQueue.vue'
 
 export default {

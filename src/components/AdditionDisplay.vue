@@ -22,8 +22,8 @@
 <script>
 import TrackGridItem from './template/TrackGridItem.vue'
 import TrackGridShell from './template/TrackGridShell.vue'
-import AddButton from './featureButtons/AddButton.vue'
-import JumpInButton from './featureButtons/JumpInButton.vue'
+import AddButton from './feature-buttons/AddButton.vue'
+import JumpInButton from './feature-buttons/JumpInButton.vue'
 
 export default {
   components: {
