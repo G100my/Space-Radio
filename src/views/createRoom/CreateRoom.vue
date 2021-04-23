@@ -4,11 +4,11 @@
     <form class="form">
       <p>
         <label>Host ID : </label>
-        <input :value="userId" />
+        <input disabled :value="userId" />
       </p>
       <p>
         <label>Room Key : </label>
-        <input :value="roomKey" />
+        <input disabled :value="roomKey" />
       </p>
       <p>
         <label for="room-name">Room name : </label>
@@ -43,6 +43,7 @@
 <script>
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import firebase from '../../store/firebase.js'
 
 export default {
@@ -51,6 +52,7 @@ export default {
     const userId = computed(() => useStore().getters.userId)
     const roomName = ref('')
     const isVaild = ref(true)
+    const router = useRouter()
 
     let roomNameArray = []
 
@@ -83,6 +85,7 @@ export default {
       checkRoomNameHandler()
       if (isVaild.value) {
         console.log('router push')
+        router.push({ name: 'RoomSetting', params: { roomName: roomName.value } })
       }
     }
 
