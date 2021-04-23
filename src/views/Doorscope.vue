@@ -1,24 +1,21 @@
 <template>
-  <HallShell>
-    <div class="go-back">
-      <router-link :to="{ name: 'Hall' }">Go Back</router-link>
-    </div>
-    <div class="header">
-      <h2>{{ roomName }}</h2>
-    </div>
-    <div class="content">
-      <img class="cover" :src="album.image_url === '' ? initCover : album.image_url" alt="" />
-      <p v-if="trackName">
-        <span>Now playing:</span>
-        <span>{{ trackName }}</span>
-      </p>
-      <p v-else>This room is not playing any track now.</p>
-      <button type="button" @click="PKCE('#room')">Enter Room with Spotify</button>
-    </div>
-  </HallShell>
+  <div class="go-back">
+    <router-link :to="{ name: 'Hall' }">Go Back</router-link>
+  </div>
+  <div class="header">
+    <h2>{{ roomName }}</h2>
+  </div>
+  <div class="content">
+    <img class="cover" :src="album.image_url === '' ? initCover : album.image_url" alt="" />
+    <p v-if="trackName">
+      <span>Now playing:</span>
+      <span>{{ trackName }}</span>
+    </p>
+    <p v-else>This room is not playing any track now.</p>
+    <button type="button" @click="PKCE('#room')">Enter Room with Spotify</button>
+  </div>
 </template>
 <script>
-import HallShell from '../components/hall/HallShell.vue'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
@@ -27,9 +24,6 @@ import { PKCE } from '../utility/PKCE.js'
 import initCover from '../assets/vinyl-record.png'
 
 export default {
-  components: {
-    HallShell,
-  },
   setup() {
     const roomKey = useRoute().params.roomKey
     const store = useStore()

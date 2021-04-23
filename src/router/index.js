@@ -3,7 +3,9 @@ import store from '../store/'
 import Hall from '../views/Hall.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
+import HallShell from '../components/hall/HallShell.vue'
 import CreateRoom from '../views/CreateRoom/CreateRoom.vue'
+import RoomSetting from '../views/CreateRoom/RoomSetting.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
 import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
@@ -14,9 +16,21 @@ import { setQueueRef } from '../store/Queue.js'
 const routes = [
   {
     path: '/',
-    name: 'Hall',
     meta: { requiresAuth: false },
-    component: Hall,
+    component: HallShell,
+    children: [
+      {
+        path: '',
+        name: 'Hall',
+        component: Hall,
+      },
+      {
+        path: '/create',
+        name: 'Create',
+        meta: { requiresAuth: true },
+        component: CreateRoom,
+      },
+    ],
   },
   {
     path: '/doorscope/:roomKey',
@@ -35,12 +49,6 @@ const routes = [
       setUserLogRef(roomKey)
       setQueueRef(roomKey)
     },
-  },
-  {
-    path: '/create',
-    name: 'Create',
-    component: CreateRoom,
-    meta: { requiresAuth: true },
   },
 ]
 
@@ -71,12 +79,12 @@ router.beforeEach(async to => {
   }
 
   if (window.location.search.includes('?error=')) {
-    return { name: 'Lobby' }
+    return { name: 'Hall' }
   }
 
   if (to.meta.requiresAuth && !store.getters.isTokenValid) {
     console.log(store.getters.isTokenValid)
-    return { name: 'Lobby' }
+    return { name: 'Hall' }
   }
 })
 
