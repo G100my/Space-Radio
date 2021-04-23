@@ -1,7 +1,7 @@
 <template>
   <div class="mt-24">
     <h2 class="text-subtitle font-semibold mb-4">Create room</h2>
-    <form class="form">
+    <form class="create-room-form">
       <p>
         <label>Host ID : </label>
         <input disabled :value="userId" />
@@ -99,19 +99,19 @@ export default {
 }
 </script>
 <style lang="postcss">
-.form {
+.create-room-form {
   @apply space-y-4;
   & p {
     @apply flex flex-col;
-    & label {
-      @apply mb-2;
-    }
-    & input {
-      @apply tracking-[-0.015rem] h-12 border-2 border-black p-2 pl-5 align-middle bg-[#E0E0E0];
-    }
     &:nth-child(3) input {
       @apply bg-white;
     }
+  }
+  & label {
+    @apply mb-2;
+  }
+  & input {
+    @apply tracking-[-0.015rem] h-12 border-2 border-black p-2 pl-5 align-middle bg-[#E0E0E0];
   }
 }
 </style>
