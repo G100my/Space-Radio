@@ -4,6 +4,9 @@ module.exports = {
   purge: ['src/index.css', './src/**/*.vue'],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    fontFamily: {
+      inter: ['Inter', 'sans-serif'],
+    },
     extend: {
       screen: {
         '3xl': '1920px',

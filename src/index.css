@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Inter';
+}
+@layer base {
+  body {
+    @apply font-inter;
+  }
+}
+
 @layer base {
   div::-webkit-scrollbar {
     width: 3px;
