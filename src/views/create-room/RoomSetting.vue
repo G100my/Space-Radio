@@ -13,9 +13,9 @@
       <div class="room-setting-form-item">
         <div>
           <label for="minimal-volume">Minimal Volume*</label>
-          <BasePlusButton @click="plusMinimal" />
-          <span>{{ minimalVolume }}</span>
           <BaseMinusButton @click="minusMinimal" />
+          <span>{{ minimalVolume }}</span>
+          <BasePlusButton @click="plusMinimal" />
         </div>
         <input
           id="minimal-volume"
@@ -30,9 +30,9 @@
       <div class="room-setting-form-item">
         <div>
           <label for="initial-volumn">Initial Volumn*</label>
-          <BasePlusButton @click="plusVolume" />
-          <span>{{ volume }}</span>
           <BaseMinusButton @click="minusVolume" />
+          <span>{{ volume }}</span>
+          <BasePlusButton @click="plusVolume" />
         </div>
         <input
           id="initial-volumn"
@@ -47,9 +47,9 @@
       <div class="room-setting-form-item">
         <div>
           <label>Skip Song threshold*</label>
-          <BasePlusButton @click="plusDislikeThreshold" />
-          <span>{{ dislikeThreshold }}</span>
           <BaseMinusButton @click="minusDislikeThreshold" />
+          <span>{{ dislikeThreshold }}</span>
+          <BasePlusButton @click="plusDislikeThreshold" />
         </div>
       </div>
       <div class="mt-5">
