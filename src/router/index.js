@@ -30,6 +30,12 @@ const routes = [
         meta: { requiresAuth: true },
         component: CreateRoom,
       },
+      {
+        path: '/create-setting',
+        name: 'RoomSetting',
+        meta: { requiresAuth: true },
+        component: RoomSetting,
+      },
     ],
   },
   {
