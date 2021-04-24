@@ -13,27 +13,43 @@
       <div class="room-setting-form-item">
         <div>
           <label for="minimal-volume">Minimal Volume*</label>
-          <BasePlusButton @click="test" />
-          <span>1</span>
-          <BaseMinusButton />
+          <BasePlusButton @click="plusMinimal" />
+          <span>{{ minimalVolume }}</span>
+          <BaseMinusButton @click="minusMinimal" />
         </div>
-        <input id="minimal-volume" type="range" />
+        <input
+          id="minimal-volume"
+          min="0"
+          max="100"
+          type="range"
+          :step="step"
+          :value="minimalVolume"
+          @input="minimalVolumeInputHandler"
+        />
       </div>
       <div class="room-setting-form-item">
         <div>
-          <label>Initial Volumn*</label>
-          <BasePlusButton @click="test" />
-          <span>1</span>
-          <BaseMinusButton />
+          <label for="initial-volumn">Initial Volumn*</label>
+          <BasePlusButton @click="plusVolume" />
+          <span>{{ volume }}</span>
+          <BaseMinusButton @click="minusVolume" />
         </div>
-        <input type="range" />
+        <input
+          id="initial-volumn"
+          min="0"
+          max="100"
+          type="range"
+          :step="step"
+          :value="volume"
+          @input="volumeInputHandler"
+        />
       </div>
       <div class="room-setting-form-item">
         <div>
           <label>Skip Song threshold*</label>
-          <BasePlusButton @click="test" />
-          <span>1</span>
-          <BaseMinusButton />
+          <BasePlusButton @click="plusDislikeThreshold" />
+          <span>{{ dislikeThreshold }}</span>
+          <BaseMinusButton @click="minusDislikeThreshold" />
         </div>
       </div>
       <div class="mt-5">
@@ -47,9 +63,10 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import firebase from '../../store/firebase.js'
+import { usePlusMinusHandler } from '../../composables/usePlusMinusHandler.js'
 
 import IconChevronLeft from '../../assets/icons/chevron-left.vue'
 import BasePlusButton from '../../components/base/BasePlusButton.vue'
@@ -62,12 +79,33 @@ export default {
     BaseMinusButton,
   },
   setup() {
-    const { room_key } = useRoute().params
+    const dislikeThreshold = ref(2)
     const volume = ref(50)
     const minimalVolume = ref(10)
-    const dislikeThreshold = ref(2)
+    const step = 5
+    const minimalLimit = 10
+    watch(minimalVolume, newValue => {
+      if (volume.value < newValue) volume.value = newValue
+    })
 
-    const unregisterHandler = () => {
+    function minimalVolumeInputHandler(event) {
+      if (event.target.value >= minimalLimit) minimalVolume.value = Number(event.target.value)
+      else event.target.value = minimalLimit
+    }
+    function volumeInputHandler(event) {
+      if (event.target.value >= minimalVolume.value) volume.value = Number(event.target.value)
+      else event.target.value = minimalVolume.value
+    }
+
+    const { plus: plusMinimal, minus: minusMinimal } = usePlusMinusHandler(minimalVolume, step, 10, 100)
+    const { plus: plusVolume, minus: minusVolume } = usePlusMinusHandler(volume, step, minimalVolume, 100)
+    const { plus: plusDislikeThreshold, minus: minusDislikeThreshold } = usePlusMinusHandler(dislikeThreshold, 1, 1, 5)
+
+    //
+
+    const { room_key } = useRoute().params
+
+    function unregisterHandler() {
       firebase.database().ref(`room_list/${room_key}`).remove()
       window.removeEventListener('beforeunload', unregisterHandler)
     }
@@ -92,9 +130,27 @@ export default {
           this.$router.push({ name: 'Room' })
         })
     }
+
+    //
+
     return {
       createHandler,
       unregisterHandler,
+
+      volume,
+      minimalVolume,
+      dislikeThreshold,
+      step,
+
+      minimalVolumeInputHandler,
+      volumeInputHandler,
+
+      plusVolume,
+      minusVolume,
+      plusMinimal,
+      minusMinimal,
+      plusDislikeThreshold,
+      minusDislikeThreshold,
     }
   },
 }
