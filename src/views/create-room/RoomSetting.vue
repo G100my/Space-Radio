@@ -1,6 +1,10 @@
 <template>
   <div class="mt-24 relative">
-    <button type="button" class="text-gray-600 flex absolute bottom-full transform -translate-y-5">
+    <button
+      type="button"
+      class="text-gray-600 flex absolute bottom-full transform -translate-y-5"
+      @click="$router.push({ name: 'CreateRoom' }) && unregisterHandler()"
+    >
       <IconChevronLeft />
       <span>Go Back</span>
     </button>
@@ -39,14 +43,18 @@
         </select>
       </div>
     </form>
-    <button class="btn btn-spotify-bg-green w-full mt-6" type="button">Create</button>
+    <button class="btn btn-spotify-bg-green w-full mt-6" type="button" @click="createHandler">Create</button>
   </div>
 </template>
 <script>
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import firebase from '../../store/firebase.js'
+
 import IconChevronLeft from '../../assets/icons/chevron-left.vue'
 import BasePlusButton from '../../components/base/BasePlusButton.vue'
 import BaseMinusButton from '../../components/base/BaseMinusButton.vue'
+
 export default {
   components: {
     IconChevronLeft,
@@ -54,9 +62,40 @@ export default {
     BaseMinusButton,
   },
   setup() {
-    const roomName = useRoute().params
-    console.log(roomName)
-    return {}
+    const { room_key } = useRoute().params
+    const volume = ref(50)
+    const minimalVolume = ref(10)
+    const dislikeThreshold = ref(2)
+
+    const unregisterHandler = () => {
+      firebase.database().ref(`room_list/${room_key}`).remove()
+      window.removeEventListener('beforeunload', unregisterHandler)
+    }
+
+    window.addEventListener('beforeunload', unregisterHandler)
+
+    function createHandler() {
+      const room = firebase.database().ref(room_key)
+      room
+        .set({
+          basic: { ...useRoute().params },
+          playing_state: {
+            volume: volume.value,
+            minimal_volume: minimalVolume.value,
+            dislike_threshold: dislikeThreshold.value,
+            dislike: 0,
+          },
+        })
+        .then(() => {
+          localStorage.setItem('jukebox_room_key')
+          window.removeEventListener('beforeunload', unregisterHandler)
+          this.$router.push({ name: 'Room' })
+        })
+    }
+    return {
+      createHandler,
+      unregisterHandler,
+    }
   },
 }
 </script>

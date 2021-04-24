@@ -26,7 +26,7 @@ const routes = [
       },
       {
         path: '/create',
-        name: 'Create',
+        name: 'CreateRoom',
         meta: { requiresAuth: true },
         component: CreateRoom,
       },

@@ -50,10 +50,8 @@ export default {
 
     let roomNameArray = []
 
-    firebase
-      .database()
-      .ref('room_list')
-      .on('value', snapshot => (roomNameArray = Object.values(snapshot.val())))
+    const room_list_ref = firebase.database().ref('room_list')
+    room_list_ref.on('value', snapshot => (roomNameArray = Object.values(snapshot.val())))
 
     const hasSameRoomName = computed(() => roomNameArray.includes(roomName.value))
 
@@ -78,8 +76,19 @@ export default {
     function nextHandler() {
       checkRoomNameHandler()
       if (isVaild.value) {
-        console.log('router push')
-        router.push({ name: 'RoomSetting', params: { roomName: roomName.value } })
+        // 先加進去 room_list 以避免其他使用者同時間創立一樣 roomName
+        const roomListObject = {}
+        roomListObject[roomKey] = roomName.value
+        room_list_ref.update(roomListObject)
+
+        router.push({
+          name: 'RoomSetting',
+          params: {
+            host_id: userId.value,
+            room_key: roomKey,
+            room_name: roomName.value,
+          },
+        })
       }
     }
 
