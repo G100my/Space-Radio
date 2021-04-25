@@ -16,7 +16,7 @@
       </p>
     </label>
     <button class="btn btn-spotify-bg-white mb-2" type="button" @click="searchRoom">Next</button>
-    <button class="text-left hover:underline" type="button" @click="PKCE('#create')">
+    <button class="text-left hover:underline" type="button" @click="enterCreateHandler">
       Having no room? Create one!
     </button>
   </div>
@@ -26,6 +26,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
+import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
 export default {
   setup() {
@@ -63,11 +64,16 @@ export default {
       }
     }
 
+    function enterCreateHandler() {
+      spotifyAPI.getAccessToken() ? router.push({ name: 'CreateRoom' }) : PKCE('#create')
+    }
+
     return {
       searchKeyWordInput,
       isErrorMessageShow,
       searchRoom,
       PKCE,
+      enterCreateHandler,
     }
   },
 }
