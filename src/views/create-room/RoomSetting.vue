@@ -1,13 +1,6 @@
 <template>
   <div class="mt-24 relative">
-    <button
-      type="button"
-      class="text-gray-600 flex absolute bottom-full transform -translate-y-5"
-      @click="$router.push({ name: 'CreateRoom' }) && unregisterHandler()"
-    >
-      <IconChevronLeft />
-      <span>Go Back</span>
-    </button>
+    <BaseGoBackButton @click="$router.push({ name: 'CreateRoom' }) && unregisterHandler()" />
     <h2 class="text-subtitle font-semibold mb-4">Create room</h2>
     <form class="text-gray-600">
       <div class="room-setting-form-item">
@@ -69,13 +62,13 @@ import firebase from '../../store/firebase.js'
 import { usePlusMinusHandler } from '../../composables/usePlusMinusHandler.js'
 import { spotifyAPI } from '../../plugin/spotify-web-api.js'
 
-import IconChevronLeft from '../../assets/icons/chevron-left.vue'
+import BaseGoBackButton from '../../components/base/BaseGoBackButton.vue'
 import BasePlusButton from '../../components/base/BasePlusButton.vue'
 import BaseMinusButton from '../../components/base/BaseMinusButton.vue'
 
 export default {
   components: {
-    IconChevronLeft,
+    BaseGoBackButton,
     BasePlusButton,
     BaseMinusButton,
   },
