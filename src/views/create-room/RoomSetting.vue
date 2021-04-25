@@ -54,8 +54,8 @@
       </div>
       <div class="mt-5">
         <p>Choose a playlist as recommendation references</p>
-        <select class="w-full p-4 mt-0.5 bg-white border-2 border-black">
-          <option>fff</option>
+        <select ref="basePlaylist" class="w-full p-4 mt-0.5 bg-white border-2 border-black">
+          <option v-for="playlist in hostPlaylists" :key="playlist.id" :value="playlist.id">{{ playlist.name }}</option>
         </select>
       </div>
     </form>
@@ -63,10 +63,11 @@
   </div>
 </template>
 <script>
-import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import firebase from '../../store/firebase.js'
 import { usePlusMinusHandler } from '../../composables/usePlusMinusHandler.js'
+import { spotifyAPI } from '../../plugin/spotify-web-api.js'
 
 import IconChevronLeft from '../../assets/icons/chevron-left.vue'
 import BasePlusButton from '../../components/base/BasePlusButton.vue'
@@ -103,8 +104,26 @@ export default {
 
     //
 
-    const { room_key } = useRoute().params
+    let hostPlaylists = reactive([])
+    const basePlaylist = ref(null)
+    spotifyAPI.getUserPlaylists({ limit: 50 }, (error, sucess) => {
+      if (error) {
+        console.warn('something wrong when try to get host playlist.')
+        return
+      }
+      sucess.items.forEach(item => {
+        hostPlaylists.push({
+          id: item.id,
+          name: item.name,
+        })
+      })
+    })
 
+    //
+
+    const params = useRoute().params
+    const room_key = params.room_key
+    const router = useRouter()
     function unregisterHandler() {
       firebase.database().ref(`room_list/${room_key}`).remove()
       window.removeEventListener('beforeunload', unregisterHandler)
@@ -116,7 +135,7 @@ export default {
       const room = firebase.database().ref(room_key)
       room
         .set({
-          basic: { ...useRoute().params },
+          basic: { base_playlist: basePlaylist.value, ...params },
           playing_state: {
             volume: volume.value,
             minimal_volume: minimalVolume.value,
@@ -125,13 +144,11 @@ export default {
           },
         })
         .then(() => {
-          localStorage.setItem('jukebox_room_key')
+          localStorage.setItem('jukebox_room_key', room_key)
           window.removeEventListener('beforeunload', unregisterHandler)
-          this.$router.push({ name: 'Room' })
+          router.push({ name: 'Room' })
         })
     }
-
-    //
 
     return {
       createHandler,
@@ -151,6 +168,9 @@ export default {
       minusMinimal,
       plusDislikeThreshold,
       minusDislikeThreshold,
+
+      hostPlaylists,
+      basePlaylist,
     }
   },
 }

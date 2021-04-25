@@ -37,6 +37,12 @@ const routes = [
         component: RoomSetting,
       },
     ],
+    beforeEnter: () => {
+      // avoid user refresh page
+      if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
+        spotifyAPI.setAccessToken(store.getters.token)
+      }
+    },
   },
   {
     path: '/doorscope/:roomKey',
