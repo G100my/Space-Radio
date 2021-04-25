@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col justify-center">
+  <div class="sm:mt-14 flex flex-col">
     <h2 class="text-subtitle font-semibold mb-4">Enter Room</h2>
     <label class="text-gray-400 mb-5">
       <p>Room Name or Room Key</p>

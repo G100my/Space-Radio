@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-24 mb-10 relative justify-self-start flex-1 flex flex-col justify-evenly">
+  <div class="sm:mt-14 flex flex-col relative">
     <BaseGoBackButton @click="$router.back()" />
     <h2 class="text-subtitle font-semibold mb-4">{{ roomName }}</h2>
     <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" />
@@ -7,9 +7,9 @@
       <span>Now playing:</span>
       <span>{{ trackName }}</span>
     </p>
-    <p v-else class="text-center">This room is not playing any track now.</p>
+    <p v-else class="text-center whitespace-nowrap">This room is not playing any track now.</p>
     <button
-      class="btn btn-spotify-bg-green w-full"
+      class="mt-6 btn btn-spotify-bg-green w-full"
       type="button"
       @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
     >

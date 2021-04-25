@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-24">
-    <h2 class="text-subtitle font-semibold mb-4">Create room</h2>
+  <div>
+    <h2 class="text-subtitle font-semibold">Create room</h2>
     <form class="create-room-form">
       <p>
         <label>Host ID : </label>
@@ -27,11 +27,11 @@
           errorMessage
         }}</span>
       </p>
-      <button type="button" class="btn btn-spotify-bg-green w-full" @click="nextHandler">Create room</button>
-      <button type="button" class="tracking-tighter underline" @click="$router.push({ name: 'Hall' })">
-        Enter an existing room!
-      </button>
     </form>
+    <button type="button" class="btn btn-spotify-bg-green w-full" @click="nextHandler">Create room</button>
+    <button type="button" class="tracking-tighter underline mt-1" @click="$router.push({ name: 'Hall' })">
+      Enter an existing room!
+    </button>
   </div>
 </template>
 <script>

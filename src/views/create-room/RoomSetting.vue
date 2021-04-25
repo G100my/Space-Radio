@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-24 relative">
+  <div class="relative">
     <BaseGoBackButton @click="$router.push({ name: 'CreateRoom' }) && unregisterHandler()" />
     <h2 class="text-subtitle font-semibold mb-4">Create room</h2>
     <form class="text-gray-600">
