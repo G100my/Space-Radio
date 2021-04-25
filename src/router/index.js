@@ -36,6 +36,12 @@ const routes = [
         meta: { requiresAuth: true },
         component: RoomSetting,
       },
+      {
+        path: '/doorscope/:roomKey',
+        name: 'Doorscope',
+        meta: { requiresAuth: false },
+        component: Doorscope,
+      },
     ],
     beforeEnter: () => {
       // avoid user refresh page
@@ -43,12 +49,6 @@ const routes = [
         spotifyAPI.setAccessToken(store.getters.token)
       }
     },
-  },
-  {
-    path: '/doorscope/:roomKey',
-    name: 'Doorscope',
-    meta: { requiresAuth: false },
-    component: Doorscope,
   },
   {
     path: '/room',

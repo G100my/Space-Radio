@@ -1,18 +1,20 @@
 <template>
-  <div class="go-back">
-    <router-link :to="{ name: 'Hall' }">Go Back</router-link>
-  </div>
-  <div class="header">
-    <h2>{{ roomName }}</h2>
-  </div>
-  <div class="content">
-    <img class="cover" :src="album.image_url === '' ? initCover : album.image_url" alt="" />
+  <div class="mt-24 mb-10 relative justify-self-start flex-1 flex flex-col justify-evenly">
+    <BaseGoBackButton @click="$router.back()" />
+    <h2 class="text-subtitle font-semibold mb-4">{{ roomName }}</h2>
+    <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" />
     <p v-if="trackName">
       <span>Now playing:</span>
       <span>{{ trackName }}</span>
     </p>
-    <p v-else>This room is not playing any track now.</p>
-    <button type="button" @click="PKCE('#room')">Enter Room with Spotify</button>
+    <p v-else class="text-center">This room is not playing any track now.</p>
+    <button
+      class="btn btn-spotify-bg-green w-full"
+      type="button"
+      @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
+    >
+      Enter Room with Spotify
+    </button>
   </div>
 </template>
 <script>
@@ -22,8 +24,13 @@ import { useStore } from 'vuex'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
 import initCover from '../assets/vinyl-record.png'
+import BaseGoBackButton from '../components/base/BaseGoBackButton.vue'
+import { spotifyAPI } from '../plugin/spotify-web-api.js'
 
 export default {
+  components: {
+    BaseGoBackButton,
+  },
   setup() {
     const roomKey = useRoute().params.roomKey
     const store = useStore()
@@ -44,12 +51,14 @@ export default {
       .then(snapshot => {
         roomName.value = snapshot.val()
       })
+
     return {
       roomName,
       album,
       initCover,
       PKCE,
       trackName: computed(() => store.getters.playerPlayingTrackName),
+      spotifyAPI,
     }
   },
 }
