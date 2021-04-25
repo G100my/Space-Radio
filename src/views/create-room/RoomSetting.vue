@@ -185,7 +185,7 @@ export default {
     @apply mr-auto;
   }
   & span {
-    @apply w-4 mx-3 text-center;
+    @apply w-8 mx-0.5 text-center;
   }
   & input {
     @apply mt-2;
