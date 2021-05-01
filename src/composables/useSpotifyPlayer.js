@@ -11,11 +11,65 @@ const isSpotifyPlayerActived = ref(false)
 let playerVolume = 50
 const pendingQueue = computed(() => store.getters.pendingQueue)
 
-window.onSpotifyWebPlaybackSDKReady = () => {
-  const currentVolume = computed(() => store.getters.currentVolume)
-  const isTokenValid = computed(() => store.getters.isTokenValid)
-  const token = computed(() => store.getters.token)
+// player_state_changed handler
 
+let positionStateCounter = 0
+function clearPendingQueueHandler(playerState) {
+  if (playerState.position === 0) {
+    positionStateCounter++
+    if (positionStateCounter >= 2) {
+      positionStateCounter = 0
+      // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
+      if (pendingQueue.value && pendingQueue.value.id === playerState.track_window.current_track.id) {
+        store.dispatch('clearPendingQueue')
+      }
+    }
+  }
+}
+
+const executeBeforeEndTime = 10000
+let coundDownTimer
+const leftQueueAmount = computed(() => store.getters.leftQueueAmount)
+const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
+function diffirentPlayingTrackIdHandler(playerStateTrack) {
+  // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
+  playerStateTrack.id !== playerPlayingTrackId.value && store.dispatch('updatePlayingTrack', playerStateTrack)
+}
+
+function setNextQueueTimeout(playerState) {
+  if (!playerState.paused && leftQueueAmount.value > 0 && !pendingQueue.value) {
+    // 防止開啟多個頁面且登入同樣的 host account 還都執行撥放，造成短時間內重複 dispatch sendNextQueue
+    const randomTime = Math.floor(Math.random() * 5) * 5 * 1000
+    const bufferTime = playerState.duration - playerState.position - executeBeforeEndTime - randomTime
+    // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
+    if (bufferTime > 0) {
+      // 每次隨機狀態出現就刷新秒數，避免曲目被快轉
+      if (coundDownTimer) clearTimeout(coundDownTimer)
+      console.log('set coundDownTimer')
+      coundDownTimer = setTimeout(() => {
+        store.dispatch('sendNextQueue')
+      }, bufferTime)
+    }
+  }
+}
+
+let lastTimestamp = 0
+function updateProgressTimeHandler(playerState) {
+  const { paused, duration, position, timestamp } = playerState
+  if (timestamp - lastTimestamp < 1500) {
+    lastTimestamp = timestamp
+  } else if (position !== 0 && !paused) {
+    store.dispatch('updateProgress', { paused, duration, position })
+  } else if (paused) {
+    store.dispatch('updatePauseProgress')
+  }
+}
+
+const currentVolume = computed(() => store.getters.currentVolume)
+const isTokenValid = computed(() => store.getters.isTokenValid)
+const token = computed(() => store.getters.token)
+
+window.onSpotifyWebPlaybackSDKReady = () => {
   spotifyPlayer = new window.Spotify.Player({
     name: 'Jukebox player',
     volume: currentVolume.value / 100,
@@ -58,62 +112,14 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   })
 
   // 避免中途重啟 pending 會一直常駐，直到下一首歌曲取代目前的 pending
-  function checkPending(state) {
+  function checkPending(playerState) {
     if (pendingQueue.value) {
-      if (state.track_window.next_tracks[0].id !== pendingQueue.value.id) store.dispatch('clearPendingQueue')
+      if (playerState.track_window.next_tracks[0].id !== pendingQueue.value.id) store.dispatch('clearPendingQueue')
     }
     spotifyPlayer.removeListener('player_state_changed', checkPending)
   }
   spotifyPlayer.addListener('player_state_changed', checkPending)
 
-  let positionStateCounter = 0
-  const executeBeforeEndTime = 10000
-  let coundDownTimer
-  const leftQueueAmount = computed(() => store.getters.leftQueueAmount)
-  const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
-  function diffirentPlayingTrackIdHandler(playerStateTrack) {
-    // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
-    playerStateTrack.id !== playerPlayingTrackId.value && store.dispatch('updatePlayingTrack', playerStateTrack)
-  }
-  function setNextQueueTimeout(playerState) {
-    if (!playerState.paused && leftQueueAmount.value > 0 && !pendingQueue.value) {
-      // 防止開啟多個頁面且登入同樣的 host account 還都執行撥放，造成短時間內重複 dispatch sendNextQueue
-      const randomTime = Math.floor(Math.random() * 5) * 5 * 1000
-      const bufferTime = playerState.duration - playerState.position - executeBeforeEndTime - randomTime
-      // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
-      if (bufferTime > 0) {
-        // 每次隨機狀態出現就刷新秒數，避免曲目被快轉
-        if (coundDownTimer) clearTimeout(coundDownTimer)
-        console.log('set coundDownTimer')
-        coundDownTimer = setTimeout(() => {
-          store.dispatch('sendNextQueue')
-        }, bufferTime)
-      }
-    }
-  }
-  function clearPendingQueueHandler(playerState) {
-    if (playerState.position === 0) {
-      positionStateCounter++
-      if (positionStateCounter >= 2) {
-        positionStateCounter = 0
-        // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
-        if (pendingQueue.value && pendingQueue.value.id === playerState.track_window.current_track.id) {
-          store.dispatch('clearPendingQueue')
-        }
-      }
-    }
-  }
-  let lastTimestamp = 0
-  function updateProgressTimeHandler(playerState) {
-    const { paused, duration, position, timestamp } = playerState
-    if (timestamp - lastTimestamp < 1500) {
-      lastTimestamp = timestamp
-    } else if (position !== 0 && !paused) {
-      store.dispatch('updateProgress', { paused, duration, position })
-    } else if (paused) {
-      store.dispatch('updatePauseProgress')
-    }
-  }
   // Playback status updates
   spotifyPlayer.addListener('player_state_changed', playerState => {
     console.log(playerState)
@@ -134,6 +140,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 }
 import('../utility/spotify-player-SDK.js')
 
+// watch pendingQueue
 watch(pendingQueue, nextQueue => {
   if (nextQueue && nextQueue.note) {
     const note = nextQueue.note
@@ -156,6 +163,8 @@ window.onbeforeunload = () => {
   store.dispatch('clearPendingQueue')
   if (isSpotifyPlayerActived.value) spotifyPlayer.disconnect()
 }
+
+// volume reduce/resume control
 
 let recodeVolume
 let adjustProcessTime = 5000
