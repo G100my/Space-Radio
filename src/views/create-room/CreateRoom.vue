@@ -51,7 +51,12 @@ export default {
     let roomNameArray = []
 
     const room_list_ref = firebase.database().ref('room_list')
-    room_list_ref.on('value', snapshot => (roomNameArray = Object.values(snapshot.val())))
+    room_list_ref.on('value', snapshot => {
+      const roomList = snapshot.val()
+      if (roomList !== null) {
+        roomNameArray = Object.values(roomList)
+      }
+    })
 
     const hasSameRoomName = computed(() => roomNameArray.includes(roomName.value))
 

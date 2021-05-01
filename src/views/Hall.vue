@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
@@ -34,16 +34,24 @@ export default {
     const searchKeyWordInput = ref('')
     const isErrorMessageShow = ref(false)
 
-    let roomListObject
+    let roomListObject = null
+
     firebase
       .database()
       .ref('room_list')
-      .get()
-      .then(snapshot => {
+      .on('value', snapshot => {
         roomListObject = snapshot.val()
       })
+    onBeforeUnmount(() => {
+      firebase.database().ref('room_list').off()
+    })
 
     function searchRoom() {
+      if (roomListObject === null) {
+        isErrorMessageShow.value = true
+        return
+      }
+
       let roomKey
       // 可以搜尋 room key 或者搜尋 room name
       if (Object.prototype.hasOwnProperty.call(roomListObject, searchKeyWordInput)) {
