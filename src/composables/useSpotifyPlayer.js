@@ -11,6 +11,16 @@ const isSpotifyPlayerActived = ref(false)
 let playerVolume = 50
 const pendingQueue = computed(() => store.getters.pendingQueue)
 
+// player 音量縮小比例，否則語音音量過小
+const playerVolumeReduceRate = 0.7
+function useWatchCurrentVolume(currentVolume) {
+  watch(currentVolume, newValue => {
+    playerVolume = newValue
+    console.log(`currentVolume: ${currentVolume.value}, newValue: ${newValue} `)
+    if (spotifyPlayer !== null) spotifyPlayer.setVolume((newValue / 100) * playerVolumeReduceRate)
+  })
+}
+
 // player_state_changed handler
 
 let positionStateCounter = 0
@@ -104,11 +114,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     // })
 
     // 等 player 準備完成才 watch playerVolume
-    watch(currentVolume, newValue => {
-      playerVolume = newValue
-      console.log(`currentVolume: ${currentVolume.value}, newValue: ${newValue} `)
-      if (spotifyPlayer !== null) spotifyPlayer.setVolume(newValue / 100)
-    })
+    useWatchCurrentVolume(currentVolume)
   })
 
   // 避免中途重啟 pending 會一直常駐，直到下一首歌曲取代目前的 pending
