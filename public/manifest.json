@@ -1,7 +1,7 @@
 {
   "name": "Jukebox",
   "short_name": "Jukebox",
-  "start_url": "https://g100my.github.io/Jukebox/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#FF66D8",
   "description": "A music web platform in specify regional public space, base on spotify.",
@@ -22,8 +22,8 @@
       "type": "image/png"
     },
     {
-      "src": "appicon/144.png",
-      "sizes": "144x144",
+      "src": "appicon/128.png",
+      "sizes": "128x128",
       "type": "image/png"
     },
     {
