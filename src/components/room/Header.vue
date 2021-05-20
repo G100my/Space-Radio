@@ -15,7 +15,7 @@
         @updateAdditionDisplaySource="additionDisplaySource = $event"
       />
       <h1>
-        <img src="../assets/vinyl-record.png" alt="" />
+        <img src="../../assets/vinyl-record.png" alt="" />
         <p>{{ $store.getters.roomName }}</p>
       </h1>
       <ul>
