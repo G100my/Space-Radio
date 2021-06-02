@@ -8,21 +8,24 @@ module.exports = {
       inter: ['Inter', 'sans-serif'],
     },
     extend: {
-      screen: {
-        '3xl': '1920px',
-      },
       colors: {
         primary: '#FF66D8',
         secondary: '#1ED760',
         tertiary: {
+          1: '#081B50',
+          2: '#374F95',
+          // will remove in future, use these in Doorscope wireframe page, create room wireframe pages
           dark: '#081B50',
           light: '#374F95',
         },
         natural: {
-          accent: '#F8FAFC',
-          disaccent: '#EBF0F3',
-          disable: '#9595A8',
+          white: '#FDFEFF',
+          gray1: '#F8FAFC',
+          gray2: '#EBF0F3',
+          gray3: '#9595A8',
+          black: '#1D1D1E',
         },
+        // will remove in future
         spotify: '#1DB954',
       },
       fontSize: {
