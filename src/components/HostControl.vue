@@ -450,8 +450,8 @@ export default {
     }
   }
   @media (min-width: 768px) {
-    left: 105%;
-    bottom: 0;
+    right: 0%;
+    bottom: 120%;
     width: max-content;
 
     input {
