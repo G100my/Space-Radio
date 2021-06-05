@@ -15,5 +15,10 @@ export default ({ command }) => {
     build: {
       outDir: './docs/',
     },
+    resolve: {
+      alias: {
+        '@': '/src',
+      },
+    },
   }
 }
