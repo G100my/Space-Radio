@@ -1,11 +1,11 @@
 <template>
-  <div class="room" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
-    <Header />
-    <div ref="slideContainer" class="slide-container">
-      <div class="sidebar slide-items">
+  <div class="bg-tertiary-2 h-screen overflow-hidden" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
+    <Header class="" />
+    <div ref="slideContainer" class="h-full flex items-stretch transition-transform pt-24 pb-4">
+      <div class="flex-shrink-0 w-full overflow-y-auto md:w-96 md:py-10">
         <PlayingState />
       </div>
-      <div class="view slide-items">
+      <div class="flex-shrink-0 w-full flex md:flex-1 md:relative">
         <RoomQueue @activeNoteDialog="activeNoteDialogHandler" />
         <!-- <AdditionDisplay
           v-if="!mobileMode"
@@ -18,8 +18,8 @@
     </div>
     <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
     <div class="slide-navigation">
-      <span class="sidebar-navigation" :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
-      <span class="view-navigation" :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
+      <span :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
+      <span :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
     </div>
   </div>
 </template>
@@ -152,134 +152,14 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.room {
-  --primary-dark: #13192c;
-  --secondary-dark: #0c0f1c;
-
-  --primary-light: #f2f3f7;
-  --secondary-light: #ffffff;
-
-  --primary-highlight: #dd6e42;
-  --secondary-highlight: #cf5626;
-
-  --primary-neutral: #4b90c2;
-  --secondary-neutral: #5aa4da;
-
-  --ignore: #c0c0c0;
-
-  --border-radius: 4px;
-  a {
-    color: var(--primary-light);
-    text-decoration: none;
-    text-decoration-color: var(--primary-neutral);
-    &:visited {
-      color: var(--ignore);
-    }
-    &:hover {
-      color: var(--primary-neutral);
-    }
-  }
-  button {
-    background-color: inherit;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--primary-highlight);
-    color: var(--primary-light);
-    &:focus {
-      outline: none;
-    }
-  }
-  svg {
-    height: 16px;
-    width: 16px;
-    vertical-align: middle;
-  }
-  div {
-    &::-webkit-scrollbar {
-      width: 3px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: transparent;
-      border-radius: 6px;
-    }
-  }
-  div:hover {
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--secondary-neutral);
-    }
-  }
-  color: var(--primary-light);
-  background-color: var(--primary-dark);
-  overflow: hidden;
-  flex: 0;
-  @media (min-width: 768px) {
-    flex: 1;
-    max-height: 100vh;
-    width: 100vw;
-  }
-
-  .slide-container {
-    display: flex;
-    transition: transform 0.1s ease-in-out;
-  }
-  .slide-items {
-    flex-shrink: 0;
-    height: 100vh;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 90px 10px 20px;
-    @media (min-width: 768px) {
-      padding: 0;
-    }
-  }
-  .view.slide-items {
-    display: flex;
-    @media (min-width: 768px) {
-      flex: 1;
-      position: relative;
-      padding: 100px 3% 30px;
-      width: 0;
-    }
-  }
-  .sidebar.slide-items {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    .playing-state {
-      flex: 1;
-    }
-    @media (min-width: 768px) {
-      width: 400px;
-      padding: 40px 0 40px 20px;
-    }
-  }
-}
-
+<style lang="postcss">
 .slide-navigation {
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: var(--primary-dark);
-  padding-top: 5px;
-  span {
-    box-sizing: border-box;
-    height: 4px;
-    width: 15%;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--ignore);
+  @apply flex justify-center fixed bottom-0 w-full;
+  & > span {
+    @apply h-1 w-3/12 rounded-sm;
   }
-  .view-navigation {
-    margin-left: 5px;
-  }
-  .active {
-    background-color: var(--secondary-neutral);
-    border: none;
-  }
-  @media (min-width: 768px) {
-    display: none;
+  & > .active {
+    @apply bg-yellow-500;
   }
 }
 </style>
