@@ -8,6 +8,9 @@ module.exports = {
       inter: ['Inter', 'sans-serif'],
     },
     extend: {
+      screens: {
+        laptop: '1024px',
+      },
       colors: {
         primary: '#FF66D8',
         secondary: '#1ED760',
@@ -33,6 +36,7 @@ module.exports = {
         subtitle: ['1.5rem'], // 24px
         body: ['1rem', { lineHeight: 1.4 }], // 16px
         small: ['0.875rem', { letterSpacing: '-0.03rem' }], // 14px
+        0: '0rem',
       },
     },
   },
