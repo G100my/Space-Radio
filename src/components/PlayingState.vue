@@ -1,9 +1,5 @@
 <template>
   <div class="playing-state">
-    <h1>
-      <img src="../assets/vinyl-record.png" alt="" />
-      <p>{{ roomName }}</p>
-    </h1>
     <div class="track-info">
       <div class="cover">
         <img :src="playerPlayingAlbum.image_url ? playerPlayingAlbum.image_url : logo" alt="" />

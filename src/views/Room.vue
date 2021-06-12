@@ -1,28 +1,3 @@
-<template>
-  <div class="bg-tertiary-2 h-screen overflow-hidden" @touchstart="touchstartHandler" @touchmove="touchmoveHandler" @touchend="touchendHandler">
-    <Header class="" />
-    <div ref="slideContainer" class="h-full flex items-stretch transition-transform pt-24 pb-4">
-      <div class="flex-shrink-0 w-full overflow-y-auto md:w-96 md:py-10">
-        <PlayingState />
-      </div>
-      <div class="flex-shrink-0 w-full flex md:flex-1 md:relative">
-        <RoomQueue @activeNoteDialog="activeNoteDialogHandler" />
-        <!-- <AdditionDisplay
-          v-if="!mobileMode"
-          v-show="additionDisplayToggler"
-          :source="additionDisplaySource"
-          @activeNoteDialog="activeNoteDialogHandler"
-          @disactiveSearchStyle="isSearchActive = false"
-        /> -->
-      </div>
-    </div>
-    <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
-    <div class="slide-navigation">
-      <span :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
-      <span :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
-    </div>
-  </div>
-</template>
 <script>
 import firebase from '../store/firebase.js'
 import { Queue as QueueStore, queueConnect2firebase } from '../store/Queue.js'
@@ -152,11 +127,88 @@ export default {
   },
 }
 </script>
+<template>
+  <div
+    class="
+      bg-tertiary-2
+      h-screen
+      overflow-hidden
+      flex
+      laptop:pl-[60px]
+      laptop:pr-[74px]
+      laptop:py-10
+      laptop:items-stretch
+      laptop:flex laptop:flex-col
+    "
+    @touchstart="touchstartHandler"
+    @touchmove="touchmoveHandler"
+    @touchend="touchendHandler"
+  >
+    <Header
+      class="bg-tertiary-1 bg-opacity-60 show-all-flex px-8 pt-8 fixed inset-0 bottom-auto laptop:static laptop:p-0"
+    />
+    <div
+      ref="slideContainer"
+      class="
+        show-all-flex
+        w-full
+        mt-24
+        mb-10
+        flex
+        items-stretch
+        transition-transform
+        laptop:h-auto
+        laptop:flex-1
+        laptop:my-0
+      "
+    >
+      <div
+        class="
+          bg-tertiary-1 bg-opacity-60
+          flex-shrink-0
+          w-full
+          px-8
+          pb-8
+          overflow-y-auto
+          laptop:w-96
+          laptop:px-0
+          laptop:pb-0
+        "
+      >
+        <PlayingState />
+      </div>
+      <div class="flex-shrink-0 w-full px-8 pb-8 flex laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">
+        <RoomQueue />
+        <!-- <AdditionDisplay
+          v-if="!mobileMode"
+          v-show="additionDisplayToggler"
+          :source="additionDisplaySource"
+          @activeNoteDialog="activeNoteDialogHandler"
+          @disactiveSearchStyle="isSearchActive = false"
+        /> -->
+      </div>
+    </div>
+    <div class="slide-navigation laptop:hidden">
+      <span :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
+      <span :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
+    </div>
+    <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
+  </div>
+</template>
 <style lang="postcss">
+.show-all-flex {
+  & > *:first-child {
+    @apply laptop:flex-none laptop:w-96;
+  }
+  & > *:last-child {
+    @apply laptop:flex-1;
+  }
+}
+
 .slide-navigation {
   @apply flex justify-center fixed bottom-0 w-full;
   & > span {
-    @apply h-1 w-3/12 rounded-sm;
+    @apply h-10 w-3/12 rounded-sm;
   }
   & > .active {
     @apply bg-yellow-500;
