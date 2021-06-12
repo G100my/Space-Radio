@@ -63,3 +63,38 @@
     @apply bg-spotify border-spotify text-white active:border-green-600 active:bg-green-600;
   }
 }
+
+@layer components {
+  .btn-primary {
+    @apply py-2 px-4 bg-primary bg-opacity-80 text-tertiary-1 rounded-sm text-base;
+  }
+  .btn-primary:hover,
+  .btn-primary:focus {
+    @apply opacity-100;
+  }
+  .btn-primary:active {
+    @apply border-2 border-tertiary-2 text-tertiary-2 text-opacity-60;
+  }
+}
+
+@layer components {
+  .btn-secondary {
+    @apply py-2 px-4 bg-tertiary-2 rounded-sm border border-natural-gray2 text-natural-gray2 text-base;
+  }
+  .btn-secondary:hover,
+  .btn-secondary:focus {
+    @apply bg-tertiary-1 bg-opacity-60 text-natural-gray1;
+  }
+  .btn-secondary:active {
+    @apply bg-tertiary-1 bg-opacity-100 text-natural-gray3 border-natural-gray3;
+  }
+}
+
+@layer components {
+  .btn-tertiary {
+    @apply py-2 px-4 text-base text-white;
+  }
+  .btn-tertiary-border {
+    @apply bg-tertiary-1 bg-opacity-60 border border-natural-gray2 rounded-sm;
+  }
+}
