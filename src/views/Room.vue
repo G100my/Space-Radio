@@ -129,17 +129,7 @@ export default {
 </script>
 <template>
   <div
-    class="
-      bg-tertiary-2
-      h-screen
-      overflow-hidden
-      flex
-      laptop:pl-[60px]
-      laptop:pr-[74px]
-      laptop:py-10
-      laptop:items-stretch
-      laptop:flex laptop:flex-col
-    "
+    class="bg-tertiary-2 h-screen overflow-hidden flex laptop:pl-[60px] laptop:pr-[74px] laptop:py-10 laptop:items-stretch laptop:flex laptop:flex-col"
     @touchstart="touchstartHandler"
     @touchmove="touchmoveHandler"
     @touchend="touchendHandler"
@@ -149,31 +139,10 @@ export default {
     />
     <div
       ref="slideContainer"
-      class="
-        show-all-flex
-        w-full
-        mt-24
-        mb-10
-        flex
-        items-stretch
-        transition-transform
-        laptop:h-auto
-        laptop:flex-1
-        laptop:my-0
-      "
+      class="show-all-flex w-full mt-24 mb-10 flex items-stretch transition-transform laptop:h-auto laptop:flex-1 laptop:my-0"
     >
       <div
-        class="
-          bg-tertiary-1 bg-opacity-60
-          flex-shrink-0
-          w-full
-          px-8
-          pb-8
-          overflow-y-auto
-          laptop:w-96
-          laptop:px-0
-          laptop:pb-0
-        "
+        class="bg-tertiary-1 bg-opacity-60 flex-shrink-0 w-full px-8 pb-8 overflow-y-auto laptop:w-96 laptop:px-0 laptop:pb-0"
       >
         <PlayingState />
       </div>
