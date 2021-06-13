@@ -3,6 +3,7 @@ import firebase from '../store/firebase.js'
 import { Queue as QueueStore, queueConnect2firebase } from '../store/Queue.js'
 import { playingStateConnect2firebase } from '../store/PlayingState.js'
 import { userLogConnect2firebase } from '../store/UserLog.js'
+import SideDrawer from '@/components/SideDrawer.vue'
 
 import Header from '../components/room/Header.vue'
 import PlayingState from '../components/PlayingState.vue'
@@ -16,6 +17,7 @@ export default {
     PlayingState,
     RoomQueue,
     NoteDialog,
+    SideDrawer,
     // AdditionDisplay,
   },
   data() {
@@ -28,6 +30,7 @@ export default {
         trackNameForLog: '',
         submitFunction: () => {},
       },
+      isSideDrawerShow: false,
     }
   },
   computed: {
@@ -157,6 +160,14 @@ export default {
         /> -->
       </div>
     </div>
+    <SideDrawer
+      v-show="isSideDrawerShow"
+      id="SideDrawer"
+      class="fixed w-full h-full z-50"
+      @close="isSideDrawerShow = false"
+    >
+      <!-- other components -->
+    </SideDrawer>
     <div class="slide-navigation laptop:hidden">
       <span :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
       <span :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
