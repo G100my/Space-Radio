@@ -3,8 +3,9 @@ import firebase from '../store/firebase.js'
 import { Queue as QueueStore, queueConnect2firebase } from '../store/Queue.js'
 import { playingStateConnect2firebase } from '../store/PlayingState.js'
 import { userLogConnect2firebase } from '../store/UserLog.js'
-import SideDrawer from '@/components/SideDrawer.vue'
 
+import SlideContainer from '../components/SlideContainer.vue'
+import SideDrawer from '../components/SideDrawer.vue'
 import Header from '../components/room/Header.vue'
 import PlayingState from '../components/PlayingState.vue'
 import NoteDialog from '../components/NoteDialog.vue'
@@ -13,17 +14,16 @@ import RoomQueue from '../components/RoomQueue.vue'
 
 export default {
   components: {
+    SlideContainer,
+    SideDrawer,
     Header,
     PlayingState,
     RoomQueue,
     NoteDialog,
-    SideDrawer,
     // AdditionDisplay,
   },
   data() {
     return {
-      isMainSide: true,
-      touchStartPosition: 0,
       isNoteDialogActive: false,
       editingNote: {
         queueKey: '',
@@ -73,93 +73,27 @@ export default {
         submitFunction: () => {},
       }
     },
-    sliderToggler(direction) {
-      switch (direction) {
-        case 'slide2right':
-          this.$refs.slideContainer.style.transform = ''
-          this.isMainSide = true
-          break
-        case 'slide2left':
-          this.$refs.slideContainer.style.transform = `translate(-${window.innerWidth}px, 0)`
-          this.isMainSide = false
-          break
-        case 'resume':
-          if (this.isMainSide) {
-            this.$refs.slideContainer.style.transform = ''
-          } else {
-            this.$refs.slideContainer.style.transform = `translate(-${window.innerWidth}px, 0)`
-          }
-          break
-        default:
-          console.log('something wrong')
-          break
-      }
-    },
-    touchstartHandler(event) {
-      this.touchStartPosition = event.touches[0].clientX
-    },
-    touchendHandler(event) {
-      const currentDistance = this.touchStartPosition - event.changedTouches[0].clientX
-      if (Math.abs(currentDistance) < 30) return
-      if (currentDistance > 70) {
-        this.sliderToggler('slide2left')
-      } else if (currentDistance < 70) {
-        this.sliderToggler('slide2right')
-      } else {
-        this.sliderToggler('resume')
-      }
-    },
-    touchmoveHandler(event) {
-      // left: -,   right: +
-      const currentDistance = event.touches[0].clientX - this.touchStartPosition
-      if (Math.abs(currentDistance) < 30) return
-      if (this.isMainSide) {
-        if (currentDistance > 50) {
-          return
-        } else {
-          this.$refs.slideContainer.style.transform = `translate(${currentDistance}px, 0)`
-        }
-      } else {
-        if (currentDistance < -50) {
-          return
-        } else {
-          this.$refs.slideContainer.style.transform = `translate(${-window.innerWidth + currentDistance}px, 0)`
-        }
-      }
-    },
   },
 }
 </script>
 <template>
-  <div
-    class="bg-tertiary-2 h-screen overflow-hidden flex laptop:pl-[60px] laptop:pr-[74px] laptop:py-10 laptop:items-stretch laptop:flex laptop:flex-col"
-    @touchstart="touchstartHandler"
-    @touchmove="touchmoveHandler"
-    @touchend="touchendHandler"
-  >
+  <SlideContainer>
     <Header
       class="bg-tertiary-1 bg-opacity-60 show-all-flex px-8 pt-8 fixed inset-0 bottom-auto laptop:static laptop:p-0"
     />
-    <div
-      ref="slideContainer"
-      class="show-all-flex w-full mt-24 mb-10 flex items-stretch transition-transform laptop:h-auto laptop:flex-1 laptop:my-0"
-    >
-      <div
-        class="bg-tertiary-1 bg-opacity-60 flex-shrink-0 w-full px-8 pb-8 overflow-y-auto laptop:w-96 laptop:px-0 laptop:pb-0"
-      >
-        <PlayingState />
-      </div>
-      <div class="flex-shrink-0 w-full px-8 pb-8 flex laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">
-        <RoomQueue />
-        <!-- <AdditionDisplay
-          v-if="!mobileMode"
-          v-show="additionDisplayToggler"
-          :source="additionDisplaySource"
-          @activeNoteDialog="activeNoteDialogHandler"
-          @disactiveSearchStyle="isSearchActive = false"
-        /> -->
-      </div>
-    </div>
+    <template #left-side>
+      <PlayingState />
+    </template>
+    <template #right-side>
+      <RoomQueue />
+      <!-- <AdditionDisplay
+        v-if="!mobileMode"
+        v-show="additionDisplayToggler"
+        :source="additionDisplaySource"
+        @activeNoteDialog="activeNoteDialogHandler"
+        @disactiveSearchStyle="isSearchActive = false"
+      /> -->
+    </template>
     <SideDrawer
       v-show="isSideDrawerShow"
       id="SideDrawer"
@@ -173,7 +107,7 @@ export default {
       <span :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
     </div>
     <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
-  </div>
+  </SlideContainer>
 </template>
 <style lang="postcss">
 .show-all-flex {
