@@ -1,4 +1,5 @@
 <script>
+import { ref } from 'vue'
 import Marquee from '@/components/Marquee.vue'
 // import UserRecentPlayedButton from '@/components/feature-buttons/UserRecentPlayedButton.vue'
 import HandwriteLogo from '@/assets/handwriteLogo.svg'
@@ -15,11 +16,10 @@ export default {
     IconPerson,
     IconPlus,
   },
-  data() {
+  setup() {
+    const isSearchActive = ref(false)
     return {
-      isSearchActive: false,
-      additionDisplayToggler: false,
-      additionDisplaySource: [],
+      isSearchActive,
     }
   },
 }
