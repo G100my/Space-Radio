@@ -80,6 +80,7 @@ export default {
   <SlideContainer>
     <Header
       class="bg-tertiary-1 bg-opacity-60 show-all-flex px-8 pt-8 fixed inset-0 bottom-auto laptop:static laptop:p-0"
+      @activeSideDrawer="isSideDrawerShow = true"
     />
     <template #left-side>
       <PlayingState />

@@ -16,6 +16,7 @@ export default {
     IconPerson,
     IconPlus,
   },
+  emits: ['activeSideDrawer'],
   setup() {
     const isSearchActive = ref(false)
     return {
@@ -33,7 +34,7 @@ export default {
     <nav>
       <ul class="justify-end flex space-x-2">
         <li>
-          <button type="button" class="px-3 laptop:py-2 laptop:px-4">
+          <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="$emit('activeSideDrawer')">
             <IconSearch />
           </button>
         </li>
@@ -41,13 +42,18 @@ export default {
           <button
             type="button"
             class="flex text-white px-3 laptop:py-2 laptop:px-4 laptop:border laptop:border-natural-gray2"
+            @click="$emit('activeSideDrawer')"
           >
             <IconPlus />
             <label>Add from Spotify</label>
           </button>
         </li>
         <li>
-          <button class="flex items-center text-white px-3 laptop:py-2 laptop:px-4" type="button">
+          <button
+            class="flex items-center text-white px-3 laptop:py-2 laptop:px-4"
+            type="button"
+            @click="$emit('activeSideDrawer')"
+          >
             <IconPerson />
             <label class="hidden laptop:inline">{{ $store.getters.userName }}</label>
           </button>
