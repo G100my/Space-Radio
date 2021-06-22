@@ -77,7 +77,7 @@ export default {
 }
 </script>
 <template>
-  <div id="room" class="relative bg-tertiary-2 h-full flex flex-col">
+  <div id="room" class="relative bg-tertiary-2 h-full flex flex-col overflow-hidden">
     <Header class="show-all-flex" @activeSideDrawer="isSideDrawerShow = true" />
     <SlideContainer class="flex-1">
       <template #left-side>
@@ -97,7 +97,7 @@ export default {
 
     <!-- absolute -->
     <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
-    <SideDrawer v-show="isSideDrawerShow" class="hidden" @close="isSideDrawerShow = false">
+    <SideDrawer v-model="isSideDrawerShow">
       <!-- other components placeholder -->
     </SideDrawer>
   </div>
