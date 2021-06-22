@@ -38,6 +38,12 @@ module.exports = {
         small: ['0.875rem', { letterSpacing: '-0.03rem' }], // 14px
         0: '0rem',
       },
+      width: {
+        fit: 'fit-content',
+      },
+      height: {
+        fit: 'fit-content',
+      },
     },
   },
   variants: {
