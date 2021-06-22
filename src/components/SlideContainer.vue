@@ -3,7 +3,7 @@ import { ref } from 'vue'
 export default {
   setup() {
     const slideContent = ref(null)
-    let isMainSide
+    let isMainSide = ref(true)
     let touchStartPosition
 
     function touchstartHandler(event) {
@@ -24,7 +24,7 @@ export default {
       // left: -,   right: +
       const currentDistance = event.touches[0].clientX - touchStartPosition
       if (Math.abs(currentDistance) < 30) return
-      if (isMainSide) {
+      if (isMainSide.value) {
         if (currentDistance > 50) {
           return
         } else {
@@ -42,14 +42,14 @@ export default {
       switch (direction) {
         case 'slide2right':
           slideContent.value.style.transform = ''
-          isMainSide = true
+          isMainSide.value = true
           break
         case 'slide2left':
           slideContent.value.style.transform = `translate(-${window.innerWidth}px, 0)`
-          isMainSide = false
+          isMainSide.value = false
           break
         case 'resume':
-          if (isMainSide) {
+          if (isMainSide.value) {
             slideContent.value.style.transform = ''
           } else {
             slideContent.value.style.transform = `translate(-${window.innerWidth}px, 0)`
@@ -66,6 +66,7 @@ export default {
       touchstartHandler,
       touchendHandler,
       sliderToggler,
+      isMainSide,
     }
   },
 }
@@ -90,4 +91,20 @@ export default {
       </div>
     </div>
   </div>
+
+  <div class="slide-navigation laptop:hidden">
+    <button type="button" :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
+    <button type="button" :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
+  </div>
 </template>
+<style lang="postcss">
+.slide-navigation {
+  @apply flex justify-center w-full;
+  & > button {
+    @apply h-10 w-3/12 rounded-sm;
+  }
+  & > .active {
+    @apply bg-yellow-500;
+  }
+}
+</style>

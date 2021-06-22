@@ -94,10 +94,6 @@ export default {
       /> -->
       </template>
     </SlideContainer>
-    <div class="slide-navigation laptop:hidden">
-      <span :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
-      <span :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
-    </div>
 
     <!-- absolute -->
     <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
@@ -106,14 +102,3 @@ export default {
     </SideDrawer>
   </div>
 </template>
-<style lang="postcss">
-.slide-navigation {
-  @apply flex justify-center w-full;
-  & > span {
-    @apply h-10 w-3/12 rounded-sm;
-  }
-  & > .active {
-    @apply bg-yellow-500;
-  }
-}
-</style>
