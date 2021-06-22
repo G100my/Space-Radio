@@ -1,0 +1,10 @@
+@layer components {
+  .show-all-flex {
+    & > *:first-child {
+      @apply laptop:flex-none laptop:w-96;
+    }
+    & > *:last-child {
+      @apply laptop:flex-1;
+    }
+  }
+}

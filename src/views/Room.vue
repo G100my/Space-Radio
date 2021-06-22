@@ -111,15 +111,6 @@ export default {
   </SlideContainer>
 </template>
 <style lang="postcss">
-.show-all-flex {
-  & > *:first-child {
-    @apply laptop:flex-none laptop:w-96;
-  }
-  & > *:last-child {
-    @apply laptop:flex-1;
-  }
-}
-
 .slide-navigation {
   @apply flex justify-center fixed bottom-0 w-full;
   & > span {
