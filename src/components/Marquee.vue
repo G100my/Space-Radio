@@ -1,17 +1,23 @@
 <template>
-  <div class="marquee">
-    <div class="container" :class="{ 'active-marquee': isFilled }">
-      <p @animationend="isFilled = false">
-        <span @mouseenter="mouseenterHandler">{{ messageOutput }}</span>
-        <span v-if="isFilled">{{ messageOutput }}</span>
+  <div id="marquee" class="flex items-center flex-nowrap overflow-hidden">
+    <IconSpeaker />
+    <div class="flex-1 ml-3 overflow-hidden" :class="{ 'active-marquee': isFilled }">
+      <p class="text-0 whitespace-nowrap overflow-hidden overflow-ellipsis" @animationend="isFilled = false">
+        <!--  -->
+        <span class="marquee-message" @mouseenter="mouseenterHandler">{{ messageOutput }}</span>
+        <span v-if="isFilled" class="marquee-message">{{ messageOutput }}</span>
       </p>
     </div>
   </div>
 </template>
 <script>
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+import IconSpeaker from '@/assets/speaker.svg'
 
 export default {
+  components: {
+    IconSpeaker,
+  },
   data() {
     return {
       isFilled: false,
@@ -44,69 +50,33 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.marquee {
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  transition: flex 0.3s ease-in-out;
-
-  .container {
-    width: 100%;
-    margin: 0 20px;
-    flex-wrap: nowrap;
-    overflow: inherit;
+<style lang="postcss">
+@keyframes marquee {
+  from {
+    transform: translateX(0);
   }
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-100%);
-    }
+  to {
+    transform: translateX(-100%);
   }
+}
+.marquee-message {
+  @apply inline-block text-base text-natural-gray1 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
+}
 
-  p {
-    font-size: 0;
-    vertical-align: middle;
-    overflow: inherit;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    &:hover {
-      span {
-        max-width: none;
-      }
-    }
+#marquee {
+  & p:hover span {
+    max-width: none;
   }
-  span {
-    // display: inline-block;
-    font-size: 1rem;
-    max-width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    @media (min-width: 768px) {
-      font-size: 2rem;
-    }
-  }
-
-  .active-marquee {
-    p {
+  & .active-marquee {
+    & p {
+      @apply relative w-fit overflow-ellipsis overflow-visible;
       animation: marquee 10s linear 1;
-      position: relative;
-      width: fit-content;
-      text-overflow: initial;
-      overflow: initial;
     }
-    span {
-      width: fit-content;
-      padding-right: 300px;
+    & span {
+      @apply w-max pr-10;
     }
-    span + span {
-      position: absolute;
+    & span + span {
+      @apply absolute;
     }
   }
 }

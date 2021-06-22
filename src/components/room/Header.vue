@@ -30,7 +30,7 @@ export default {
     <h1 class="flex items-center justify-center laptop:justify-start">
       <HandwriteLogo />
     </h1>
-    <Marquee />
+    <Marquee class="mt-5 laptop:mt-0" />
     <nav>
       <ul class="justify-end flex space-x-2">
         <li>
@@ -68,7 +68,7 @@ export default {
 
   grid-template-areas: 'h1 nav' 'marquee marquee';
 
-  & > .marquee {
+  & > #marquee {
     grid-area: marquee;
   }
   & > h1 {
