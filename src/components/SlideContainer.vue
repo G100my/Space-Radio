@@ -72,20 +72,17 @@ export default {
 </script>
 <template>
   <div
-    refs
-    class="bg-tertiary-2 h-screen overflow-hidden flex laptop:items-stretch laptop:flex laptop:flex-col"
+    id="slide-container"
+    class="bg-tertiary-1 bg-opacity-60 overflow-y-auto laptop:bg-transparent"
     @touchstart="touchstartHandler"
     @touchmove="touchmoveHandler"
     @touchend="touchendHandler"
   >
-    <slot />
     <div
       ref="slideContent"
-      class="show-all-flex w-full mt-24 mb-10 flex items-stretch transition-transform laptop:h-auto laptop:flex-1 laptop:my-0"
+      class="show-all-flex w-full h-full flex overflow-y-auto items-stretch transition-transform laptop:flex-1 laptop:my-0"
     >
-      <div
-        class="bg-tertiary-1 bg-opacity-60 flex-shrink-0 w-full px-8 pb-8 overflow-y-auto laptop:w-96 laptop:px-0 laptop:pb-0"
-      >
+      <div class="flex-shrink-0 w-full px-8 pb-8 overflow-y-auto laptop:w-96 laptop:px-0 laptop:pb-0">
         <slot name="left-side" />
       </div>
       <div class="flex-shrink-0 w-full px-8 pb-8 flex laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">

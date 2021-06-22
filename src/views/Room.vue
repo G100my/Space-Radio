@@ -77,42 +77,38 @@ export default {
 }
 </script>
 <template>
-  <SlideContainer>
-    <Header
-      class="bg-tertiary-1 bg-opacity-60 show-all-flex px-8 pt-8 fixed inset-0 bottom-auto laptop:static laptop:p-0"
-      @activeSideDrawer="isSideDrawerShow = true"
-    />
-    <template #left-side>
-      <PlayingState />
-    </template>
-    <template #right-side>
-      <RoomQueue />
-      <!-- <AdditionDisplay
+  <div id="room" class="relative bg-tertiary-2 h-full flex flex-col">
+    <Header class="show-all-flex" @activeSideDrawer="isSideDrawerShow = true" />
+    <SlideContainer class="flex-1">
+      <template #left-side>
+        <PlayingState />
+      </template>
+      <template #right-side>
+        <RoomQueue />
+        <!-- <AdditionDisplay
         v-if="!mobileMode"
         v-show="additionDisplayToggler"
         :source="additionDisplaySource"
         @activeNoteDialog="activeNoteDialogHandler"
         @disactiveSearchStyle="isSearchActive = false"
       /> -->
-    </template>
-    <SideDrawer
-      v-show="isSideDrawerShow"
-      id="SideDrawer"
-      class="fixed w-full h-full z-50"
-      @close="isSideDrawerShow = false"
-    >
-      <!-- other components -->
-    </SideDrawer>
+      </template>
+    </SlideContainer>
     <div class="slide-navigation laptop:hidden">
       <span :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
       <span :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
     </div>
+
+    <!-- absolute -->
     <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
-  </SlideContainer>
+    <SideDrawer v-show="isSideDrawerShow" class="hidden" @close="isSideDrawerShow = false">
+      <!-- other components placeholder -->
+    </SideDrawer>
+  </div>
 </template>
 <style lang="postcss">
 .slide-navigation {
-  @apply flex justify-center fixed bottom-0 w-full;
+  @apply flex justify-center w-full;
   & > span {
     @apply h-10 w-3/12 rounded-sm;
   }

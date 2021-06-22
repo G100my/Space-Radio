@@ -26,7 +26,7 @@ export default {
 }
 </script>
 <template>
-  <header class="header z-10" :class="{ 'active-search': isSearchActive }">
+  <header class="header z-10 px-8 pt-8 laptop:p-0 bg-tertiary-1 bg-opacity-60 laptop:bg-transparent">
     <h1 class="flex items-center justify-center laptop:justify-start">
       <HandwriteLogo />
     </h1>
