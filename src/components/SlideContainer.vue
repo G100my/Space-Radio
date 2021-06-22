@@ -73,6 +73,7 @@ export default {
 </script>
 <template>
   <div
+    v-bind="$attrs"
     id="slide-container"
     class="bg-tertiary-1 bg-opacity-60 overflow-y-auto laptop:bg-transparent"
     @touchstart="touchstartHandler"
