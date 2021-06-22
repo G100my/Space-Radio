@@ -41,11 +41,11 @@ export default {
 <template>
   <div id="marquee" class="flex items-center flex-nowrap overflow-hidden">
     <IconSpeaker />
-    <div class="flex-1 ml-3 overflow-hidden" :class="{ 'active-marquee': isFilled }">
-      <p class="text-0 whitespace-nowrap overflow-hidden overflow-ellipsis" @animationend="isFilled = false">
+    <div class="flex-1 ml-3 overflow-hidden">
+      <p class="marquee-content" :class="{ active: isFilled }" @animationend="isFilled = false">
         <!--  -->
-        <span class="marquee-message" @mouseenter="mouseenterHandler">{{ messageOutput }}</span>
-        <span v-if="isFilled" class="marquee-message">{{ messageOutput }}</span>
+        <span @mouseenter="mouseenterHandler">{{ messageOutput }}</span>
+        <span v-if="isFilled">{{ messageOutput }}</span>
       </p>
     </div>
   </div>
@@ -59,24 +59,30 @@ export default {
     transform: translateX(-100%);
   }
 }
-.marquee-message {
-  @apply inline-block text-base text-natural-gray1 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
-}
 
-#marquee {
-  p:hover span {
-    max-width: none;
-  }
-  .active-marquee {
-    p {
+@tailwind components;
+@layer components {
+  .marquee-content {
+    @apply text-0 whitespace-nowrap overflow-hidden overflow-ellipsis;
+
+    &:hover span {
+      max-width: none;
+    }
+
+    span {
+      @apply inline-block text-base text-natural-gray1 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
+    }
+
+    &.active {
       @apply relative w-fit overflow-ellipsis overflow-visible;
       animation: marquee 10s linear 1;
-    }
-    span {
-      @apply w-max pr-10;
-    }
-    span + span {
-      @apply absolute;
+
+      span {
+        @apply w-max pr-10;
+      }
+      span + span {
+        @apply absolute;
+      }
     }
   }
 }
