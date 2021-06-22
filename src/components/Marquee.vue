@@ -64,18 +64,18 @@ export default {
 }
 
 #marquee {
-  & p:hover span {
+p:hover span {
     max-width: none;
   }
-  & .active-marquee {
-    & p {
+.active-marquee {
+  p {
       @apply relative w-fit overflow-ellipsis overflow-visible;
       animation: marquee 10s linear 1;
     }
-    & span {
+  span {
       @apply w-max pr-10;
     }
-    & span + span {
+  span + span {
       @apply absolute;
     }
   }

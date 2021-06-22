@@ -115,16 +115,16 @@ export default {
 <style lang="postcss">
 .create-room-form {
   @apply space-y-4;
-  & p {
+p {
     @apply flex flex-col;
     &:nth-child(3) input {
       @apply bg-white;
     }
   }
-  & label {
+label {
     @apply mb-2;
   }
-  & input {
+input {
     @apply tracking-[-0.015rem] h-12 border-2 border-black p-2 pl-5 align-middle bg-[#E0E0E0];
   }
 }

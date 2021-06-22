@@ -68,21 +68,21 @@ export default {
 
   grid-template-areas: 'h1 nav' 'marquee marquee';
 
-  & > #marquee {
+> #marquee {
     grid-area: marquee;
   }
-  & > h1 {
+> h1 {
     grid-area: h1;
   }
-  & > nav {
+> nav {
     grid-area: nav;
   }
 
-  & li {
+li {
     @apply flex;
   }
 
-  & > nav label {
+> nav label {
     @apply hidden ml-3 laptop:inline;
   }
 }
