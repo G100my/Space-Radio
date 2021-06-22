@@ -1,15 +1,3 @@
-<template>
-  <div id="marquee" class="flex items-center flex-nowrap overflow-hidden">
-    <IconSpeaker />
-    <div class="flex-1 ml-3 overflow-hidden" :class="{ 'active-marquee': isFilled }">
-      <p class="text-0 whitespace-nowrap overflow-hidden overflow-ellipsis" @animationend="isFilled = false">
-        <!--  -->
-        <span class="marquee-message" @mouseenter="mouseenterHandler">{{ messageOutput }}</span>
-        <span v-if="isFilled" class="marquee-message">{{ messageOutput }}</span>
-      </p>
-    </div>
-  </div>
-</template>
 <script>
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
 import IconSpeaker from '@/assets/speaker.svg'
@@ -50,6 +38,18 @@ export default {
   },
 }
 </script>
+<template>
+  <div id="marquee" class="flex items-center flex-nowrap overflow-hidden">
+    <IconSpeaker />
+    <div class="flex-1 ml-3 overflow-hidden" :class="{ 'active-marquee': isFilled }">
+      <p class="text-0 whitespace-nowrap overflow-hidden overflow-ellipsis" @animationend="isFilled = false">
+        <!--  -->
+        <span class="marquee-message" @mouseenter="mouseenterHandler">{{ messageOutput }}</span>
+        <span v-if="isFilled" class="marquee-message">{{ messageOutput }}</span>
+      </p>
+    </div>
+  </div>
+</template>
 <style lang="postcss">
 @keyframes marquee {
   from {
@@ -64,18 +64,18 @@ export default {
 }
 
 #marquee {
-p:hover span {
+  p:hover span {
     max-width: none;
   }
-.active-marquee {
-  p {
+  .active-marquee {
+    p {
       @apply relative w-fit overflow-ellipsis overflow-visible;
       animation: marquee 10s linear 1;
     }
-  span {
+    span {
       @apply w-max pr-10;
     }
-  span + span {
+    span + span {
       @apply absolute;
     }
   }

@@ -101,10 +101,10 @@ export default {
 <style lang="postcss">
 .slide-navigation {
   @apply flex justify-center w-full;
-> button {
+  > button {
     @apply h-10 w-3/12 rounded-sm;
   }
-> .active {
+  > .active {
     @apply bg-yellow-500;
   }
 }

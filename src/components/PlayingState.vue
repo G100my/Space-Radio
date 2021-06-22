@@ -286,7 +286,7 @@ export default {
   }
 
   .control-board {
-  button {
+    button {
       color: var(--secondary-neutral);
     }
   }

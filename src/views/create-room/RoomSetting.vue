@@ -171,16 +171,16 @@ export default {
 <style lang="postcss">
 .room-setting-form-item {
   @apply lg:mt-5;
-> div {
+  > div {
     @apply flex;
   }
-label {
+  label {
     @apply mr-auto;
   }
-span {
+  span {
     @apply w-8 mx-0.5 text-center;
   }
-input {
+  input {
     @apply mt-2;
   }
 }
