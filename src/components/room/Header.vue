@@ -1,7 +1,6 @@
 <script>
 import { ref } from 'vue'
 import Marquee from '@/components/Marquee.vue'
-// import UserRecentPlayedButton from '@/components/feature-buttons/UserRecentPlayedButton.vue'
 import HandwriteLogo from '@/assets/handwriteLogo.svg'
 import IconSearch from '@/assets/icons/search.svg'
 import IconPerson from '@/assets/icons/person.svg'
@@ -11,7 +10,6 @@ export default {
   components: {
     IconSearch,
     Marquee,
-    // UserRecentPlayedButton,
     HandwriteLogo,
     IconPerson,
     IconPlus,
@@ -26,13 +24,16 @@ export default {
 }
 </script>
 <template>
-  <header class="header z-10 px-8 pt-8 laptop:p-0 bg-tertiary-1 bg-opacity-60 laptop:bg-transparent">
-    <h1 class="flex items-center justify-center laptop:justify-start">
+  <header
+    class="header z-10 px-8 pt-8 laptop:p-0 bg-tertiary-1 bg-opacity-60 laptop:bg-transparent laptop:items-center"
+  >
+    <h1 class="flex items-center justify-center laptop:flex-col laptop:pt-10 laptop:px-[60px]">
       <HandwriteLogo />
+      <h2 class="text-natural-white hidden laptop:block laptop:mt-6">@{{ $store.getters.roomName }}</h2>
     </h1>
     <Marquee class="mt-5 laptop:mt-0" />
     <nav>
-      <ul class="justify-end flex space-x-2">
+      <ul class="justify-end flex">
         <li>
           <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="$emit('activeSideDrawer')">
             <IconSearch />
@@ -41,7 +42,7 @@ export default {
         <li>
           <button
             type="button"
-            class="flex text-white px-3 laptop:py-2 laptop:px-4 laptop:border laptop:border-natural-gray2"
+            class="flex text-natural-white px-3 laptop:py-2 laptop:px-4 laptop:border laptop:border-natural-gray2"
             @click="$emit('activeSideDrawer')"
           >
             <IconPlus />

@@ -5,7 +5,7 @@
       @apply laptop:flex-none laptop:w-96 laptop:bg-tertiary-1 laptop:bg-opacity-60;
     }
     > *:not(:first-child) {
-      @apply laptop:flex-1;
+      @apply laptop:flex-1 laptop:px-[60px];
     }
   }
 }

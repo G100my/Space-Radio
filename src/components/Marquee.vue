@@ -70,7 +70,7 @@ export default {
     }
 
     span {
-      @apply inline-block text-base text-natural-gray1 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
+      @apply inline-block text-base text-natural-gray1 text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
     }
 
     &.active {
