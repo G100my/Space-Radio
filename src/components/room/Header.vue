@@ -50,7 +50,7 @@ export default {
         </li>
         <li>
           <button
-            class="flex items-center text-white px-3 laptop:py-2 laptop:px-4"
+            class="flex items-center text-natural-white px-3 laptop:py-2 laptop:px-4"
             type="button"
             @click="$emit('activeSideDrawer')"
           >

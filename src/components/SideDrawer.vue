@@ -44,7 +44,7 @@ export default {
     >
       <div class="relative bg-tertiary-1 bg-opacity-80 w-screen h-screen laptop:w-1/2 laptop:ml-auto">
         <head class="flex justify-end">
-          <button type="button" class="text-white h-10 w-10" @click="$emit('update:modelValue', false)">
+          <button type="button" class="text-natural-white h-10 w-10" @click="$emit('update:modelValue', false)">
             <XCircleIcon />
           </button>
         </head>

@@ -7,11 +7,11 @@
   }
 
   .btn-spotify-bg-white {
-    @apply text-spotify border-spotify active:border-spotify active:bg-spotify active:text-white;
+    @apply text-spotify border-spotify active:border-spotify active:bg-spotify active:text-natural-white;
   }
 
   .btn-spotify-bg-green {
-    @apply bg-spotify border-spotify text-white active:border-green-600 active:bg-green-600;
+    @apply bg-spotify border-spotify text-natural-white active:border-green-600 active:bg-green-600;
   }
 }
 
@@ -43,7 +43,7 @@
 
 @layer components {
   .btn-tertiary {
-    @apply py-2 px-4 text-base text-white;
+    @apply py-2 px-4 text-base text-natural-white;
   }
   .btn-tertiary-border {
     @apply bg-tertiary-1 bg-opacity-60 border border-natural-gray2 rounded-sm;
