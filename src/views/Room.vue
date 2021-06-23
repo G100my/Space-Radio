@@ -6,11 +6,11 @@ import { userLogConnect2firebase } from '../store/UserLog.js'
 
 import SlideContainer from '../components/SlideContainer.vue'
 import SideDrawer from '../components/SideDrawer.vue'
-import Header from '../components/room/Header.vue'
-import PlayingState from '../components/PlayingState.vue'
-import NoteDialog from '../components/NoteDialog.vue'
+import Header from '../components/header/Header.vue'
+import PlayingState from '../components/player/PlayingState.vue'
+import NoteDialog from '../components/lineup/NoteDialog.vue'
 // import AdditionDisplay from '../components/AdditionDisplay.vue'
-import RoomQueue from '../components/RoomQueue.vue'
+import RoomQueue from '../components/lineup/RoomQueue.vue'
 
 export default {
   components: {

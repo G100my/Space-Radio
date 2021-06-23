@@ -116,14 +116,14 @@
 import { defineAsyncComponent } from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import UserLog from './UserLog.vue'
-import logo from '../assets/vinyl-record.png'
-import ProgressTimer from '../components/ProgressTimer.vue'
+import logo from '@/assets/vinyl-record.png'
+import ProgressTimer from './ProgressTimer.vue'
 
 export default {
   components: {
     UserLog,
     ProgressTimer,
-    HostControl: defineAsyncComponent(() => import('../components/HostControl.vue')),
+    HostControl: defineAsyncComponent(() => import('./HostControl.vue')),
   },
   data() {
     return {

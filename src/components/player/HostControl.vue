@@ -76,8 +76,8 @@ import {
   isSpotifyPlayerPaused,
   isSpotifyPlayerActived,
   spotifyPlayerId,
-} from '../composables/useSpotifyPlayer.js'
-import { spotifyAPI } from '../plugin/spotify-web-api.js'
+} from '../../composables/useSpotifyPlayer.js'
+import { spotifyAPI } from '../../plugin/spotify-web-api.js'
 
 export default {
   setup() {

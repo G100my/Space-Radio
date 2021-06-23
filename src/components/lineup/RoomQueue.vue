@@ -58,8 +58,8 @@
   </div>
 </template>
 <script>
-import TrackGridItem from '../components/template/TrackGridItem.vue'
-import TrackGridShell from '../components/template/TrackGridShell.vue'
+import TrackGridItem from '../template/TrackGridItem.vue'
+import TrackGridShell from '../template/TrackGridShell.vue'
 import { mapGetters } from 'vuex'
 
 export default {

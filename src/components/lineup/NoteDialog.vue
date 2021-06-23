@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+import { messageOutputMaker } from '@/utility/messageOutputMaker.js'
 
 export default {
   props: {

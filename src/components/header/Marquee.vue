@@ -1,5 +1,5 @@
 <script>
-import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+import { messageOutputMaker } from '@/utility/messageOutputMaker.js'
 import IconSpeaker from '@/assets/speaker.svg'
 
 export default {

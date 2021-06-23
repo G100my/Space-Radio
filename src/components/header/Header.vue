@@ -1,6 +1,6 @@
 <script>
 import { ref } from 'vue'
-import Marquee from '@/components/Marquee.vue'
+import Marquee from '@/components/header/Marquee.vue'
 import HandwriteLogo from '@/assets/handwriteLogo.svg'
 import IconSearch from '@/assets/icons/search.svg'
 import IconPerson from '@/assets/icons/person.svg'
