@@ -24,18 +24,11 @@ export default {
       // left: -,   right: +
       const currentDistance = event.touches[0].clientX - touchStartPosition
       if (Math.abs(currentDistance) < 30) return
-      if (isMainSide.value) {
-        if (currentDistance > 50) {
-          return
-        } else {
-          slideContent.value.style.transform = `translate(${currentDistance}px, 0)`
-        }
-      } else {
-        if (currentDistance < -50) {
-          return
-        } else {
-          slideContent.value.style.transform = `translate(${-window.innerWidth + currentDistance}px, 0)`
-        }
+
+      if (isMainSide.value && currentDistance < 50) {
+        slideContent.value.style.transform = `translate(${currentDistance}px, 0)`
+      } else if (!isMainSide.value && currentDistance > -50) {
+        slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2 + currentDistance}px, 0)`
       }
     }
     function sliderToggler(direction) {
@@ -45,14 +38,14 @@ export default {
           isMainSide.value = true
           break
         case 'slide2left':
-          slideContent.value.style.transform = `translate(-${window.innerWidth}px, 0)`
+          slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
           isMainSide.value = false
           break
         case 'resume':
           if (isMainSide.value) {
             slideContent.value.style.transform = ''
           } else {
-            slideContent.value.style.transform = `translate(-${window.innerWidth}px, 0)`
+            slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
           }
           break
         default:
@@ -76,18 +69,19 @@ export default {
     v-bind="$attrs"
     id="slide-container"
     class="bg-tertiary-1 bg-opacity-60 overflow-y-auto laptop:bg-transparent"
-    @touchstart="touchstartHandler"
-    @touchmove="touchmoveHandler"
-    @touchend="touchendHandler"
+    @touchstart.prevent="touchstartHandler"
+    @touchmove.prevent="touchmoveHandler"
+    @touchend.prevent="touchendHandler"
   >
     <div
+      id="slide-content"
       ref="slideContent"
-      class="show-all-flex w-full h-full flex overflow-y-auto items-stretch transition-transform laptop:flex-1 laptop:my-0"
+      class="show-all-flex w-[200%] h-full flex overflow-y-auto items-stretch transition-transform duration-300 laptop:flex-1 laptop:my-0 laptop:w-auto"
     >
-      <div class="flex-shrink-0 w-full px-8 pb-8 overflow-y-auto laptop:w-96 laptop:px-0 laptop:pb-0">
+      <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto laptop:w-96 laptop:px-0 laptop:pb-0">
         <slot name="left-side" />
       </div>
-      <div class="flex-shrink-0 w-full px-8 pb-8 flex laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">
+      <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto flex laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">
         <slot name="right-side" />
       </div>
     </div>
