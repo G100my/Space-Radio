@@ -1,15 +1,12 @@
 <script>
 import { messageOutputMaker } from '@/utility/messageOutputMaker.js'
 import IconSpeaker from '@/assets/speaker.svg'
+import BaseMarquee from '@/components/base/BaseMarquee.vue'
 
 export default {
   components: {
     IconSpeaker,
-  },
-  data() {
-    return {
-      isFilled: false,
-    }
+    BaseMarquee,
   },
   computed: {
     latestQueue() {
@@ -22,68 +19,11 @@ export default {
       return messageOutputMaker(note, trackName)
     },
   },
-  watch: {
-    // when latestQueue exist, play animation
-    latestQueue(newValue) {
-      if (newValue) this.isFilled = true
-    },
-  },
-  methods: {
-    mouseenterHandler(event) {
-      const span = event.currentTarget
-      if (span.offsetWidth > span.parentElement.offsetWidth) {
-        this.isFilled = true
-      }
-    },
-  },
 }
 </script>
 <template>
   <div id="marquee" class="flex items-center flex-nowrap overflow-hidden">
     <IconSpeaker />
-    <div class="flex-1 ml-3 overflow-hidden">
-      <p class="marquee-content" :class="{ active: isFilled }" @animationend="isFilled = false">
-        <!--  -->
-        <span @mouseenter="mouseenterHandler">{{ messageOutput }}</span>
-        <span v-if="isFilled">{{ messageOutput }}</span>
-      </p>
-    </div>
+    <BaseMarquee :text="messageOutput" class="flex-1 ml-3" />
   </div>
 </template>
-<style lang="postcss">
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-@tailwind components;
-@layer components {
-  .marquee-content {
-    @apply text-0 whitespace-nowrap overflow-hidden overflow-ellipsis;
-
-    &:hover span {
-      max-width: none;
-    }
-
-    span {
-      @apply inline-block text-base text-natural-gray1 text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
-    }
-
-    &.active {
-      @apply relative w-fit overflow-ellipsis overflow-visible;
-      animation: marquee 10s linear 1;
-
-      span {
-        @apply w-max pr-10;
-      }
-      span + span {
-        @apply absolute;
-      }
-    }
-  }
-}
-</style>
