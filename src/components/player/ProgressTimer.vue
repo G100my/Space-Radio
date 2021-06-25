@@ -1,10 +1,8 @@
 <template>
-  <div class="progress-timer">
-    <p>
-      <span>{{ positionMin }}:{{ positionSec }}</span
-      ><span class="midline">/</span><span>{{ durationMin }}:{{ durationSec }}</span>
-    </p>
-  </div>
+  <p>
+    <span>{{ positionMin }}:{{ positionSec }}</span
+    ><span class="mx-2">/</span><span>{{ durationMin }}:{{ durationSec }}</span>
+  </p>
 </template>
 <script>
 import { watch, computed, ref } from 'vue'
@@ -77,10 +75,3 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.progress-timer {
-  .midline {
-    margin: 0 0.5em;
-  }
-}
-</style>
