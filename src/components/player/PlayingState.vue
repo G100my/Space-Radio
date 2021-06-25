@@ -1,26 +1,44 @@
 <template>
-  <div class="playing-state">
-    <div class="track-info">
-      <div class="cover">
-        <img :src="playerPlayingAlbum.image_url ? playerPlayingAlbum.image_url : logo" alt="" />
+  <section class="bg-opacity-40 h-full w-full">
+    <header class="flex justify-between items-center">
+      <h3 class="text-2xl text-natural-white">Now</h3>
+      <img :src="SpotifyLogo" alt="Spotify" class="w-20" />
+    </header>
+    <section id="plarer-state" class="mt-7 flex items-start">
+      <div class="relative bg-tertiary-2 bg-opacity-60 px-5 py-3">
+        <a :href="playerPlayingAlbum.url" target="_blank">
+          <img
+            :src="playerPlayingAlbum.image_url ? playerPlayingAlbum.image_url : logo"
+            :alt="playerPlayingAlbum.name"
+            :title="playerPlayingAlbum.name"
+            class="h-20 w-20"
+          />
+        </a>
+        <PlayStatusButton class="absolute right-0 bottom-0 translate-y-1/3 translate-x-1/3" />
       </div>
-      <section class="description">
-        <p class="track-name">
-          <span>{{ playerPlayingTrackName }}</span>
-        </p>
-        <p class="artists">
-          <a v-for="(artists, index) in playerPlayingArtists" :key="index" target="_blank" :href="artists.url">
-            {{ artists.name }}
-          </a>
-        </p>
-        <p class="album">
-          <a target="_blank" :href="playerPlayingAlbum.url">{{ playerPlayingAlbum.name }}</a>
-        </p>
-        <p>
-          <ProgressTimer />
-        </p>
+      <section class="flex-1 pl-4 self-stretch flex flex-col">
+        <section class="flex">
+          <p class="flex-1 font-bold text-natural-gray1">{{ playerPlayingTrackName }}</p>
+          <button type="button" class="w-6 h-6">
+            <IconHeart class="text-natural-gray1" />
+          </button>
+        </section>
+        <section class="mt-1">
+          <BaseMarquee>
+            <a v-for="(artists, index) in playerPlayingArtists" :key="index" target="_blank" :href="artists.url">
+              {{ artists.name }}
+            </a>
+          </BaseMarquee>
+        </section>
+        <section class="mt-auto flex justify-end text-primary">
+          <ProgressTimer class="text-opacity-80" />
+          <p class="ml-5">{{ '點播人' }}</p>
+        </section>
       </section>
-    </div>
+    </section>
+  </section>
+  <!--  -->
+  <div class="playing-state">
     <div class="control-board">
       <div class="volumn-control">
         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-volume-down" viewBox="0 0 16 16">
@@ -118,15 +136,23 @@ import { mapState, mapGetters } from 'vuex'
 import UserLog from './UserLog.vue'
 import logo from '@/assets/vinyl-record.png'
 import ProgressTimer from './ProgressTimer.vue'
+import SpotifyLogo from '@/assets/Spotify_Logo_CMYK_Green.png'
+import IconHeart from '@heroicons/vue/solid/HeartIcon'
+import BaseMarquee from '@/components/base/BaseMarquee.vue'
+import PlayStatusButton from '@/components/feature-buttons/PlayStatusButton.vue'
 
 export default {
   components: {
     UserLog,
     ProgressTimer,
     HostControl: defineAsyncComponent(() => import('./HostControl.vue')),
+    IconHeart,
+    BaseMarquee,
+    PlayStatusButton,
   },
   data() {
     return {
+      SpotifyLogo,
       logo,
       userPlaylists: [],
       selectedPlaylistKey: null,
