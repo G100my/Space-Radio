@@ -14,7 +14,7 @@
             class="h-20 w-20"
           />
         </a>
-        <PlayStatusButton class="absolute right-0 bottom-0 translate-y-1/3 translate-x-1/3" />
+        <PlayToggle class="absolute right-0 bottom-0 translate-y-1/3 translate-x-1/3" />
       </div>
       <section class="flex-1 pl-4 self-stretch flex flex-col">
         <section class="flex">
@@ -139,7 +139,7 @@ import ProgressTimer from './ProgressTimer.vue'
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import IconHeart from '@heroicons/vue/solid/HeartIcon'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
-import PlayStatusButton from '@/components/feature-buttons/PlayStatusButton.vue'
+import PlayToggle from '@/components/feature-buttons/PlayToggle.vue'
 
 export default {
   components: {
@@ -148,7 +148,7 @@ export default {
     HostControl: defineAsyncComponent(() => import('./HostControl.vue')),
     IconHeart,
     BaseMarquee,
-    PlayStatusButton,
+    PlayToggle,
   },
   data() {
     return {
