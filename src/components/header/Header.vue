@@ -27,7 +27,7 @@ export default {
   <header
     class="header z-10 px-8 py-8 laptop:p-0 bg-tertiary-1 bg-opacity-60 laptop:bg-transparent laptop:items-center"
   >
-    <h1 class="flex items-center justify-center laptop:flex-col laptop:pt-10 laptop:px-[60px]">
+    <h1 class="flex items-center justify-start laptop:flex-col laptop:pt-10 laptop:items-start">
       <Logo class="text-natural-white" />
       <h2 class="text-natural-white hidden laptop:block laptop:mt-6">@{{ $store.getters.roomName }}</h2>
     </h1>
