@@ -1,16 +1,16 @@
 <script>
 import { ref } from 'vue'
 import Marquee from '@/components/header/Marquee.vue'
-import HandwriteLogo from '@/assets/handwriteLogo.svg'
-import IconSearch from '@/assets/icons/search.svg'
-import IconPerson from '@/assets/icons/person.svg'
-import IconPlus from '@/assets/icons/plus.svg'
+import Logo from '@/assets/images/logo-large.svg'
+import IconSearch from '@/assets/icons/icon-search.svg'
+import IconPerson from '@/assets/icons/icon/profile.svg'
+import IconPlus from '@/assets/icons/icon-plus.svg'
 
 export default {
   components: {
     IconSearch,
     Marquee,
-    HandwriteLogo,
+    Logo,
     IconPerson,
     IconPlus,
   },
@@ -28,7 +28,7 @@ export default {
     class="header z-10 px-8 py-8 laptop:p-0 bg-tertiary-1 bg-opacity-60 laptop:bg-transparent laptop:items-center"
   >
     <h1 class="flex items-center justify-center laptop:flex-col laptop:pt-10 laptop:px-[60px]">
-      <HandwriteLogo />
+      <Logo class="text-natural-white" />
       <h2 class="text-natural-white hidden laptop:block laptop:mt-6">@{{ $store.getters.roomName }}</h2>
     </h1>
     <Marquee class="mt-5 laptop:mt-0" />

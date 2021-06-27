@@ -1,11 +1,11 @@
 <script>
-import IconPlay from '@/assets/icons/play.svg'
-import IconStop from '@/assets/icons/stop.svg'
+import IconPlay from '@/assets/icons/icon-play.svg'
+import IconPause from '@/assets/icons/icon-pause.svg'
 import { isSpotifyPlayerPaused } from '../../composables/useSpotifyPlayer.js'
 export default {
   components: {
     IconPlay,
-    IconStop,
+    IconPause,
   },
   setup() {
     return isSpotifyPlayerPaused
@@ -21,6 +21,6 @@ export default {
     @click="togglePlay"
   >
     <IconPlay v-show="isSpotifyPlayerPaused" />
-    <IconStop v-show="!isSpotifyPlayerPaused" />
+    <IconPause v-show="!isSpotifyPlayerPaused" />
   </button>
 </template>

@@ -1,6 +1,6 @@
 <script>
 import { messageOutputMaker } from '@/utility/messageOutputMaker.js'
-import IconSpeaker from '@/assets/speaker.svg'
+import IconSpeaker from '@/assets/icons/icon-announcing.svg'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
 
 export default {
