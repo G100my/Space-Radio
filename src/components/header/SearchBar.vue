@@ -15,7 +15,7 @@
 </template>
 <script>
 import { ref } from 'vue'
-import { spotifyAPI } from '../../utility/spotify-web-api'
+import { spotifyAPI } from '../../utility/spotifyAPI'
 import { SearchIcon, XCircleIcon } from '@heroicons/vue/outline'
 
 export default {

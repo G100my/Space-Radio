@@ -60,7 +60,7 @@ import { reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import firebase from '../../store/firebase.js'
 import { usePlusMinusHandler } from '../../composables/usePlusMinusHandler.js'
-import { spotifyAPI } from '../../utility/spotify-web-api.js'
+import { spotifyAPI } from '../../utility/spotifyAPI.js'
 
 import BaseGoBackButton from '../../components/base/BaseGoBackButton.vue'
 import BasePlusButton from '../../components/base/BasePlusButton.vue'

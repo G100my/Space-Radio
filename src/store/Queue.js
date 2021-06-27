@@ -1,4 +1,4 @@
-import { spotifyAPI } from '../utility/spotify-web-api.js'
+import { spotifyAPI } from '../utility/spotifyAPI.js'
 import firebase from './firebase.js'
 
 let urgent_queue_ref

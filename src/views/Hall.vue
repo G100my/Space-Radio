@@ -26,7 +26,7 @@ import { onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
-import { spotifyAPI } from '../utility/spotify-web-api.js'
+import { spotifyAPI } from '../utility/spotifyAPI.js'
 
 export default {
   setup() {
