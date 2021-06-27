@@ -1990,7 +1990,7 @@ var SpotifyWebApi = (function () {
 // }
 
 import store from '../store'
-import { refreshAccessToken } from '../utility/PKCE.js'
+import { refreshAccessToken } from './PKCE.js'
 
 const spotifyAPI = new Proxy(new SpotifyWebApi(), {
   get: function (target, property) {

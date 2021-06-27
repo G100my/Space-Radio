@@ -7,7 +7,7 @@ import HallShell from '../components/hall/HallShell.vue'
 import CreateRoom from '../views/create-room/CreateRoom.vue'
 import RoomSetting from '../views/create-room/RoomSetting.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
-import { spotifyAPI } from '../plugin/spotify-web-api.js'
+import { spotifyAPI } from '../utility/spotify-web-api.js'
 
 import { setPlayingStateRef } from '../store/PlayingState.js'
 import { setUserLogRef } from '../store/UserLog.js'

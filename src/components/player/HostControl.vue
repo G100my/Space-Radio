@@ -77,7 +77,7 @@ import {
   isSpotifyPlayerActived,
   spotifyPlayerId,
 } from '../../composables/useSpotifyPlayer.js'
-import { spotifyAPI } from '../../plugin/spotify-web-api.js'
+import { spotifyAPI } from '../../utility/spotify-web-api.js'
 
 export default {
   setup() {

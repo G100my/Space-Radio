@@ -25,7 +25,7 @@ import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
 import initCover from '../assets/vinyl-record.png'
 import BaseGoBackButton from '../components/base/BaseGoBackButton.vue'
-import { spotifyAPI } from '../plugin/spotify-web-api.js'
+import { spotifyAPI } from '../utility/spotify-web-api.js'
 
 export default {
   components: {
