@@ -7,12 +7,15 @@ import {
   currentActiveDeviceId,
   spotifyPlayerId,
 } from '@/composables/useSpotifyPlayer.js'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 export default {
   components: {
     IconPlay,
     IconPause,
   },
   setup() {
+    const store = useStore()
     // fixme 怎樣直接能在 @click 綁訂 spotifyPlayer.togglePlay() ?
     function togglePlay() {
       spotifyPlayer.togglePlay()
@@ -22,12 +25,14 @@ export default {
       currentActiveDeviceId,
       spotifyPlayerId,
       togglePlay,
+      isHost: computed(() => store.getters.isHostUser),
     }
   },
 }
 </script>
 <template>
   <button
+    v-if="isHost"
     id="play-status-button"
     class="flex items-center justify-center h-10 w-10 bg-primary rounded-full disabled:filter disabled:grayscale"
     type="button"

@@ -24,6 +24,9 @@ const Personal = {
     userName(state) {
       return state.display_name
     },
+    isHostUser(_state, getters, _rootState, rootGetters) {
+      return rootGetters.hostId === getters.userId
+    },
     refreshToken(state) {
       return state.refresh_token
     },
