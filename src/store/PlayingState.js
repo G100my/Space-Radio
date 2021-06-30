@@ -63,7 +63,7 @@ const PlayingState = {
       return state.playing_track.album
     },
     playerPlayingTrackName(state) {
-      return state.playing_track.name
+      return state.playing_track.name ? state.playing_track.name : 'No track in player'
     },
     currentVolume(state) {
       return state.volume

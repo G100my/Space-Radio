@@ -1,6 +1,13 @@
 <script>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import IconNowPlay from '@/assets/icons/icon-nowplay.svg'
+import IconNextPlay from '@/assets/icons/icon-nextplay.svg'
+
 export default {
+  components: {
+    IconNowPlay,
+    IconNextPlay,
+  },
   setup() {
     const slideContent = ref(null)
     let isMainSide = ref(true)
@@ -13,9 +20,9 @@ export default {
       const currentDistance = touchStartPosition - event.changedTouches[0].clientX
       if (Math.abs(currentDistance) < 30) return
       if (currentDistance > 70) {
-        sliderToggler('slide2left')
+        sliderToggler('left2right')
       } else if (currentDistance < 70) {
-        sliderToggler('slide2right')
+        sliderToggler('right2left')
       } else {
         sliderToggler('resume')
       }
@@ -31,15 +38,42 @@ export default {
         slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2 + currentDistance}px, 0)`
       }
     }
-    function sliderToggler(direction) {
+
+    // ==
+
+    const mainSideButton = ref(null)
+
+    const left = ref(0)
+    const targetLeft = ref(0)
+    const right = ref(0)
+    const targetRight = ref(0)
+    const animationTyle = ref(null)
+    function computeLeftRight(element) {
+      const leftValue = element.offsetLeft
+      const rightValue = element.parentElement.offsetWidth - element.offsetLeft - element.offsetWidth
+      return { leftValue, rightValue }
+    }
+
+    // ==
+
+    function sliderToggler(direction, event) {
+      const { leftValue, rightValue } = computeLeftRight(event.currentTarget)
+      targetLeft.value = leftValue
+      targetRight.value = rightValue
+      console.log(left.value, targetLeft.value)
+      console.log(right.value, targetRight.value)
+      animationTyle.value = direction
+
       switch (direction) {
-        case 'slide2right':
+        case 'right2left':
           slideContent.value.style.transform = ''
           isMainSide.value = true
+          console.log(direction)
           break
-        case 'slide2left':
+        case 'left2right':
           slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
           isMainSide.value = false
+          console.log(direction)
           break
         case 'resume':
           if (isMainSide.value) {
@@ -53,6 +87,17 @@ export default {
           break
       }
     }
+
+    function animationendHandler() {
+      left.value = targetLeft.value
+      right.value = targetRight.value
+    }
+    onMounted(() => {
+      const { leftValue, rightValue } = computeLeftRight(mainSideButton.value)
+      left.value = leftValue
+      right.value = rightValue
+    })
+
     return {
       slideContent,
       touchmoveHandler,
@@ -60,6 +105,14 @@ export default {
       touchendHandler,
       sliderToggler,
       isMainSide,
+
+      mainSideButton,
+      left,
+      targetLeft,
+      right,
+      targetRight,
+      animationTyle,
+      animationendHandler,
     }
   },
 }
@@ -87,19 +140,75 @@ export default {
     </div>
   </div>
 
-  <div class="slide-navigation laptop:hidden">
-    <button type="button" :class="{ active: isMainSide }" @click="sliderToggler('slide2right')" />
-    <button type="button" :class="{ active: !isMainSide }" @click="sliderToggler('slide2left')" />
+  <div class="slide-navigation">
+    <div
+      class="slide-navigation-bar"
+      :style="{
+        '--left': `${left}px`,
+        '--right': `${right}px`,
+        '--targetLeft': `${targetLeft}px`,
+        '--targetRight': `${targetRight}px`,
+        '--animation': animationTyle,
+      }"
+      @animationend="animationendHandler"
+    />
+    <button ref="mainSideButton" type="button" @click="sliderToggler('right2left', $event)">
+      <IconNowPlay />
+      <span>Now</span>
+    </button>
+    <button type="button" @click="sliderToggler('left2right', $event)">
+      <IconNextPlay />
+      <span>Next</span>
+    </button>
   </div>
 </template>
 <style lang="postcss">
 .slide-navigation {
-  @apply flex justify-center w-full;
+  @apply h-16 p-1.5 flex justify-evenly relative laptop:hidden;
   > button {
-    @apply h-10 w-3/12 rounded-sm;
+    @apply h-full w-[77px] rounded-sm flex flex-col items-center focus:outline-none;
+    svg {
+      @apply h-7 w-7 mt-auto;
+    }
+    span {
+      @apply text-xs text-natural-gray2 mb-auto;
+    }
   }
-  > .active {
-    @apply bg-yellow-500;
+
+  &-bar {
+    @apply absolute bg-[#071A4F] h-1.5 rounded-md top-0;
+    left: var(--left);
+    right: var(--right);
+    animation-name: var(--animation);
+    animation-duration: 0.4s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+  }
+  @keyframes left2right {
+    0% {
+      right: var(--right);
+    }
+    50% {
+      right: var(--targetRight);
+      left: var(--left);
+    }
+    100% {
+      right: var(--targetRight);
+      left: var(--targetLeft);
+    }
+  }
+  @keyframes right2left {
+    0% {
+      left: var(--left);
+    }
+    50% {
+      left: var(--targetLeft);
+      right: var(--right);
+    }
+    100% {
+      left: var(--targetLeft);
+      right: var(--targetRight);
+    }
   }
 }
 </style>

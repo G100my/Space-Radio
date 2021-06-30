@@ -3,11 +3,16 @@ import store from '../store'
 import { refreshAccessToken } from '../utility/PKCE.js'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
 import { TTS } from '../utility/tts.js'
+import { spotifyAPI } from '@/utility/spotifyAPI'
 
 let spotifyPlayer
 const isSpotifyPlayerPaused = ref(true)
 const spotifyPlayerId = ref(null)
 const isSpotifyPlayerActived = ref(false)
+
+const currentActiveDeviceId = ref(null)
+const currentActiveDeviceName = ref(null)
+
 let playerVolume = 50
 const pendingQueue = computed(() => store.getters.pendingQueue)
 
@@ -101,6 +106,14 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     })
   })
 
+  function refreshCurrentDevice() {
+    spotifyAPI.getMyCurrentPlaybackState().then(result => {
+      if (!result) return
+      currentActiveDeviceId.value = result.device.id
+      currentActiveDeviceName.value = result.device.name
+    })
+  }
+
   // Ready
   spotifyPlayer.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id)
@@ -112,7 +125,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     //     deviceActived.value = true
     //   }
     // })
-
+    refreshCurrentDevice()
     // 等 player 準備完成才 watch playerVolume
     useWatchCurrentVolume(currentVolume)
   })
@@ -137,6 +150,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       return
     }
     isSpotifyPlayerPaused.value = playerState.paused
+    if (!isSpotifyPlayerActived.value) refreshCurrentDevice()
     diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
     clearPendingQueueHandler(playerState)
     setNextQueueTimeout(playerState)
@@ -255,4 +269,6 @@ export {
   nextTrack,
   isSpotifyPlayerPaused,
   spotifyPlayerId,
+  currentActiveDeviceId,
+  currentActiveDeviceName,
 }
