@@ -8,6 +8,9 @@ import SlideContainer from '../components/SlideContainer.vue'
 import SideDrawer from '../components/SideDrawer.vue'
 import Header from '../components/header/Header.vue'
 import PlayingState from '../components/player/PlayingState.vue'
+import VolumnBar from '@/components/player/VolumnBar.vue'
+import Collection from '@/components/player/Collection.vue'
+import Vote from '@/components/player/Vote.vue'
 import NoteDialog from '../components/lineup/NoteDialog.vue'
 // import AdditionDisplay from '../components/AdditionDisplay.vue'
 import RoomQueue from '../components/lineup/RoomQueue.vue'
@@ -18,6 +21,9 @@ export default {
     SideDrawer,
     Header,
     PlayingState,
+    VolumnBar,
+    Collection,
+    Vote,
     RoomQueue,
     NoteDialog,
     // AdditionDisplay,
@@ -82,6 +88,9 @@ export default {
     <SlideContainer class="flex-1">
       <template #left-side>
         <PlayingState />
+        <VolumnBar class="mt-7 laptop:mt-3" />
+        <Collection class="mt-4" />
+        <Vote class="my-4" />
       </template>
       <template #right-side>
         <RoomQueue />

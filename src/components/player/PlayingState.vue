@@ -30,7 +30,7 @@ export default {
 }
 </script>
 <template>
-  <section class="bg-opacity-40 h-full w-full">
+  <section class="bg-opacity-40 w-full">
     <header class="flex justify-between items-center">
       <h3 class="text-2xl text-natural-white">Now</h3>
       <img :src="SpotifyLogo" alt="Spotify" class="w-20" />
@@ -48,22 +48,26 @@ export default {
           />
         </a>
         <PlayToggle
-          class="absolute right-0 bottom-0 translate-y-1/3 translate-x-1/3 laptop:translate-x-3/4 laptop:translate-y-1/2 z-30"
+          class="absolute right-0 bottom-0 translate-y-1/2 translate-x-1/2 laptop:translate-x-3/4 laptop:translate-y-1/2 z-30"
         />
       </div>
-      <section class="flex-1 pl-4 self-stretch flex flex-col laptop:-mt-4 laptop:pl-0 laptop:relative laptop:space-y-2">
+      <section class="flex-1 pl-4 self-stretch flex flex-col justify-end laptop:-mt-4 laptop:pl-0 laptop:min-h-[90px]">
         <section class="flex laptop:w-9/12 laptop:relative">
           <p class="flex-1 font-bold text-natural-gray1">{{ playerPlayingTrackName }}</p>
           <LikeButton class="laptop:absolute laptop:-top-2 laptop:right-0 laptop:z-30" />
         </section>
-        <section class="mt-1">
+
+        <section class="mt-1 laptop:mt-auto">
           <BaseMarquee>
             <a v-for="(artists, index) in playerPlayingArtists" :key="index" target="_blank" :href="artists.url">
               {{ artists.name }}
             </a>
           </BaseMarquee>
         </section>
-        <section class="mt-auto flex justify-end text-primary laptop:justify-between">
+
+        <section
+          class="mt-auto flex justify-end text-primary translate-y-1/2 laptop:justify-between laptop:transform-none laptop:mt-2"
+        >
           <ProgressTimer class="text-opacity-80" />
           <p class="ml-5">{{ '點播人' }}</p>
         </section>

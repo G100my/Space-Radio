@@ -20,7 +20,7 @@ export default {
 }
 </script>
 <template>
-  <div id="volumn-bar" class="bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
+  <div id="volumn-bar" class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
     <span class="text-primary font-bold">{{ currentVolume }}</span>
     <IconVolumn class="ml-3" />
     <div class="ml-3 flex-1 bg-tertiary-2 bg-opacity-60">
