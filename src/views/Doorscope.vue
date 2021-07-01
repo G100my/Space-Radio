@@ -41,6 +41,7 @@
           <p>Please enter room key or room name</p>
           <div class="search-room">
             <input
+              ref="roomInput"
               v-model="searchKeyWordInput"
               type="text"
               placeholder="search room key or name"
@@ -55,9 +56,7 @@
             </button>
           </div>
           <div class="buttons">
-            <button class="login-botton" :disabled="!targetRoomName" type="button" @click="PKCE('#room')">
-              Spotify Login
-            </button>
+            <button class="login-botton" type="button" @click="loginHandler">Spotify Login</button>
             <button v-if="!$route.params.roomKey" type="button" @click="PKCE('#create')">Create Room</button>
           </div>
         </div>
@@ -110,7 +109,7 @@ export default {
   },
   methods: {
     PKCE,
-    searchRoomKey() {
+    async searchRoomKey() {
       let targetRoomKey
       // 可以搜尋 room key 或者搜尋 room name
       if (Object.prototype.hasOwnProperty.call(this.roomListObject, this.searchKeyWordInput)) {
@@ -126,28 +125,46 @@ export default {
       if (targetRoomKey) {
         localStorage.setItem('jukebox_room_key', targetRoomKey)
         this.fetchRoomBasicInfo(targetRoomKey)
+        return true
       } else {
         console.log('no result')
         localStorage.setItem('jukebox_room_key', targetRoomKey)
         this.$store.commit('refreshPlayerTrack', null)
         this.targetRoomName = ''
+        return false
       }
     },
-    fetchRoomBasicInfo(roomKey) {
+    async fetchRoomBasicInfo(roomKey) {
       const room_ref = firebase.database().ref(roomKey)
-      room_ref
+      return await room_ref
         .child('playing_state')
         .get()
         .then(snapshot => {
           const playingTrack = snapshot.val()['playing_track']
           this.$store.commit('refreshPlayerTrack', playingTrack)
         })
-      room_ref
-        .child('basic/room_name')
-        .get()
-        .then(snapshot => {
-          this.targetRoomName = snapshot.val()
+        .then(() =>
+          room_ref
+            .child('basic/room_name')
+            .get()
+            .then(snapshot => {
+              this.targetRoomName = snapshot.val()
+            })
+        )
+    },
+    loginHandler() {
+      if (this.searchKeyWordInput) {
+        this.searchRoomKey().then(result => {
+          console.log(result)
+          if (result) {
+            setTimeout(() => {
+              PKCE('#room')
+            }, 1500)
+          }
         })
+      } else {
+        this.$refs.roomInput.focus()
+      }
     },
   },
 }
@@ -315,6 +332,9 @@ export default {
       display: flex;
       margin-top: 3px;
       height: 35px;
+      &:focus-within {
+        box-shadow: 0 0 10px 2px var(--primary-highlight);
+      }
       input {
         color: white;
         padding-left: 10px;
