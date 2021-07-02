@@ -2,10 +2,17 @@
   .show-all-flex {
     @apply laptop:flex laptop:items-stretch;
     > *:first-child {
-      @apply laptop:flex-none laptop:w-96 laptop:bg-tertiary-1 laptop:bg-opacity-60 laptop:pl-[60px] laptop:pr-[68px];
+      @apply laptop:flex-none laptop:w-96 laptop:bg-tertiary-1 laptop:bg-opacity-60 laptop:pl-[20px] laptop:pr-[20px];
     }
     > *:not(:first-child) {
-      @apply laptop:flex-1 laptop:px-[60px];
+      @apply laptop:flex-1 laptop:px-[20px];
+    }
+    @apply xl:flex xl:items-stretch;
+    > *:first-child {
+      @apply xl:flex-none xl:w-96 xl:bg-tertiary-1 xl:bg-opacity-60 xl:pl-[60px] xl:pr-[58px];
+    }
+    > *:not(:first-child) {
+      @apply xl:flex-1 xl:px-[60px];
     }
   }
 }

@@ -26,6 +26,7 @@ module.exports = {
           gray1: '#F8FAFC',
           gray2: '#EBF0F3',
           gray3: '#9595A8',
+          gray4: '#F7F7F9',
           black: '#1D1D1E',
         },
         // will remove in future
@@ -43,6 +44,9 @@ module.exports = {
       },
       height: {
         fit: 'fit-content',
+      },
+      flex: {
+        '2': '1 1 500px'
       },
     },
   },
