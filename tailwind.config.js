@@ -44,6 +44,9 @@ module.exports = {
       height: {
         fit: 'fit-content',
       },
+      zIndex: {
+        '-1': '-1',
+      },
     },
   },
   variants: {
