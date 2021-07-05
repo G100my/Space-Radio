@@ -16,6 +16,53 @@ export default {
     const leftSideButton = ref(null)
     const rightSideButton = ref(null)
 
+    const left = ref(0)
+    const targetLeft = ref(0)
+    const right = ref(0)
+    const targetRight = ref(0)
+    const animationTyle = ref(null)
+
+    function computeLeftRight(element) {
+      const leftValue = element.offsetLeft
+      const rightValue = element.parentElement.offsetWidth - element.offsetLeft - element.offsetWidth
+      return { leftValue, rightValue }
+    }
+
+    function sliderToggler(direction, element) {
+      if (element) {
+        const { leftValue, rightValue } = computeLeftRight(element)
+        targetLeft.value = leftValue
+        targetRight.value = rightValue
+      }
+      animationTyle.value = direction
+
+      switch (direction) {
+        case 'right2left':
+          slideContent.value.style.transform = ''
+          isMainSide.value = true
+          break
+        case 'left2right':
+          slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
+          isMainSide.value = false
+          break
+        case 'resume':
+          if (isMainSide.value) {
+            slideContent.value.style.transform = ''
+          } else {
+            slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
+          }
+          break
+        default:
+          console.log('something wrong')
+          break
+      }
+    }
+
+    function animationendHandler() {
+      left.value = targetLeft.value
+      right.value = targetRight.value
+    }
+
     function touchstartHandler(event) {
       touchStartPosition = event.touches[0].clientX
     }
@@ -42,59 +89,6 @@ export default {
       }
     }
 
-    // ==
-
-    const left = ref(0)
-    const targetLeft = ref(0)
-    const right = ref(0)
-    const targetRight = ref(0)
-    const animationTyle = ref(null)
-    function computeLeftRight(element) {
-      const leftValue = element.offsetLeft
-      const rightValue = element.parentElement.offsetWidth - element.offsetLeft - element.offsetWidth
-      return { leftValue, rightValue }
-    }
-
-    // ==
-
-    function sliderToggler(direction, element) {
-      if (element) {
-        console.log(element)
-        const { leftValue, rightValue } = computeLeftRight(element)
-        targetLeft.value = leftValue
-        targetRight.value = rightValue
-      }
-      animationTyle.value = direction
-
-      switch (direction) {
-        case 'right2left':
-          slideContent.value.style.transform = ''
-          isMainSide.value = true
-          console.log(direction)
-          break
-        case 'left2right':
-          slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
-          isMainSide.value = false
-          console.log(direction)
-          break
-        case 'resume':
-          if (isMainSide.value) {
-            slideContent.value.style.transform = ''
-          } else {
-            slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
-          }
-          break
-        default:
-          console.log('something wrong')
-          break
-      }
-    }
-
-    function animationendHandler() {
-      console.log('animationendHandler')
-      left.value = targetLeft.value
-      right.value = targetRight.value
-    }
     onMounted(() => {
       const { leftValue, rightValue } = computeLeftRight(leftSideButton.value)
       left.value = leftValue
