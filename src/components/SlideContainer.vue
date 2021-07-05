@@ -13,6 +13,9 @@ export default {
     let isMainSide = ref(true)
     let touchStartPosition
 
+    const leftSideButton = ref(null)
+    const rightSideButton = ref(null)
+
     function touchstartHandler(event) {
       touchStartPosition = event.touches[0].clientX
     }
@@ -20,9 +23,9 @@ export default {
       const currentDistance = touchStartPosition - event.changedTouches[0].clientX
       if (Math.abs(currentDistance) < 30) return
       if (currentDistance > 70) {
-        sliderToggler('left2right')
+        sliderToggler('left2right', rightSideButton.value)
       } else if (currentDistance < 70) {
-        sliderToggler('right2left')
+        sliderToggler('right2left', leftSideButton.value)
       } else {
         sliderToggler('resume')
       }
@@ -41,8 +44,6 @@ export default {
 
     // ==
 
-    const mainSideButton = ref(null)
-
     const left = ref(0)
     const targetLeft = ref(0)
     const right = ref(0)
@@ -56,12 +57,13 @@ export default {
 
     // ==
 
-    function sliderToggler(direction, event) {
-      const { leftValue, rightValue } = computeLeftRight(event.currentTarget)
-      targetLeft.value = leftValue
-      targetRight.value = rightValue
-      console.log(left.value, targetLeft.value)
-      console.log(right.value, targetRight.value)
+    function sliderToggler(direction, element) {
+      if (element) {
+        console.log(element)
+        const { leftValue, rightValue } = computeLeftRight(element)
+        targetLeft.value = leftValue
+        targetRight.value = rightValue
+      }
       animationTyle.value = direction
 
       switch (direction) {
@@ -89,11 +91,12 @@ export default {
     }
 
     function animationendHandler() {
+      console.log('animationendHandler')
       left.value = targetLeft.value
       right.value = targetRight.value
     }
     onMounted(() => {
-      const { leftValue, rightValue } = computeLeftRight(mainSideButton.value)
+      const { leftValue, rightValue } = computeLeftRight(leftSideButton.value)
       left.value = leftValue
       right.value = rightValue
     })
@@ -106,7 +109,8 @@ export default {
       sliderToggler,
       isMainSide,
 
-      mainSideButton,
+      leftSideButton,
+      rightSideButton,
       left,
       targetLeft,
       right,
@@ -152,11 +156,11 @@ export default {
       }"
       @animationend="animationendHandler"
     />
-    <button ref="mainSideButton" type="button" @click="sliderToggler('right2left', $event)">
+    <button ref="leftSideButton" type="button" @click="sliderToggler('right2left', $event.currentTarget)">
       <IconNowPlay />
       <span>Now</span>
     </button>
-    <button type="button" @click="sliderToggler('left2right', $event)">
+    <button ref="rightSideButton" type="button" @click="sliderToggler('left2right', $event.currentTarget)">
       <IconNextPlay />
       <span>Next</span>
     </button>
