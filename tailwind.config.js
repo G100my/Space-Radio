@@ -55,6 +55,12 @@ module.exports = {
       zIndex: {
         '-1': '-1',
       },
+      boxShadow: {
+        10: '0 10px 20px 10px rgba(0, 0, 0, 0.1)',
+        4: '0 4px 8px 4px rgba(0, 0, 0, 0.1)',
+        '-4': 'inset 0 4px 4px 0 rgba(0, 0, 0, 0.25)',
+        none: 'none',
+      },
     },
   },
   variants: {
