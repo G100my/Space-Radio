@@ -19,6 +19,7 @@ module.exports = {
           2: '#374F95',
           // will remove in future, use these in Doorscope wireframe page, create room wireframe pages
           dark: '#081B50',
+          'dark-60': 'rgba(8,27,80, 0.6)',
           light: '#374F95',
         },
         natural: {
