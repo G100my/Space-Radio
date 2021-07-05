@@ -28,6 +28,14 @@ module.exports = {
           gray3: '#9595A8',
           black: '#1D1D1E',
         },
+        system: {
+          error1: '#ED0303',
+          error2: '#FFA39E',
+          error3: '#FFF1F0',
+          success3: '#D7FFE5',
+          success2: '#45C172',
+          success1: '#4DC477',
+        },
         // will remove in future
         spotify: '#1DB954',
       },
