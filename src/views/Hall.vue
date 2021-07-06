@@ -1,26 +1,3 @@
-<template>
-  <div class="laptop:mt-[33vh] laptop:max-w-sm laptop:mr-10">
-    <h2 class="text-subtitle">Enter Room</h2>
-    <label class="block mt-6">
-      <p class="text-natural-gray1 font-bold">Room name<span class="text-primary">*</span></p>
-      <BaseInput
-        v-model="searchKeyWordInput"
-        required-sign
-        type="text"
-        placeholder="Please enter room name."
-        @focus="isErrorMessageShow = false"
-        @keydown.prevent.enter="searchRoom"
-      >
-        <BaseAlert error :show="isErrorMessageShow" :title="`This room name not found.`" />
-      </BaseInput>
-    </label>
-    <button class="btn btn-primary w-full mt-5 laptop:mt-11" type="button" @click="searchRoom">Next</button>
-    <button class="btn btn-secondary w-full mt-3 laptop:mt-4" type="button" @click="enterCreateHandler">
-      Having no room? Create Room
-    </button>
-  </div>
-  <HallNav class="laptop:mt-20" />
-</template>
 <script>
 import { onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -94,3 +71,26 @@ export default {
   },
 }
 </script>
+<template>
+  <div class="laptop:mt-[33vh] laptop:max-w-sm laptop:mr-10">
+    <h2 class="text-subtitle">Enter Room</h2>
+    <label class="block mt-6">
+      <p class="text-natural-gray1 font-bold">Room name<span class="text-primary">*</span></p>
+      <BaseInput
+        v-model="searchKeyWordInput"
+        required-sign
+        type="text"
+        placeholder="Please enter room name."
+        @focus="isErrorMessageShow = false"
+        @keydown.prevent.enter="searchRoom"
+      >
+        <BaseAlert error :show="isErrorMessageShow" :title="`This room name not found.`" />
+      </BaseInput>
+    </label>
+    <button class="btn btn-primary w-full mt-5 laptop:mt-11" type="button" @click="searchRoom">Next</button>
+    <button class="btn btn-secondary w-full mt-3 laptop:mt-4" type="button" @click="enterCreateHandler">
+      Having no room? Create Room
+    </button>
+  </div>
+  <HallNav class="laptop:mt-20" />
+</template>

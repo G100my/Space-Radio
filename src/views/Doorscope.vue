@@ -1,22 +1,3 @@
-<template>
-  <div class="sm:mt-14 flex flex-col relative">
-    <BaseGoBackButton @click="$router.back()" />
-    <h2 class="text-subtitle font-semibold mb-4">{{ roomName }}</h2>
-    <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" />
-    <p v-if="trackName">
-      <span>Now playing:</span>
-      <span>{{ trackName }}</span>
-    </p>
-    <p v-else class="text-center whitespace-nowrap">This room is not playing any track now.</p>
-    <button
-      class="mt-6 btn btn-spotify-bg-green w-full"
-      type="button"
-      @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
-    >
-      Enter Room with Spotify
-    </button>
-  </div>
-</template>
 <script>
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -63,4 +44,22 @@ export default {
   },
 }
 </script>
-<style lang="scss"></style>
+<template>
+  <div class="sm:mt-14 flex flex-col relative">
+    <BaseGoBackButton @click="$router.back()" />
+    <h2 class="text-subtitle font-semibold mb-4">{{ roomName }}</h2>
+    <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" />
+    <p v-if="trackName">
+      <span>Now playing:</span>
+      <span>{{ trackName }}</span>
+    </p>
+    <p v-else class="text-center whitespace-nowrap">This room is not playing any track now.</p>
+    <button
+      class="mt-6 btn btn-spotify-bg-green w-full"
+      type="button"
+      @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
+    >
+      Enter Room with Spotify
+    </button>
+  </div>
+</template>
