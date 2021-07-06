@@ -1,23 +1,22 @@
 <template>
-  <div class="sm:mt-14 flex flex-col">
-    <h2 class="text-subtitle font-semibold mb-4">Enter Room</h2>
-    <label class="text-gray-400 mb-5">
-      <p>Room Name or Room Key</p>
-      <input
-        id="search-room-input"
+  <div>
+    <h2 class="text-subtitle mb-6">Enter Room</h2>
+    <label>
+      <p class="text-natural-gray1 font-bold">Room name<span class="text-primary">*</span></p>
+      <BaseInput
         v-model="searchKeyWordInput"
-        class="p-3 w-full border-2 border-black"
+        required-sign
         type="text"
+        placeholder="Please enter room name."
         @focus="isErrorMessageShow = false"
         @keydown.prevent.enter="searchRoom"
-      />
-      <p class="text-red-600" :style="{ visibility: isErrorMessageShow ? 'visible' : 'hidden' }">
-        Invalid Room Name or Room Key
-      </p>
+      >
+        <BaseAlert error :show="isErrorMessageShow" :title="`This room name not found.`" />
+      </BaseInput>
     </label>
-    <button class="btn btn-spotify-bg-white mb-2" type="button" @click="searchRoom">Next</button>
-    <button class="text-left hover:underline" type="button" @click="enterCreateHandler">
-      Having no room? Create one!
+    <button class="btn btn-primary w-full mt-5" type="button" @click="searchRoom">Next</button>
+    <button class="btn btn-secondary w-full mt-3" type="button" @click="enterCreateHandler">
+      Having no room? Create Room
     </button>
   </div>
 </template>
@@ -27,8 +26,14 @@ import { useRouter } from 'vue-router'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
 import { spotifyAPI } from '../utility/spotifyAPI.js'
+import BaseInput from '@/components/base/BaseInput.vue'
+import BaseAlert from '@/components/base/BaseAlert.vue'
 
 export default {
+  components: {
+    BaseInput,
+    BaseAlert,
+  },
   setup() {
     const router = useRouter()
     const searchKeyWordInput = ref('')
