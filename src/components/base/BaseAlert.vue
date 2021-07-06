@@ -20,7 +20,7 @@ export default {
     },
     contentText: {
       type: String,
-      default: 'content text. content text. content text. content text. content text. content text. ',
+      default: '',
     },
     show: {
       type: Boolean,
@@ -32,7 +32,7 @@ export default {
     },
     closeButton: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     iconSize: {
       type: String,
@@ -55,7 +55,7 @@ export default {
     :show="isShow"
     appear
     as="div"
-    class="overflow-hidden grid grid-cols-alert px-4 py-2 border absolute"
+    class="base-alert"
     :class="{ 'alert-error': error, 'alert-success': !error }"
     enter="transition-all duration-150"
     enter-from="max-h-0"
@@ -64,13 +64,13 @@ export default {
     leave-from="max-h-full"
     leave-to="max-h-0"
   >
-    <label class="mr-4 self-center" :class="{ 'alert-icon-sm': iconSize === 'sm', 'alert-icon-lg': iconSize === 'lg' }">
+    <label class="self-center" :class="{ 'alert-icon-sm': iconSize === 'sm', 'alert-icon-lg': iconSize === 'lg' }">
       <IconError v-if="error" class="h-full w-full text-system-error1" />
       <IconSuccess v-else class="h-full w-full text-system-success2" />
     </label>
 
     <div class="flex text-body text-natural-black items-center">
-      <p class="mb-1">{{ title }}</p>
+      <p :class="{ 'mb-1': contentText }">{{ title }}</p>
       <button v-if="closeButton" class="ml-auto h-9 w-9 flex justify-center items-center" @click="$emits('close')">
         <IconClose class="w-2.5 h-2.5 text-natural-gray3" />
       </button>
@@ -80,6 +80,10 @@ export default {
   </TransitionRoot>
 </template>
 <style lang="postcss">
+.base-alert {
+  @apply overflow-hidden px-4 py-2 border translate-y-1 grid;
+  grid-template-columns: min-content 1fr;
+}
 .alert-error {
   @apply bg-system-error3 border-system-error2;
 }
@@ -87,9 +91,9 @@ export default {
   @apply bg-system-success3 border-system-success2;
 }
 .alert-icon-sm {
-  @apply h-4 w-4;
+  @apply h-4 w-4 mr-3;
 }
 .alert-icon-lg {
-  @apply h-5 w-5;
+  @apply h-5 w-5 mr-6;
 }
 </style>
