@@ -61,6 +61,9 @@ module.exports = {
         '-4': 'inset 0 4px 4px 0 rgba(0, 0, 0, 0.25)',
         none: 'none',
       },
+      gridTemplateColumns: {
+        alert: 'fit-content auto',
+      },
     },
   },
   variants: {
