@@ -31,11 +31,6 @@ export default {
 
     <div class="flex-1 w-full flex flex-col laptop:h-full">
       <router-view />
-
-      <div class="my-auto w-full flex items-center space-x-5">
-        <a href="##">Terms & privacy</a>
-        <a href="##">Contact us</a>
-      </div>
     </div>
   </div>
 </template>
