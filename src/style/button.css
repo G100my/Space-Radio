@@ -1,6 +1,6 @@
 @layer utilities {
   .btn {
-    @apply min-w-[38px] min-h-[38px] flex items-center justify-center rounded-sm text-body;
+    @apply min-w-[38px] min-h-[38px] flex items-center justify-center rounded-sm text-body focus:outline-none;
   }
 }
 
