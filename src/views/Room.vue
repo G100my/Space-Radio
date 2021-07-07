@@ -43,6 +43,9 @@ export default {
     mobileMode() {
       return window.innerWidth < 768 ? true : false
     },
+    currentVolume() {
+      return this.$store.getters.currentVolume
+    },
   },
   beforeCreate() {
     if (!this.$store.hasModule('Queue')) {
@@ -88,7 +91,12 @@ export default {
     <SlideContainer class="flex-1">
       <template #left-side>
         <PlayingState />
-        <VolumnBar class="mt-7 laptop:mt-3" />
+        <VolumnBar
+          :value="currentVolume"
+          class="mt-7 laptop:mt-3"
+          @minus="$store.dispatch('turnDown')"
+          @plus="store.dispatch('turnUp')"
+        />
         <Collection class="mt-4" />
         <Vote class="my-4" />
       </template>
