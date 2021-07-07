@@ -10,7 +10,7 @@
       <template #body>
         <div 
           v-for="(playlist, index) in mockPlaylistdata" :key="index"
-          class="playlist flex items-center justify-around rounded-lg bg-tertiary-dark bg-opacity-60 mb-2  py-3 px-2 mobile:px-4 xl:px-10"
+          class="playlist flex items-center justify-around rounded-lg hover:bg-tertiary-dark bg-tertiary-dark bg-opacity-60 mb-2  py-3 px-2 mobile:px-4 xl:px-10"
           >
           <div class="status">
             <div class="pending px-2 mobile:pr-4 xl:pr-10" v-if="playlist.status === 'pending'">
@@ -55,7 +55,7 @@
             <div class="album-author  text-xs md:text-base">{{ playlist.albumAuthor }}</div>
           </div>
           <div class="features flex justify-end hidden laptop:block">
-            <button class="pr-4 xl:pr-11">
+            <button class="mr-4 xl:mr-11">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="24" height="24" fill="none"/>
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6089 18.5667C12.6089 18.1525 12.9447 17.8167 13.3589 17.8167H18.9998C19.414 17.8167 19.7498 18.1525 19.7498 18.5667C19.7498 18.9809 19.414 19.3167 18.9998 19.3167H13.3589C12.9447 19.3167 12.6089 18.9809 12.6089 18.5667Z" fill="#F8FAFC"/>
@@ -63,7 +63,7 @@
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M11.3231 6.99741C11.619 6.61676 12.1675 6.54807 12.5481 6.84399L15.1474 8.86464C15.528 9.16056 15.5967 9.70903 15.3008 10.0897C15.0049 10.4703 14.4564 10.539 14.0757 10.2431L11.4765 8.22244C11.0959 7.92652 11.0272 7.37805 11.3231 6.99741Z" fill="#F8FAFC"/>
               </svg>
             </button> 
-            <button class="pr-4 xl:pr-11">
+            <button class="mr-4 xl:mr-11">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="24" height="24" fill="none"/>
                 <path d="M17.5651 14.38L12.5651 19.36C12.4051 19.52 12.2051 19.6 12.0051 19.6C11.8051 19.6 11.6051 19.52 11.4451 19.36L6.44507 14.38C6.12507 14.06 6.12507 13.56 6.44507 13.24C6.76507 12.92 7.26508 12.92 7.58508 13.24L11.2251 16.86V5.2C11.2251 4.76 11.5851 4.4 12.0251 4.4C12.4651 4.4 12.8251 4.76 12.8251 5.2V16.88L16.4651 13.26C16.7851 12.94 17.2851 12.94 17.6051 13.26C17.8851 13.56 17.8851 14.06 17.5651 14.38Z" fill="#F8FAFC"/>
@@ -76,7 +76,7 @@
               </svg>
             </button> 
           </div>
-          <div class="block laptop:hidden pr-2">
+          <div class="block laptop:hidden pr-2 cursor-pointer">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="24" height="24" fill="none"/>
               <path d="M7.00498 13.4C6.64498 13.4 6.26498 13.24 6.00498 12.98C5.74498 12.72 5.60498 12.36 5.60498 12C5.60498 11.64 5.76498 11.28 6.00498 11C6.26498 10.74 6.62498 10.6 7.00498 10.6C7.36498 10.6 7.72499 10.76 7.98499 11C8.24499 11.26 8.40498 11.62 8.40498 12C8.40498 12.36 8.24499 12.72 7.98499 12.98C7.74499 13.26 7.36498 13.4 7.00498 13.4ZM13.005 12.98C13.265 12.72 13.425 12.36 13.425 12C13.425 11.64 13.265 11.28 13.005 11C12.745 10.74 12.385 10.6 12.025 10.6C11.665 10.6 11.285 10.76 11.025 11C10.765 11.26 10.625 11.62 10.625 12C10.625 12.36 10.785 12.72 11.025 12.98C11.285 13.24 11.645 13.4 12.025 13.4C12.365 13.4 12.745 13.26 13.005 12.98ZM18.005 12.98C18.265 12.72 18.425 12.36 18.425 12C18.425 11.64 18.265 11.28 18.005 11C17.745 10.74 17.385 10.6 17.025 10.6C16.665 10.6 16.285 10.76 16.025 11C15.765 11.26 15.625 11.62 15.625 12C15.625 12.36 15.785 12.72 16.025 12.98C16.285 13.24 16.645 13.4 17.025 13.4C17.365 13.4 17.745 13.26 18.005 12.98Z" fill="#F8FAFC"/>
