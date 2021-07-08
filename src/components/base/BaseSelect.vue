@@ -17,9 +17,6 @@ export default {
     options: {
       type: Array,
       required: true,
-      validator(income) {
-        return Array.isArray(income) && income.length
-      },
     },
   },
   setup() {
@@ -63,7 +60,7 @@ export default {
         leave-to="transform scale-95 opacity-0"
       >
         <ListboxOptions
-          class="pt-1 pb-2 bg-tertiary-1 border border-t-0 border-tertiary-2 rounded rounded-b text-natural-gray3 space-y-0.5 -translate-y-1 fixed inset-y-1/4 inset-x-0 max-w-xs mx-auto laptop:absolute laptop:inset-auto z-30 laptop:mx-auto laptop:max-w-none laptop:w-full"
+          class="pt-1 pb-2 bg-tertiary-1 border border-t-0 border-tertiary-2 rounded rounded-b text-natural-gray3 space-y-0.5 -translate-y-1 overflow-y-auto fixed inset-y-1/4 inset-x-0 max-w-xs mx-auto laptop:absolute laptop:inset-auto z-30 laptop:mx-auto laptop:max-w-none laptop:w-full laptop:max-h-32"
         >
           <ListboxOption
             v-for="(option, index) in options"
