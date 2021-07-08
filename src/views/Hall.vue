@@ -87,8 +87,8 @@ export default {
         <BaseAlert error :show="isErrorMessageShow" :title="`This room name not found.`" />
       </BaseInput>
     </label>
-    <button class="btn btn-primary w-full mt-5 laptop:mt-11" type="button" @click="searchRoom">Next</button>
-    <button class="btn btn-secondary w-full mt-3 laptop:mt-4" type="button" @click="enterCreateHandler">
+    <button class="btn-primary w-full mt-5 laptop:mt-11" type="button" @click="searchRoom">Next</button>
+    <button class="btn-secondary w-full mt-3 laptop:mt-4" type="button" @click="enterCreateHandler">
       Having no room? Create Room
     </button>
   </div>

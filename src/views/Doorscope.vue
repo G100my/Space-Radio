@@ -47,7 +47,7 @@ export default {
 <template>
   <div class="laptop:relative laptop:mt-[33vh] laptop:mr-10 laptop:max-w-sm">
     <button
-      class="btn btn-tertiary self-start relative -left-5 -top-8 laptop:absolute laptop:-top-14"
+      class="btn-tertiary self-start relative -left-5 -top-8 laptop:absolute laptop:-top-14"
       type="button"
       @click="$router.back()"
     >
@@ -61,7 +61,7 @@ export default {
     <!-- </div> -->
     <!-- <p v-else class="mt-8 text-natural-gray1 whitespace-nowrap">This room is not playing any track now.</p> -->
     <button
-      class="mt-9 btn btn-primary w-full"
+      class="mt-9 btn-primary w-full"
       type="button"
       @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
     >

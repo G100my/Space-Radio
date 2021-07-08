@@ -52,7 +52,7 @@
         </select>
       </div>
     </form>
-    <button class="btn btn-spotify-bg-green w-full mt-6" type="button" @click="createHandler">Create</button>
+    <button class="btn-spotify-bg-green w-full mt-6" type="button" @click="createHandler">Create</button>
   </div>
 </template>
 <script>

@@ -28,7 +28,7 @@
         }}</span>
       </p>
     </form>
-    <button type="button" class="btn btn-spotify-bg-green w-full" @click="nextHandler">Create room</button>
+    <button type="button" class="btn-spotify-bg-green w-full" @click="nextHandler">Create room</button>
     <button type="button" class="tracking-tighter underline mt-1" @click="$router.push({ name: 'Hall' })">
       Enter an existing room!
     </button>
