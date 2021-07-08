@@ -172,22 +172,20 @@ export default {
 }
 </script>
 <template>
-  <div class="py-4 my-auto">
-    <button
-      class="btn btn-tertiary hidden self-start laptop:flex laptop:-left-5 laptop:absolute laptop:-top-14"
-      type="button"
-      @click="$router.push({ name: 'Hall' })"
-    >
-      <IconArrowLeft />
-    </button>
-    <h2 class="text-subtitle flex justify-between">
+  <div class="py-4 my-auto laptop:max-w-sm">
+    <h2 class="text-subtitle flex justify-between relative">
       <span>Create room</span>
-      <button class="btn btn-tertiary laptop:hidden" type="button" @click="$router.push({ name: 'Hall' })">
-        <IconClose />
+      <button
+        class="btn btn-tertiary laptop:-left-5 laptop:absolute laptop:-top-14"
+        type="button"
+        @click="$router.push({ name: 'Hall' })"
+      >
+        <IconArrowLeft class="hidden laptop:block" />
+        <IconClose class="laptop:hidden" />
       </button>
     </h2>
 
-    <form class="create-room-form overflow-y-auto space-y-3">
+    <form class="create-room-form overflow-y-auto space-y-3 laptop:overflow-y-visible laptop:space-y-3">
       <div>
         <label for="room-name">Room name</label>
         <BaseInput
@@ -203,12 +201,17 @@ export default {
 
       <div>
         <label for="minimal-volume">Minimal Volume</label>
-        <VolumnBar :step="5" :model-value="minimalVolume" @update:change="minimalVolumeInputHandler" />
+        <VolumnBar
+          class="laptop:mt-3"
+          :step="5"
+          :model-value="minimalVolume"
+          @update:change="minimalVolumeInputHandler"
+        />
       </div>
 
       <div>
         <label for="initial-volumn">Initial Volumn</label>
-        <VolumnBar :model-value="volume" @update:change="volumeInputHandler" />
+        <VolumnBar class="laptop:mt-3" :model-value="volume" @update:change="volumeInputHandler" />
       </div>
 
       <div>
@@ -228,7 +231,8 @@ export default {
         <p class="font-bold">Choose a playlist as recommendation references</p>
         <BaseSelect :options="hostPlaylists" class="mt-2" />
       </div>
-      <button class="btn btn-primary w-full mt-6" type="button" @click="createHandler">Create</button>
+
+      <button class="btn btn-primary w-full mt-6 laptop:mt-8" type="button" @click="createHandler">Create</button>
     </form>
   </div>
 </template>
