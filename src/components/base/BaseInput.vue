@@ -1,5 +1,6 @@
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     modelValue: {
       type: [String, Number],
@@ -11,7 +12,7 @@ export default {
 </script>
 <template>
   <div class="base-input">
-    <input v-model="value" v-bind="$attrs" @input="$emit('update:modelValue', $event.target.value)" />
+    <input :value="modelValue" v-bind="$attrs" @input="$emit('update:modelValue', $event.target.value)" />
     <slot />
   </div>
 </template>
