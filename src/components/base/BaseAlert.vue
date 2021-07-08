@@ -57,10 +57,10 @@ export default {
     as="div"
     class="base-alert"
     :class="{ 'alert-error': error, 'alert-success': !error }"
-    enter="transition-all duration-150"
+    enter="transition-all duration-75"
     enter-from="max-h-0"
     enter-to="max-h-full"
-    leave="transition-all duration-300"
+    leave="transition-all duration-150"
     leave-from="max-h-full"
     leave-to="max-h-0"
   >
