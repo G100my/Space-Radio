@@ -1,46 +1,92 @@
 <template>
-  <div>
-    <h2 class="text-subtitle font-semibold">Create room</h2>
-    <form class="create-room-form">
-      <p>
-        <label>Host ID : </label>
-        <input disabled :value="userId" />
-      </p>
-      <p>
-        <label>Room Key : </label>
-        <input disabled :value="roomKey" />
-      </p>
-      <p>
-        <label for="room-name">Room name : </label>
-        <input
+  <div class="py-4 my-auto">
+    <button
+      class="btn btn-tertiary hidden self-start laptop:flex laptop:-left-5 laptop:absolute laptop:-top-14"
+      type="button"
+      @click="$router.push({ name: 'Hall' })"
+    >
+      <IconArrowLeft />
+    </button>
+    <h2 class="text-subtitle flex justify-between">
+      <span>Create room</span>
+      <button class="btn btn-tertiary laptop:hidden" type="button" @click="$router.push({ name: 'Hall' })">
+        <IconClose />
+      </button>
+    </h2>
+
+    <form class="create-room-form overflow-y-auto space-y-3">
+      <div>
+        <label for="room-name">Room name</label>
+        <BaseInput
           id="room-name"
           v-model.trim="roomName"
-          type="text"
           maxlength="50"
           autocomplete="off"
-          class="ring-red-600 ring-offset-2"
-          :class="{ 'ring-2': !isVaild }"
           @blur="checkRoomNameHandler"
           @input="checkRoomNameHandler"
-        />
-        <span class="text-red-500 font-semibold" :style="{ visibility: isVaild ? 'hidden' : 'visible' }">{{
-          errorMessage
-        }}</span>
-      </p>
+        >
+          <BaseAlert class="mb-1" error :title="errorMessage" :show="isVaild" />
+        </BaseInput>
+      </div>
+
+      <div>
+        <label for="minimal-volume">Minimal Volume</label>
+        <VolumnBar :step="5" :model-value="minimalVolume" @update:change="minimalVolumeInputHandler" />
+      </div>
+
+      <div>
+        <label for="initial-volumn">Initial Volumn</label>
+        <VolumnBar :model-value="volume" @update:change="volumeInputHandler" />
+      </div>
+
+      <div>
+        <label>Skip Song threshold</label>
+        <p class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
+          <span class="mr-auto text-primary font-bold w-7 flex-shrink-0 text-center">{{ dislikeThreshold }}</span>
+          <button class="btn btn-tertiary" type="button" @click="minusDislikeThreshold">
+            <IconMinus />
+          </button>
+          <button class="btn btn-tertiary" type="button" @click="plusDislikeThreshold">
+            <IconPlus />
+          </button>
+        </p>
+      </div>
+
+      <div>
+        <p class="font-bold">Choose a playlist as recommendation references</p>
+        <BaseSelect :options="hostPlaylists" class="mt-2" />
+      </div>
+      <button class="btn btn-primary w-full mt-6" type="button" @click="createHandler">Create</button>
     </form>
-    <button type="button" class="btn-spotify-bg-green w-full" @click="nextHandler">Create room</button>
-    <button type="button" class="tracking-tighter underline mt-1" @click="$router.push({ name: 'Hall' })">
-      Enter an existing room!
-    </button>
   </div>
 </template>
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, watch, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import firebase from '../../store/firebase.js'
+import { usePlusMinusHandler } from '../../composables/usePlusMinusHandler.js'
+import { spotifyAPI } from '../../utility/spotifyAPI.js'
+import BaseAlert from '@/components/base/BaseAlert.vue'
+import BaseInput from '@/components/base/BaseInput.vue'
+import BaseSelect from '@/components/base/BaseSelect.vue'
+import VolumnBar from '@/components/VolumnBar.vue'
+import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg'
+import IconPlus from '@/assets/icons/icon-plus.svg'
+import IconMinus from '@/assets/icons/icon-minus.svg'
+import IconClose from '@/assets/icons/icon/close.svg'
 
 export default {
+  components: {
+    BaseInput,
+    BaseAlert,
+    BaseSelect,
+    VolumnBar,
+    IconArrowLeft,
+    IconPlus,
+    IconMinus,
+    IconClose,
+  },
   setup() {
     const roomKey = Array.from(window.crypto.getRandomValues(new Uint32Array(2)), item => item.toString(16)).join('')
     const userId = computed(() => useStore().getters.userId)
@@ -62,9 +108,9 @@ export default {
 
     const errorMessage = computed(() => {
       if (hasSameRoomName.value) {
-        return `already has room name: ${roomName.value}`
+        return `Room name exist: ${roomName.value}`
       } else if (roomName.value === '') {
-        return `please enter your room name`
+        return `Can't be empty.`
       } else {
         return false
       }
@@ -97,7 +143,80 @@ export default {
       }
     }
 
+    const dislikeThreshold = ref(2)
+    const volume = ref(50)
+    const minimalVolume = ref(10)
+    const step = 5
+    const minimalLimit = 10
+    watch(minimalVolume, newValue => {
+      if (volume.value < newValue) volume.value = newValue
+    })
+
+    function minimalVolumeInputHandler(eventValue) {
+      if (eventValue >= minimalLimit) minimalVolume.value = Number(eventValue)
+      else minimalVolume.value = minimalLimit
+    }
+    function volumeInputHandler(eventValue) {
+      if (eventValue >= minimalVolume.value) volume.value = Number(eventValue)
+      else volume.value = minimalVolume.value
+    }
+
+    const { plus: plusMinimal, minus: minusMinimal } = usePlusMinusHandler(minimalVolume, step, 10, 100)
+    const { plus: plusVolume, minus: minusVolume } = usePlusMinusHandler(volume, step, minimalVolume, 100)
+    const { plus: plusDislikeThreshold, minus: minusDislikeThreshold } = usePlusMinusHandler(dislikeThreshold, 1, 1, 5)
+
+    //
+
+    let hostPlaylists = reactive([])
+    const basePlaylist = ref(null)
+    spotifyAPI.getUserPlaylists({ limit: 50 }, (error, sucess) => {
+      if (error) {
+        console.warn('something wrong when try to get host playlist.')
+        return
+      }
+      sucess.items.forEach(item => {
+        hostPlaylists.push({
+          id: item.id,
+          name: item.name,
+        })
+      })
+    })
+
+    //
+
+    const params = useRoute().params
+    const room_key = params.room_key
+    function unregisterHandler() {
+      firebase.database().ref(`room_list/${room_key}`).remove()
+      window.removeEventListener('beforeunload', unregisterHandler)
+    }
+
+    window.addEventListener('beforeunload', unregisterHandler)
+
+    function createHandler() {
+      const room = firebase.database().ref(room_key)
+      room
+        .set({
+          basic: { base_playlist: basePlaylist.value, ...params },
+          playing_state: {
+            volume: volume.value,
+            minimal_volume: minimalVolume.value,
+            dislike_threshold: dislikeThreshold.value,
+            dislike: 0,
+          },
+        })
+        .then(() => {
+          localStorage.setItem('jukebox_room_key', room_key)
+          window.removeEventListener('beforeunload', unregisterHandler)
+          router.push({ name: 'Room' })
+        })
+    }
+
+    const testvalue = ref(0)
+
     return {
+      testvalue,
+
       userId,
       roomKey,
       roomName,
@@ -108,24 +227,36 @@ export default {
       roomNameArray,
       nextHandler,
       checkRoomNameHandler,
+
+      createHandler,
+      unregisterHandler,
+
+      volume,
+      minimalVolume,
+      dislikeThreshold,
+      step,
+
+      minimalVolumeInputHandler,
+      volumeInputHandler,
+
+      plusVolume,
+      minusVolume,
+      plusMinimal,
+      minusMinimal,
+      plusDislikeThreshold,
+      minusDislikeThreshold,
+
+      hostPlaylists,
+      basePlaylist,
     }
   },
 }
 </script>
 <style lang="postcss">
 .create-room-form {
-  @apply space-y-4;
-  p {
-    @apply flex flex-col;
-    &:nth-child(3) input {
-      @apply bg-white;
-    }
-  }
-  label {
-    @apply mb-2;
-  }
-  input {
-    @apply tracking-[-0.015rem] h-12 border-2 border-black p-2 pl-5 align-middle bg-[#E0E0E0];
+  > div > label:first-child::after {
+    content: '*';
+    @apply text-primary mb-1;
   }
 }
 </style>
