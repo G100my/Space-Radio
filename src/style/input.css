@@ -9,18 +9,18 @@
   }
 
   input[type='range']::-webkit-slider-runnable-track {
-    @apply w-full h-full min-h-[2px] cursor-pointer;
+    @apply w-full h-full min-h-[2px] cursor-pointer transition-colors duration-500;
     border-radius: inherit;
   }
   input[type='range']::-moz-range-track {
-    @apply w-full h-full min-h-[2px] cursor-pointer;
+    @apply w-full h-full min-h-[2px] cursor-pointer transition-colors duration-500;
     border-radius: inherit;
   }
   input[type='range']:focus::-webkit-slider-runnable-track {
-    @apply bg-primary;
+    @apply bg-primary duration-150;
   }
   input[type='range']:focus::-moz-range-track {
-    @apply bg-primary;
+    @apply bg-primary duration-150;
   }
 
   input[type='range']::-webkit-slider-thumb {

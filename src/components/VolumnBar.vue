@@ -10,28 +10,58 @@ export default {
     IconMinus,
   },
   props: {
-    value: {
+    modelValue: {
       type: Number,
       required: true,
     },
+    step: {
+      type: Number,
+      default: 1,
+    },
   },
-  emits: ['plus', 'minus'],
+  emits: ['update:change'],
 }
 </script>
 <template>
   <div class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
-    <span class="text-primary font-bold">{{ value }}</span>
+    <span class="text-primary font-bold w-7 flex-shrink-0 text-center">{{ modelValue }}</span>
     <IconVolumn class="ml-3" />
-    <div class="ml-3 flex-1 bg-tertiary-2 bg-opacity-60">
-      <div class="rounded-sm h-0.5 bg-natural-white" :style="{ width: `${value}%` }" />
-    </div>
-    <div class="flex">
-      <button class="btn-tertiary" type="button" @click="$emit('minus')">
-        <IconMinus />
-      </button>
-      <button class="btn-tertiary" type="button" @click="$emit('plus')">
-        <IconPlus />
-      </button>
-    </div>
+    <!-- <div class="ml-3 flex-1 bg-tertiary-2 bg-opacity-60">
+      <div class="rounded-sm h-0.5 bg-natural-white" :style="{ width: `${modelValue}%` }" />
+    </div> -->
+
+    <button
+      class="volumn-bar-button btn-tertiary order-11"
+      type="button"
+      @click="$emit('update:change', modelValue - step)"
+    >
+      <IconMinus />
+    </button>
+    <button
+      class="volumn-bar-button btn-tertiary order-12"
+      type="button"
+      @click="$emit('update:change', modelValue + step)"
+    >
+      <IconPlus />
+    </button>
+
+    <input
+      :value="modelValue"
+      v-bind="$attrs"
+      :step="step"
+      type="range"
+      class="ml-3"
+      @input="$emit('update:change', Number($event.target.value))"
+    />
   </div>
 </template>
+<style lang="postcss">
+.volumn-bar-button:focus ~ input[type='range'] {
+  &::-webkit-slider-runnable-track {
+    @apply bg-primary;
+  }
+  &::-moz-range-track {
+    @apply bg-primary;
+  }
+}
+</style>
