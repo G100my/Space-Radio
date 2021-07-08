@@ -9,21 +9,18 @@ export default {
     IconPlus,
     IconMinus,
   },
+  inheritAttrs: false,
   props: {
     modelValue: {
       type: Number,
       required: true,
-    },
-    step: {
-      type: Number,
-      default: 1,
     },
   },
   emits: ['update:change'],
 }
 </script>
 <template>
-  <div class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
+  <div :class="$attrs.class" class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
     <span class="text-primary font-bold w-7 flex-shrink-0 text-center">{{ modelValue }}</span>
     <IconVolumn class="ml-3" />
     <!-- <div class="ml-3 flex-1 bg-tertiary-2 bg-opacity-60">
@@ -47,8 +44,9 @@ export default {
 
     <input
       :value="modelValue"
-      v-bind="$attrs"
-      :step="step"
+      :min="$attrs.min"
+      :max="$attrs.max"
+      :step="$attrs.step"
       type="range"
       class="ml-3"
       @input="$emit('update:change', Number($event.target.value))"
