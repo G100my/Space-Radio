@@ -32,7 +32,7 @@ export default {
       <Logo class="h-full w-[120px] md:w-52 laptop:w-[300px]" />
     </h1>
 
-    <div class="flex-1 w-full flex flex-col laptop:h-full">
+    <div class="flex-1 w-full flex flex-col laptop:h-full laptop:max-w-sm laptop:mr-10">
       <router-view />
     </div>
   </div>

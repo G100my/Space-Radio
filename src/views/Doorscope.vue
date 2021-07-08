@@ -45,7 +45,7 @@ export default {
 }
 </script>
 <template>
-  <div class="laptop:relative laptop:mt-[33vh] laptop:mr-10 laptop:max-w-sm">
+  <div class="laptop:relative laptop:mt-[33vh]">
     <button
       class="btn-tertiary self-start relative -left-5 -top-8 laptop:absolute laptop:-top-14"
       type="button"

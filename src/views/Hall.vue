@@ -72,7 +72,7 @@ export default {
 }
 </script>
 <template>
-  <div class="laptop:mt-[33vh] laptop:max-w-sm laptop:mr-10">
+  <div class="laptop:mt-[33vh]">
     <h2 class="text-subtitle">Enter Room</h2>
     <label class="block mt-6">
       <p class="text-natural-gray1 font-bold">Room name<span class="text-primary">*</span></p>

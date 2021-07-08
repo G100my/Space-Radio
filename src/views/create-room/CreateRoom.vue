@@ -172,7 +172,7 @@ export default {
 }
 </script>
 <template>
-  <div class="py-4 my-auto laptop:max-w-sm">
+  <div class="py-4 my-auto">
     <h2 class="text-subtitle flex justify-between relative">
       <span>Create room</span>
       <button
