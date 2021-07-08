@@ -10,7 +10,7 @@ module.exports = {
     extend: {
       screens: {
         laptop: '1024px',
-        mobile: '576px'
+        mobile: '576px',
       },
       colors: {
         primary: '#FF66D8',
@@ -30,6 +30,14 @@ module.exports = {
           gray4: '#F7F7F9',
           black: '#1D1D1E',
         },
+        system: {
+          error1: '#ED0303',
+          error2: '#FFA39E',
+          error3: '#FFF1F0',
+          success3: '#D7FFE5',
+          success2: '#45C172',
+          success1: '#4DC477',
+        },
         // will remove in future
         spotify: '#1DB954',
       },
@@ -47,7 +55,19 @@ module.exports = {
         fit: 'fit-content',
       },
       flex: {
-        '2': '1 1 500px'
+        2: '1 1 500px',
+      },
+      zIndex: {
+        '-1': '-1',
+      },
+      boxShadow: {
+        10: '0 10px 20px 10px rgba(0, 0, 0, 0.1)',
+        4: '0 4px 8px 4px rgba(0, 0, 0, 0.1)',
+        '-4': 'inset 0 4px 4px 0 rgba(0, 0, 0, 0.25)',
+        none: 'none',
+      },
+      gridTemplateColumns: {
+        alert: 'fit-content auto',
       },
     },
   },

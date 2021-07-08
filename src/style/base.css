@@ -1,10 +1,8 @@
 @layer base {
-  div::-webkit-scrollbar {
-    width: 3px;
-    @apply h-0 w-0;
+  *::-webkit-scrollbar {
+    display: none;
   }
-  div::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    border-radius: 6px;
+  *:focus {
+    outline: none;
   }
 }

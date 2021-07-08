@@ -32,7 +32,7 @@ export default {
 <template>
   <section class="bg-opacity-40 w-full">
     <header class="flex justify-between items-center">
-      <h3 class="text-2xl text-natural-white">Now</h3>
+      <h3 class="text-subtitle text-natural-white">Now</h3>
       <img :src="SpotifyLogo" alt="Spotify" class="w-20" />
     </header>
     <section id="plarer-state" class="mt-7 flex items-start laptop:flex-col">

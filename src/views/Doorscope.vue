@@ -1,35 +1,16 @@
-<template>
-  <div class="sm:mt-14 flex flex-col relative">
-    <BaseGoBackButton @click="$router.back()" />
-    <h2 class="text-subtitle font-semibold mb-4">{{ roomName }}</h2>
-    <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" />
-    <p v-if="trackName">
-      <span>Now playing:</span>
-      <span>{{ trackName }}</span>
-    </p>
-    <p v-else class="text-center whitespace-nowrap">This room is not playing any track now.</p>
-    <button
-      class="mt-6 btn btn-spotify-bg-green w-full"
-      type="button"
-      @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
-    >
-      Enter Room with Spotify
-    </button>
-  </div>
-</template>
 <script>
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
-import initCover from '../assets/vinyl-record.png'
-import BaseGoBackButton from '../components/base/BaseGoBackButton.vue'
 import { spotifyAPI } from '../utility/spotifyAPI.js'
+import initCover from '../assets/vinyl-record.png'
+import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg'
 
 export default {
   components: {
-    BaseGoBackButton,
+    IconArrowLeft,
   },
   setup() {
     const roomKey = useRoute().params.roomKey
@@ -63,4 +44,28 @@ export default {
   },
 }
 </script>
-<style lang="scss"></style>
+<template>
+  <div class="laptop:relative laptop:mt-[33vh]">
+    <button
+      class="btn-tertiary self-start relative -left-5 -top-8 laptop:absolute laptop:-top-14"
+      type="button"
+      @click="$router.back()"
+    >
+      <IconArrowLeft />
+    </button>
+    <h2 class="text-subtitle mb-4">{{ roomName }}</h2>
+    <!-- <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" /> -->
+    <!-- <div v-if="trackName"> -->
+    <p class="mt-8 font-bold text-natural-gray1 text-body">Now playing</p>
+    <p class="mt-3 text-natural-gray1 text-body">{{ trackName }}</p>
+    <!-- </div> -->
+    <!-- <p v-else class="mt-8 text-natural-gray1 whitespace-nowrap">This room is not playing any track now.</p> -->
+    <button
+      class="mt-9 btn-primary w-full"
+      type="button"
+      @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
+    >
+      Enter
+    </button>
+  </div>
+</template>
