@@ -1,20 +1,18 @@
 <script>
+import { computed, defineAsyncComponent } from 'vue'
 import { useStore } from 'vuex'
-
 import logo from '@/assets/vinyl-record.png'
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import ProgressTimer from './ProgressTimer.vue'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
 import LikeButton from '@/components/feature-buttons/LikeButton.vue'
-import PlayToggle from '@/components/feature-buttons/PlayToggle.vue'
-import { computed } from 'vue'
 
 export default {
   components: {
     ProgressTimer,
     LikeButton,
     BaseMarquee,
-    PlayToggle,
+    PlayToggle: defineAsyncComponent(() => import('@/components/feature-buttons/PlayToggle.vue')),
   },
   setup() {
     const store = useStore()
@@ -25,6 +23,7 @@ export default {
       playerPlayingAlbum: computed(() => store.getters.playerPlayingAlbum),
       playerPlayingArtists: computed(() => store.getters.playerPlayingArtists),
       playerPlayingTrackName: computed(() => store.getters.playerPlayingTrackName),
+      isHostUser: computed(() => store.getters.isHostUser),
     }
   },
 }
@@ -48,6 +47,7 @@ export default {
           />
         </a>
         <PlayToggle
+          v-if="isHostUser"
           class="absolute right-0 bottom-0 translate-y-1/2 translate-x-1/2 laptop:translate-x-3/4 laptop:translate-y-1/2 z-30"
         />
       </div>
