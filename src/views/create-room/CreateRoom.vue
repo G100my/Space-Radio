@@ -1,72 +1,10 @@
-<template>
-  <div class="py-4 my-auto">
-    <button
-      class="btn btn-tertiary hidden self-start laptop:flex laptop:-left-5 laptop:absolute laptop:-top-14"
-      type="button"
-      @click="$router.push({ name: 'Hall' })"
-    >
-      <IconArrowLeft />
-    </button>
-    <h2 class="text-subtitle flex justify-between">
-      <span>Create room</span>
-      <button class="btn btn-tertiary laptop:hidden" type="button" @click="$router.push({ name: 'Hall' })">
-        <IconClose />
-      </button>
-    </h2>
-
-    <form class="create-room-form overflow-y-auto space-y-3">
-      <div>
-        <label for="room-name">Room name</label>
-        <BaseInput
-          id="room-name"
-          v-model.trim="roomName"
-          maxlength="50"
-          autocomplete="off"
-          @blur="checkRoomNameHandler"
-          @input="checkRoomNameHandler"
-        >
-          <BaseAlert class="mb-1" error :title="errorMessage" :show="isVaild" />
-        </BaseInput>
-      </div>
-
-      <div>
-        <label for="minimal-volume">Minimal Volume</label>
-        <VolumnBar :step="5" :model-value="minimalVolume" @update:change="minimalVolumeInputHandler" />
-      </div>
-
-      <div>
-        <label for="initial-volumn">Initial Volumn</label>
-        <VolumnBar :model-value="volume" @update:change="volumeInputHandler" />
-      </div>
-
-      <div>
-        <label>Skip Song threshold</label>
-        <p class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
-          <span class="mr-auto text-primary font-bold w-7 flex-shrink-0 text-center">{{ dislikeThreshold }}</span>
-          <button class="btn btn-tertiary" type="button" @click="minusDislikeThreshold">
-            <IconMinus />
-          </button>
-          <button class="btn btn-tertiary" type="button" @click="plusDislikeThreshold">
-            <IconPlus />
-          </button>
-        </p>
-      </div>
-
-      <div>
-        <p class="font-bold">Choose a playlist as recommendation references</p>
-        <BaseSelect :options="hostPlaylists" class="mt-2" />
-      </div>
-      <button class="btn btn-primary w-full mt-6" type="button" @click="createHandler">Create</button>
-    </form>
-  </div>
-</template>
 <script>
 import { computed, ref, watch, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
-import firebase from '../../store/firebase.js'
-import { usePlusMinusHandler } from '../../composables/usePlusMinusHandler.js'
-import { spotifyAPI } from '../../utility/spotifyAPI.js'
+import firebase from '@/store/firebase.js'
+import { usePlusMinusHandler } from '@/composables/usePlusMinusHandler.js'
+import { spotifyAPI } from '@/utility/spotifyAPI.js'
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
 import BaseSelect from '@/components/base/BaseSelect.vue'
@@ -252,6 +190,68 @@ export default {
   },
 }
 </script>
+<template>
+  <div class="py-4 my-auto">
+    <button
+      class="btn btn-tertiary hidden self-start laptop:flex laptop:-left-5 laptop:absolute laptop:-top-14"
+      type="button"
+      @click="$router.push({ name: 'Hall' })"
+    >
+      <IconArrowLeft />
+    </button>
+    <h2 class="text-subtitle flex justify-between">
+      <span>Create room</span>
+      <button class="btn btn-tertiary laptop:hidden" type="button" @click="$router.push({ name: 'Hall' })">
+        <IconClose />
+      </button>
+    </h2>
+
+    <form class="create-room-form overflow-y-auto space-y-3">
+      <div>
+        <label for="room-name">Room name</label>
+        <BaseInput
+          id="room-name"
+          v-model.trim="roomName"
+          maxlength="50"
+          autocomplete="off"
+          @blur="checkRoomNameHandler"
+          @input="checkRoomNameHandler"
+        >
+          <BaseAlert class="mb-1" error :title="errorMessage" :show="isVaild" />
+        </BaseInput>
+      </div>
+
+      <div>
+        <label for="minimal-volume">Minimal Volume</label>
+        <VolumnBar :step="5" :model-value="minimalVolume" @update:change="minimalVolumeInputHandler" />
+      </div>
+
+      <div>
+        <label for="initial-volumn">Initial Volumn</label>
+        <VolumnBar :model-value="volume" @update:change="volumeInputHandler" />
+      </div>
+
+      <div>
+        <label>Skip Song threshold</label>
+        <p class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
+          <span class="mr-auto text-primary font-bold w-7 flex-shrink-0 text-center">{{ dislikeThreshold }}</span>
+          <button class="btn btn-tertiary" type="button" @click="minusDislikeThreshold">
+            <IconMinus />
+          </button>
+          <button class="btn btn-tertiary" type="button" @click="plusDislikeThreshold">
+            <IconPlus />
+          </button>
+        </p>
+      </div>
+
+      <div>
+        <p class="font-bold">Choose a playlist as recommendation references</p>
+        <BaseSelect :options="hostPlaylists" class="mt-2" />
+      </div>
+      <button class="btn btn-primary w-full mt-6" type="button" @click="createHandler">Create</button>
+    </form>
+  </div>
+</template>
 <style lang="postcss">
 .create-room-form {
   > div > label:first-child::after {
