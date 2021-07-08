@@ -258,7 +258,11 @@ export default {
       })
     }
 
-    import('../utility/spotify-player-SDK.js')
+    const sdk = document.createElement('script')
+    sdk.defer = true
+    sdk.async = true
+    document.head.appendChild(sdk)
+    sdk.src = 'https://sdk.scdn.co/spotify-player.js'
 
     this.utterance.pitch = 1
     this.utterance.rate = 1
