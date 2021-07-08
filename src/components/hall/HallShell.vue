@@ -25,7 +25,10 @@ export default {
       <img :src="mobileBackground" class="w-screen h-screen object-cover object-center" />
     </picture>
 
-    <h1 class="h-1/3 w-full flex items-center laptop:h-auto laptop:w-7/12 laptop:justify-center">
+    <h1
+      :class="{ 'hidden laptop:flex': $route.name === 'CreateRoom' }"
+      class="h-1/3 w-full flex items-center laptop:h-auto laptop:w-7/12 laptop:justify-center"
+    >
       <Logo class="h-full w-[120px] md:w-52 laptop:w-[300px]" />
     </h1>
 
