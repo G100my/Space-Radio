@@ -1,9 +1,10 @@
 <script>
 import { computed, ref, watch, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import firebase from '@/store/firebase.js'
 import { usePlusMinusHandler } from '@/composables/usePlusMinusHandler.js'
+import { roomKeyMaker } from '@/utility/randomMaker.js'
 import { spotifyAPI } from '@/utility/spotifyAPI.js'
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
@@ -26,9 +27,10 @@ export default {
     IconClose,
   },
   setup() {
-    const roomKey = Array.from(window.crypto.getRandomValues(new Uint32Array(2)), item => item.toString(16)).join('')
-    const userId = computed(() => useStore().getters.userId)
-    const roomName = ref('')
+    const roomKey = roomKeyMaker()
+    const store = useStore()
+    const userId = computed(() => store.getters.userId)
+    const roomName = ref(null)
     const isVaild = ref(true)
     const router = useRouter()
 
@@ -37,7 +39,7 @@ export default {
     const room_list_ref = firebase.database().ref('room_list')
     room_list_ref.on('value', snapshot => {
       const roomList = snapshot.val()
-      if (roomList !== null) {
+      if (roomList) {
         roomNameArray = Object.values(roomList)
       }
     })
@@ -47,39 +49,26 @@ export default {
     const errorMessage = computed(() => {
       if (hasSameRoomName.value) {
         return `Room name exist: ${roomName.value}`
-      } else if (roomName.value === '') {
-        return `Can't be empty.`
       } else {
-        return false
+        return `Can't be empty.`
       }
     })
 
     function checkRoomNameHandler() {
-      if (hasSameRoomName.value || roomName.value === '') {
-        isVaild.value = false
-      } else {
-        isVaild.value = true
-      }
+      isVaild.value = !hasSameRoomName.value && roomName.value !== ''
     }
 
-    function nextHandler() {
-      checkRoomNameHandler()
-      if (isVaild.value) {
-        // 先加進去 room_list 以避免其他使用者同時間創立一樣 roomName
-        const roomListObject = {}
-        roomListObject[roomKey] = roomName.value
-        room_list_ref.update(roomListObject)
-
-        router.push({
-          name: 'RoomSetting',
-          params: {
-            host_id: userId.value,
-            room_key: roomKey,
-            room_name: roomName.value,
-          },
-        })
-      }
-    }
+    // function registerRoomNameHandler() {
+    //   if (isVaild.value) {
+    //     // 先加進去 room_list 以避免其他使用者同時間創立一樣 roomName
+    //     const roomListObject = {}
+    //     roomListObject[roomKey] = roomName.value
+    //     room_list_ref.update(roomListObject)
+    //   }
+    // }
+    // function unregisterHandler() {
+    //   firebase.database().ref(`room_list/${room_key}`).remove()
+    // }
 
     const dislikeThreshold = ref(2)
     const volume = ref(50)
@@ -122,20 +111,19 @@ export default {
 
     //
 
-    const params = useRoute().params
-    const room_key = params.room_key
-    function unregisterHandler() {
-      firebase.database().ref(`room_list/${room_key}`).remove()
-      window.removeEventListener('beforeunload', unregisterHandler)
-    }
-
-    window.addEventListener('beforeunload', unregisterHandler)
-
     function createHandler() {
-      const room = firebase.database().ref(room_key)
+      checkRoomNameHandler()
+      if (!isVaild.value) return
+      firebase.database().ref(`room_list/${roomKey}`).set(roomName.value)
+      const room = firebase.database().ref(roomKey)
       room
         .set({
-          basic: { base_playlist: basePlaylist.value, ...params },
+          basic: {
+            base_playlist: basePlaylist.value,
+            host_id: userId.value,
+            room_key: roomKey,
+            room_name: roomName.value,
+          },
           playing_state: {
             volume: volume.value,
             minimal_volume: minimalVolume.value,
@@ -144,17 +132,12 @@ export default {
           },
         })
         .then(() => {
-          localStorage.setItem('jukebox_room_key', room_key)
-          window.removeEventListener('beforeunload', unregisterHandler)
+          localStorage.setItem('jukebox_room_key', roomKey)
           router.push({ name: 'Room' })
         })
     }
 
-    const testvalue = ref(0)
-
     return {
-      testvalue,
-
       userId,
       roomKey,
       roomName,
@@ -163,11 +146,9 @@ export default {
       hasSameRoomName,
       errorMessage,
       roomNameArray,
-      nextHandler,
-      checkRoomNameHandler,
 
+      checkRoomNameHandler,
       createHandler,
-      unregisterHandler,
 
       volume,
       minimalVolume,
@@ -214,10 +195,9 @@ export default {
           v-model.trim="roomName"
           maxlength="50"
           autocomplete="off"
-          @blur="checkRoomNameHandler"
-          @input="checkRoomNameHandler"
+          @keyup="checkRoomNameHandler"
         >
-          <BaseAlert class="mb-1" error :title="errorMessage" :show="isVaild" />
+          <BaseAlert class="mb-1" error :title="errorMessage" :show="!isVaild" />
         </BaseInput>
       </div>
 
