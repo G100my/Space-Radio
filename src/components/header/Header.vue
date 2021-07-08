@@ -33,7 +33,7 @@ export default {
     </h1>
     <div class="flex justify-between items-center">
       <Marquee class="mt-5 laptop:mt-0 flex-auto" />
-      <nav class="flex-2 absolute top-8 right-8 laptop:static">
+      <nav class="absolute top-8 right-8 laptop:static">
         <ul class="justify-end flex">
           <li>
             <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="$emit('activeSideDrawer')">
@@ -70,7 +70,9 @@ export default {
   li {
     @apply flex;
   }
-
+  nav {
+    flex: 1 1 500px;
+  }
   nav label {
     @apply hidden ml-3 laptop:inline;
   }

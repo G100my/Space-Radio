@@ -18,9 +18,6 @@ module.exports = {
         tertiary: {
           1: '#081B50',
           2: '#374F95',
-          // will remove in future, use these in Doorscope wireframe page, create room wireframe pages
-          dark: '#081B50',
-          light: '#374F95',
         },
         natural: {
           white: '#FDFEFF',
@@ -38,8 +35,6 @@ module.exports = {
           success2: '#45C172',
           success1: '#4DC477',
         },
-        // will remove in future
-        spotify: '#1DB954',
       },
       fontSize: {
         header: ['2.5rem', { letterSpacing: '-0.02rem', lineHeight: 0.92 }], //40px
@@ -53,9 +48,6 @@ module.exports = {
       },
       height: {
         fit: 'fit-content',
-      },
-      flex: {
-        2: '1 1 500px',
       },
       zIndex: {
         '-1': '-1',
