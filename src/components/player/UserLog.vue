@@ -1,66 +1,82 @@
-<template>
-  <ul class="log-container">
-    <li v-for="log in logs" :key="log.timestamp">
-      <p v-if="log.action_type === 'add' || log.action_type === 'jumpIn'">
-        <span>{{ log.user_name }}</span
-        >{{ log.action_type === 'add' ? '點' : '插' }}播了<span>{{ log.option.track_name }}</span>
-      </p>
-      <p v-else-if="log.action_type === 'normalRemove' || log.action_type === 'urgentRemove'">
-        <span>{{ log.user_name }}</span
-        >從{{ log.action_type === 'normalRemove' ? '點' : '插' }}播序列移除了<span>{{ log.option.track_name }}</span>
-      </p>
-      <p v-else-if="log.action_type === 'normal2urgent' || log.action_type === 'urgent2normal'">
-        <span>{{ log.user_name }}</span
-        >把<span>{{ log.option.track_name }}</span
-        >移到{{ log.action_type === 'normal2urgent' ? '點' : '插' }}播序列
-      </p>
-      <p v-else-if="log.action_type === 'turnUp' || log.action_type === 'turnDown'">
-        <span>{{ log.user_name }}</span
-        >調高音量至:<span>{{ log.option.volume }}</span>
-      </p>
-      <p v-else-if="log.action_type === 'increaseDislike' || log.action_type === 'reduceDislike'">更新切歌投票數</p>
-      <p v-else-if="log.action_type === 'updateMinimalVolume'">
-        <span>{{ log.user_name }}</span
-        >將最小撥放音量調整為<span>{{ log.option.minimal_volume }}</span>
-      </p>
-      <p v-else-if="log.action_type === 'updateDislikeThreshold'">
-        <span>{{ log.user_name }}</span
-        >將最小投票數調整為<span>{{ log.option.dislike_threshold }}</span>
-      </p>
-    </li>
-    <li v-if="logs.length === 0"><p>- - No logs - -</p></li>
-  </ul>
-</template>
 <script>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+import IconVolumn from '@/assets/icons/icon/volumn.svg'
+import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
+import IconArrowDown from '@/assets/icons/icon-arrow-down.svg'
+import IconPlus from '@/assets/icons/icon-plus.svg'
+import IconClose from '@/assets/icons/icon/close.svg'
+import IconSkipSong from '@/assets/icons/icon/skipsong.svg'
+import IconRoomSetting from '@/assets/icons/icon-roomsetting.svg'
+
 export default {
-  computed: {
-    logs() {
-      return this.$store.getters.userLog
-    },
+  components: {
+    IconVolumn,
+    IconArrowUp,
+    IconArrowDown,
+    IconPlus,
+    IconClose,
+    IconSkipSong,
+    IconRoomSetting,
+  },
+  setup() {
+    const store = useStore()
+    function addZero(num) {
+      return num < 10 ? '0' + num.toString() : num.toString()
+    }
+    function timeTransfer(timestamp) {
+      const time = new Date(timestamp)
+      return addZero(time.getHours()) + ':' + addZero(time.getMinutes())
+    }
+    return {
+      logs: computed(() => store.getters.userLog),
+      // fixme 音量變成紀錄 音量偏移量
+      // currentVolume: computed(() => store.getters.currentVolume),
+      timeTransfer,
+    }
   },
 }
 </script>
-<style lang="scss">
-.log-container {
-  padding: 5px;
-  border: 1px solid var(--ignore);
-  background-color: var(--secondary-dark);
-  border-radius: var(--border-radius);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  p {
-    text-align: center;
-    color: var(--ignore);
-    font-size: 14px;
-  }
-  span {
-    display: inline-block;
-    margin: 0 5px;
-    color: var(--secondary-neutral);
-    &:first-child {
-      color: var(--secondary-highlight);
-    }
-  }
-}
-</style>
+<template>
+  <div id="user-log" class="overflow-y-auto">
+    <h3 class="text-natural-gray3 font-bold">Records</h3>
+    <ul class="mt-4 text-natural-gray2 space-y-5 overflow-y-auto">
+      <li v-for="log in logs" :key="log.timestamp">
+        <div class="flex">
+          <span class="flex-0 mr-5">
+            <IconPlus v-if="log.action_type === 'add'" />
+            <IconArrowDown v-else-if="log.action_type === 'urgent2normal'" />
+            <IconArrowUp v-else-if="['jumpIn', 'normal2urgent'].includes(log.action_type)" />
+            <IconClose v-else-if="['normalRemove', 'urgentRemove'].includes(log.action_type)" />
+            <IconVolumn v-else-if="['turnUp', 'turnDown'].includes(log.action_type)" />
+            <IconSkipSong v-else-if="['increaseDislike', 'reduceDislike'].includes(log.action_type)" />
+            <IconRoomSetting v-else-if="['updateMinimalVolume', 'updateDislikeThreshold'].includes(log.action_type)" />
+          </span>
+
+          <span class="flex-0 whitespace-nowrap w-fit mr-4">{{ timeTransfer(log.timestamp) }}</span>
+
+          <p class="flex-1">
+            <span
+              v-if="
+                ['add', 'jumpIn', 'normalRemove', 'urgentRemove', 'normal2urgent', 'urgent2normal'].includes(
+                  log.action_type
+                )
+              "
+              >{{ log.option.track_name }}</span
+            >
+            <span v-else-if="['turnUp', 'turnDown'].includes(log.action_type)"
+              >Adjust Volumn: {{ log.option.volume }}</span
+            >
+            <span v-else-if="log.action_type === 'updateMinimalVolume'"
+              >Minimal Volume: {{ log.option.minimal_volume }}</span
+            >
+            <span v-else-if="log.action_type === 'updateDislikeThreshold'"
+              >Skip threshold: {{ log.option.dislike_threshold }}
+            </span>
+          </p>
+        </div>
+      </li>
+      <li v-if="logs.length === 0"><p>- - No logs - -</p></li>
+    </ul>
+  </div>
+</template>
