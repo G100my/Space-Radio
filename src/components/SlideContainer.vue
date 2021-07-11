@@ -129,7 +129,7 @@ export default {
       ref="slideContent"
       class="show-all-flex w-[200%] h-full flex overflow-y-auto items-stretch transition-transform duration-300 laptop:flex-1 laptop:my-0 laptop:w-auto"
     >
-      <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto laptop:w-96 laptop:px-0 laptop:pb-0">
+      <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto laptop:w-96 laptop:pb-10">
         <slot name="left-side" />
       </div>
       <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto flex laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">
