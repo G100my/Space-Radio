@@ -11,6 +11,7 @@ import PlayingState from '../components/player/PlayingState.vue'
 import VolumnBar from '@/components/VolumnBar.vue'
 import Collection from '@/components/player/Collection.vue'
 import Vote from '@/components/player/Vote.vue'
+import UserLog from '@/components/player/UserLog.vue'
 import NoteDialog from '../components/lineup/NoteDialog.vue'
 // import AdditionDisplay from '../components/AdditionDisplay.vue'
 import RoomQueue from '../components/lineup/RoomQueue.vue'
@@ -26,6 +27,7 @@ export default {
     Vote,
     RoomQueue,
     NoteDialog,
+    UserLog,
     // AdditionDisplay,
   },
   data() {
@@ -90,15 +92,18 @@ export default {
     <Header class="show-all-flex" @activeSideDrawer="isSideDrawerShow = true" />
     <SlideContainer class="flex-1">
       <template #left-side>
-        <PlayingState />
-        <VolumnBar
-          :value="currentVolume"
-          class="mt-7 laptop:mt-3"
-          @minus="$store.dispatch('turnDown')"
-          @plus="store.dispatch('turnUp')"
-        />
-        <Collection class="mt-4" />
-        <Vote class="my-4" />
+        <div class="h-full flex flex-col">
+          <PlayingState />
+          <VolumnBar
+            :value="currentVolume"
+            class="mt-7 laptop:mt-3"
+            @minus="$store.dispatch('turnDown')"
+            @plus="store.dispatch('turnUp')"
+          />
+          <Collection class="mt-4" />
+          <Vote class="my-4" />
+          <UserLog class="flex-1 hidden laptop:block" />
+        </div>
       </template>
       <template #right-side>
         <RoomQueue />
