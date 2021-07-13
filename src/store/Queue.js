@@ -81,6 +81,12 @@ const Queue = {
     urgentQueue(state) {
       return state.urgent_queue
     },
+    totalQueue(state) {
+      const pending = state.pending_queue ? Object.keys(state.pending_queue) : []
+      const normal = state.normal_queue ? Object.keys(state.normal_queue) : []
+      const urgent = state.urgent_queue ? Object.keys(state.urgent_queue) : []
+      return pending.concat(normal).concat(urgent)
+    },
     previousDeleted(state) {
       return state.previousDeleted
     },
@@ -102,19 +108,19 @@ const Queue = {
       delete state.trackData.pending
     },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
-      const queueKey = oldChildSnapshot.key
-      state.previousDeleted = state.trackData[queueKey]
-      delete state.trackData[queueKey]
-      delete state[`${storeTarget}_queue`][queueKey]
+      const orderKey = oldChildSnapshot.key
+      state.previousDeleted = state.trackData[orderKey]
+      delete state.trackData[orderKey]
+      delete state[`${storeTarget}_queue`][orderKey]
     },
     addQueueTrack(state, { storeTarget, childSnapshot, addedTrack }) {
-      const queueKey = childSnapshot.key
-      state[`${storeTarget}_queue`][queueKey] = childSnapshot.val()
-      state.trackData[queueKey] = addedTrack
+      const orderKey = childSnapshot.key
+      state[`${storeTarget}_queue`][orderKey] = childSnapshot.val()
+      state.trackData[orderKey] = addedTrack
     },
     editQueue(state, { storeTarget, childSnapshot }) {
-      const queueKey = childSnapshot.key
-      state[`${storeTarget}_queue`][queueKey] = childSnapshot.val()
+      const orderKey = childSnapshot.key
+      state[`${storeTarget}_queue`][orderKey] = childSnapshot.val()
     },
     refreshPendingQueue(state, queue) {
       state.pending_queue = queue
@@ -127,65 +133,65 @@ const Queue = {
     add({ getters }, { id, note, trackNameForLog: track_name }) {
       const now = Date.now()
       const parameter = {}
-      const userId = getters.userId
-      const orderKey = `${now}-${userId}`
-      parameter[orderKey] = {
+      const order_key = `normal-${now}`
+      parameter[order_key] = {
         id,
         added_time: now,
-        added_by: userId,
+        orderer: getters.userName,
         note,
         track_name,
+        order_key,
       }
       normal_queue_ref.update(parameter)
     },
     jumpIn({ getters }, { id, note, trackNameForLog: track_name }) {
       const now = Date.now()
-      const userId = getters.userId
+      const order_key = `urgent-${now}`
       urgent_queue_ref.push({
         id,
         added_time: now,
-        added_by: userId,
+        orderer: getters.userName,
         note,
         track_name,
+        order_key,
       })
     },
-    urgentRemove(_context, { queueKey }) {
-      urgent_queue_ref.child(queueKey).remove()
+    urgentRemove(_context, { orderKey }) {
+      urgent_queue_ref.child(orderKey).remove()
     },
-    normalRemove(_context, { queueKey }) {
-      normal_queue_ref.child(queueKey).remove()
+    normalRemove(_context, { orderKey }) {
+      normal_queue_ref.child(orderKey).remove()
     },
 
-    urgent2normal({ state }, { queueKey }) {
-      const queue = { ...state.urgent_queue[queueKey] }
-      queue.note = false
-      const orderKey = `${queue.added_time}-${queue.added_by}`
+    urgent2normal({ state }, { orderKey }) {
+      const order_key = `normal-${queue.added_time}`
+      const queue = { ...state.urgent_queue[orderKey], note: false, order_key }
 
       const parameter = {}
-      parameter[orderKey] = queue
+      parameter[order_key] = queue
 
       urgent_queue_ref
-        .child(queueKey)
+        .child(orderKey)
         .remove()
         .then(() => {
           normal_queue_ref.update(parameter)
         })
     },
 
-    normal2urgent({ state }, { queueKey, note }) {
-      const queue = { ...state.normal_queue[queueKey] }
-      queue.note = note
+    normal2urgent({ state }, { orderKey, note }) {
+      const order_key = `urgent-${queue.added_time}`
+      const queue = { ...state.normal_queue[orderKey], note, order_key }
 
       normal_queue_ref
-        .child(queueKey)
+        .child(orderKey)
         .remove()
         .then(() => {
           urgent_queue_ref.push(queue)
         })
     },
 
-    urgentEdit(_context, { queueKey, note }) {
-      urgent_queue_ref.child(queueKey).update({ note })
+    urgentEdit(_context, { orderKey, note }) {
+      urgent_queue_ref.child(orderKey).update({ note })
     },
     sendNextQueue({ state }, callback) {
       const urgentQueueArray = Object.keys(state.urgent_queue)
@@ -209,7 +215,8 @@ const Queue = {
       spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextQueueKey].id}`, error => {
         error && console.log(error)
         if (!error) {
-          const queue = state[`${level}_queue`][nextQueueKey]
+          const order_key = `pending-${queue.added_time}`
+          const queue = { ...state[`${level}_queue`][nextQueueKey], order_key }
 
           let targetQueue
           if (level === 'urgent') {
