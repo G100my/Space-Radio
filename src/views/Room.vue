@@ -106,7 +106,7 @@ export default {
         </div>
       </template>
       <template #right-side>
-        <RoomQueue />
+        <RoomQueue class="flex-1" />
         <!-- <AdditionDisplay
         v-if="!mobileMode"
         v-show="additionDisplayToggler"
