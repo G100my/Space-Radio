@@ -53,27 +53,27 @@ export default {
   }
 }
 
-  .marquee-content {
-    @apply text-0 whitespace-nowrap overflow-hidden overflow-ellipsis;
+.marquee-content {
+  @apply text-0 whitespace-nowrap overflow-hidden overflow-ellipsis;
 
-    &:hover span {
-      max-width: none;
-    }
+  &:hover span {
+    max-width: none;
+  }
+
+  span {
+    @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
+  }
+
+  &.active {
+    @apply relative w-fit overflow-ellipsis overflow-visible;
+    animation: marquee 10s linear 1;
 
     span {
-      @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
+      @apply w-max pr-10;
     }
-
-    &.active {
-      @apply relative w-fit overflow-ellipsis overflow-visible;
-      animation: marquee 10s linear 1;
-
-      span {
-        @apply w-max pr-10;
-      }
-      span + span {
-        @apply absolute;
-      }
+    span + span {
+      @apply absolute;
     }
   }
+}
 </style>
