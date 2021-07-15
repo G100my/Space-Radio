@@ -58,7 +58,7 @@ export default {
         </section>
 
         <section class="mt-1 laptop:mt-auto">
-          <BaseMarquee>
+          <BaseMarquee class="text-natural-gray1">
             <a v-for="(artists, index) in playerPlayingArtists" :key="index" target="_blank" :href="artists.url">
               {{ artists.name }}
             </a>

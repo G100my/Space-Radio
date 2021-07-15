@@ -53,8 +53,6 @@ export default {
   }
 }
 
-@tailwind components;
-@layer components {
   .marquee-content {
     @apply text-0 whitespace-nowrap overflow-hidden overflow-ellipsis;
 
@@ -63,7 +61,7 @@ export default {
     }
 
     span {
-      @apply inline-block text-base text-natural-gray1 text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
+      @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
     }
 
     &.active {
@@ -78,5 +76,4 @@ export default {
       }
     }
   }
-}
 </style>
