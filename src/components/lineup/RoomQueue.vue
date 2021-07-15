@@ -9,89 +9,88 @@
       </template>
       <template #body>
         <div
-          v-for="(orderKey, index) in totalQueue"
-          :key="index"
-          class="track flex items-center justify-around rounded-lg hover:bg-tertiary-dark bg-tertiary-dark bg-opacity-60 mb-2 py-3 px-2 mobile:px-4 xl:px-10"
+          style="grid-template-columns: 40px repeat(3, 1fr); grid-column-gap: 10px; grid-auto-columns: minmax(100px, 1fr);"
+          class="track w-full grid rounded-lg hover:bg-tertiary-dark bg-tertiary-dark bg-opacity-60 mb-2 py-3 px-2 mobile:px-4 xl:px-10"
         >
-          <div class="status">
-            <div v-if="orderKey.startsWith('normal')" class="numbere px-2 mobile:pr-4 xl:pr-10">
-              <span>{{ index }}</span>
-            </div>
-            <!-- 暫定，命名後續調整 -->
-            <div v-else-if="orderKey.startsWith('urgent')" class="arrow-up px-2 mobile:pr-4 xl:pr-10">
-              <IconArrowUp />
-            </div>
-            <!-- 暫定，命名後續調整 -->
-            <div v-else class="pending px-2 mobile:pr-4 xl:pr-10">
-              <IconPending />
-            </div>
-          </div>
-
-          <div class="song-details flex items-center" style="flex: 1 1 300px">
-            <div class="album-img pr-4">
-              <img :src="getImageUrl(trackData[orderKey])" alt="album photo" />
-            </div>
-            <div class="song">
-              <div class="name text-natural-gray1 font-bold text-xs md:text-base">
-                <BaseMarquee :text="trackData[orderKey].name" />
+          <template v-for="(orderKey, index) in totalQueue" :key="index">
+            <div class="status">
+              <div v-if="orderKey.startsWith('normal')" class="numbere px-2 mobile:pr-4 xl:pr-10">
+                <span>{{ index }}</span>
               </div>
-              <div class="orderer text-primary text-xs md:text-base">
-                <BaseMarquee :text="getOrderer(orderKey)" />
+              <div v-else-if="orderKey.startsWith('urgent')" class="arrow-up px-2 mobile:pr-4 xl:pr-10">
+                <IconArrowUp />
+              </div>
+              <div v-else class="pending px-2 mobile:pr-4 xl:pr-10">
+                <IconPending />
               </div>
             </div>
+
+            <div class="song-details flex">
+              <div class="album-img mr-4"  style="width: 64px">
+                <img :src="getImageUrl(trackData[orderKey])" alt="album photo" />
+              </div>
+              <div class="song">
+                <div class="name text-natural-gray1 font-bold text-xs md:text-base">
+                  <BaseMarquee :text="trackData[orderKey].name" />
+                </div>
+                <div class="orderer text-primary text-xs md:text-base">
+                  <BaseMarquee :text="getOrderer(orderKey)" />
+                </div>
+              </div>
           </div>
 
-          <div class="album text-natural-gray1 flex-auto hidden md:block">
-            <div class="album-name text-xs md:text-base">
-              <BaseMarquee>
-                <a :href="trackData[orderKey].external_urls.spotify" target="_blank">{{
-                  trackData[orderKey].album.name
-                }}</a>
-              </BaseMarquee>
+            <div class="album text-natural-gray1 flex-auto hidden md:block">
+              <div class="album-name text-xs md:text-base">
+                <BaseMarquee>
+                  <a :href="trackData[orderKey].external_urls.spotify" target="_blank">{{
+                    trackData[orderKey].album.name
+                  }}</a>
+                </BaseMarquee>
+              </div>
+              <div class="album-author text-xs md:text-base">
+                <BaseMarquee>
+                  <a
+                    v-for="artist in trackData[orderKey].artists"
+                    :key="artist.name"
+                    :href="artist.external_urls.spotify"
+                    target="_blank"
+                    >{{ artist.name }}</a
+                  >
+                </BaseMarquee>
+              </div>
             </div>
-            <div class="album-author text-xs md:text-base">
-              <BaseMarquee>
-                <a
-                  v-for="artist in trackData[orderKey].artists"
-                  :key="artist.name"
-                  :href="artist.external_urls.spotify"
-                  target="_blank"
-                  >{{ artist.name }}</a
-                >
-              </BaseMarquee>
-            </div>
-          </div>
 
-          <div class="features justify-end hidden laptop:block space-x-4 xl:space-x-11">
-            <template v-if="orderKey.startsWith('urgent')">
-              <button class="btn-tertiary" type="button" @click="editNote(orderKey)">
-                <IconEdit />
+            <div class="features justify-end hidden laptop:block space-x-4 xl:space-x-11">
+              <template v-if="orderKey.startsWith('urgent')">
+                <button class="btn-tertiary ml-auto" type="button" @click="editNote(orderKey)">
+                  <IconEdit />
+                </button>
+                <button class="btn-tertiary ml-auto" type="button" @click="urgent2normal(orderKey)">
+                  <IconArrowDown />
+                </button>
+              </template>
+              <button
+                v-if="orderKey.startsWith('normal')"
+                class="btn-tertiary ml-auto"
+                type="button"
+                @click="normal2urgent(orderKey)"
+              >
+                <IconArrowUp />
               </button>
-              <button class="btn-tertiary" type="button" @click="urgent2normal(orderKey)">
-                <IconArrowDown />
+              <button
+                v-if="!orderKey.startsWith('pending')"
+                class="btn-tertiary ml-auto"
+                type="button"
+                @click="remove(orderKey, orderKey.startsWith('normal') ? 'normal' : 'urgent')"
+              >
+                <IconRemove />
               </button>
-            </template>
-            <button
-              v-if="orderKey.startsWith('normal')"
-              class="btn-tertiary"
-              type="button"
-              @click="normal2urgent(orderKey)"
-            >
-              <IconArrowUp />
-            </button>
-            <button
-              v-if="!orderKey.startsWith('pending')"
-              class="btn-tertiary"
-              type="button"
-              @click="remove(orderKey, orderKey.startsWith('normal') ? 'normal' : 'urgent')"
-            >
-              <IconRemove />
-            </button>
-          </div>
-          <!-- fixme -->
-          <div class="more block laptop:hidden pr-2 cursor-pointer">
-            <IconMore />
-          </div>
+            </div>
+            <!-- fixme -->
+            <div class="more block laptop:hidden pr-2 cursor-pointer">
+              <IconMore />
+            </div>
+          </template>
         </div>
       </template>
     </TrackGridShell>
