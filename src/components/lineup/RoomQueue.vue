@@ -8,36 +8,32 @@
         </header>
       </template>
       <template #body>
-        <div
-          style="grid-template-columns: 40px repeat(3, 1fr); grid-column-gap: 10px; grid-auto-columns: minmax(100px, 1fr);"
-          class="track w-full grid rounded-lg hover:bg-tertiary-dark bg-tertiary-dark bg-opacity-60 mb-2 py-3 px-2 mobile:px-4 xl:px-10"
-        >
+        <div class="track">
           <template v-for="(orderKey, index) in totalQueue" :key="index">
-            <div class="status">
-              <div v-if="orderKey.startsWith('normal')" class="numbere px-2 mobile:pr-4 xl:pr-10">
+            <div class="status flex justify-center items-center">
+              <div v-if="orderKey.startsWith('normal')" class="number">
                 <span>{{ index }}</span>
               </div>
-              <div v-else-if="orderKey.startsWith('urgent')" class="arrow-up px-2 mobile:pr-4 xl:pr-10">
+              <div v-else-if="orderKey.startsWith('urgent')" class="arrow-up">
                 <IconArrowUp />
               </div>
-              <div v-else class="pending px-2 mobile:pr-4 xl:pr-10">
+              <div v-else class="pending">
                 <IconPending />
               </div>
             </div>
 
-            <div class="song-details flex">
-              <div class="album-img mr-4"  style="width: 64px">
-                <img :src="getImageUrl(trackData[orderKey])" alt="album photo" />
-              </div>
-              <div class="song">
-                <div class="name text-natural-gray1 font-bold text-xs md:text-base">
-                  <BaseMarquee :text="trackData[orderKey].name" />
-                </div>
-                <div class="orderer text-primary text-xs md:text-base">
-                  <BaseMarquee :text="getOrderer(orderKey)" />
-                </div>
-              </div>
-          </div>
+            <div class="album-img flex justify-center items-center">
+              <img class="w-16 h-16" :src="getImageUrl(trackData[orderKey])" alt="album photo" />
+            </div>
+
+            <div class="song overflow-hidden w-full">
+              <BaseMarquee
+                class="name text-natural-gray1 font-bold text-xs md:text-base"
+                :text="trackData[orderKey].name"
+              />
+
+              <BaseMarquee class="orderer text-primary text-xs md:text-base" :text="getOrderer(orderKey)" />
+            </div>
 
             <div class="album text-natural-gray1 flex-auto hidden md:block">
               <div class="album-name text-xs md:text-base">
@@ -60,7 +56,7 @@
               </div>
             </div>
 
-            <div class="features justify-end hidden laptop:block space-x-4 xl:space-x-11">
+            <div class="features justify-end hidden laptop:flex space-x-4 xl:space-x-11">
               <template v-if="orderKey.startsWith('urgent')">
                 <button class="btn-tertiary ml-auto" type="button" @click="editNote(orderKey)">
                   <IconEdit />
@@ -183,3 +179,19 @@ export default {
   },
 }
 </script>
+<style lang="postcss">
+.track {
+  @apply max-w-full w-full grid mb-2 py-3 px-2 mobile:px-4 xl:px-10 gap-y-[10px];
+  grid-template-columns: auto auto repeat(2, minmax(auto, 2fr)) 1fr;
+  > div {
+    @apply bg-opacity-60 hover:bg-tertiary-1 bg-tertiary-1 py-3 px-3;
+    &:first-child {
+      @apply rounded-l-lg;
+    }
+  }
+  .more,
+  .features {
+    @apply rounded-r-lg;
+  }
+}
+</style>
