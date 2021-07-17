@@ -45,10 +45,7 @@ export default {
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div
-          id="select-overlay"
-          class="fixed inset-0 flex items-center justify-center backdrop-blur-sm laptop:hidden"
-        />
+        <div class="fixed inset-0 flex items-center justify-center backdrop-blur-sm laptop:hidden" />
       </TransitionChild>
       <TransitionChild
         as="template"

@@ -89,7 +89,7 @@ export default {
 </script>
 <template>
   <div id="room" class="relative bg-tertiary-2 h-full flex flex-col overflow-hidden">
-    <Header class="show-all-flex" @activeSideDrawer="isSideDrawerShow = true" />
+    <Header class="_show_all_flex" @activeSideDrawer="isSideDrawerShow = true" />
     <SlideContainer class="flex-1">
       <template #left-side>
         <div class="h-full flex flex-col">

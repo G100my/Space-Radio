@@ -3,7 +3,7 @@
     <BaseGoBackButton @click="$router.push({ name: 'CreateRoom' }) && unregisterHandler()" />
     <h2 class="text-subtitle font-semibold mb-4">Create room</h2>
     <form class="text-gray-600">
-      <div class="room-setting-form-item">
+      <div class="_room_setting_form_item">
         <div>
           <label for="minimal-volume">Minimal Volume*</label>
           <BaseMinusButton @click="minusMinimal" />
@@ -20,7 +20,7 @@
           @input="minimalVolumeInputHandler"
         />
       </div>
-      <div class="room-setting-form-item">
+      <div class="_room_setting_form_item">
         <div>
           <label for="initial-volumn">Initial Volumn*</label>
           <BaseMinusButton @click="minusVolume" />
@@ -37,7 +37,7 @@
           @input="volumeInputHandler"
         />
       </div>
-      <div class="room-setting-form-item">
+      <div class="_room_setting_form_item">
         <div>
           <label>Skip Song threshold*</label>
           <BaseMinusButton @click="minusDislikeThreshold" />
@@ -169,7 +169,7 @@ export default {
 }
 </script>
 <style lang="postcss">
-.room-setting-form-item {
+._room_setting_form_item {
   @apply lg:mt-5;
   > div {
     @apply flex;
@@ -184,7 +184,7 @@ export default {
     @apply mt-2;
   }
 }
-.room-setting-form-item + .room-setting-form-item {
+._room_setting_form_item + ._room_setting_form_item {
   @apply mt-6;
 }
 </style>

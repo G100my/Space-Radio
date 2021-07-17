@@ -55,8 +55,8 @@ export default {
     :show="isShow"
     appear
     as="div"
-    class="base-alert"
-    :class="{ 'alert-error': error, 'alert-success': !error }"
+    class="_base_alert"
+    :class="{ _alert_error: error, _alert_success: !error }"
     enter="transition-all duration-75"
     enter-from="max-h-0"
     enter-to="max-h-full"
@@ -64,7 +64,7 @@ export default {
     leave-from="max-h-full"
     leave-to="max-h-0"
   >
-    <label class="self-center" :class="{ 'alert-icon-sm': iconSize === 'sm', 'alert-icon-lg': iconSize === 'lg' }">
+    <label class="self-center" :class="{ _alert_icon_sm: iconSize === 'sm', _alert_icon_lg: iconSize === 'lg' }">
       <IconError v-if="error" class="h-full w-full text-system-error1" />
       <IconSuccess v-else class="h-full w-full text-system-success2" />
     </label>
@@ -80,20 +80,20 @@ export default {
   </TransitionRoot>
 </template>
 <style lang="postcss">
-.base-alert {
+._base_alert {
   @apply overflow-hidden px-4 py-2 border translate-y-1 grid;
   grid-template-columns: min-content 1fr;
 }
-.alert-error {
+._alert_error {
   @apply bg-system-error3 border-system-error2;
 }
-.alert-success {
+._alert_success {
   @apply bg-system-success3 border-system-success2;
 }
-.alert-icon-sm {
+._alert_icon_sm {
   @apply h-4 w-4 mr-3;
 }
-.alert-icon-lg {
+._alert_icon_lg {
   @apply h-5 w-5 mr-6;
 }
 </style>

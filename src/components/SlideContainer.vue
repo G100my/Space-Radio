@@ -127,7 +127,7 @@ export default {
     <div
       id="slide-content"
       ref="slideContent"
-      class="show-all-flex w-[200%] h-full flex overflow-y-auto items-stretch transition-transform duration-300 laptop:flex-1 laptop:my-0 laptop:w-auto"
+      class="_show_all_flex w-[200%] h-full flex overflow-y-auto items-stretch transition-transform duration-300 laptop:flex-1 laptop:my-0 laptop:w-auto"
     >
       <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto laptop:w-96 laptop:pb-10">
         <slot name="left-side" />
@@ -138,9 +138,9 @@ export default {
     </div>
   </div>
 
-  <div class="slide-navigation">
+  <div class="_slide_navigation">
     <div
-      class="slide-navigation-bar"
+      class="_slide_navigation_bar"
       :style="{
         '--left': `${left}px`,
         '--right': `${right}px`,
@@ -161,7 +161,7 @@ export default {
   </div>
 </template>
 <style lang="postcss">
-.slide-navigation {
+._slide_navigation {
   @apply h-16 p-1.5 flex justify-evenly relative laptop:hidden;
   > button {
     @apply h-full w-[77px] rounded-sm flex flex-col items-center focus:outline-none;
@@ -173,7 +173,7 @@ export default {
     }
   }
 
-  &-bar {
+  &_bar {
     @apply absolute bg-[#071A4F] h-1.5 rounded-md top-0;
     left: var(--left);
     right: var(--right);

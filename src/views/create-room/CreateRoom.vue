@@ -185,7 +185,7 @@ export default {
       </button>
     </h2>
 
-    <form class="create-room-form overflow-y-auto space-y-3 laptop:overflow-y-visible laptop:space-y-3">
+    <form class="_create_room_form overflow-y-auto space-y-3 laptop:overflow-y-visible laptop:space-y-3">
       <div>
         <label for="room-name">Room name</label>
         <BaseInput
@@ -237,7 +237,7 @@ export default {
   </div>
 </template>
 <style lang="postcss">
-.create-room-form {
+._create_room_form {
   > div > label:first-child::after {
     content: '*';
     @apply text-primary mb-1;

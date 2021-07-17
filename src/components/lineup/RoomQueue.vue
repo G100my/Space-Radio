@@ -8,9 +8,9 @@
         </header>
       </template>
       <template #body>
-        <div class="track">
+        <div class="_tracks">
           <template v-for="(orderKey, index) in totalQueue" :key="index">
-            <div class="status flex justify-center items-center">
+            <div class="flex justify-center items-center">
               <div v-if="orderKey.startsWith('normal')" class="number">
                 <span>{{ index }}</span>
               </div>
@@ -22,28 +22,25 @@
               </div>
             </div>
 
-            <div class="album-img flex justify-center items-center">
+            <div class="flex justify-center items-center">
               <img class="w-16 h-16" :src="getImageUrl(trackData[orderKey])" alt="album photo" />
             </div>
 
-            <div class="song overflow-hidden w-full">
-              <BaseMarquee
-                class="name text-natural-gray1 font-bold text-xs md:text-base"
-                :text="trackData[orderKey].name"
-              />
+            <div class="overflow-hidden w-full">
+              <BaseMarquee class="text-natural-gray1 font-bold text-xs md:text-base" :text="trackData[orderKey].name" />
 
               <BaseMarquee class="orderer text-primary text-xs md:text-base" :text="getOrderer(orderKey)" />
             </div>
 
-            <div class="album text-natural-gray1 flex-auto hidden md:block">
-              <div class="album-name text-xs md:text-base">
+            <div class="text-natural-gray1 flex-auto hidden md:block">
+              <div class="text-xs md:text-base">
                 <BaseMarquee>
                   <a :href="trackData[orderKey].external_urls.spotify" target="_blank">{{
                     trackData[orderKey].album.name
                   }}</a>
                 </BaseMarquee>
               </div>
-              <div class="album-author text-xs md:text-base">
+              <div class="text-xs md:text-base">
                 <BaseMarquee>
                   <a
                     v-for="artist in trackData[orderKey].artists"
@@ -56,7 +53,7 @@
               </div>
             </div>
 
-            <div class="features justify-end hidden laptop:flex space-x-4 xl:space-x-11">
+            <div class="_features justify-end hidden laptop:flex space-x-4 xl:space-x-11">
               <template v-if="orderKey.startsWith('urgent')">
                 <button class="btn-tertiary ml-auto" type="button" @click="editNote(orderKey)">
                   <IconEdit />
@@ -83,7 +80,7 @@
               </button>
             </div>
             <!-- fixme -->
-            <div class="more block laptop:hidden pr-2 cursor-pointer">
+            <div class="_more block laptop:hidden pr-2 cursor-pointer">
               <IconMore />
             </div>
           </template>
@@ -180,7 +177,7 @@ export default {
 }
 </script>
 <style lang="postcss">
-.track {
+._tracks {
   @apply max-w-full w-full grid mb-2 py-3 px-2 mobile:px-4 xl:px-10 gap-y-[10px];
   grid-template-columns: auto auto repeat(2, minmax(auto, 2fr)) 1fr;
   > div {
@@ -189,8 +186,8 @@ export default {
       @apply rounded-l-lg;
     }
   }
-  .more,
-  .features {
+  ._more,
+  ._features {
     @apply rounded-r-lg;
   }
 }

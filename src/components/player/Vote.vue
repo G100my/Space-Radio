@@ -16,7 +16,7 @@ export default {
 }
 </script>
 <template>
-  <div class="vote flex flex-col">
+  <div class="_vote flex flex-col">
     <template v-if="currentDislikeCountdown">
       <p>
         Will skip current music after
@@ -41,7 +41,7 @@ export default {
   </div>
 </template>
 <style lang="postcss">
-.vote {
+._vote {
   > p {
     @apply text-natural-gray3 font-bold;
     > span {

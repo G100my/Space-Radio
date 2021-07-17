@@ -33,7 +33,7 @@ export default {
 </script>
 <template>
   <div class="overflow-hidden">
-    <p class="marquee-content" :class="{ active: isFilled }" @animationend="isFilled = false">
+    <p class="_marquee_content" :class="{ active: isFilled }" @animationend="isFilled = false">
       <span ref="mainSpan" @mouseenter="mouseenterHandler">
         <slot>{{ text }}</slot>
       </span>
@@ -53,7 +53,7 @@ export default {
   }
 }
 
-.marquee-content {
+._marquee_content {
   @apply text-0 whitespace-nowrap overflow-hidden overflow-ellipsis;
 
   &:hover span {

@@ -23,19 +23,16 @@ export default {
   <div :class="$attrs.class" class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
     <span class="text-primary font-bold w-7 flex-shrink-0 text-center">{{ modelValue }}</span>
     <IconVolumn class="ml-3" />
-    <!-- <div class="ml-3 flex-1 bg-tertiary-2 bg-opacity-60">
-      <div class="rounded-sm h-0.5 bg-natural-white" :style="{ width: `${modelValue}%` }" />
-    </div> -->
 
     <button
-      class="volumn-bar-button btn-tertiary order-11"
+      class="_volumn_bar_button btn-tertiary order-11"
       type="button"
       @click="$emit('update:change', modelValue - step)"
     >
       <IconMinus />
     </button>
     <button
-      class="volumn-bar-button btn-tertiary order-12"
+      class="_volumn_bar_button btn-tertiary order-12"
       type="button"
       @click="$emit('update:change', modelValue + step)"
     >
@@ -54,7 +51,7 @@ export default {
   </div>
 </template>
 <style lang="postcss">
-.volumn-bar-button:focus ~ input[type='range'] {
+._volumn_bar_button:focus ~ input[type='range'] {
   &::-webkit-slider-runnable-track {
     @apply bg-primary;
   }

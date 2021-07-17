@@ -1,5 +1,5 @@
-@layer utilities {
-  .show-all-flex {
+@layer components {
+  ._show_all_flex {
     @apply laptop:flex laptop:items-stretch;
     > *:first-child {
       @apply laptop:flex-none laptop:w-96 laptop:bg-tertiary-1 laptop:bg-opacity-60 laptop:pl-[20px] laptop:pr-[20px];

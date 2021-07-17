@@ -11,19 +11,19 @@ export default {
 }
 </script>
 <template>
-  <div class="base-input">
+  <div class="_base_input">
     <input :value="modelValue" v-bind="$attrs" @input="$emit('update:modelValue', $event.target.value)" />
     <slot />
   </div>
 </template>
 <style lang="postcss">
-.base-input > input {
+._base_input > input {
   @apply mt-1.5 w-full bg-tertiary-1 border border-tertiary-2 border-opacity-60 -shadow-4 px-4 py-3 text-natural-gray1 rounded text-body;
   &:focus {
     @apply border-primary border-opacity-80 outline-none;
   }
 }
-.base-input > input::placeholder {
+._base_input > input::placeholder {
   @apply text-natural-gray3;
 }
 </style>
