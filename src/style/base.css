@@ -5,4 +5,8 @@
   *:focus {
     outline: none;
   }
+  body {
+    /* 為了讓 #room blur 時不會有明顯的白邊 */
+    background-color: black;
+  }
 }
