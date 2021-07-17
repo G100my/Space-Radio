@@ -7,11 +7,22 @@ module.exports = {
     fontFamily: {
       inter: ['Inter', 'sans-serif'],
     },
+    screens: {
+      mobile: '576px',
+      laptop: '1024px',
+      // below from tailwind css default
+      sm: '640px',
+      // => @media (min-width: 640px) { ... }
+      md: '768px',
+      // => @media (min-width: 768px) { ... }
+      lg: '1024px',
+      // => @media (min-width: 1024px) { ... }
+      xl: '1280px',
+      // => @media (min-width: 1280px) { ... }
+      '2xl': '1536px',
+      // => @media (min-width: 1536px) { ... }
+    },
     extend: {
-      screens: {
-        laptop: '1024px',
-        mobile: '576px',
-      },
       colors: {
         primary: '#FF66D8',
         secondary: '#1ED760',
