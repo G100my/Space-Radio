@@ -1,5 +1,5 @@
 <script>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 export default {
   props: {
     text: {
@@ -11,11 +11,6 @@ export default {
   setup() {
     const mainSpan = ref(null)
     const isFilled = ref(false)
-
-    // when latestQueue exist, play animation
-    watch(mainSpan, newValue => {
-      if (newValue) isFilled.value = true
-    })
 
     const mouseenterHandler = event => {
       const span = event.currentTarget
@@ -60,7 +55,7 @@ export default {
     max-width: none;
   }
 
-  span {
+  > span {
     @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
   }
 
@@ -68,10 +63,10 @@ export default {
     @apply relative w-fit overflow-ellipsis overflow-visible;
     animation: marquee 10s linear 1;
 
-    span {
+    > span {
       @apply w-max pr-10;
     }
-    span + span {
+    > span + span {
       @apply absolute;
     }
   }
