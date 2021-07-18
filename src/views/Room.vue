@@ -1,5 +1,7 @@
 <script>
+import { computed, onMounted, ref } from 'vue'
 import firebase from '../store/firebase.js'
+import { spotifyAPI } from '@/utility/spotifyAPI'
 import { Queue as QueueStore, queueConnect2firebase } from '../store/Queue.js'
 import { playingStateConnect2firebase } from '../store/PlayingState.js'
 import { userLogConnect2firebase } from '../store/UserLog.js'
@@ -12,9 +14,10 @@ import VolumnBar from '@/components/VolumnBar.vue'
 import Collection from '@/components/player/Collection.vue'
 import Vote from '@/components/player/Vote.vue'
 import UserLog from '@/components/player/UserLog.vue'
-import NoteDialog from '../components/lineup/NoteDialog.vue'
+// import NoteDialog from '../components/lineup/NoteDialog.vue'
 // import AdditionDisplay from '../components/AdditionDisplay.vue'
 import RoomQueue from '../components/lineup/RoomQueue.vue'
+import { useStore } from 'vuex'
 
 export default {
   components: {
@@ -26,36 +29,18 @@ export default {
     Collection,
     Vote,
     RoomQueue,
-    NoteDialog,
+    // NoteDialog,
     UserLog,
     // AdditionDisplay,
   },
-  data() {
-    return {
-      isNoteDialogActive: false,
-      editingNote: {
-        queueKey: '',
-        trackNameForLog: '',
-        submitFunction: () => {},
-      },
-      isSideDrawerShow: false,
-    }
-  },
-  computed: {
-    mobileMode() {
-      return window.innerWidth < 768 ? true : false
-    },
-    currentVolume() {
-      return this.$store.getters.currentVolume
-    },
-  },
-  beforeCreate() {
-    if (!this.$store.hasModule('Queue')) {
-      this.$store.registerModule('Queue', QueueStore)
+  setup() {
+    const store = useStore()
+    if (!store.hasModule('Queue')) {
+      store.registerModule('Queue', QueueStore)
     }
     // avoid user refresh page
-    if (!this.$spotifyAPI.getAccessToken() && this.$store.getters.isTokenValid) {
-      this.$spotifyAPI.setAccessToken(this.$store.getters.token)
+    if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
+      spotifyAPI.setAccessToken(store.getters.token)
     }
     const roomKey = localStorage.getItem('jukebox_room_key')
     firebase
@@ -63,27 +48,42 @@ export default {
       .ref(`${roomKey}/basic`)
       .get()
       .then(snapshot => {
-        this.$store.commit('setRoomBasicInfo', snapshot.val())
+        store.commit('setRoomBasicInfo', snapshot.val())
       })
-  },
-  mounted() {
-    queueConnect2firebase(this.$store)
-    playingStateConnect2firebase(this.$store)
-    userLogConnect2firebase(this.$store)
-  },
-  methods: {
-    activeNoteDialogHandler(note) {
-      this.editingNote = { ...note }
-      this.isNoteDialogActive = true
-    },
-    dialogFinishHandler() {
-      this.isNoteDialogActive = false
-      this.editingNote = {
-        queueKey: '',
-        trackNameForLog: '',
-        submitFunction: () => {},
-      }
-    },
+
+    onMounted(() => {
+      queueConnect2firebase(store)
+      playingStateConnect2firebase(store)
+      userLogConnect2firebase(store)
+    })
+
+    const isSideDrawerShow = ref(false)
+
+    // const editingNote = reactive({
+    //   queueKey: '',
+    //   trackNameForLog: '',
+    //   submitFunction: () => {},
+    // })
+    // const isNoteDialogActive = ref(false)
+    // function activeNoteDialogHandler(note) {
+    //   editingNote.value = { ...note }
+    //   isNoteDialogActive.value = true
+    // }
+    // function dialogFinishHandler() {
+    //   isNoteDialogActive.value = false
+    //   editingNote.value = {
+    //     queueKey: '',
+    //     trackNameForLog: '',
+    //     submitFunction: () => {},
+    //   }
+    // }
+
+    return {
+      isSideDrawerShow,
+
+      mobileMode: computed(() => (window.innerWidth < 768 ? true : false)),
+      currentVolume: computed(() => store.getters.currentVolume),
+    }
   },
 }
 </script>
@@ -117,8 +117,8 @@ export default {
       </template>
     </SlideContainer>
 
-    <!-- absolute -->
-    <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" />
+    <!-- fixme -->
+    <!-- <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" /> -->
     <SideDrawer v-model="isSideDrawerShow">
       <!-- other components placeholder -->
     </SideDrawer>
