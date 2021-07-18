@@ -2,7 +2,7 @@
 @import './font.css';
 @import './button.css';
 @import './input.css';
-@import './utilities.css';
+@import './universal.css';
 
 @tailwind base;
 @tailwind components;
