@@ -1,7 +1,7 @@
 <script>
 import IconClose from '@/assets/icons/icon/close.svg'
 import { TransitionRoot, TransitionChild } from '@headlessui/vue'
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 export default {
   components: {
@@ -16,8 +16,9 @@ export default {
     },
   },
   emits: ['update:modelValue'],
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     let roomElement
+    const isDifferantBgColor = ref(false)
 
     function closeHandler() {
       emit('update:modelValue', false)
@@ -25,6 +26,7 @@ export default {
 
     onMounted(() => {
       roomElement = document.getElementById('room')
+      isDifferantBgColor.value = slots.default()[0].type.name === 'AddFromStreamingService'
     })
 
     watch(
@@ -39,6 +41,7 @@ export default {
 
     return {
       closeHandler,
+      isDifferantBgColor,
     }
   },
 }
@@ -68,7 +71,8 @@ export default {
         leave-to="translate-x-full"
       >
         <div
-          class="w-screen max-w-xl ml-auto h-screen flex flex-col laptop:w-1/2 laptop:max-w-none px-9 pt-14 pb-8 relative"
+          :class="{ 'bg-[#303f69] laptop:bg-tertiary-1': isDifferantBgColor, 'bg-tertiary-1': !isDifferantBgColor }"
+          class="bg-opacity-80 w-screen max-w-xl ml-auto h-screen flex flex-col laptop:w-1/2 laptop:max-w-none px-9 pt-14 pb-8 relative"
         >
           <button
             type="button"

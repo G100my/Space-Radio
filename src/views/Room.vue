@@ -123,8 +123,9 @@ export default {
 
     <!-- fixme -->
     <!-- <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" /> -->
+
+    <!-- accept 'Search', 'AddFromStreamingService', 'Personal' those emited from Header -->
     <SideDrawer v-model="isSideDrawerShow">
-      <!-- accept 'Search', 'AddFromStreamingService', 'Personal' those emited from Header -->
       <component :is="'AddFromStreamingService'" />
     </SideDrawer>
   </div>
