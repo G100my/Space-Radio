@@ -15,10 +15,14 @@ export default {
     IconPlus,
   },
   emits: ['activeSideDrawer'],
-  setup() {
+  setup(_props, { emit }) {
     const isSearchActive = ref(false)
+    function activeSideDrawerHandler(componentName) {
+      emit('activeSideDrawer', componentName)
+    }
     return {
       isSearchActive,
+      activeSideDrawerHandler,
     }
   },
 }
@@ -36,7 +40,7 @@ export default {
       <nav class="absolute top-8 right-8 laptop:static">
         <ul class="justify-end flex">
           <li>
-            <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="$emit('activeSideDrawer')">
+            <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="activeSideDrawerHandler('Search')">
               <IconSearch />
             </button>
           </li>
@@ -44,7 +48,7 @@ export default {
             <button
               type="button"
               class="flex text-natural-white laptop:bg-tertiary-1 px-3 laptop:py-2 laptop:px-4 laptop:border laptop:border-natural-gray2"
-              @click="$emit('activeSideDrawer')"
+              @click="activeSideDrawerHandler('AddFromStreamingService')"
             >
               <IconPlus />
               <label>Add from Spotify</label>
@@ -54,7 +58,7 @@ export default {
             <button
               class="flex items-center text-natural-white px-3 laptop:py-2 laptop:px-4"
               type="button"
-              @click="$emit('activeSideDrawer')"
+              @click="activeSideDrawerHandler('Personal')"
             >
               <IconPerson />
               <label class="hidden laptop:inline">{{ $store.getters.userName }}</label>
