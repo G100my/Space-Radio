@@ -14,6 +14,7 @@ import VolumnBar from '@/components/VolumnBar.vue'
 import Collection from '@/components/player/Collection.vue'
 import Vote from '@/components/player/Vote.vue'
 import UserLog from '@/components/player/UserLog.vue'
+import AddFromStreamingService from '@/components/sideDrawer/AddFromStreamingService.vue'
 // import NoteDialog from '../components/lineup/NoteDialog.vue'
 // import AdditionDisplay from '../components/AdditionDisplay.vue'
 import RoomQueue from '../components/lineup/RoomQueue.vue'
@@ -32,6 +33,7 @@ export default {
     // NoteDialog,
     UserLog,
     // AdditionDisplay,
+    AddFromStreamingService,
   },
   setup() {
     const store = useStore()
@@ -58,6 +60,7 @@ export default {
     })
 
     const isSideDrawerShow = ref(false)
+    const activeComponent = ref(null)
 
     // const editingNote = reactive({
     //   queueKey: '',
@@ -80,6 +83,7 @@ export default {
 
     return {
       isSideDrawerShow,
+      activeComponent,
 
       mobileMode: computed(() => (window.innerWidth < 768 ? true : false)),
       currentVolume: computed(() => store.getters.currentVolume),
@@ -120,7 +124,8 @@ export default {
     <!-- fixme -->
     <!-- <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" /> -->
     <SideDrawer v-model="isSideDrawerShow">
-      <!-- other components placeholder -->
+      <!-- accept 'Search', 'AddFromStreamingService', 'Personal' those emited from Header -->
+      <component :is="'AddFromStreamingService'" />
     </SideDrawer>
   </div>
 </template>

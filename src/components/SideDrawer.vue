@@ -68,23 +68,18 @@ export default {
         leave-to="translate-x-full"
       >
         <div
-          class="bg-tertiary-1 bg-opacity-80 w-screen max-w-xl ml-auto h-screen flex flex-col laptop:w-1/2 px-9 pt-14 pb-8"
+          class="w-screen max-w-xl ml-auto h-screen flex flex-col laptop:w-1/2 laptop:max-w-none px-9 pt-14 pb-8 relative"
         >
-          <div class="h-full relative">
-            <button type="button" class="btn-tertiary translate-x-2 absolute right-0" @click="closeHandler">
-              <IconClose />
-            </button>
-            <div class="_side_drawer_content h-full">
-              <slot />
-            </div>
-          </div>
+          <button
+            type="button"
+            class="btn-tertiary absolute right-9 translate-x-2 -translate-y-1/2"
+            @click="closeHandler"
+          >
+            <IconClose />
+          </button>
+          <slot />
         </div>
       </TransitionChild>
     </TransitionRoot>
   </teleport>
 </template>
-<style lang="postcss">
-._side_drawer_content > *:first-child {
-  @apply mr-10;
-}
-</style>
