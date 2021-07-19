@@ -36,10 +36,7 @@ export default {
 }
 </script>
 <template>
-  <!-- fixme 考慮顏色要設在parent還是這裡啊... -->
-  <!-- <div class="absolute inset-0 -z-1 bg-natural-white" />
-  <div class="absolute inset-0 -z-1 bg-tertiary-1 bg-opacity-80" /> -->
-
+  <div class="flex flex-col h-full">
   <header>
     <h2 class="text-natural-gray1 text-subtitle laptop:text-header">Add from Spotify</h2>
   </header>
@@ -72,6 +69,7 @@ export default {
         </button>
       </li>
     </ul>
+  </div>
   </div>
 </template>
 <style lang="postcss" scoped>
