@@ -72,9 +72,13 @@ export default {
       >
         <div
           :class="{ 'bg-[#303f69] laptop:bg-tertiary-1': isDifferantBgColor, 'bg-tertiary-1': !isDifferantBgColor }"
-          class="bg-opacity-80 w-screen max-w-xl ml-auto h-screen laptop:w-1/2 laptop:max-w-none px-9 pt-28 pb-8 relative"
+          class="bg-opacity-80 w-screen max-w-xl ml-auto h-screen laptop:w-1/2 laptop:max-w-none px-9 pt-20 pb-8 relative"
         >
-          <button type="button" class="btn-tertiary absolute right-9 translate-x-2 top-16" @click="closeHandler">
+          <button
+            type="button"
+            class="btn-tertiary absolute right-9 translate-x-2 -translate-y-12"
+            @click="closeHandler"
+          >
             <IconClose />
           </button>
           <slot />
