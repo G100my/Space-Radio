@@ -10,3 +10,16 @@
     background-color: black;
   }
 }
+
+@layer base {
+  input[type='checkbox'] {
+    @apply appearance-none w-5 h-5 rounded-sm border border-natural-white;
+  }
+  input[type='checkbox']:checked {
+    background-repeat: no-repeat;
+    background-clip: padding-box;
+    background-position: center;
+    background-image: url(@/assets/icons/icon-checkbox.png);
+    @apply bg-primary border-0;
+  }
+}
