@@ -1,6 +1,9 @@
 <script>
+// root element is <div>, can't not place in <p>
+
 import { ref } from 'vue'
 export default {
+  inheritAttrs: false,
   props: {
     text: {
       type: String,
@@ -9,19 +12,23 @@ export default {
     },
   },
   setup() {
-    const mainSpan = ref(null)
+    const mainChild = ref(null)
     const isFilled = ref(false)
+    const innerHTML = ref(null)
 
     const mouseenterHandler = event => {
-      const span = event.currentTarget
-      if (span.offsetWidth > span.parentElement.offsetWidth) {
+      const mainChild = event.currentTarget
+
+      if (mainChild.offsetWidth > mainChild.parentElement.offsetWidth) {
         isFilled.value = true
+        innerHTML.value = mainChild.innerHTML
       }
     }
     return {
-      mainSpan,
+      mainChild,
       isFilled,
       mouseenterHandler,
+      innerHTML,
     }
   },
 }
@@ -29,12 +36,10 @@ export default {
 <template>
   <div class="overflow-hidden">
     <p class="_marquee_content" :class="{ active: isFilled }" @animationend="isFilled = false">
-      <span ref="mainSpan" @mouseenter="mouseenterHandler">
+      <span ref="mainChild" class="_sentence" v-bind="$attrs" @mouseenter="mouseenterHandler">
         <slot>{{ text }}</slot>
       </span>
-      <span v-if="isFilled">
-        {{ $refs.mainSpan.textContent }}
-      </span>
+      <span v-if="isFilled" v-bind="$attrs" class="_sentence" v-html="innerHTML" />
     </p>
   </div>
 </template>
@@ -51,24 +56,23 @@ export default {
 ._marquee_content {
   @apply text-0 whitespace-nowrap overflow-hidden overflow-ellipsis;
 
-  &:hover span {
+  &:hover ._sentence {
     max-width: none;
-  }
-
-  > span {
-    @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
   }
 
   &.active {
     @apply relative w-fit overflow-ellipsis overflow-visible;
     animation: marquee 10s linear 1;
 
-    > span {
+    > ._sentence {
       @apply w-max pr-10;
     }
-    > span + span {
+    > ._sentence + ._sentence {
       @apply absolute;
     }
   }
+}
+._sentence {
+  @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
 }
 </style>

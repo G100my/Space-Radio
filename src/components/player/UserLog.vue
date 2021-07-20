@@ -57,7 +57,7 @@ export default {
 
           <span class="flex-0 whitespace-nowrap w-fit mr-4">{{ timeTransfer(log.timestamp) }}</span>
 
-          <p class="flex-1 min-w-0">
+          <div class="flex-1 min-w-0">
             <BaseMarquee
               v-if="
                 ['add', 'jumpIn', 'normalRemove', 'urgentRemove', 'normal2urgent', 'urgent2normal'].includes(
@@ -80,7 +80,7 @@ export default {
             <span v-else-if="log.action_type === 'updateDislikeThreshold'"
               >Skip threshold: {{ log.option.dislike_threshold }}
             </span>
-          </p>
+          </div>
         </div>
       </li>
       <li v-if="logs.length === 0"><p>- - No logs - -</p></li>
