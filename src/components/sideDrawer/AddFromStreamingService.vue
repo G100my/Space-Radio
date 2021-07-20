@@ -2,7 +2,7 @@
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import IconArrowRight from '@/assets/icons/icon-arrow-right.svg'
 
-import { computed, onMounted } from '@vue/runtime-core'
+import { computed } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 
 export default {
@@ -10,7 +10,8 @@ export default {
   components: {
     IconArrowRight,
   },
-  setup() {
+  emits: ['activeSideDrawer'],
+  setup(_props, { emit }) {
     const store = useStore()
     console.log(store)
 
@@ -18,13 +19,12 @@ export default {
       // emit,  change component
     }
 
-    function playlistClickHandler() {
-      // emit,  change component
+    function playlistClickHandler(spotifyListId) {
+      store.dispatch('getSpotifyListContent', spotifyListId)
+      emit('activeSideDrawer', 'PlaylistContent')
     }
 
-    onMounted(() => {
-      store.dispatch('getSpotifyLists')
-    })
+    store.dispatch('getSpotifyLists')
 
     return {
       SpotifyLogo,
@@ -64,7 +64,7 @@ export default {
     <ul class="_side_drawer_ul">
       <li v-for="(playlist, index) in spotify" :key="index">
         <p>{{ playlist.name }}</p>
-        <button class="btn-tertiary" type="button" @click="playlistClickHandler">
+        <button class="btn-tertiary" type="button" @click="playlistClickHandler(playlist.id)">
           <IconArrowRight />
         </button>
       </li>

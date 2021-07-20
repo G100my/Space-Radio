@@ -10,6 +10,9 @@ export const PersonalPlaylists = {
     chosenList: [],
   },
   getters: {
+    spotifyLists(state) {
+      return state.spotifyLists
+    },
     chosenList(state) {
       return state.chosenList
     },
