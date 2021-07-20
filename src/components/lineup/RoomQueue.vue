@@ -1,3 +1,90 @@
+<script>
+import IconPending from '@/assets/icons/icon-spinner-loader.svg'
+import IconEdit from '@/assets/icons/icon/edit.svg'
+import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
+import IconArrowDown from '@/assets/icons/icon-arrow-down.svg'
+import IconRemove from '@/assets/icons/icon-remove.svg'
+import IconMore from '@/assets/icons/icon-more.svg'
+
+import { mapGetters } from 'vuex'
+import TrackGridShell from '../template/TrackGridShell.vue'
+import BaseMarquee from '../base/BaseMarquee.vue'
+
+export default {
+  components: {
+    TrackGridShell,
+    IconPending,
+    IconEdit,
+    IconArrowUp,
+    IconArrowDown,
+    IconRemove,
+    IconMore,
+    BaseMarquee,
+  },
+  emits: ['activeNoteDialog'],
+  computed: {
+    ...mapGetters(['trackData', 'totalQueue', 'normalQueue', 'urgentQueue', 'pendingQueue', 'userId']),
+  },
+  methods: {
+    remove(queueKey, level) {
+      this.$store.dispatch(`${level}Remove`, {
+        queueKey,
+        id: this.trackData[queueKey].id,
+        trackNameForLog: this.trackData[queueKey].name,
+      })
+    },
+    editNote(queueKey) {
+      const trackNameForLog = this.trackData[queueKey].name
+      const submitFunction = newNote => {
+        this.$store.dispatch(`urgentEdit`, { queueKey, note: newNote })
+      }
+      this.$emit('activeNoteDialog', { queueKey, trackNameForLog, submitFunction })
+    },
+    urgent2normal(queueKey) {
+      this.$store.dispatch('urgent2normal', {
+        queueKey,
+        id: this.trackData[queueKey].id,
+        trackNameForLog: this.trackData[queueKey].name,
+      })
+    },
+    normal2urgent(queueKey) {
+      const trackNameForLog = this.trackData[queueKey].name
+      const submitFunction = newNote => {
+        this.$store.dispatch('normal2urgent', {
+          queueKey,
+          note: newNote,
+          id: this.trackData[queueKey].id,
+          trackNameForLog,
+        })
+      }
+      this.$emit('activeNoteDialog', { queueKey, trackNameForLog, submitFunction })
+    },
+    getImageUrl(track) {
+      const imagesArray = track.album.images
+      const imageLastObject = imagesArray[imagesArray.length - 1]
+      // fixme 忘記當初是抓最大張圖片還是最小張
+      return imageLastObject ? imageLastObject.url : null
+    },
+    getOrderer(orderKey) {
+      // eslint-disable-next-line no-useless-escape
+      const type = orderKey.slice(0, orderKey.search(/\-/))
+      switch (type) {
+        case 'normal':
+          return this.normalQueue[orderKey].orderer
+
+        case 'urgent':
+          return this.urgentQueue[orderKey].orderer
+
+        case 'pending':
+          return this.pendingQueue[orderKey].orderer
+
+        default:
+          return '???'
+      }
+    },
+  },
+}
+</script>
 <template>
   <div class="h-full overflow-y-auto flex flex-col">
     <TrackGridShell>
@@ -89,93 +176,6 @@
     </TrackGridShell>
   </div>
 </template>
-<script>
-import IconPending from '@/assets/icons/icon-spinner-loader.svg'
-import IconEdit from '@/assets/icons/icon/edit.svg'
-import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
-import IconArrowDown from '@/assets/icons/icon-arrow-down.svg'
-import IconRemove from '@/assets/icons/icon-remove.svg'
-import IconMore from '@/assets/icons/icon-more.svg'
-
-import { mapGetters } from 'vuex'
-import TrackGridShell from '../template/TrackGridShell.vue'
-import BaseMarquee from '../base/BaseMarquee.vue'
-
-export default {
-  components: {
-    TrackGridShell,
-    IconPending,
-    IconEdit,
-    IconArrowUp,
-    IconArrowDown,
-    IconRemove,
-    IconMore,
-    BaseMarquee,
-  },
-  emits: ['activeNoteDialog'],
-  computed: {
-    ...mapGetters(['trackData', 'totalQueue', 'normalQueue', 'urgentQueue', 'pendingQueue', 'userId']),
-  },
-  methods: {
-    remove(queueKey, level) {
-      this.$store.dispatch(`${level}Remove`, {
-        queueKey,
-        id: this.trackData[queueKey].id,
-        trackNameForLog: this.trackData[queueKey].name,
-      })
-    },
-    editNote(queueKey) {
-      const trackNameForLog = this.trackData[queueKey].name
-      const submitFunction = newNote => {
-        this.$store.dispatch(`urgentEdit`, { queueKey, note: newNote })
-      }
-      this.$emit('activeNoteDialog', { queueKey, trackNameForLog, submitFunction })
-    },
-    urgent2normal(queueKey) {
-      this.$store.dispatch('urgent2normal', {
-        queueKey,
-        id: this.trackData[queueKey].id,
-        trackNameForLog: this.trackData[queueKey].name,
-      })
-    },
-    normal2urgent(queueKey) {
-      const trackNameForLog = this.trackData[queueKey].name
-      const submitFunction = newNote => {
-        this.$store.dispatch('normal2urgent', {
-          queueKey,
-          note: newNote,
-          id: this.trackData[queueKey].id,
-          trackNameForLog,
-        })
-      }
-      this.$emit('activeNoteDialog', { queueKey, trackNameForLog, submitFunction })
-    },
-    getImageUrl(track) {
-      const imagesArray = track.album.images
-      const imageLastObject = imagesArray[imagesArray.length - 1]
-      // fixme 忘記當初是抓最大張圖片還是最小張
-      return imageLastObject ? imageLastObject.url : null
-    },
-    getOrderer(orderKey) {
-      // eslint-disable-next-line no-useless-escape
-      const type = orderKey.slice(0, orderKey.search(/\-/))
-      switch (type) {
-        case 'normal':
-          return this.normalQueue[orderKey].orderer
-
-        case 'urgent':
-          return this.urgentQueue[orderKey].orderer
-
-        case 'pending':
-          return this.pendingQueue[orderKey].orderer
-
-        default:
-          return '???'
-      }
-    },
-  },
-}
-</script>
 <style lang="postcss">
 ._tracks {
   @apply max-w-full w-full grid mb-2 py-3 px-2 mobile:px-4 xl:px-10 gap-y-[10px];
