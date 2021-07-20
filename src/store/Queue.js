@@ -23,9 +23,14 @@ function bindListener(target, storeTarget, store) {
       return
     }
     if (spotifyAPI.getAccessToken()) {
-      spotifyAPI.getTrack(trackId).then(addedTrack => {
-        store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
-      })
+      spotifyAPI
+        .getTrack(trackId)
+        .then(addedTrack => {
+          store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
+        })
+        .catch(e => {
+          console.error(e.responseText, `trackId: ${trackId}`)
+        })
     } else {
       console.warn('spotifyAPI.getAccessToken() is ' + spotifyAPI.getAccessToken())
     }
