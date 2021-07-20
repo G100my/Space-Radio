@@ -132,7 +132,7 @@ export default {
       <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto laptop:w-96 laptop:pb-10">
         <slot name="left-side" />
       </div>
-      <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto flex laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">
+      <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">
         <slot name="right-side" />
       </div>
     </div>

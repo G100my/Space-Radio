@@ -7,12 +7,10 @@ import IconRemove from '@/assets/icons/icon-remove.svg'
 import IconMore from '@/assets/icons/icon-more.svg'
 
 import { mapGetters } from 'vuex'
-import TrackGridShell from '../template/TrackGridShell.vue'
 import BaseMarquee from '../base/BaseMarquee.vue'
 
 export default {
   components: {
-    TrackGridShell,
     IconPending,
     IconEdit,
     IconArrowUp,
@@ -86,109 +84,80 @@ export default {
 }
 </script>
 <template>
-  <div class="h-full overflow-y-auto flex flex-col">
-    <TrackGridShell>
-      <template #header>
-        <header class="flex justify-between items-center pb-6">
-          <h3 class="text-natural-gray2 text-2xl xl:text-4xl font-semibold">Next</h3>
-          <img src="@/assets/images/Spotify_Logo_CMYK_Green.png" alt="Spotify" class="w-20" />
-        </header>
-      </template>
-      <template #body>
-        <div class="_tracks">
-          <template v-for="(orderKey, index) in totalQueue" :key="index">
-            <div class="flex justify-center items-center">
-              <div v-if="orderKey.startsWith('normal')" class="number">
-                <span>{{ index }}</span>
-              </div>
-              <div v-else-if="orderKey.startsWith('urgent')" class="arrow-up">
-                <IconArrowUp />
-              </div>
-              <div v-else class="pending">
-                <IconPending />
-              </div>
-            </div>
-
-            <div class="flex justify-center items-center">
-              <img class="w-16 h-16" :src="getImageUrl(trackData[orderKey])" alt="album photo" />
-            </div>
-
-            <div class="overflow-hidden w-full">
-              <BaseMarquee class="text-natural-gray1 font-bold text-xs md:text-base" :text="trackData[orderKey].name" />
-
-              <BaseMarquee class="orderer text-primary text-xs md:text-base" :text="getOrderer(orderKey)" />
-            </div>
-
-            <div class="text-natural-gray1 flex-auto hidden md:block">
-              <div class="text-xs md:text-base">
-                <BaseMarquee>
-                  <a :href="trackData[orderKey].external_urls.spotify" target="_blank">{{
-                    trackData[orderKey].album.name
-                  }}</a>
-                </BaseMarquee>
-              </div>
-              <div class="text-xs md:text-base">
-                <BaseMarquee>
-                  <a
-                    v-for="artist in trackData[orderKey].artists"
-                    :key="artist.name"
-                    :href="artist.external_urls.spotify"
-                    target="_blank"
-                    >{{ artist.name }}</a
-                  >
-                </BaseMarquee>
-              </div>
-            </div>
-
-            <div class="_features justify-end hidden laptop:flex space-x-4 xl:space-x-11">
-              <template v-if="orderKey.startsWith('urgent')">
-                <button class="btn-tertiary ml-auto" type="button" @click="editNote(orderKey)">
-                  <IconEdit />
-                </button>
-                <button class="btn-tertiary ml-auto" type="button" @click="urgent2normal(orderKey)">
-                  <IconArrowDown />
-                </button>
-              </template>
-              <button
-                v-if="orderKey.startsWith('normal')"
-                class="btn-tertiary ml-auto"
-                type="button"
-                @click="normal2urgent(orderKey)"
-              >
-                <IconArrowUp />
-              </button>
-              <button
-                v-if="!orderKey.startsWith('pending')"
-                class="btn-tertiary ml-auto"
-                type="button"
-                @click="remove(orderKey, orderKey.startsWith('normal') ? 'normal' : 'urgent')"
-              >
-                <IconRemove />
-              </button>
-            </div>
-            <!-- fixme -->
-            <div class="_more block laptop:hidden pr-2 cursor-pointer">
-              <IconMore />
-            </div>
-          </template>
+  <div class="h-full overflow-y-auto flex flex-col laptop:pb-10">
+    <header class="flex justify-between items-center pb-6">
+      <h3 class="text-natural-gray2 text-2xl xl:text-4xl font-semibold">Next</h3>
+      <img src="@/assets/images/Spotify_Logo_CMYK_Green.png" alt="Spotify" class="w-20" />
+    </header>
+    <ul class="flex-1 overflow-y-auto space-y-2">
+      <li
+        v-for="(orderKey, index) in totalQueue"
+        :key="index"
+        class="flex items-center gap-x-3 p-3 bg-tertiary-1 bg-opacity-60 rounded-[10px]"
+      >
+        <div class="flex-shrink-0 w-10 flex justify-center items-center">
+          <span v-if="orderKey.startsWith('normal')" class="text-body font-bold text-natural-gray3">{{ index }}</span>
+          <IconArrowUp v-else-if="orderKey.startsWith('urgent')" class="arrow-up" />
+          <IconPending v-else class="pending" />
         </div>
-      </template>
-    </TrackGridShell>
+
+        <div class="flex-shrink-0 flex justify-center items-center">
+          <img class="w-11 h-11" :src="getImageUrl(trackData[orderKey])" alt="album photo" />
+        </div>
+
+        <div class="overflow-hidden w-full">
+          <BaseMarquee class="text-natural-gray1 font-bold text-xs md:text-base" :text="trackData[orderKey].name" />
+          <BaseMarquee class="orderer text-primary text-xs md:text-base" :text="getOrderer(orderKey)" />
+        </div>
+
+        <div class="flex-auto hidden md:block">
+          <BaseMarquee class="text-xs md:text-base">
+            <a :href="trackData[orderKey].external_urls.spotify" target="_blank">{{
+              trackData[orderKey].album.name
+            }}</a>
+          </BaseMarquee>
+          <BaseMarquee class="text-xs md:text-base">
+            <a
+              v-for="artist in trackData[orderKey].artists"
+              :key="artist.name"
+              :href="artist.external_urls.spotify"
+              target="_blank"
+              >{{ artist.name }}</a
+            >
+          </BaseMarquee>
+        </div>
+
+        <div class="justify-end hidden laptop:flex space-x-4 xl:space-x-11">
+          <template v-if="orderKey.startsWith('urgent')">
+            <button class="btn-tertiary ml-auto" type="button" @click="editNote(orderKey)">
+              <IconEdit />
+            </button>
+            <button class="btn-tertiary ml-auto" type="button" @click="urgent2normal(orderKey)">
+              <IconArrowDown />
+            </button>
+          </template>
+          <button
+            v-if="orderKey.startsWith('normal')"
+            class="btn-tertiary ml-auto"
+            type="button"
+            @click="normal2urgent(orderKey)"
+          >
+            <IconArrowUp />
+          </button>
+          <button
+            v-if="!orderKey.startsWith('pending')"
+            class="btn-tertiary ml-auto"
+            type="button"
+            @click="remove(orderKey, orderKey.startsWith('normal') ? 'normal' : 'urgent')"
+          >
+            <IconRemove />
+          </button>
+        </div>
+
+        <button class="laptop:hidden cursor-pointer self-stretch">
+          <IconMore />
+        </button>
+      </li>
+    </ul>
   </div>
 </template>
-<style lang="postcss">
-._tracks {
-  @apply max-w-full w-full grid mb-2 py-3 px-2 mobile:px-4 xl:px-10 gap-y-[10px];
-  grid-template-columns: auto auto repeat(2, minmax(auto, 2fr)) 1fr;
-  > div {
-    @apply bg-opacity-60 hover:bg-tertiary-1 bg-tertiary-1 py-3 px-3;
-    &:first-child {
-      @apply rounded-l-lg;
-    }
-  }
-  ._more,
-  ._features {
-    @apply rounded-r-lg;
-  }
-}
-</style>
