@@ -15,6 +15,7 @@ import Collection from '@/components/player/Collection.vue'
 import Vote from '@/components/player/Vote.vue'
 import UserLog from '@/components/player/UserLog.vue'
 import AddFromStreamingService from '@/components/sideDrawer/AddFromStreamingService.vue'
+import PlaylistContent from '@/components/sideDrawer/PlaylistContent.vue'
 // import NoteDialog from '../components/lineup/NoteDialog.vue'
 // import AdditionDisplay from '../components/AdditionDisplay.vue'
 import RoomQueue from '../components/lineup/RoomQueue.vue'
@@ -34,6 +35,7 @@ export default {
     UserLog,
     // AdditionDisplay,
     AddFromStreamingService,
+    PlaylistContent,
   },
   setup() {
     const store = useStore()
@@ -81,9 +83,15 @@ export default {
     //   }
     // }
 
+    function activeSideDrawerHandler(componentName) {
+      isSideDrawerShow.value = true
+      activeComponent.value = componentName
+    }
+
     return {
       isSideDrawerShow,
       activeComponent,
+      activeSideDrawerHandler,
 
       mobileMode: computed(() => (window.innerWidth < 768 ? true : false)),
       currentVolume: computed(() => store.getters.currentVolume),
@@ -93,7 +101,7 @@ export default {
 </script>
 <template>
   <div id="room" class="relative bg-tertiary-2 h-full flex flex-col overflow-hidden">
-    <Header class="_show_all_flex" @activeSideDrawer="isSideDrawerShow = true" />
+    <Header class="_show_all_flex" @activeSideDrawer="activeSideDrawerHandler" />
     <SlideContainer class="flex-1">
       <template #left-side>
         <div class="h-full flex flex-col">
@@ -124,9 +132,9 @@ export default {
     <!-- fixme -->
     <!-- <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" /> -->
 
-    <!-- accept 'Search', 'AddFromStreamingService', 'Personal' those emited from Header -->
+    <!-- accept 'Search', 'AddFromStreamingService', 'Personal', 'PlaylistContent' those emited from Header -->
     <SideDrawer v-model="isSideDrawerShow">
-      <component :is="'AddFromStreamingService'" />
+      <component :is="activeComponent" @activeSideDrawer="activeSideDrawerHandler" />
     </SideDrawer>
   </div>
 </template>
