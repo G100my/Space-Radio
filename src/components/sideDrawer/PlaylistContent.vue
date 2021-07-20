@@ -27,7 +27,7 @@ export default {
     }
 
     function addMultipleHandler() {
-      store.dispatch('addMultiple', { idSet: toRaw(idSet), nameSet })
+      store.dispatch('addMultiple', { ids: Array.from(toRaw(idSet)), names: Array.from(nameSet) })
       clearSet()
     }
     function cancelHandler() {

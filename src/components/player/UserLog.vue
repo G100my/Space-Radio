@@ -8,6 +8,7 @@ import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconClose from '@/assets/icons/icon/close.svg'
 import IconSkipSong from '@/assets/icons/icon/skipsong.svg'
 import IconRoomSetting from '@/assets/icons/icon-roomsetting.svg'
+import BaseMarquee from '../base/BaseMarquee.vue'
 
 export default {
   components: {
@@ -18,6 +19,7 @@ export default {
     IconClose,
     IconSkipSong,
     IconRoomSetting,
+    BaseMarquee,
   },
   setup() {
     const store = useStore()
@@ -44,7 +46,7 @@ export default {
       <li v-for="log in logs" :key="log.timestamp">
         <div class="flex">
           <span class="flex-0 mr-5">
-            <IconPlus v-if="log.action_type === 'add'" />
+            <IconPlus v-if="['add', 'addMultiple'].includes(log.action_type)" />
             <IconArrowDown v-else-if="log.action_type === 'urgent2normal'" />
             <IconArrowUp v-else-if="['jumpIn', 'normal2urgent'].includes(log.action_type)" />
             <IconClose v-else-if="['normalRemove', 'urgentRemove'].includes(log.action_type)" />
@@ -55,15 +57,20 @@ export default {
 
           <span class="flex-0 whitespace-nowrap w-fit mr-4">{{ timeTransfer(log.timestamp) }}</span>
 
-          <p class="flex-1">
-            <span
+          <p class="flex-1 min-w-0">
+            <BaseMarquee
               v-if="
                 ['add', 'jumpIn', 'normalRemove', 'urgentRemove', 'normal2urgent', 'urgent2normal'].includes(
                   log.action_type
                 )
               "
-              >{{ log.option.track_name }}</span
-            >
+              :text="log.option.track_name"
+            />
+            <template v-else-if="log.action_type === 'addMultiple'">
+              <BaseMarquee v-for="(name, index) in log.option.names" :key="index" class="flex flex-col w-full">
+                <span>{{ name }}</span>
+              </BaseMarquee>
+            </template>
             <span v-else-if="['turnUp', 'turnDown'].includes(log.action_type)"
               >Adjust Volumn: {{ log.option.volume }}</span
             >

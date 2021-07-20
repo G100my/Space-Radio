@@ -161,10 +161,8 @@ const Queue = {
         order_key,
       })
     },
-    addMultiple({ getters }, { idSet, nameSet }) {
+    addMultiple({ getters }, { ids, names }) {
       const parameter = {}
-      const ids = Array.from(idSet)
-      const names = Array.from(nameSet)
       const now = Date.now()
       ids.forEach((id, index) => {
         const order_key = `normal-${now}-${index}`

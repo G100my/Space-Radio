@@ -64,6 +64,13 @@ function userLogConnect2firebase(store) {
           break
         }
 
+        case 'addMultiple': {
+          const { names } = action.payload
+          userLog = { ...maker(action), option: { names } }
+          console.log(userLog)
+          break
+        }
+
         case 'turnUp':
         case 'turnDown':
           if (recordVolumeLogTimer) clearTimeout(recordVolumeLogTimer)
