@@ -19,7 +19,8 @@ export default {
       // emit,  change component
     }
 
-    function playlistClickHandler(spotifyListId) {
+    function playlistClickHandler(spotifyListId, spotifyListname) {
+      store.commit('refreshChosenListName', spotifyListname)
       store.dispatch('getSpotifyListContent', spotifyListId)
       emit('activeSideDrawer', 'PlaylistContent')
     }
@@ -64,7 +65,7 @@ export default {
       <ul class="_side_drawer_ul">
         <li v-for="(playlist, index) in spotify" :key="index">
           <p>{{ playlist.name }}</p>
-          <button class="btn-tertiary" type="button" @click="playlistClickHandler(playlist.id)">
+          <button class="btn-tertiary" type="button" @click="playlistClickHandler(playlist.id, playlist.name)">
             <IconArrowRight />
           </button>
         </li>

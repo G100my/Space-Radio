@@ -24,10 +24,10 @@ export const PersonalPlaylists = {
     _refreshSpotifyLists(state, newPlaylists) {
       state.spotifyLists = newPlaylists
     },
-    _refreshChosenList(state, content) {
+    refreshChosenList(state, content) {
       state.chosenList = content
     },
-    _refreshChosenListName(state, listName) {
+    refreshChosenListName(state, listName) {
       state.chosenListName = listName
     },
   },
@@ -43,7 +43,6 @@ export const PersonalPlaylists = {
           fields: playListFields,
         })
         .then(result => {
-          commit('_refreshChosenListName', result.name)
           const transferResult = result.tracks.items.map(i => ({
             album: {
               name: i.track.album.name,
@@ -57,7 +56,7 @@ export const PersonalPlaylists = {
             name: i.track.name,
           }))
           console.log(transferResult)
-          commit('_refreshChosenList', transferResult)
+          commit('refreshChosenList', transferResult)
         })
     },
   },

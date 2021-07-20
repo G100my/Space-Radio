@@ -1,5 +1,5 @@
 <script>
-import { computed, reactive, ref, toRaw } from '@vue/runtime-core'
+import { computed, onUnmounted, reactive, ref, toRaw } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
@@ -39,6 +39,10 @@ export default {
       idSet.clear()
       nameSet.clear()
     }
+
+    onUnmounted(() => {
+      store.commit('refreshChosenList', [])
+    })
     return {
       playlist,
       listName: computed(() => store.getters.listName),
