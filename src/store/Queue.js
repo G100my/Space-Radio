@@ -130,7 +130,7 @@ const Queue = {
     },
   },
   actions: {
-    add({ getters }, { id, note, trackNameForLog: track_name }) {
+    add({ getters }, { id, trackNameForLog: track_name }) {
       const now = Date.now()
       const parameter = {}
       const order_key = `normal-${now}`
@@ -138,7 +138,7 @@ const Queue = {
         id,
         added_time: now,
         orderer: getters.userName,
-        note,
+        note: false,
         track_name,
         order_key,
       }
@@ -156,6 +156,24 @@ const Queue = {
         order_key,
       })
     },
+    addMultiple({ getters }, { idSet, nameSet }) {
+      const parameter = {}
+      const ids = Array.from(idSet)
+      const names = Array.from(nameSet)
+      const now = Date.now()
+      ids.forEach((id, index) => {
+        const order_key = `normal-${now}-${index}`
+        parameter[order_key] = {
+          id,
+          added_time: now,
+          orderer: getters.userName,
+          note: false,
+          track_name: names[index],
+          order_key,
+        }
+      })
+      normal_queue_ref.update(parameter)
+    },
     urgentRemove(_context, { orderKey }) {
       urgent_queue_ref.child(orderKey).remove()
     },
@@ -164,7 +182,7 @@ const Queue = {
     },
 
     urgent2normal({ state }, { orderKey }) {
-      const order_key = `normal-${queue.added_time}`
+      const order_key = `normal${orderKey.slice(6)}`
       const queue = { ...state.urgent_queue[orderKey], note: false, order_key }
 
       const parameter = {}
@@ -179,7 +197,7 @@ const Queue = {
     },
 
     normal2urgent({ state }, { orderKey, note }) {
-      const order_key = `urgent-${queue.added_time}`
+      const order_key = `urgent${orderKey.slice(6)}`
       const queue = { ...state.normal_queue[orderKey], note, order_key }
 
       normal_queue_ref
