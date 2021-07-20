@@ -177,10 +177,10 @@ const Queue = {
       })
       normal_queue_ref.update(parameter)
     },
-    urgentRemove(_context, { orderKey }) {
+    urgentRemove(_context, orderKey) {
       urgent_queue_ref.child(orderKey).remove()
     },
-    normalRemove(_context, { orderKey }) {
+    normalRemove(_context, orderKey) {
       normal_queue_ref.child(orderKey).remove()
     },
 

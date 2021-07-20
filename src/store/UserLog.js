@@ -47,23 +47,30 @@ function userLogConnect2firebase(store) {
   let recordVolumeLogTimer = null
 
   store.subscribeAction({
+    before: (action, state) => {
+      let userLog
+      switch (action.type) {
+        case 'normalRemove':
+        case 'urgentRemove':
+        case 'normal2urgent':
+        case 'urgent2normal': {
+          const { orderKey } = action.payload
+          const track_name = state.Queue.trackData[orderKey].name
+          userLog = { ...maker(action), option: { track_name } }
+          break
+        }
+
+        default:
+          break
+      }
+      user_log_ref.push(userLog)
+    },
     after: (action, state) => {
       let userLog
 
       switch (action.type) {
         case 'add':
         case 'jumpIn':
-        case 'normalRemove':
-        case 'urgentRemove':
-        case 'normal2urgent':
-        case 'urgent2normal': {
-          const {
-            payload: { id, trackNameForLog: track_name },
-          } = action
-          userLog = { ...maker(action), option: { id, track_name } }
-          break
-        }
-
         case 'addMultiple': {
           const { names } = action.payload
           userLog = { ...maker(action), option: { names } }

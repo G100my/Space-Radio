@@ -24,38 +24,34 @@ export default {
     ...mapGetters(['trackData', 'totalQueue', 'normalQueue', 'urgentQueue', 'pendingQueue', 'userId']),
   },
   methods: {
-    remove(queueKey, level) {
-      this.$store.dispatch(`${level}Remove`, {
-        queueKey,
-        id: this.trackData[queueKey].id,
-        trackNameForLog: this.trackData[queueKey].name,
-      })
+    remove(orderKey, level) {
+      this.$store.dispatch(`${level}Remove`, orderKey)
     },
-    editNote(queueKey) {
-      const trackNameForLog = this.trackData[queueKey].name
+    editNote(orderKey) {
+      const trackNameForLog = this.trackData[orderKey].name
       const submitFunction = newNote => {
-        this.$store.dispatch(`urgentEdit`, { queueKey, note: newNote })
+        this.$store.dispatch(`urgentEdit`, { orderKey, note: newNote })
       }
-      this.$emit('activeNoteDialog', { queueKey, trackNameForLog, submitFunction })
+      this.$emit('activeNoteDialog', { orderKey, trackNameForLog, submitFunction })
     },
-    urgent2normal(queueKey) {
+    urgent2normal(orderKey) {
       this.$store.dispatch('urgent2normal', {
-        queueKey,
-        id: this.trackData[queueKey].id,
-        trackNameForLog: this.trackData[queueKey].name,
+        orderKey,
+        id: this.trackData[orderKey].id,
+        trackNameForLog: this.trackData[orderKey].name,
       })
     },
-    normal2urgent(queueKey) {
-      const trackNameForLog = this.trackData[queueKey].name
+    normal2urgent(orderKey) {
+      const trackNameForLog = this.trackData[orderKey].name
       const submitFunction = newNote => {
         this.$store.dispatch('normal2urgent', {
-          queueKey,
+          orderKey,
           note: newNote,
-          id: this.trackData[queueKey].id,
+          id: this.trackData[orderKey].id,
           trackNameForLog,
         })
       }
-      this.$emit('activeNoteDialog', { queueKey, trackNameForLog, submitFunction })
+      this.$emit('activeNoteDialog', { orderKey, trackNameForLog, submitFunction })
     },
     getImageUrl(track) {
       const imagesArray = track.album.images
@@ -93,7 +89,7 @@ export default {
       <li
         v-for="(orderKey, index) in totalQueue"
         :key="index"
-        class="flex items-center gap-x-3 p-3 bg-tertiary-1 bg-opacity-60 rounded-[10px]"
+        class="_tracks flex items-center gap-x-3 p-3 bg-tertiary-1 bg-opacity-60 rounded-[10px] hover:bg-opacity-100"
       >
         <div class="flex-shrink-0 w-10 flex justify-center items-center">
           <span v-if="orderKey.startsWith('normal')" class="text-body font-bold text-natural-gray3">{{ index }}</span>
@@ -105,18 +101,18 @@ export default {
           <img class="w-11 h-11" :src="getImageUrl(trackData[orderKey])" alt="album photo" />
         </div>
 
-        <div class="overflow-hidden w-full">
+        <div class="_info_1 overflow-hidden w-full">
           <BaseMarquee class="text-natural-gray1 font-bold text-xs md:text-base" :text="trackData[orderKey].name" />
-          <BaseMarquee class="orderer text-primary text-xs md:text-base" :text="getOrderer(orderKey)" />
+          <BaseMarquee class="text-primary text-xs md:text-base" :text="getOrderer(orderKey)" />
         </div>
 
-        <div class="flex-auto hidden md:block">
-          <BaseMarquee class="text-xs md:text-base">
-            <a :href="trackData[orderKey].external_urls.spotify" target="_blank">{{
-              trackData[orderKey].album.name
-            }}</a>
+        <div class="_info_2 hidden md:block">
+          <BaseMarquee class="text-natural-gray1">
+            <a :href="trackData[orderKey].external_urls.spotify" target="_blank">
+              {{ trackData[orderKey].album.name }}
+            </a>
           </BaseMarquee>
-          <BaseMarquee class="text-xs md:text-base">
+          <BaseMarquee class="text-natural-gray1">
             <a
               v-for="artist in trackData[orderKey].artists"
               :key="artist.name"
@@ -127,7 +123,7 @@ export default {
           </BaseMarquee>
         </div>
 
-        <div class="justify-end hidden laptop:flex space-x-4 xl:space-x-11">
+        <div class="w-[146px] justify-end hidden md:flex space-x-4 xl:space-x-11">
           <template v-if="orderKey.startsWith('urgent')">
             <button class="btn-tertiary ml-auto" type="button" @click="editNote(orderKey)">
               <IconEdit />
@@ -154,10 +150,22 @@ export default {
           </button>
         </div>
 
-        <button class="laptop:hidden cursor-pointer self-stretch">
+        <button class="md:hidden cursor-pointer self-stretch">
           <IconMore />
         </button>
       </li>
     </ul>
   </div>
 </template>
+<style lang="postcss">
+._info_1,
+._info_2 {
+  @apply min-w-0;
+}
+._info_1 {
+  flex: 2;
+}
+._info_2 {
+  flex: 1;
+}
+</style>
