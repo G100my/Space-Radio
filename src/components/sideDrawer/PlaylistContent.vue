@@ -1,5 +1,5 @@
 <script>
-import { computed, reactive, ref } from '@vue/runtime-core'
+import { computed, reactive, ref, toRaw } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
@@ -12,51 +12,59 @@ export default {
     const store = useStore()
 
     const selectMode = ref(false)
-    const selectedId = reactive(new Set())
+    const idSet = reactive(new Set())
+    const nameSet = new Set()
+    const playlist = ref(null)
 
-    function checkboxHandler(id) {
-      if (selectedId.has(id)) {
-        selectedId.delete(id)
-      } else {
-        selectedId.add(id)
+    function checkboxHandler(value, id, name) {
+      if (value && !idSet.has(id)) {
+        idSet.add(id)
+        nameSet.add(name)
+      } else if (!value) {
+        idSet.delete(id)
+        nameSet.delete(name)
       }
     }
 
-    function addHandler() {
-      console.log('bububu~~')
-      console.log(selectedId)
-      selectedId.clear()
+    function addMultipleHandler() {
+      store.dispatch('addMultiple', { idSet: toRaw(idSet), nameSet })
+      clearSet()
     }
-
-    function clearHandler() {
-      selectedId.clear()
+    function cancelHandler() {
+      clearSet()
       selectMode.value = false
     }
+
+    function clearSet() {
+      idSet.clear()
+      nameSet.clear()
+    }
     return {
+      playlist,
       listName: computed(() => store.getters.listName),
       list: computed(() => store.getters.chosenList),
       selectMode,
-      selectedId,
+      idSet,
       checkboxHandler,
-      addHandler,
-      clearHandler,
+      addMultipleHandler,
+      cancelHandler,
     }
   },
 }
 </script>
 <template>
   <div class="flex flex-col h-full">
-    <header>
-      <div v-show="!selectMode" class="flex justify-between">
-        <h2 class="text-natural-gray1 text-subtitle laptop:text-header">{{ listName }}</h2>
-        <button class="btn-primary text-tertiary-1 text-opacity-80" type="button" @click="selectMode = true">
+    <header class="relative">
+      <div :class="{ invisible: selectMode }" class="flex justify-between items-center">
+        <h2 class="text-natural-gray1 text-subtitle laptop:text-header laptop:leading-tight">{{ listName }}</h2>
+        <button class="ml-3 btn-primary text-tertiary-1 text-opacity-80" type="button" @click="selectMode = true">
           Select
         </button>
       </div>
-      <div v-show="selectMode" class="flex gap-x-2.5 items-center">
-        <p class="text-body font-bold text-natural-gray2">{{ selectedId.size }} selected</p>
-        <button type="button" class="ml-auto btn-primary" @click="addHandler">Add</button>
-        <button type="button" class="btn-secondary" @click="clearHandler">Cancel</button>
+      <div v-show="selectMode" class="flex gap-x-2.5 items-center absolute inset-0">
+        <p class="text-body font-bold text-natural-gray2">{{ idSet.size }} selected</p>
+        <button type="button" class="ml-auto btn-primary" @click="addMultipleHandler">Add</button>
+        <button type="button" class="btn-secondary" @click="cancelHandler">Cancel</button>
       </div>
     </header>
     <ul class="flex-1 mt-7 w-full space-y-4 overflow-y-auto">
@@ -74,7 +82,11 @@ export default {
             :src="track.album.coverUrl"
             :alt="track.album.name"
           />
-          <input v-if="selectMode" type="checkbox" @change="checkboxHandler(track.id)" />
+          <input
+            v-if="selectMode"
+            type="checkbox"
+            @change="checkboxHandler($event.target.value, track.id, track.name)"
+          />
         </div>
         <!-- https://www.w3.org/TR/css-flexbox-1/#min-size-auto -->
         <div class="flex-auto min-w-0">
@@ -89,7 +101,6 @@ export default {
           <button class="btn-tertiary" type="button"><IconPlus /></button>
           <button class="btn-tertiary" type="button"><IconArrowUp /></button>
         </div>
-        <!--  -->
       </li>
     </ul>
   </div>
