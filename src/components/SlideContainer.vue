@@ -20,7 +20,7 @@ export default {
     const targetLeft = ref(0)
     const right = ref(0)
     const targetRight = ref(0)
-    const animationTyle = ref(null)
+    const animationType = ref(null)
 
     function computeLeftRight(element) {
       const leftValue = element.offsetLeft
@@ -34,7 +34,7 @@ export default {
         targetLeft.value = leftValue
         targetRight.value = rightValue
       }
-      animationTyle.value = direction
+      animationType.value = direction
 
       switch (direction) {
         case 'right2left':
@@ -95,6 +95,14 @@ export default {
       right.value = rightValue
     })
 
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024) return
+      if (!isMainSide.value) sliderToggler('right2left', leftSideButton.value)
+      const { leftValue, rightValue } = computeLeftRight(leftSideButton.value)
+      left.value = leftValue
+      right.value = rightValue
+    })
+
     return {
       slideContent,
       touchmoveHandler,
@@ -109,7 +117,7 @@ export default {
       targetLeft,
       right,
       targetRight,
-      animationTyle,
+      animationType,
       animationendHandler,
     }
   },
@@ -146,7 +154,7 @@ export default {
         '--right': `${right}px`,
         '--targetLeft': `${targetLeft}px`,
         '--targetRight': `${targetRight}px`,
-        '--animation': animationTyle,
+        '--animation': animationType,
       }"
       @animationend="animationendHandler"
     />
