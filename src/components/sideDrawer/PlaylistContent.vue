@@ -102,7 +102,14 @@ export default {
           </BaseMarquee>
         </div>
         <div class="flex">
-          <button class="btn-tertiary" type="button"><IconPlus /></button>
+          <button
+            class="btn-tertiary"
+            type="button"
+            @click="$store.dispatch('add', { id: track.id, trackNameForLog: track.name })"
+          >
+            <IconPlus />
+          </button>
+          <!-- fixme -->
           <button class="btn-tertiary" type="button"><IconArrowUp /></button>
         </div>
       </li>
