@@ -8,6 +8,7 @@ import IconMore from '@/assets/icons/icon-more.svg'
 
 import { mapGetters } from 'vuex'
 import BaseMarquee from '../base/BaseMarquee.vue'
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 
 export default {
   components: {
@@ -18,6 +19,10 @@ export default {
     IconRemove,
     IconMore,
     BaseMarquee,
+    Menu,
+    MenuButton,
+    MenuItems,
+    MenuItem,
   },
   emits: ['activeNoteDialog'],
   computed: {
@@ -150,9 +155,52 @@ export default {
           </button>
         </div>
 
-        <button class="md:hidden cursor-pointer self-stretch">
-          <IconMore />
-        </button>
+        <Menu as="div" class="cursor-pointer self-stretch relative md:hidden cursor-pointer self-stretch">
+          <MenuButton class="btn-tertiary" type="button" @click="test"><IconMore /></MenuButton>
+          <transition
+            enter-active-class="transition duration-150 ease-out"
+            enter-from-class="transform scale-95 opacity-0"
+            enter-to-class="transform scale-100 opacity-100"
+            leave-active-class="transition duration-75 ease-out"
+            leave-from-class="transform scale-100 opacity-100"
+            leave-to-class="transform scale-95 opacity-0"
+          >
+            <MenuItems class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-[10px] space-y-4">
+              <template v-if="orderKey.startsWith('urgent')">
+                <MenuItem v-slot="{ active }">
+                  <li :class="{ active }" class="_menu-item" @click="editNote(orderKey)">
+                    <IconEdit />
+                    <span>Edit order</span>
+                  </li>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <li :class="{ active }" class="_menu-item" @click="urgent2normal(orderKey)">
+                    <IconArrowDown />
+                    <span>Cancel order</span>
+                  </li>
+                </MenuItem>
+              </template>
+
+              <MenuItem v-if="orderKey.startsWith('normal')" v-slot="{ active }">
+                <li :class="{ active }" class="_menu-item" @click="normal2urgent(orderKey)">
+                  <IconArrowUp />
+                  <span>Order</span>
+                </li>
+              </MenuItem>
+
+              <MenuItem v-if="!orderKey.startsWith('pending')" v-slot="{ active }">
+                <li
+                  :class="{ active }"
+                  class="_menu-item"
+                  @click="remove(orderKey, orderKey.startsWith('normal') ? 'normal' : 'urgent')"
+                >
+                  <IconRemove />
+                  <span>Delete song</span>
+                </li>
+              </MenuItem>
+            </MenuItems>
+          </transition>
+        </Menu>
       </li>
     </ul>
   </div>
@@ -167,5 +215,16 @@ export default {
 }
 ._info_2 {
   flex: 1;
+}
+
+._menu-item {
+  @apply whitespace-nowrap flex text-natural-white gap-x-2;
+
+  &.active {
+    @apply text-primary;
+    path {
+      @apply fill-current;
+    }
+  }
 }
 </style>
