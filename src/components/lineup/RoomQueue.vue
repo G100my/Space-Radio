@@ -25,6 +25,11 @@ export default {
     MenuItem,
   },
   emits: ['activeNoteDialog'],
+  data() {
+    return {
+      isMenuPositionUp: false,
+    }
+  },
   computed: {
     ...mapGetters(['trackData', 'totalQueue', 'normalQueue', 'urgentQueue', 'pendingQueue', 'userId']),
   },
@@ -79,6 +84,13 @@ export default {
 
         default:
           return '???'
+      }
+    },
+    menuPositionHandler(event, openState) {
+      if (!openState && event.clientY > (window.innerHeight * 2) / 3) {
+        this.isMenuPositionUp = true
+      } else {
+        this.isMenuPositionUp = false
       }
     },
   },
@@ -155,8 +167,14 @@ export default {
           </button>
         </div>
 
-        <Menu as="div" class="cursor-pointer self-stretch relative md:hidden cursor-pointer self-stretch">
-          <MenuButton class="btn-tertiary" type="button" @click="test"><IconMore /></MenuButton>
+        <Menu
+          v-slot="{ open }"
+          as="div"
+          class="cursor-pointer self-stretch relative md:hidden cursor-pointer self-stretch"
+        >
+          <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
+            <IconMore />
+          </MenuButton>
           <transition
             enter-active-class="transition duration-150 ease-out"
             enter-from-class="transform scale-95 opacity-0"
@@ -165,7 +183,10 @@ export default {
             leave-from-class="transform scale-100 opacity-100"
             leave-to-class="transform scale-95 opacity-0"
           >
-            <MenuItems class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-[10px] space-y-4">
+            <MenuItems
+              :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
+              class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-[10px] space-y-4"
+            >
               <template v-if="orderKey.startsWith('urgent')">
                 <MenuItem v-slot="{ active }">
                   <li :class="{ active }" class="_menu-item" @click="editNote(orderKey)">
