@@ -96,7 +96,7 @@ export default {
     })
 
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 1024) return
+      if (window.innerWidth > 1200) return
       if (!isMainSide.value) sliderToggler('right2left', leftSideButton.value)
       const { leftValue, rightValue } = computeLeftRight(leftSideButton.value)
       left.value = leftValue
@@ -128,9 +128,9 @@ export default {
     v-bind="$attrs"
     id="slide-container"
     class="bg-tertiary-1 bg-opacity-60 overflow-y-auto laptop:bg-transparent"
-    @touchstart.prevent="touchstartHandler"
-    @touchmove.prevent="touchmoveHandler"
-    @touchend.prevent="touchendHandler"
+    @touchstart="touchstartHandler"
+    @touchmove="touchmoveHandler"
+    @touchend="touchendHandler"
   >
     <div
       id="slide-content"
