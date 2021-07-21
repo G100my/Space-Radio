@@ -72,7 +72,7 @@ const router = createRouter({
 router.beforeEach(async to => {
   if (window.location.search.includes('?code=')) {
     const [authorizationCode, hashPath] = window.location.href
-      .slice(window.location.href.search(/(?<=code=)[\w+]/))
+      .slice(window.location.href.search(/code=/) + 5)
       .split('#/')
 
     if (!authorizationCode) return
