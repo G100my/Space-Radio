@@ -158,11 +158,11 @@ export default {
       }"
       @animationend="animationendHandler"
     />
-    <button ref="leftSideButton" type="button" @click="sliderToggler('right2left', $event.currentTarget)">
+    <button ref="leftSideButton" :class="{'active': isMainSide}" type="button" @click="sliderToggler('right2left', $event.currentTarget)">
       <IconNowPlay />
       <span>Now</span>
     </button>
-    <button ref="rightSideButton" type="button" @click="sliderToggler('left2right', $event.currentTarget)">
+    <button ref="rightSideButton" :class="{'active': !isMainSide}" type="button" @click="sliderToggler('left2right', $event.currentTarget)">
       <IconNextPlay />
       <span>Next</span>
     </button>
@@ -172,13 +172,19 @@ export default {
 ._slide_navigation {
   @apply h-16 p-1.5 flex justify-evenly relative laptop:hidden;
   > button {
-    @apply h-full w-[77px] rounded-sm flex flex-col items-center focus:outline-none;
+    @apply h-full w-[77px] rounded-sm flex flex-col items-center focus:outline-none text-natural-gray3;
     svg {
       @apply h-7 w-7 mt-auto;
     }
     span {
-      @apply text-xs text-natural-gray2 mb-auto;
+      @apply text-xs mb-auto;
     }
+    svg, span {
+      transition: color 0.2s linear;
+    }
+  }
+  > button.active {
+    @apply text-natural-gray2;
   }
 
   &_bar {
