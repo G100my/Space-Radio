@@ -7,7 +7,6 @@ import { usePlusMinusHandler } from '@/composables/usePlusMinusHandler.js'
 import { roomKeyMaker } from '@/utility/randomMaker.js'
 import { spotifyAPI } from '@/utility/spotifyAPI.js'
 import BaseAlert from '@/components/base/BaseAlert.vue'
-import BaseInput from '@/components/base/BaseInput.vue'
 import BaseSelect from '@/components/base/BaseSelect.vue'
 import VolumnBar from '@/components/VolumnBar.vue'
 import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg'
@@ -17,7 +16,6 @@ import IconClose from '@/assets/icons/icon/close.svg'
 
 export default {
   components: {
-    BaseInput,
     BaseAlert,
     BaseSelect,
     VolumnBar,
@@ -188,15 +186,16 @@ export default {
     <form class="_create_room_form overflow-y-auto space-y-3 laptop:overflow-y-visible laptop:space-y-3">
       <div>
         <label for="room-name">Room name</label>
-        <BaseInput
-          id="room-name"
-          v-model.trim="roomName"
-          maxlength="50"
-          autocomplete="off"
-          @keyup="checkRoomNameHandler"
-        >
+        <div>
+          <input
+            v-model.trim="roomName"
+            class="base-input mt-1.5 w-full"
+            maxlength="50"
+            autocomplete="off"
+            @keyup="checkRoomNameHandler"
+          />
           <BaseAlert class="mb-1" error :title="errorMessage" :show="!isVaild" />
-        </BaseInput>
+        </div>
       </div>
 
       <div>

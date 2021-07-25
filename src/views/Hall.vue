@@ -4,13 +4,11 @@ import { useRouter } from 'vue-router'
 import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
 import { spotifyAPI } from '../utility/spotifyAPI.js'
-import BaseInput from '@/components/base/BaseInput.vue'
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import HallNav from '@/components/Hall/HallNav.vue'
 
 export default {
   components: {
-    BaseInput,
     BaseAlert,
     HallNav,
   },
@@ -76,16 +74,17 @@ export default {
     <h2 class="text-subtitle">Enter Room</h2>
     <label class="block mt-6">
       <p class="text-natural-gray1 font-bold">Room name<span class="text-primary">*</span></p>
-      <BaseInput
-        v-model="searchKeyWordInput"
-        required-sign
-        type="text"
-        placeholder="Please enter room name."
-        @focus="isErrorMessageShow = false"
-        @keydown.prevent.enter="searchRoom"
-      >
+      <div>
+        <input
+          v-model="searchKeyWordInput"
+          class="base-input mt-1.5 w-full"
+          type="text"
+          placeholder="Please enter room name."
+          @focus="isErrorMessageShow = false"
+          @keydown.prevent.enter="searchRoom"
+        />
         <BaseAlert error :show="isErrorMessageShow" :title="`This room name not found.`" />
-      </BaseInput>
+      </div>
     </label>
     <button class="btn-primary w-full mt-5 laptop:mt-11" type="button" @click="searchRoom">Next</button>
     <button class="btn-secondary w-full mt-3 laptop:mt-4" type="button" @click="enterCreateHandler">

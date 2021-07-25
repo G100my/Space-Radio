@@ -33,3 +33,15 @@
     @apply h-full w-0 cursor-pointer;
   }
 }
+
+@layer components {
+  .base-input {
+    @apply bg-tertiary-1 border border-tertiary-2 border-opacity-60 -shadow-4 px-4 py-3 text-natural-gray1 rounded text-body;
+  }
+  .base-input:focus {
+    @apply border-primary border-opacity-80 outline-none;
+  }
+  .base-input::placeholder {
+    @apply text-natural-gray3;
+  }
+}
