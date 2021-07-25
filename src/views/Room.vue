@@ -104,7 +104,7 @@ export default {
     <Header class="_show_all_flex" @activeSideDrawer="activeSideDrawerHandler" />
     <SlideContainer class="flex-1">
       <template #left-side>
-        <div class="h-full flex flex-col">
+        <div class="min-h-full flex flex-col">
           <PlayingState />
           <VolumnBar
             :value="currentVolume"

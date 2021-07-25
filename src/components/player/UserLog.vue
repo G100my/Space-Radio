@@ -40,8 +40,9 @@ export default {
 }
 </script>
 <template>
-  <div id="user-log" class="overflow-y-auto">
-    <h3 class="text-natural-gray3 font-bold">Records</h3>
+  <div id="user-log" class="overflow-y-auto max-h-[200px] relative">
+    <!-- h3 background color 寫死 -->
+    <h3 class="text-natural-gray3 font-bold sticky top-0 bg-[#1b306c]">Records</h3>
     <ul class="mt-4 text-natural-gray2 space-y-5 overflow-y-auto">
       <li v-for="log in logs" :key="log.timestamp">
         <div class="flex">

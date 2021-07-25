@@ -33,7 +33,7 @@ export default {
   >
     <h1 class="flex items-center justify-start laptop:flex-col laptop:pt-10 laptop:items-start">
       <Logo class="text-natural-white" />
-      <h2 class="text-natural-white hidden laptop:block laptop:mt-6">@{{ $store.getters.roomName }}</h2>
+      <h2 class="text-natural-white hidden laptop:block ㄅlaptop:mt-6 laptop:mb-2">@{{ $store.getters.roomName }}</h2>
     </h1>
     <div class="flex justify-between items-center">
       <Marquee class="mt-5 laptop:mt-0 flex-auto" />
