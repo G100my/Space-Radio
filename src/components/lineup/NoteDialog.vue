@@ -1,202 +1,85 @@
-<template>
-  <span class="mask dialog" />
-  <div class="dialog">
-    <p class="dialog-header">Write your message.</p>
-    <div class="dialog-body">
-      <input v-model="currentNote.sender" class="sender" :placeholder="$store.getters.userName" />插播一首<span
-        class="track-name"
-        >{{ trackNameForLog }}</span
-      >給<input v-model="currentNote.recipient" class="recipient" type="text" placeholder="everyone" />，<br /><textarea
-        v-model="currentNote.message"
-        class="message"
-        cols="25"
-        rows="3"
-        placeholder="(Say something...)"
-      />
-    </div>
-    <div class="dialog-footer">
-      <button type="button" @click="submitHandler">Submit</button>
-      <button type="button" @click="$emit('finish')">Cancel</button>
-    </div>
-    <p class="preview">{{ output }}</p>
-  </div>
-</template>
 <script>
-import { messageOutputMaker } from '@/utility/messageOutputMaker.js'
+import IconClose from '@/assets/icons/icon/close.svg'
 
+import { Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue'
+import { computed } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 export default {
-  props: {
-    queueKey: {
-      type: String,
-      default: '',
-    },
-    trackNameForLog: {
-      type: String,
-      required: true,
-    },
-    submitFunction: {
-      type: Function,
-      required: true,
-    },
+  components: {
+    Dialog,
+    DialogOverlay,
+    DialogTitle,
+    IconClose,
   },
-  emits: ['finish'],
-  data() {
+  setup() {
+    const store = useStore()
+
+    const isOpen = computed(() => store.getters.isDialogOpen)
+
+    const sender = computed(() => store.getters.noteSender)
+    const recipient = computed(() => store.getters.noteRecipient)
+    const message = computed(() => store.getters.noteMessage)
+    const submitHandler = computed(() => store.getters.noteDialogSubmitHandler)
+
+    function cancelHandler() {
+      store.commit('noteDialogToggler', false)
+    }
+
     return {
-      currentNote: {
-        sender: '',
-        recipient: '',
-        message: '',
-      },
+      isOpen,
+
+      sender,
+      recipient,
+      message,
+      submitHandler,
+      cancelHandler,
     }
-  },
-  computed: {
-    output() {
-      return messageOutputMaker(this.currentNote, this.trackNameForLog)
-    },
-  },
-  created() {
-    if (
-      this.queueKey !== '' &&
-      Object.prototype.hasOwnProperty.call(this.$store.state.Queue.urgent_queue, this.queueKey)
-    ) {
-      const editedNote = this.$store.state.Queue.urgent_queue[this.queueKey].note
-      if (editedNote) {
-        this.currentNote = { ...editedNote }
-      } else {
-        const previousSenderName = localStorage.getItem('jukebox_senderName')
-        this.currentNote.sender = previousSenderName ? previousSenderName : this.$store.getters.userName
-      }
-    }
-  },
-  beforeUnmount() {
-    if (this.currentNote.sender.length !== 0) localStorage.setItem('jukebox_senderName', this.currentNote.sender)
-  },
-  methods: {
-    submitHandler() {
-      const { sender, recipient, message } = this.currentNote
-      this.submitFunction({
-        sender: sender ? sender : this.$store.getters.userName,
-        recipient,
-        message,
-      })
-      this.$emit('finish')
-    },
   },
 }
 </script>
-<style lang="scss">
-.dialog {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  height: fit-content;
-  width: min-content;
-  margin: auto;
-  overflow: visible;
-  border: 3px var(--secondary-neutral) solid;
-  border-radius: var(--border-radius);
-  z-index: 30;
-  background-color: var(--primary-dark);
-  &.mask {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    background-color: black;
-    opacity: 0.3;
-    z-index: 9;
-  }
+<template>
+  <Dialog :open="isOpen" class="fixed inset-0 z-40 text-natural-gray4" @close="cancelHandler">
+    <DialogOverlay class="bg-tertiary-1 bg-opacity-60 h-screen w-screen absolute -z-1" />
 
-  .dialog-header {
-    font-size: 1.5rem;
-    font-weight: 600;
-    padding: 5px 0;
-    text-align: center;
-    border-bottom: 1px var(--primary-light) solid;
-  }
-  .dialog-body {
-    line-height: 1.8rem;
-    padding: 5px 15px 0;
-  }
-  .track-name {
-    color: var(--primary-highlight);
-    margin: 0 5px;
-  }
-  .sender,
-  .recipient,
-  .message {
-    color: var(--primary-neutral);
-    background: none;
-    border: none;
-    caret-color: var(--primary-highlight);
-
-    &:focus {
-      outline: none;
-    }
-  }
-  .sender,
-  .recipient {
-    text-transform: capitalize;
-    font-size: 1.2rem;
-    width: 5rem;
-    text-align: center;
-    border-bottom: 2px solid var(--ignore);
-  }
-  .sender {
-    margin-right: 5px;
-  }
-  .recipient {
-    margin-left: 5px;
-  }
-  .message {
-    $line-height: 30px;
-    margin-top: 5px;
-    font-size: 16px;
-    line-height: $line-height;
-    background-attachment: local;
-    background-clip: padding-box;
-    padding-bottom: 2px;
-    background-image: linear-gradient(
-        to right,
-        transparent 5%,
-        var(--primary-dark) 5% 10%,
-        transparent 10% 15%,
-        var(--primary-dark) 15% 20%,
-        transparent 20% 25%,
-        var(--primary-dark) 25% 30%,
-        transparent 30% 35%,
-        var(--primary-dark) 35% 40%,
-        transparent 40% 45%,
-        var(--primary-dark) 45% 50%,
-        transparent 50% 55%,
-        var(--primary-dark) 55% 60%,
-        transparent 60% 65%,
-        var(--primary-dark) 65% 70%,
-        transparent 70% 75%,
-        var(--primary-dark) 75% 80%,
-        transparent 80% 85%,
-        var(--primary-dark) 85% 90%,
-        transparent 90% 95%,
-        var(--primary-dark) 95% 100%
-      ),
-      linear-gradient(to bottom, var(--primary-dark) $line-height - 1px, var(--ignore));
-    background-size: 100% 100%, 100% $line-height;
-  }
-  .dialog-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 10px 0;
-    button {
-      padding: 4px 15px;
-      margin-right: 10px;
-    }
-  }
-  .preview {
-    padding: 5px;
-    text-transform: capitalize;
-  }
-}
-</style>
+    <div class="absolute inset-0 m-auto bg-tertiary-2 rounded-[10px] h-fit max-w-xs md:max-w-xl lg:max-w-2xl">
+      <div class="flex justify-between items-center gap-x-2 py-4 pl-8 pr-4">
+        <DialogTitle class="text-subtitle">Any words for your friends?</DialogTitle>
+        <button class="btn-tertiary flex-shrink-0" type="button">
+          <IconClose />
+        </button>
+      </div>
+      <div
+        class="bg-tertiary-1 pt-6 pb-7 px-4 w-full flex flex-wrap items-baseline gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3"
+      >
+        <input
+          :value="sender"
+          maxlength="16"
+          class="base-input w-32 max-w-full"
+          type="text"
+          @change="$store.commit('refreshNote', { sender: $event.target.value })"
+        />
+        <span>order</span>
+        <strong>{{ 'fix you' }}</strong>
+        <input
+          :value="recipient"
+          maxlength="16"
+          class="base-input w-32 max-w-full"
+          type="text"
+          @change="$store.commit('refreshNote', { recipient: $event.target.value })"
+        />
+        <span>say</span>
+        <textarea
+          :value="message"
+          rows="3"
+          maxlength="72"
+          class="base-input resize-none w-full"
+          @change="$store.commit('refreshNote', { message: $event.target.value })"
+        />
+      </div>
+      <div class="flex justify-end gap-x-4 py-5 px-8">
+        <button class="btn-primary flex-1" @click="submitHandler">Deactivate</button>
+        <button class="btn-secondary flex-1" @click="cancelHandler">Cancel</button>
+      </div>
+    </div>
+  </Dialog>
+</template>
