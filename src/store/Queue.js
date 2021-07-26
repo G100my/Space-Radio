@@ -115,6 +115,10 @@ function queueConnect2firebase(store) {
   })
 }
 
+function orderKeyMaker(timeString) {
+  return `${timeString.toString()}-${Math.floor(Math.random() * 10000).toString(16)}`
+}
+
 const Queue = {
   state: {
     normal_queue: {},
@@ -143,7 +147,7 @@ const Queue = {
       const pending = state.pending_queue ? Object.keys(state.pending_queue) : []
       const normal = state.normal_queue ? Object.keys(state.normal_queue) : []
       const urgent = state.urgent_queue ? Object.keys(state.urgent_queue) : []
-      return pending.concat(normal).concat(urgent)
+      return pending.concat(urgent).concat(normal)
     },
     previousDeleted(state) {
       return state.previousDeleted
@@ -193,10 +197,9 @@ const Queue = {
     add({ getters }, { id, trackNameForLog: track_name }) {
       const now = Date.now()
       const parameter = {}
-      const order_key = `normal-${now}`
+      const order_key = orderKeyMaker(now)
       parameter[order_key] = {
         id,
-        added_time: now,
         orderer: getters.userName,
         note: false,
         track_name,
@@ -207,10 +210,9 @@ const Queue = {
     jumpIn({ getters, commit }, { id, track_name }) {
       function handler(note) {
         const now = Date.now()
-        const order_key = `urgent-${now}`
+        const order_key = orderKeyMaker(now)
         urgent_queue_ref.push({
           id,
-          added_time: now,
           orderer: getters.userName,
           note,
           track_name,
@@ -227,10 +229,9 @@ const Queue = {
       const parameter = {}
       const now = Date.now()
       ids.forEach((id, index) => {
-        const order_key = `normal-${now}-${index}`
+        const order_key = `${now}-${index}`
         parameter[order_key] = {
           id,
-          added_time: now,
           orderer: getters.userName,
           note: false,
           track_name: names[index],
@@ -246,15 +247,15 @@ const Queue = {
       normal_queue_ref.child(orderKey).remove()
     },
 
-    urgent2normal({ state }, { orderKey }) {
-      const order_key = `normal${orderKey.slice(6)}`
-      const queue = { ...state.urgent_queue[orderKey], note: false, order_key }
+    urgent2normal({ state }, key) {
+      const order_key = state.urgent_queue[key].order_key
+      const queue = { ...state.urgent_queue[key], note: false }
 
       const parameter = {}
       parameter[order_key] = queue
 
       urgent_queue_ref
-        .child(orderKey)
+        .child(key)
         .remove()
         .then(() => {
           normal_queue_ref.update(parameter)
@@ -263,9 +264,7 @@ const Queue = {
 
     normal2urgent({ state, commit }, orderKey) {
       function handler(note) {
-        const order_key = `urgent${orderKey.slice(6)}`
-        const queue = { ...state.normal_queue[orderKey], note, order_key }
-        console.log(queue)
+        const queue = { ...state.normal_queue[orderKey], note }
         normal_queue_ref
           .child(orderKey)
           .remove()
@@ -278,12 +277,12 @@ const Queue = {
       commit('noteDialogToggler', true)
       commit('_refreshHandler', handler)
     },
-    urgentEdit({ commit, state }, orderKey) {
+    urgentEdit({ commit, state }, key) {
       function handler(newNote) {
-        urgent_queue_ref.child(orderKey).update({ note: newNote })
+        urgent_queue_ref.child(key).update({ note: newNote })
         commit('_refreshLocalSenderName')
       }
-      const oldNote = state.urgent_queue[orderKey].note
+      const oldNote = state.urgent_queue[key].note
       commit('refreshNote', oldNote)
       commit('_refreshHandler', handler)
       commit('noteDialogToggler', true)
@@ -310,7 +309,7 @@ const Queue = {
       spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextQueueKey].id}`, error => {
         error && console.log(error)
         if (!error) {
-          const order_key = `pending-${queue.added_time}`
+          const order_key = nextQueueKey
           const queue = { ...state[`${level}_queue`][nextQueueKey], order_key }
 
           let targetQueue

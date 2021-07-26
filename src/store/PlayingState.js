@@ -29,11 +29,11 @@ const initialTrack = {
   is_playable: true,
 }
 const initialQueue = {
-  added_time: '',
-  added_by: '',
-  note: false,
-  order_key: null,
   id: '',
+  orderer: '',
+  note: false,
+  track_name: '',
+  order_key: '',
 }
 const initProgress = {
   paused: false,
