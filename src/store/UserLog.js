@@ -54,7 +54,7 @@ function userLogConnect2firebase(store) {
         case 'urgentRemove':
         case 'normal2urgent':
         case 'urgent2normal': {
-          const { orderKey } = action.payload
+          const orderKey = action.payload
           const track_name = state.Queue.trackData[orderKey].name
           userLog = { ...maker(action), option: { track_name } }
           break
