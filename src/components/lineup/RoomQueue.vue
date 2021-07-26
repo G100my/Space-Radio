@@ -136,7 +136,7 @@ export default {
             v-if="!checkLevel('pending', key)"
             class="btn-tertiary"
             type="button"
-            @click="remove(key, key.startsWith('normal') ? 'normal' : 'urgent')"
+            @click="remove(key, checkLevel('normal', key) ? 'normal' : 'urgent')"
           >
             <IconRemove />
           </button>
@@ -188,7 +188,7 @@ export default {
                 <li
                   :class="{ active }"
                   class="_menu-item"
-                  @click="remove(key, ckeckLevel('normal', key) ? 'normal' : 'urgent')"
+                  @click="remove(key, checkLevel('normal', key) ? 'normal' : 'urgent')"
                 >
                   <IconRemove />
                   <span>Delete song</span>

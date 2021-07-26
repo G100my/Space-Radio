@@ -101,16 +101,21 @@ export default {
             <span v-for="artist in track.artists" :key="artist.name">{{ artist.name }}</span>
           </BaseMarquee>
         </div>
-        <div class="flex">
+        <div class="flex items-center">
           <button
             class="btn-tertiary"
             type="button"
-            @click="$store.dispatch('add', { id: track.id, trackNameForLog: track.name })"
+            @click="$store.dispatch('add', { id: track.id, track_name: track.name })"
           >
             <IconPlus />
           </button>
-          <!-- fixme -->
-          <button class="btn-tertiary" type="button"><IconArrowUp /></button>
+          <button
+            class="btn-tertiary"
+            type="button"
+            @click="$store.dispatch('jumpIn', { id: track.id, track_name: track.name })"
+          >
+            <IconArrowUp />
+          </button>
         </div>
       </li>
     </ul>

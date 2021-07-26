@@ -199,7 +199,7 @@ const Queue = {
     ...Note.mutations,
   },
   actions: {
-    add({ getters }, { id, trackNameForLog: track_name }) {
+    add({ getters }, { id, track_name }) {
       const now = Date.now()
       const parameter = {}
       const order_key = orderKeyMaker(now)
@@ -223,7 +223,7 @@ const Queue = {
           track_name,
           order_key,
         })
-        commit('noteDialogToggler', true)
+        commit('noteDialogToggler', false)
         commit('_refreshLocalSenderName')
       }
       dispatch('_clearNote')
