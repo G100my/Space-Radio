@@ -44,7 +44,7 @@ export default {
     <div class="absolute inset-0 m-auto bg-tertiary-2 rounded-[10px] h-fit max-w-xs md:max-w-xl lg:max-w-2xl">
       <div class="flex justify-between items-center gap-x-2 py-4 pl-8 pr-4">
         <DialogTitle class="text-subtitle">Any words for your friends?</DialogTitle>
-        <button class="btn-tertiary flex-shrink-0" type="button">
+        <button class="btn-tertiary flex-shrink-0" type="button" @click="cancelHandler">
           <IconClose />
         </button>
       </div>
