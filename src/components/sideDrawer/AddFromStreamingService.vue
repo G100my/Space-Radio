@@ -77,7 +77,7 @@ export default {
 ._side_drawer_ul {
   @apply flex-1 overflow-y-auto space-y-4;
   li {
-    @apply min-h-[70px] px-4 py-2 flex justify-between items-center rounded-[10px] bg-tertiary-1 bg-opacity-60;
+    @apply min-h-[70px] px-4 py-2 flex justify-between items-center rounded-10 bg-tertiary-1 bg-opacity-60;
   }
   p {
     @apply text-natural-white;

@@ -72,11 +72,7 @@ export default {
       </div>
     </header>
     <ul class="flex-1 mt-7 w-full space-y-4 overflow-y-auto">
-      <li
-        v-for="track in list"
-        :key="track.id"
-        class="bg-tertiary-1 bg-opacity-60 rounded-[10px] flex gap-x-2 py-3 px-4"
-      >
+      <li v-for="track in list" :key="track.id" class="bg-tertiary-1 bg-opacity-60 rounded-10 flex gap-x-2 py-3 px-4">
         <div
           class="flex-shrink-0 w-11 h-11 md:w-16 md:h-16 object-cover object-center flex justify-center items-center"
         >

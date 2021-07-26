@@ -72,6 +72,9 @@ module.exports = {
       gridTemplateColumns: {
         alert: 'fit-content auto',
       },
+      borderRadius: {
+        10: '10px'
+      }
     },
   },
   variants: {

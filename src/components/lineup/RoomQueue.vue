@@ -81,7 +81,7 @@ export default {
       <li
         v-for="(key, index) in totalQueue"
         :key="key"
-        class="_tracks flex items-center gap-x-3 p-3 bg-tertiary-1 bg-opacity-60 rounded-[10px] hover:bg-opacity-100"
+        class="_tracks flex items-center gap-x-3 p-3 bg-tertiary-1 bg-opacity-60 rounded-10 hover:bg-opacity-100"
       >
         <div class="flex-shrink-0 w-10 flex justify-center items-center">
           <span v-if="checkLevel('normal', key)" class="text-body font-bold text-natural-gray3">{{ index }}</span>
@@ -160,7 +160,7 @@ export default {
           >
             <MenuItems
               :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
-              class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-[10px] space-y-4"
+              class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-10 space-y-4"
             >
               <template v-if="checkLevel('urgent', key)">
                 <MenuItem v-slot="{ active }">
