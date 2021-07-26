@@ -16,8 +16,7 @@ import Vote from '@/components/player/Vote.vue'
 import UserLog from '@/components/player/UserLog.vue'
 import AddFromStreamingService from '@/components/sideDrawer/AddFromStreamingService.vue'
 import PlaylistContent from '@/components/sideDrawer/PlaylistContent.vue'
-// import NoteDialog from '../components/lineup/NoteDialog.vue'
-// import AdditionDisplay from '../components/AdditionDisplay.vue'
+import NoteDialog from '../components/lineup/NoteDialog.vue'
 import RoomQueue from '../components/lineup/RoomQueue.vue'
 import { useStore } from 'vuex'
 
@@ -31,9 +30,8 @@ export default {
     Collection,
     Vote,
     RoomQueue,
-    // NoteDialog,
+    NoteDialog,
     UserLog,
-    // AdditionDisplay,
     AddFromStreamingService,
     PlaylistContent,
   },
@@ -63,25 +61,6 @@ export default {
 
     const isSideDrawerShow = ref(false)
     const activeComponent = ref(null)
-
-    // const editingNote = reactive({
-    //   queueKey: '',
-    //   trackNameForLog: '',
-    //   submitFunction: () => {},
-    // })
-    // const isNoteDialogActive = ref(false)
-    // function activeNoteDialogHandler(note) {
-    //   editingNote.value = { ...note }
-    //   isNoteDialogActive.value = true
-    // }
-    // function dialogFinishHandler() {
-    //   isNoteDialogActive.value = false
-    //   editingNote.value = {
-    //     queueKey: '',
-    //     trackNameForLog: '',
-    //     submitFunction: () => {},
-    //   }
-    // }
 
     function activeSideDrawerHandler(componentName) {
       isSideDrawerShow.value = true
@@ -119,18 +98,10 @@ export default {
       </template>
       <template #right-side>
         <RoomQueue class="flex-1" />
-        <!-- <AdditionDisplay
-        v-if="!mobileMode"
-        v-show="additionDisplayToggler"
-        :source="additionDisplaySource"
-        @activeNoteDialog="activeNoteDialogHandler"
-        @disactiveSearchStyle="isSearchActive = false"
-      /> -->
       </template>
     </SlideContainer>
 
-    <!-- fixme -->
-    <!-- <NoteDialog v-if="isNoteDialogActive" v-bind="editingNote" @finish="dialogFinishHandler" /> -->
+    <NoteDialog id="note" />
 
     <!-- accept 'Search', 'AddFromStreamingService', 'Personal', 'PlaylistContent' those emited from Header -->
     <SideDrawer v-model="isSideDrawerShow">
