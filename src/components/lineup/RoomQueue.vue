@@ -37,13 +37,6 @@ export default {
     remove(orderKey, level) {
       this.$store.dispatch(`${level}Remove`, orderKey)
     },
-    urgent2normal(orderKey) {
-      this.$store.dispatch('urgent2normal', {
-        orderKey,
-        id: this.trackData[orderKey].id,
-        trackNameForLog: this.trackData[orderKey].name,
-      })
-    },
     getImageUrl(track) {
       const imagesArray = track.album.images
       const imageLastObject = imagesArray[imagesArray.length - 1]
@@ -51,21 +44,9 @@ export default {
       return imageLastObject ? imageLastObject.url : null
     },
     getOrderer(orderKey) {
-      // eslint-disable-next-line no-useless-escape
-      const type = orderKey.slice(0, orderKey.search(/\-/))
-      switch (type) {
-        case 'normal':
-          return this.normalQueue[orderKey].orderer
-
-        case 'urgent':
-          return this.urgentQueue[orderKey].orderer
-
-        case 'pending':
-          return this.pendingQueue[orderKey].orderer
-
-        default:
-          return '???'
-      }
+      if (this.normalQueue[orderKey]) return this.normalQueue[orderKey].orderer
+      else if (this.urgentQueue[orderKey]) return this.urgentQueue[orderKey].orderer
+      else return this.pendingQueue[orderKey].orderer
     },
     menuPositionHandler(event, openState) {
       if (!openState && event.clientY > (window.innerHeight * 2) / 3) {
@@ -139,7 +120,7 @@ export default {
             <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
               <IconEdit />
             </button>
-            <button class="btn-tertiary" type="button" @click="urgent2normal(key)">
+            <button class="btn-tertiary" type="button" @click="$store.dispatch('urgent2normal', key)">
               <IconArrowDown />
             </button>
           </template>
@@ -207,7 +188,7 @@ export default {
                 <li
                   :class="{ active }"
                   class="_menu-item"
-                  @click="remove(key, key.startsWith('normal') ? 'normal' : 'urgent')"
+                  @click="remove(key, ckeckLevel('normal', key) ? 'normal' : 'urgent')"
                 >
                   <IconRemove />
                   <span>Delete song</span>
