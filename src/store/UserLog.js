@@ -8,18 +8,7 @@ function setUserLogRef(roomKey) {
 
 const UserLog = {
   state: {
-    log: [
-      // {
-      //   action_type: '',
-      //   user_id: '',
-      //   timestamp: 0,
-      //   option: {
-      //     id: '',
-      //     track_name: '',
-      //     volume: 0,
-      //   },
-      // },
-    ],
+    log: [],
   },
   getters: {
     userLog(state) {
@@ -35,7 +24,7 @@ const UserLog = {
 }
 
 function userLogConnect2firebase(store) {
-  const maker = function ({ type }) {
+  const maker = function (type) {
     return {
       action_type: type,
       user_id: store.getters.userId,
@@ -56,7 +45,7 @@ function userLogConnect2firebase(store) {
         case 'urgent2normal': {
           const orderKey = action.payload
           const track_name = state.Queue.trackData[orderKey].name
-          userLog = { ...maker(action), option: { track_name } }
+          userLog = { ...maker(action.type), option: { track_name } }
           break
         }
 
@@ -72,9 +61,8 @@ function userLogConnect2firebase(store) {
         case 'add':
         case 'jumpIn':
         case 'addMultiple': {
-          const { names } = action.payload
-          userLog = { ...maker(action), option: { names } }
-          console.log(userLog)
+          const { track_name } = action.payload
+          userLog = { ...maker(action.type), option: { name: track_name } }
           break
         }
 
@@ -82,7 +70,7 @@ function userLogConnect2firebase(store) {
         case 'turnDown':
           if (recordVolumeLogTimer) clearTimeout(recordVolumeLogTimer)
           recordVolumeLogTimer = setTimeout(() => {
-            userLog = { ...maker(action), option: { volume: state.PlayingState.volume } }
+            userLog = { ...maker(action.type), option: { volume: state.PlayingState.volume } }
             user_log_ref.push(userLog)
           }, 3000)
           return
