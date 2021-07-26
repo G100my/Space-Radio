@@ -1,14 +1,13 @@
 import { spotifyAPI } from '../utility/spotifyAPI.js'
 import firebase from './firebase.js'
 
-const initNote = {
-  sender: localStorage.getItem('jukebox_senderName') || '',
-  recipient: '',
-  message: '',
-}
 const Note = {
   state: {
-    editingNote: { ...initNote },
+    editingNote: {
+      sender: localStorage.getItem('jukebox_senderName') || '',
+      recipient: '',
+      message: '',
+    },
     isDialogOpen: false,
     submitHandler: () => {},
   },
@@ -32,9 +31,6 @@ const Note = {
     },
   },
   mutations: {
-    _clearNote(state) {
-      state.editingNote = { ...initNote }
-    },
     refreshNote(state, payload) {
       state.editingNote = { ...state.editingNote, ...payload }
     },
@@ -45,10 +41,19 @@ const Note = {
       const name = state.editingNote.sender
       if (!name) return
       localStorage.setItem('jukebox_senderName', name)
-      initNote.sender = name
     },
     _refreshHandler(state, handler) {
       state.submitHandler = handler
+    },
+  },
+  actions: {
+    _clearNote({ commit, getters }) {
+      const name = localStorage.getItem('jukebox_senderName') || getters.userName
+      commit('refreshNote', {
+        sender: name,
+        recipient: '',
+        message: '',
+      })
     },
   },
 }
@@ -207,7 +212,7 @@ const Queue = {
       }
       normal_queue_ref.update(parameter)
     },
-    jumpIn({ getters, commit }, { id, track_name }) {
+    jumpIn({ getters, commit, dispatch }, { id, track_name }) {
       function handler(note) {
         const now = Date.now()
         const order_key = orderKeyMaker(now)
@@ -221,7 +226,7 @@ const Queue = {
         commit('noteDialogToggler', true)
         commit('_refreshLocalSenderName')
       }
-      commit('_clearNote')
+      dispatch('_clearNote')
       commit('noteDialogToggler', true)
       commit('_refreshHandler', handler)
     },
@@ -262,7 +267,7 @@ const Queue = {
         })
     },
 
-    normal2urgent({ state, commit }, orderKey) {
+    normal2urgent({ state, commit, dispatch }, orderKey) {
       function handler(note) {
         const queue = { ...state.normal_queue[orderKey], note }
         normal_queue_ref
@@ -273,7 +278,7 @@ const Queue = {
           })
         commit('noteDialogToggler', false)
       }
-      commit('_clearNote')
+      dispatch('_clearNote')
       commit('noteDialogToggler', true)
       commit('_refreshHandler', handler)
     },
@@ -281,6 +286,7 @@ const Queue = {
       function handler(newNote) {
         urgent_queue_ref.child(key).update({ note: newNote })
         commit('_refreshLocalSenderName')
+        commit('noteDialogToggler', false)
       }
       const oldNote = state.urgent_queue[key].note
       commit('refreshNote', oldNote)
@@ -331,6 +337,7 @@ const Queue = {
     clearPendingQueue() {
       pending_queue_ref.set(null)
     },
+    ...Note.actions,
   },
 }
 
