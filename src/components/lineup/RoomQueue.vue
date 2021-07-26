@@ -37,31 +37,12 @@ export default {
     remove(orderKey, level) {
       this.$store.dispatch(`${level}Remove`, orderKey)
     },
-    editNote(orderKey) {
-      const trackNameForLog = this.trackData[orderKey].name
-      const submitFunction = newNote => {
-        this.$store.dispatch(`urgentEdit`, { orderKey, note: newNote })
-      }
-      this.$emit('activeNoteDialog', { orderKey, trackNameForLog, submitFunction })
-    },
     urgent2normal(orderKey) {
       this.$store.dispatch('urgent2normal', {
         orderKey,
         id: this.trackData[orderKey].id,
         trackNameForLog: this.trackData[orderKey].name,
       })
-    },
-    normal2urgent(orderKey) {
-      const trackNameForLog = this.trackData[orderKey].name
-      const submitFunction = newNote => {
-        this.$store.dispatch('normal2urgent', {
-          orderKey,
-          note: newNote,
-          id: this.trackData[orderKey].id,
-          trackNameForLog,
-        })
-      }
-      this.$emit('activeNoteDialog', { orderKey, trackNameForLog, submitFunction })
     },
     getImageUrl(track) {
       const imagesArray = track.album.images
@@ -93,6 +74,19 @@ export default {
         this.isMenuPositionUp = false
       }
     },
+    checkLevel(level, key) {
+      switch (level) {
+        case 'normal':
+          return Boolean(this.normalQueue[key])
+        case 'urgent':
+          return Boolean(this.urgentQueue[key])
+        case 'pending':
+          if (this.pendingQueue) return Boolean(this.pendingQueue[key])
+          else return false
+        default:
+          return false
+      }
+    },
   },
 }
 </script>
@@ -104,34 +98,34 @@ export default {
     </header>
     <ul class="flex-1 overflow-y-auto space-y-2">
       <li
-        v-for="(orderKey, index) in totalQueue"
-        :key="index"
+        v-for="(key, index) in totalQueue"
+        :key="key"
         class="_tracks flex items-center gap-x-3 p-3 bg-tertiary-1 bg-opacity-60 rounded-[10px] hover:bg-opacity-100"
       >
         <div class="flex-shrink-0 w-10 flex justify-center items-center">
-          <span v-if="orderKey.startsWith('normal')" class="text-body font-bold text-natural-gray3">{{ index }}</span>
-          <IconArrowUp v-else-if="orderKey.startsWith('urgent')" class="arrow-up" />
+          <span v-if="checkLevel('normal', key)" class="text-body font-bold text-natural-gray3">{{ index }}</span>
+          <IconArrowUp v-else-if="checkLevel('urgent', key)" class="arrow-up" />
           <IconPending v-else class="pending" />
         </div>
 
         <div class="flex-shrink-0 flex justify-center items-center">
-          <img class="w-11 h-11" :src="getImageUrl(trackData[orderKey])" alt="album photo" />
+          <img class="w-11 h-11" :src="getImageUrl(trackData[key])" alt="album photo" />
         </div>
 
         <div class="_info_1 overflow-hidden w-full">
-          <BaseMarquee class="text-natural-gray1 font-bold text-xs md:text-base" :text="trackData[orderKey].name" />
-          <BaseMarquee class="text-primary text-xs md:text-base" :text="getOrderer(orderKey)" />
+          <BaseMarquee class="text-natural-gray1 font-bold text-xs md:text-base" :text="trackData[key].name" />
+          <BaseMarquee class="text-primary text-xs md:text-base" :text="getOrderer(key)" />
         </div>
 
         <div class="_info_2 hidden md:block">
           <BaseMarquee class="text-natural-gray1">
-            <a :href="trackData[orderKey].external_urls.spotify" target="_blank">
-              {{ trackData[orderKey].album.name }}
+            <a :href="trackData[key].external_urls.spotify" target="_blank">
+              {{ trackData[key].album.name }}
             </a>
           </BaseMarquee>
           <BaseMarquee class="text-natural-gray1">
             <a
-              v-for="artist in trackData[orderKey].artists"
+              v-for="artist in trackData[key].artists"
               :key="artist.name"
               :href="artist.external_urls.spotify"
               target="_blank"
@@ -140,28 +134,28 @@ export default {
           </BaseMarquee>
         </div>
 
-        <div class="w-[146px] justify-end hidden md:flex space-x-4 xl:space-x-11">
-          <template v-if="orderKey.startsWith('urgent')">
-            <button class="btn-tertiary ml-auto" type="button" @click="editNote(orderKey)">
+        <div class="w-[146px] hidden md:flex justify-end space-x-3">
+          <template v-if="checkLevel('urgent', key)">
+            <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
               <IconEdit />
             </button>
-            <button class="btn-tertiary ml-auto" type="button" @click="urgent2normal(orderKey)">
+            <button class="btn-tertiary" type="button" @click="urgent2normal(key)">
               <IconArrowDown />
             </button>
           </template>
           <button
-            v-if="orderKey.startsWith('normal')"
-            class="btn-tertiary ml-auto"
+            v-if="checkLevel('normal', key)"
+            class="btn-tertiary"
             type="button"
-            @click="normal2urgent(orderKey)"
+            @click="$store.dispatch('normal2urgent', key)"
           >
             <IconArrowUp />
           </button>
           <button
-            v-if="!orderKey.startsWith('pending')"
-            class="btn-tertiary ml-auto"
+            v-if="!checkLevel('pending', key)"
+            class="btn-tertiary"
             type="button"
-            @click="remove(orderKey, orderKey.startsWith('normal') ? 'normal' : 'urgent')"
+            @click="remove(key, key.startsWith('normal') ? 'normal' : 'urgent')"
           >
             <IconRemove />
           </button>
@@ -187,33 +181,33 @@ export default {
               :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
               class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-[10px] space-y-4"
             >
-              <template v-if="orderKey.startsWith('urgent')">
+              <template v-if="checkLevel('urgent', key)">
                 <MenuItem v-slot="{ active }">
-                  <li :class="{ active }" class="_menu-item" @click="editNote(orderKey)">
+                  <li :class="{ active }" class="_menu-item" @click="editNote(key)">
                     <IconEdit />
                     <span>Edit order</span>
                   </li>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <li :class="{ active }" class="_menu-item" @click="urgent2normal(orderKey)">
+                  <li :class="{ active }" class="_menu-item" @click="urgent2normal(key)">
                     <IconArrowDown />
                     <span>Cancel order</span>
                   </li>
                 </MenuItem>
               </template>
 
-              <MenuItem v-if="orderKey.startsWith('normal')" v-slot="{ active }">
-                <li :class="{ active }" class="_menu-item" @click="normal2urgent(orderKey)">
+              <MenuItem v-if="checkLevel('normal', key)" v-slot="{ active }">
+                <li :class="{ active }" class="_menu-item" @click="normal2urgent(key)">
                   <IconArrowUp />
                   <span>Order</span>
                 </li>
               </MenuItem>
 
-              <MenuItem v-if="!orderKey.startsWith('pending')" v-slot="{ active }">
+              <MenuItem v-if="!checkLevel('pending', key)" v-slot="{ active }">
                 <li
                   :class="{ active }"
                   class="_menu-item"
-                  @click="remove(orderKey, orderKey.startsWith('normal') ? 'normal' : 'urgent')"
+                  @click="remove(key, key.startsWith('normal') ? 'normal' : 'urgent')"
                 >
                   <IconRemove />
                   <span>Delete song</span>
