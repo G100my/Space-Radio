@@ -7,7 +7,7 @@ import { playingStateConnect2firebase } from '../store/PlayingState.js'
 import { userLogConnect2firebase } from '../store/UserLog.js'
 
 import SlideContainer from '../components/SlideContainer.vue'
-import SideDrawer from '../components/SideDrawer.vue'
+import SideDrawer from '../components/sideDrawer/SideDrawer.vue'
 import Header from '../components/header/Header.vue'
 import PlayingState from '../components/player/PlayingState.vue'
 import VolumnBar from '@/components/VolumnBar.vue'
