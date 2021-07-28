@@ -86,7 +86,7 @@ export default {
         <div class="min-h-full flex flex-col">
           <PlayingState />
           <VolumnBar
-            :value="currentVolume"
+            :modelValue="currentVolume"
             class="mt-7 laptop:mt-3"
             @minus="$store.dispatch('turnDown')"
             @plus="store.dispatch('turnUp')"
