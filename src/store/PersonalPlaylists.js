@@ -1,6 +1,6 @@
 import { playListFields } from '@/utility/fieldString'
 import { spotifyAPI } from '@/utility/spotifyAPI'
-import ImageVinylRecord from '@/assets/vinyl-record.png'
+import { spotifyCoverPicker } from '@/utility/dataFormat'
 
 export const PersonalPlaylists = {
   state: {
@@ -47,9 +47,7 @@ export const PersonalPlaylists = {
             album: {
               name: i.track.album.name,
               externalUrl: i.track.album.external_urls.spotify,
-              coverUrl: i.track.album.images.length
-                ? i.track.album.images[i.track.album.images.length - 1].url
-                : ImageVinylRecord,
+              coverUrl: spotifyCoverPicker(i.track.album.images),
             },
             artists: i.track.artists,
             id: i.track.id,
