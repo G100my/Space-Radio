@@ -3,7 +3,7 @@ import IconSearch from '@/assets/icons/icon-search.svg'
 import IconFilter from '@/assets/icons/icon-filter.svg'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
-import { onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { spotifyAPI } from '@/utility/spotifyAPI'
 import { spotifyCoverPicker } from '@/utility/dataFormat'
 import BaseMarquee from '../base/BaseMarquee.vue'
@@ -17,44 +17,60 @@ export default {
     BaseMarquee,
   },
   setup() {
+    let observer
+    let infinityContainer
+    onMounted(() => {
+      infinityContainer = document.getElementById('infinity')
+      const observerOptions = {
+        root: infinityContainer,
+        rootMargin: '0px',
+        threshold: 0.5,
+      }
+      const callback = ([entry]) => {
+        if (entry.isIntersecting) search(previousOffset + limit)
+      }
+      observer = new IntersectionObserver(callback, observerOptions)
+    })
+
     const list = ref([])
-    const refineMode = ref(false)
-    const recentSearchStrings = JSON.parse(localStorage.getItem('jukebox_recent_search')) || []
-    const next = ref('')
     const keywords = ref('')
     const total = ref(0)
-    let offset = 0
-
-    function searchClickHandler() {
-      console.log('🚀 ~ file: Search.vue ~ line 24 ~ searchClickHandler ~ searchClickHandler', searchClickHandler)
-
-      recentSearchStrings.push(keywords.value)
-      search()
-    }
-
+    let previousOffset = 0
+    let target
+    let next
+    const limit = 30
     function search(offset = 0) {
-      return spotifyAPI.search(keywords.value, ['track'], { limit: 50, offset }).then(response => {
+      spotifyAPI.search(keywords.value, ['track'], { limit, offset }).then(response => {
         response.tracks.items.forEach(i => (i.album.coverUrl = spotifyCoverPicker(i.album.images)))
+
         list.value = list.value.concat(response.tracks.items)
-        next.value = response.tracks.next
+        next = response.tracks.next
         total.value = response.tracks.total
-        offset = response.tracks.offset
+        previousOffset = response.tracks.offset
+
+        if (target) observer.unobserve(target)
+        if (next || total.value > list.value.length) {
+          nextTick(() => {
+            target = infinityContainer.lastElementChild
+            observer.observe(target)
+          })
+        }
       })
     }
 
+    const recentSearchStrings = JSON.parse(localStorage.getItem('jukebox_recent_search')) || []
+    function searchClickHandler() {
+      recentSearchStrings.push(keywords.value)
+      if (recentSearchStrings.length > 30) recentSearchStrings.shift()
+      list.value = []
+      search()
+    }
+
+    const refineMode = ref(false)
     function clearRefineHandler() {
-      console.log('🚀 ~ file: Search.vue ~ line 37 ~ clearRefineHandler ~ clearRefineHandler', clearRefineHandler)
-      // refineMode.value = false
+      refineMode.value = false
     }
-
-    function sortByNewHandler() {
-      console.log('🚀 ~ file: Search.vue ~ line 42 ~ sortByNewHandler ~ sortByNewHandler', sortByNewHandler)
-    }
-
-    function filterHandler() {
-      console.log('🚀 ~ file: Search.vue ~ line 46 ~ filterHandler ~ filterHandler', filterHandler)
-      //
-    }
+    function sortByNewHandler() {}
 
     onUnmounted(() => {
       localStorage.setItem('jukebox_recent_search', JSON.stringify(recentSearchStrings))
@@ -63,11 +79,9 @@ export default {
       list,
       keywords,
       recentSearchStrings,
-      next,
       total,
       refineMode,
       searchClickHandler,
-      filterHandler,
       clearRefineHandler,
       sortByNewHandler,
     }
@@ -94,7 +108,7 @@ export default {
     <div v-show="!keywords" class="flex-auto flex flex-col">
       <p class="my-5 text-subtitle text-natural-gray2">Recent searches</p>
 
-      <ul class="flex-1 mt-7 overflow-y-auto px-10">
+      <ul class="flex-auto h-0 mt-7 overflow-y-auto px-10">
         <li
           v-for="recent in recentSearchStrings"
           :key="recent"
@@ -108,15 +122,16 @@ export default {
 
     <div v-show="keywords" class="flex-auto flex flex-col">
       <div
-        v-if="!refineMode"
+        v-if="refineMode"
         class="flex mt-2 bg-[#253a77] rounded-sm px-5 py-0.5 items-center"
         @click="$refs.refineInput.focus()"
       >
         <button type="button" class="btn-tertiary" @click.stop="filterHandler">
           <IconFilter />
         </button>
-        <input ref="refineInput" type="text" class="_search_input" @keydown.enter="filterHandler" />
+        <input ref="refineInput" type="text" class="_search_input" @change="refineKeywords = $event.target.value" />
       </div>
+
       <div class="mt-5 flex gap-x-1 items-baseline">
         <p class="mr-auto text-natural-gray2 font-bold">
           <span class="mx-2">{{ total }}</span>
@@ -126,7 +141,8 @@ export default {
         <button v-else type="button" class="btn-primary" @click="clearRefineHandler">Clear</button>
         <button type="button" class="btn-secondary" @click="sortByNewHandler">Newest first</button>
       </div>
-      <ul ref="infinityContainer" class="flex-auto h-0 mt-7 w-full space-y-4 overflow-y-auto">
+
+      <ul id="infinity" class="flex-auto h-0 mt-7 w-full space-y-4 overflow-y-auto">
         <li v-for="track in list" :key="track.id" class="bg-tertiary-1 bg-opacity-60 rounded-10 flex gap-x-2 py-3 px-4">
           <div
             class="flex-shrink-0 w-11 h-11 md:w-16 md:h-16 object-cover object-center flex justify-center items-center"
