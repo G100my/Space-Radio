@@ -228,7 +228,7 @@ export default {
 
       <div>
         <p class="font-bold">Choose a playlist as recommendation references</p>
-        <BaseSelect :options="hostPlaylists" class="mt-2" />
+        <BaseSelect v-model="basePlaylist" :options="hostPlaylists" class="mt-2" />
       </div>
 
       <button class="btn btn-primary w-full mt-6 laptop:mt-8" type="button" @click="createHandler">Create</button>
