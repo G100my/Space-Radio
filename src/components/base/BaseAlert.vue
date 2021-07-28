@@ -81,7 +81,7 @@ export default {
 </template>
 <style lang="postcss">
 ._base_alert {
-  @apply overflow-hidden px-4 py-2 border translate-y-1 grid;
+  @apply overflow-hidden px-4 py-px rounded-sm border translate-y-1 grid;
   grid-template-columns: min-content 1fr;
 }
 ._alert_error {

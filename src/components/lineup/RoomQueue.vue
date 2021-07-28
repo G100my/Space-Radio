@@ -74,7 +74,7 @@ export default {
 <template>
   <div class="h-full overflow-y-auto flex flex-col laptop:pb-10">
     <header class="flex justify-between items-center pb-6">
-      <h3 class="text-natural-gray2 text-2xl xl:text-4xl font-semibold">Next</h3>
+      <h3 class="text-natural-gray2 text-2xl laptop:text-header font-semibold">Next</h3>
       <img src="@/assets/images/Spotify_Logo_CMYK_Green.png" alt="Spotify" class="w-20" />
     </header>
     <ul class="flex-1 overflow-y-auto space-y-2">

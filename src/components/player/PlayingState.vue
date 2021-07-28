@@ -30,11 +30,11 @@ export default {
 </script>
 <template>
   <section class="bg-opacity-40 w-full">
-    <header class="flex justify-between items-center">
+    <header class="flex justify-between items-center laptop:hidden">
       <h3 class="text-subtitle text-natural-white">Now</h3>
       <img :src="SpotifyLogo" alt="Spotify" class="w-20" />
     </header>
-    <section id="plarer-state" class="mt-7 flex items-start laptop:flex-col">
+    <section id="plarer-state" class="flex items-start laptop:flex-col">
       <div
         class="relative bg-tertiary-2 bg-opacity-60 px-5 pt-3 pb-4 laptop:w-10/12 laptop:px-9 laptop:pt-[22px] laptop:pb-7"
       >

@@ -83,7 +83,7 @@ export default {
     <Header class="_show_all_flex" @activeSideDrawer="activeSideDrawerHandler" />
     <SlideContainer class="flex-1">
       <template #left-side>
-        <div class="min-h-full flex flex-col">
+        <div class="min-h-full flex flex-col laptop:pt-7">
           <PlayingState />
           <VolumnBar
             :modelValue="currentVolume"
@@ -97,7 +97,7 @@ export default {
         </div>
       </template>
       <template #right-side>
-        <RoomQueue class="flex-1" />
+        <RoomQueue class="flex-1 laptop:pt-7" />
       </template>
     </SlideContainer>
 
