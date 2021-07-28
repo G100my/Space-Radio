@@ -7,8 +7,9 @@ import {
   currentActiveDeviceId,
   spotifyPlayerId,
 } from '@/composables/useSpotifyPlayer.js'
-import { computed } from 'vue'
+import { computed, unref } from 'vue'
 import { useStore } from 'vuex'
+import { spotifyAPI } from '@/utility/spotifyAPI'
 export default {
   components: {
     IconPlay,
@@ -16,9 +17,18 @@ export default {
   },
   setup() {
     const store = useStore()
-    // fixme 怎樣直接能在 @click 綁訂 spotifyPlayer.togglePlay() ?
     function togglePlay() {
-      spotifyPlayer.togglePlay()
+      spotifyPlayer.getCurrentState().then(state => {
+        if (!state) {
+          console.warn('User is not playing music through the Web Playback SDK')
+          spotifyAPI.transferMyPlayback([unref(spotifyPlayerId)]).then(() => {
+            spotifyAPI.play({ context_uri: `spotify:playlist:${store.getters.roomBasePlaylist}` })
+          })
+          return
+        } else {
+          spotifyPlayer.togglePlay()
+        }
+      })
     }
     return {
       isSpotifyPlayerPaused,
