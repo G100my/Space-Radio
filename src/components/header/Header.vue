@@ -5,6 +5,7 @@ import Logo from '@/assets/images/logo-large.svg'
 import IconSearch from '@/assets/icons/icon-search.svg'
 import IconPerson from '@/assets/icons/icon/profile.svg'
 import IconPlus from '@/assets/icons/icon-plus.svg'
+import FeedbackAlert from './FeedbackAlert.vue'
 
 export default {
   components: {
@@ -13,6 +14,7 @@ export default {
     Logo,
     IconPerson,
     IconPlus,
+    FeedbackAlert,
   },
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
@@ -66,6 +68,8 @@ export default {
           </li>
         </ul>
       </nav>
+
+      <FeedbackAlert class="absolute inset-x-1/4 top-16" />
     </div>
   </header>
 </template>

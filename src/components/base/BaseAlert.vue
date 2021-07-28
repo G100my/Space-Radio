@@ -71,7 +71,7 @@ export default {
 
     <div class="flex text-body text-natural-black items-center">
       <p :class="{ 'mb-1': contentText }">{{ title }}</p>
-      <button v-if="closeButton" class="ml-auto h-9 w-9 flex justify-center items-center" @click="$emits('close')">
+      <button v-if="closeButton" class="ml-auto h-9 w-9 flex justify-center items-center" @click="$emit('close')">
         <IconClose class="w-2.5 h-2.5 text-natural-gray3" />
       </button>
     </div>

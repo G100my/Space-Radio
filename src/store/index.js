@@ -4,6 +4,7 @@ import { Personal } from './Personal.js'
 import { UserLog } from './UserLog.js'
 import { RoomBasic } from './RoomBasic.js'
 import { PersonalPlaylists } from './PersonalPlaylists.js'
+import { FeedbackAlert } from './FeedbackAlert.js'
 
 const store = createStore({
   modules: {
@@ -12,6 +13,7 @@ const store = createStore({
     UserLog,
     RoomBasic,
     PersonalPlaylists,
+    FeedbackAlert,
   },
   plugins: [createLogger()],
 })
