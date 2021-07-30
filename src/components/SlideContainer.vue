@@ -10,11 +10,9 @@ export default {
   },
   setup() {
     const slideContent = ref(null)
-    let isMainSide = ref(true)
-    let touchStartPosition
-
     const leftSideButton = ref(null)
     const rightSideButton = ref(null)
+    let isMainSide = ref(true)
 
     const left = ref(0)
     const targetLeft = ref(0)
@@ -26,6 +24,10 @@ export default {
       const leftValue = element.offsetLeft
       const rightValue = element.parentElement.offsetWidth - element.offsetLeft - element.offsetWidth
       return { leftValue, rightValue }
+    }
+    function animationendHandler() {
+      left.value = targetLeft.value
+      right.value = targetRight.value
     }
 
     function sliderToggler(direction, element) {
@@ -52,40 +54,41 @@ export default {
             slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
           }
           break
-        default:
-          console.log('something wrong')
-          break
       }
     }
-
-    function animationendHandler() {
-      left.value = targetLeft.value
-      right.value = targetRight.value
-    }
-
+    let touchStartPosition
     function touchstartHandler(event) {
       touchStartPosition = event.touches[0].clientX
     }
+    const moveThreshold = 30
+    const disableLimit = 50
+    function touchmoveHandler(event) {
+      const currentDistance = event.touches[0].clientX - touchStartPosition
+      const absoluteDistance = Math.abs(currentDistance)
+      const mainSide = isMainSide.value
+
+      if (absoluteDistance < moveThreshold) return
+
+      if (mainSide && currentDistance > disableLimit) return
+      if (!mainSide && currentDistance < -disableLimit) return
+
+      if (mainSide) {
+        slideContent.value.style.transform = `translate(${currentDistance}px, 0)`
+      } else {
+        slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2 + currentDistance}px, 0)`
+      }
+    }
+    const toggleThreshold = 70
     function touchendHandler(event) {
       const currentDistance = touchStartPosition - event.changedTouches[0].clientX
-      if (Math.abs(currentDistance) < 30) return
-      if (currentDistance > 70) {
+      if (Math.abs(currentDistance) < moveThreshold) return
+
+      if (currentDistance > toggleThreshold) {
         sliderToggler('left2right', rightSideButton.value)
-      } else if (currentDistance < 70) {
+      } else if (currentDistance < -toggleThreshold) {
         sliderToggler('right2left', leftSideButton.value)
       } else {
         sliderToggler('resume')
-      }
-    }
-    function touchmoveHandler(event) {
-      // left: -,   right: +
-      const currentDistance = event.touches[0].clientX - touchStartPosition
-      if (Math.abs(currentDistance) < 30) return
-
-      if (isMainSide.value && currentDistance < 50) {
-        slideContent.value.style.transform = `translate(${currentDistance}px, 0)`
-      } else if (!isMainSide.value && currentDistance > -50) {
-        slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2 + currentDistance}px, 0)`
       }
     }
 
