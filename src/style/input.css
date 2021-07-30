@@ -1,7 +1,7 @@
 @layer base {
   input[type='range'] {
     -webkit-appearance: none;
-    @apply w-full rounded-full;
+    @apply w-full rounded-full bg-natural-white disabled:bg-natural-white;
   }
   input[type='range']::-webkit-slider-container {
     @apply overflow-hidden;

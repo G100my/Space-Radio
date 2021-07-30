@@ -203,14 +203,24 @@ export default {
         <VolumnBar
           class="laptop:mt-3"
           :step="5"
+          min="10"
           :modelValue="minimalVolume"
           @update:change="minimalVolumeInputHandler"
+          @minus="minimalVolumeInputHandler"
+          @plus="minimalVolumeInputHandler"
         />
       </div>
 
       <div>
         <label for="initial-volumn">Initial Volumn</label>
-        <VolumnBar class="laptop:mt-3" :modelValue="volume" @update:change="volumeInputHandler" />
+        <VolumnBar
+          class="laptop:mt-3"
+          :modelValue="volume"
+          :min="minimalVolume"
+          @update:change="volumeInputHandler"
+          @minus="volumeInputHandler"
+          @plus="volumeInputHandler"
+        />
       </div>
 
       <div>

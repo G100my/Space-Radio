@@ -15,8 +15,12 @@ export default {
       type: Number,
       required: true,
     },
+    step: {
+      type: Number,
+      default: 1,
+    },
   },
-  emits: ['update:change'],
+  emits: ['update:change', 'plus', 'minus'],
 }
 </script>
 <template>
@@ -24,26 +28,19 @@ export default {
     <span class="text-primary font-bold w-7 flex-shrink-0 text-center">{{ modelValue }}</span>
     <IconVolumn class="ml-3" />
 
-    <button
-      class="_volumn_bar_button btn-tertiary order-11"
-      type="button"
-      @click="$emit('update:change', modelValue - step)"
-    >
+    <button class="_volumn_bar_button btn-tertiary order-11" type="button" @click="$emit('minus', modelValue - step)">
       <IconMinus />
     </button>
-    <button
-      class="_volumn_bar_button btn-tertiary order-12"
-      type="button"
-      @click="$emit('update:change', modelValue + step)"
-    >
+    <button class="_volumn_bar_button btn-tertiary order-12" type="button" @click="$emit('plus', modelValue + step)">
       <IconPlus />
     </button>
-
+    <!-- v-bind="$attrs" 會連 class... 也綁，所以只指定需要的 -->
     <input
       :value="modelValue"
       :min="$attrs.min"
       :max="$attrs.max"
-      :step="$attrs.step"
+      :disabled="$attrs.disabled"
+      :step="step"
       type="range"
       class="ml-3"
       @input="$emit('update:change', Number($event.target.value))"
