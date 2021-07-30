@@ -16,6 +16,7 @@ import Vote from '@/components/player/Vote.vue'
 import UserLog from '@/components/player/UserLog.vue'
 import AddFromStreamingService from '@/components/sideDrawer/AddFromStreamingService.vue'
 import PlaylistContent from '@/components/sideDrawer/PlaylistContent.vue'
+import Search from '@/components/sideDrawer/Search.vue'
 import NoteDialog from '../components/lineup/NoteDialog.vue'
 import RoomQueue from '../components/lineup/RoomQueue.vue'
 import { useStore } from 'vuex'
@@ -34,6 +35,7 @@ export default {
     UserLog,
     AddFromStreamingService,
     PlaylistContent,
+    Search,
   },
   setup() {
     const store = useStore()
