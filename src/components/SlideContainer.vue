@@ -129,7 +129,7 @@ export default {
     id="slide-container"
     class="bg-tertiary-1 bg-opacity-60 overflow-y-auto laptop:bg-transparent"
     @touchstart="touchstartHandler"
-    @touchmove="touchmoveHandler"
+    @touchmove.prevent="touchmoveHandler"
     @touchend="touchendHandler"
   >
     <div
