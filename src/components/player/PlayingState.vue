@@ -5,14 +5,14 @@ import logo from '@/assets/vinyl-record.png'
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import ProgressTimer from './ProgressTimer.vue'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
-import LikeButton from '@/components/feature-buttons/LikeButton.vue'
+import LikeButton from '@/components/player/LikeButton.vue'
 
 export default {
   components: {
     ProgressTimer,
     LikeButton,
     BaseMarquee,
-    PlayToggle: defineAsyncComponent(() => import('@/components/feature-buttons/PlayToggle.vue')),
+    PlayToggle: defineAsyncComponent(() => import('@/components/player/PlayToggle.vue')),
   },
   setup() {
     const store = useStore()
