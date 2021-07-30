@@ -2,6 +2,7 @@
 import IconSearch from '@/assets/icons/icon-search.svg'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
+import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { spotifyAPI } from '@/utility/spotifyAPI'
 import { spotifyCoverPicker } from '@/utility/dataFormat'
@@ -12,6 +13,7 @@ export default {
     IconSearch,
     IconPlus,
     IconArrowUp,
+    IconSpinnerLoader,
     BaseMarquee,
   },
   setup() {
@@ -37,7 +39,9 @@ export default {
     let target
     let next
     const limit = 30
+    const loadingAnimation = ref(false)
     function search(offset = 0) {
+      loadingAnimation.value = true
       spotifyAPI.search(keywords.value, ['track'], { limit, offset }).then(response => {
         response.tracks.items.forEach(i => (i.album.coverUrl = spotifyCoverPicker(i.album.images)))
 
@@ -45,6 +49,8 @@ export default {
         next = response.tracks.next
         searchedAmount.value = response.tracks.total
         previousOffset = response.tracks.offset
+
+        loadingAnimation.value = false
 
         if (target) observer.unobserve(target)
         if (next || searchedAmount.value > list.value.length) {
@@ -73,6 +79,7 @@ export default {
       recentSearchStrings,
       searchedAmount,
       searchClickHandler,
+      loadingAnimation,
     }
   },
 }
@@ -118,7 +125,10 @@ export default {
         <button type="button" class="btn-secondary" @click="sortByNewHandler">Newest first</button>
       </div>
 
-      <ul id="infinity" class="flex-auto h-0 mt-7 w-full space-y-4 overflow-y-auto">
+      <ul id="infinity" class="flex-auto h-0 mt-7 w-full space-y-4 overflow-y-auto relative">
+        <li v-show="loadingAnimation">
+          <IconSpinnerLoader class="animate-spin text-natural-gray2 w-fit mx-auto mt-4" />
+        </li>
         <li v-for="track in list" :key="track.id" class="bg-tertiary-1 bg-opacity-60 rounded-10 flex gap-x-2 py-3 px-4">
           <div
             class="flex-shrink-0 w-11 h-11 md:w-16 md:h-16 object-cover object-center flex justify-center items-center"
