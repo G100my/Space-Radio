@@ -58,7 +58,7 @@ export default {
 
     const recentSearchStrings = JSON.parse(localStorage.getItem('jukebox_recent_search')) || []
     function searchClickHandler() {
-      recentSearchStrings.push(keywords.value)
+      if (!recentSearchStrings.includes(keywords.value)) recentSearchStrings.push(keywords.value)
       if (recentSearchStrings.length > 30) recentSearchStrings.shift()
       list.value = []
       search()
