@@ -1,6 +1,5 @@
 <script>
 import IconSearch from '@/assets/icons/icon-search.svg'
-import IconFilter from '@/assets/icons/icon-filter.svg'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
@@ -11,7 +10,6 @@ import BaseMarquee from '../base/BaseMarquee.vue'
 export default {
   components: {
     IconSearch,
-    IconFilter,
     IconPlus,
     IconArrowUp,
     BaseMarquee,
@@ -66,12 +64,6 @@ export default {
       search()
     }
 
-    const refineMode = ref(false)
-    function clearRefineHandler() {
-      refineMode.value = false
-    }
-    function sortByNewHandler() {}
-
     onUnmounted(() => {
       localStorage.setItem('jukebox_recent_search', JSON.stringify(recentSearchStrings))
     })
@@ -80,10 +72,7 @@ export default {
       keywords,
       recentSearchStrings,
       total,
-      refineMode,
       searchClickHandler,
-      clearRefineHandler,
-      sortByNewHandler,
     }
   },
 }
@@ -121,24 +110,11 @@ export default {
     </div>
 
     <div v-show="keywords" class="flex-auto flex flex-col">
-      <div
-        v-if="refineMode"
-        class="flex mt-2 bg-[#253a77] rounded-sm px-5 py-0.5 items-center"
-        @click="$refs.refineInput.focus()"
-      >
-        <button type="button" class="btn-tertiary" @click.stop="filterHandler">
-          <IconFilter />
-        </button>
-        <input ref="refineInput" type="text" class="_search_input" @change="refineKeywords = $event.target.value" />
-      </div>
-
       <div class="mt-5 flex gap-x-1 items-baseline">
         <p class="mr-auto text-natural-gray2 font-bold">
           <span class="mx-2">{{ total }}</span>
           <span>results</span>
         </p>
-        <button v-if="!refineMode" type="button" class="btn-primary" @click="refineMode = true">Refine</button>
-        <button v-else type="button" class="btn-primary" @click="clearRefineHandler">Clear</button>
         <button type="button" class="btn-secondary" @click="sortByNewHandler">Newest first</button>
       </div>
 
