@@ -158,7 +158,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   })
   spotifyPlayer.connect()
 }
-import('../utility/spotify-player-SDK.js')
+import('https://sdk.scdn.co/spotify-player.js')
 
 // watch pendingQueue
 watch(pendingQueue, nextQueue => {
