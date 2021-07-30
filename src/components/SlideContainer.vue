@@ -158,11 +158,21 @@ export default {
       }"
       @animationend="animationendHandler"
     />
-    <button ref="leftSideButton" :class="{'active': isMainSide}" type="button" @click="sliderToggler('right2left', $event.currentTarget)">
+    <button
+      ref="leftSideButton"
+      :class="{ active: isMainSide }"
+      type="button"
+      @click="sliderToggler('right2left', $event.currentTarget)"
+    >
       <IconNowPlay />
       <span>Now</span>
     </button>
-    <button ref="rightSideButton" :class="{'active': !isMainSide}" type="button" @click="sliderToggler('left2right', $event.currentTarget)">
+    <button
+      ref="rightSideButton"
+      :class="{ active: !isMainSide }"
+      type="button"
+      @click="sliderToggler('left2right', $event.currentTarget)"
+    >
       <IconNextPlay />
       <span>Next</span>
     </button>
@@ -179,7 +189,8 @@ export default {
     span {
       @apply text-xs mb-auto;
     }
-    svg, span {
+    svg,
+    span {
       transition: color 0.2s linear;
     }
   }

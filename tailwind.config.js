@@ -73,8 +73,8 @@ module.exports = {
         alert: 'fit-content auto',
       },
       borderRadius: {
-        10: '10px'
-      }
+        10: '10px',
+      },
     },
   },
   variants: {
