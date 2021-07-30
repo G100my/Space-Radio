@@ -37,8 +37,9 @@ export default {
       <Logo class="text-natural-white" />
       <h2 class="text-natural-white hidden laptop:block laptop:mt-6 laptop:mb-2">@{{ $store.getters.roomName }}</h2>
     </h1>
-    <div class="flex justify-between items-center relative">
+    <div class="flex justify-between items-center">
       <Marquee class="mt-5 laptop:mt-0 flex-auto" />
+      <!-- absolute base on <header> -->
       <nav class="absolute top-8 right-8 laptop:static">
         <ul class="justify-end flex">
           <li>
@@ -53,7 +54,7 @@ export default {
               @click="activeSideDrawerHandler('AddFromStreamingService')"
             >
               <IconPlus />
-              <label>Add from Spotify</label>
+              <label class="hidden ml-3 laptop:inline">Add from Spotify</label>
             </button>
           </li>
           <li>
@@ -63,7 +64,7 @@ export default {
               @click="activeSideDrawerHandler('Personal')"
             >
               <IconPerson />
-              <label class="hidden laptop:inline">{{ $store.getters.userName }}</label>
+              <label class="hidden ml-3 laptop:inline">{{ $store.getters.userName }}</label>
             </button>
           </li>
         </ul>
@@ -73,16 +74,3 @@ export default {
     </div>
   </header>
 </template>
-<style lang="postcss">
-.header {
-  li {
-    @apply flex;
-  }
-  nav {
-    flex: 1 1 500px;
-  }
-  nav label {
-    @apply hidden ml-3 laptop:inline;
-  }
-}
-</style>
