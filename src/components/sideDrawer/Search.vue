@@ -119,16 +119,13 @@ export default {
     <div v-show="keywords" class="flex-auto flex flex-col">
       <div class="mt-5 flex gap-x-1 items-baseline">
         <p class="mr-auto text-natural-gray2 font-bold">
-          <span class="mx-2">{{ searchedAmount }}</span>
+          <span class="mx-2">{{ list.length }} / {{ searchedAmount }}</span>
           <span>results</span>
+          <IconSpinnerLoader v-show="loadingAnimation" class="animate-spin inline-block text-natural-gray2 mx-2" />
         </p>
-        <button type="button" class="btn-secondary" @click="sortByNewHandler">Newest first</button>
       </div>
 
       <ul id="infinity" class="flex-auto h-0 mt-7 w-full space-y-4 overflow-y-auto relative">
-        <li v-show="loadingAnimation">
-          <IconSpinnerLoader class="animate-spin text-natural-gray2 w-fit mx-auto mt-4" />
-        </li>
         <li v-for="track in list" :key="track.id" class="bg-tertiary-1 bg-opacity-60 rounded-10 flex gap-x-2 py-3 px-4">
           <div
             class="flex-shrink-0 w-11 h-11 md:w-16 md:h-16 object-cover object-center flex justify-center items-center"
