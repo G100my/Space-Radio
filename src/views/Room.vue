@@ -79,9 +79,9 @@ export default {
 }
 </script>
 <template>
-  <div id="room" class="relative bg-tertiary-2 h-full flex flex-col overflow-hidden">
-    <Header class="_show_all_flex" @activeSideDrawer="activeSideDrawerHandler" />
-    <SlideContainer class="flex-1">
+  <div id="room" class="relative bg-tertiary-1 bg-opacity-80 h-full flex flex-col overflow-hidden laptop:bg-tertiary-2">
+    <Header class="_show_all_flex _container" @activeSideDrawer="activeSideDrawerHandler" />
+    <SlideContainer class="_container flex-1">
       <template #left-side>
         <div class="min-h-full flex flex-col laptop:pt-7">
           <PlayingState />

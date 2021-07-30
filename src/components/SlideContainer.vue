@@ -146,7 +146,7 @@ export default {
     </div>
   </div>
 
-  <div class="_slide_navigation">
+  <div class="_slide_navigation _container bg-tertiary-2">
     <div
       class="_slide_navigation_bar"
       :style="{
