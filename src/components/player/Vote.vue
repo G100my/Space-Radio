@@ -6,11 +6,11 @@ export default {
   setup() {
     const store = useStore()
     return {
-      // fixme 目前並沒有 mapGetters 能在 composition api 裡使用...
       isVoted: computed(() => store.state.PlayingState.isVoted),
       currentDislike: computed(() => store.getters.currentDislike),
       currentDislikeThreshold: computed(() => store.getters.currentDislikeThreshold),
       currentDislikeCountdown: computed(() => store.getters.currentDislikeCountdown),
+      playerPlayingTrackId: computed(() => store.getters.playerPlayingTrackId),
     }
   },
 }
@@ -34,7 +34,8 @@ export default {
     <button
       type="button"
       class="mt-2 btn-secondary"
-      @click="isVoted ? store.dispatch('reduceDislike') : store.dispatch('increaseDislike')"
+      :disabled="!playerPlayingTrackId"
+      @click="isVoted ? $store.dispatch('reduceDislike') : $store.dispatch('increaseDislike')"
     >
       {{ isVoted ? 'Cancel' : 'Vote for skip' }}
     </button>
