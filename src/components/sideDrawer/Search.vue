@@ -32,7 +32,7 @@ export default {
 
     const list = ref([])
     const keywords = ref('')
-    const total = ref(0)
+    const searchedAmount = ref(0)
     let previousOffset = 0
     let target
     let next
@@ -43,11 +43,11 @@ export default {
 
         list.value = list.value.concat(response.tracks.items)
         next = response.tracks.next
-        total.value = response.tracks.total
+        searchedAmount.value = response.tracks.total
         previousOffset = response.tracks.offset
 
         if (target) observer.unobserve(target)
-        if (next || total.value > list.value.length) {
+        if (next || searchedAmount.value > list.value.length) {
           nextTick(() => {
             target = infinityContainer.lastElementChild
             observer.observe(target)
@@ -71,7 +71,7 @@ export default {
       list,
       keywords,
       recentSearchStrings,
-      total,
+      searchedAmount,
       searchClickHandler,
     }
   },
@@ -112,7 +112,7 @@ export default {
     <div v-show="keywords" class="flex-auto flex flex-col">
       <div class="mt-5 flex gap-x-1 items-baseline">
         <p class="mr-auto text-natural-gray2 font-bold">
-          <span class="mx-2">{{ total }}</span>
+          <span class="mx-2">{{ searchedAmount }}</span>
           <span>results</span>
         </p>
         <button type="button" class="btn-secondary" @click="sortByNewHandler">Newest first</button>
