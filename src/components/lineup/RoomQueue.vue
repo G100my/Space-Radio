@@ -115,7 +115,7 @@ export default {
           </BaseMarquee>
         </div>
 
-        <div class="w-[146px] hidden md:flex justify-end space-x-3">
+        <div class="w-[146px] hidden xs:flex justify-end space-x-3">
           <template v-if="checkLevel('urgent', key)">
             <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
               <IconEdit />
@@ -145,7 +145,7 @@ export default {
         <Menu
           v-slot="{ open }"
           as="div"
-          class="cursor-pointer self-stretch relative md:hidden cursor-pointer self-stretch"
+          class="cursor-pointer self-stretch relative xs:hidden cursor-pointer self-stretch"
         >
           <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
             <IconMore />

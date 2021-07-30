@@ -10,6 +10,7 @@ module.exports = {
     screens: {
       mobile: '576px',
       laptop: '1024px',
+      xs: '425px',
       // below from tailwind css default
       sm: '640px',
       // => @media (min-width: 640px) { ... }
