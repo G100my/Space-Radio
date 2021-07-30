@@ -6,6 +6,7 @@ function setUserLogRef(roomKey) {
   user_log_ref = firebase.database().ref(`user_log/${roomKey}`)
 }
 
+const logLimit = 50
 const UserLog = {
   state: {
     log: [],
@@ -18,7 +19,7 @@ const UserLog = {
   mutations: {
     pushUserLog(state, snapshot) {
       const logLength = state.log.unshift(snapshot)
-      if (logLength > 3) state.log.pop()
+      if (logLength > logLimit) state.log.pop()
     },
   },
 }
@@ -100,7 +101,7 @@ function userLogConnect2firebase(store) {
     },
   })
 
-  user_log_ref.limitToLast(3).on('child_added', snapshot => {
+  user_log_ref.limitToLast(logLimit).on('child_added', snapshot => {
     store.commit('pushUserLog', snapshot.val())
   })
 }

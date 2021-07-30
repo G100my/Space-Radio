@@ -93,7 +93,7 @@ export default {
           />
           <Collection class="mt-4" />
           <Vote class="my-4" />
-          <UserLog class="flex-1 hidden laptop:block" />
+          <UserLog class="flex-1 max-h-72 hidden laptop:flex" />
         </div>
       </template>
       <template #right-side>
