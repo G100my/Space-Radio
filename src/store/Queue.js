@@ -86,7 +86,7 @@ function bindListener(target, storeTarget, store) {
           store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
         })
         .catch(e => {
-          console.error(e.responseText, `trackId: ${trackId}`)
+          console.error(e, `trackId: ${trackId}`)
         })
     } else {
       console.warn('spotifyAPI.getAccessToken() is ' + spotifyAPI.getAccessToken())
@@ -100,24 +100,7 @@ function bindListener(target, storeTarget, store) {
 function queueConnect2firebase(store) {
   bindListener(normal_queue_ref, 'normal', store)
   bindListener(urgent_queue_ref, 'urgent', store)
-  pending_queue_ref.on('value', snapshot => {
-    if (!snapshot.val()) {
-      store.commit('clearPendingQueue')
-      return
-    }
-
-    const trackId = snapshot.val().id
-    if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
-      store.commit('refreshPendingTrack', store.getters.previousDeleted)
-      store.commit('refreshPendingQueue', snapshot.val())
-      store.commit('clearPreviousDeleted')
-      return
-    } else if (spotifyAPI.getAccessToken())
-      spotifyAPI.getTrack(trackId).then(addedTrack => {
-        store.commit('refreshPendingTrack', addedTrack)
-        store.commit('refreshPendingQueue', snapshot.val())
-      })
-  })
+  bindListener(pending_queue_ref, 'pending', store)
 }
 
 function orderKeyMaker(timeString) {
@@ -128,11 +111,10 @@ const Queue = {
   state: {
     normal_queue: {},
     urgent_queue: {},
-    pending_queue: null,
-    trackData: {
-      pending: null,
-    },
+    pending_queue: {},
+    trackData: {},
     previousDeleted: null,
+    previousDeletedKey: null,
     ...Note.state,
   },
   getters: {
@@ -170,10 +152,10 @@ const Queue = {
   mutations: {
     clearPreviousDeleted(state) {
       state.previousDeleted = null
+      state.previousDeletedKey = null
     },
     clearPendingQueue(state) {
-      state.pending_queue = null
-      delete state.trackData.pending
+      state.pending_queue = {}
     },
     deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
       const orderKey = oldChildSnapshot.key
@@ -189,12 +171,6 @@ const Queue = {
     editQueue(state, { storeTarget, childSnapshot }) {
       const orderKey = childSnapshot.key
       state[`${storeTarget}_queue`][orderKey] = childSnapshot.val()
-    },
-    refreshPendingQueue(state, queue) {
-      state.pending_queue = queue
-    },
-    refreshPendingTrack(state, track) {
-      state.trackData.pending = track
     },
     ...Note.mutations,
   },
@@ -311,12 +287,14 @@ const Queue = {
         nextQueueKey = urgentQueueArray[0]
         level = 'urgent'
       }
+      state.previousDeletedKey = nextQueueKey
 
       spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextQueueKey].id}`, error => {
         error && console.log(error)
         if (!error) {
           const order_key = nextQueueKey
-          const queue = { ...state[`${level}_queue`][nextQueueKey], order_key }
+          const queue = {}
+          queue[nextQueueKey] = { ...state[`${level}_queue`][nextQueueKey], order_key }
 
           let targetQueue
           if (level === 'urgent') {
