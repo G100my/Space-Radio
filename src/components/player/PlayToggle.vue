@@ -18,14 +18,25 @@ export default {
   setup() {
     const store = useStore()
     function togglePlay() {
+      const device_id = unref(spotifyPlayerId)
       spotifyPlayer.getCurrentState().then(state => {
         if (!state) {
           console.warn('User is not playing music through the Web Playback SDK')
           spotifyAPI
-            .transferMyPlayback([unref(spotifyPlayerId)])
-            .then(() => spotifyAPI.setShuffle(true))
-            .then(() => spotifyAPI.play({ context_uri: `spotify:playlist:${store.getters.roomBasePlaylist}` }))
-          return
+            .transferMyPlayback([device_id])
+            .then(() => spotifyAPI.getMyCurrentPlaybackState())
+            .then(async response => {
+              console.log(response)
+              if (!response.shuffle_state) await spotifyAPI.setShuffle(true, { device_id })
+              if (!response.repeat_state) await spotifyAPI.setRepeat('context')
+
+              if (response.context.type !== 'playlist') {
+                await spotifyAPI.play({ context_uri: `spotify:playlist:${store.getters.roomBasePlaylist}` })
+              } else {
+                spotifyPlayer.togglePlay()
+              }
+            })
+            .then(() => spotifyAPI.getMyCurrentPlaybackState())
         } else {
           spotifyPlayer.togglePlay()
         }
@@ -45,17 +56,7 @@ export default {
   <button
     v-if="isHost"
     id="play-status-button"
-    class="
-      flex
-      items-center
-      justify-center
-      h-10
-      w-10
-      bg-primary
-      rounded-full
-      focus:outline-none
-      focus:ring-2 focus:ring-natural-gray1
-    "
+    class="flex items-center justify-center h-10 w-10 bg-primary rounded-full focus:outline-none focus:ring-2 focus:ring-natural-gray1"
     :class="{ 'filter grayscale': currentActiveDeviceId !== spotifyPlayerId }"
     type="button"
     @click="togglePlay"
