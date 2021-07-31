@@ -156,7 +156,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     setNextQueueTimeout(playerState)
     updateProgressTimeHandler(playerState)
   })
-  spotifyPlayer.connect()
+  spotifyPlayer.connect().then(success => {
+    if (success) console.log('Jukebox player successfully connected to Spotify!')
+  })
 }
 import('https://sdk.scdn.co/spotify-player.js')
 
