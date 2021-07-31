@@ -78,17 +78,17 @@ function userLogConnect2firebase(store) {
 
         case 'reduceDislike':
         case 'increaseDislike':
-          userLog = { ...maker(action), option: { id: state.PlayingState.playing_track.id } }
+          userLog = { ...maker(action.type), option: { id: state.PlayingState.playing_track.id } }
           break
         case 'updateMinimalVolume':
           userLog = {
-            ...maker(action),
+            ...maker(action.type),
             option: { minimal_volume: state.PlayingState.minimal_volume },
           }
           break
         case 'updateDislikeThreshold':
           userLog = {
-            ...maker(action),
+            ...maker(action.type),
             option: {
               dislike_threshold: state.PlayingState.dislike_threshold,
             },
