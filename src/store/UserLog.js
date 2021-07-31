@@ -60,10 +60,15 @@ function userLogConnect2firebase(store) {
 
       switch (action.type) {
         case 'add':
-        case 'jumpIn':
-        case 'addMultiple': {
+        case 'jumpIn': {
           const { track_name } = action.payload
           userLog = { ...maker(action.type), option: { name: track_name } }
+          break
+        }
+
+        case 'addMultiple': {
+          const { names } = action.payload
+          userLog = { ...maker(action.type), option: { names } }
           break
         }
 
