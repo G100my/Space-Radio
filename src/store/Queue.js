@@ -1,62 +1,7 @@
 import { spotifyAPI } from '../utility/spotifyAPI.js'
 import firebase from './firebase.js'
 
-const Note = {
-  state: {
-    editingNote: {
-      sender: localStorage.getItem('jukebox_senderName') || '',
-      recipient: '',
-      message: '',
-    },
-    isDialogOpen: false,
-    submitHandler: () => {},
-  },
-  getters: {
-    noteSender(state) {
-      return state.editingNote.sender
-    },
-    noteRecipient(state) {
-      return state.editingNote.recipient
-    },
-    noteMessage(state) {
-      return state.editingNote.message
-    },
-    isDialogOpen(state) {
-      return state.isDialogOpen
-    },
-    noteDialogSubmitHandler(state) {
-      return () => {
-        state.submitHandler(state.editingNote)
-      }
-    },
-  },
-  mutations: {
-    refreshNote(state, payload) {
-      state.editingNote = { ...state.editingNote, ...payload }
-    },
-    noteDialogToggler(state, status) {
-      state.isDialogOpen = status
-    },
-    _refreshLocalSenderName(state) {
-      const name = state.editingNote.sender
-      if (!name) return
-      localStorage.setItem('jukebox_senderName', name)
-    },
-    _refreshHandler(state, handler) {
-      state.submitHandler = handler
-    },
-  },
-  actions: {
-    _clearNote({ commit, getters }) {
-      const name = localStorage.getItem('jukebox_senderName') || getters.userName
-      commit('refreshNote', {
-        sender: name,
-        recipient: '',
-        message: '',
-      })
-    },
-  },
-}
+
 
 let urgent_queue_ref
 let normal_queue_ref
@@ -103,21 +48,19 @@ function queueConnect2firebase(store) {
   bindListener(pending_queue_ref, 'pending', store)
 }
 
-function orderKeyMaker(timeString) {
+export function orderKeyMaker(timeString) {
   return `${timeString.toString()}-${Math.floor(Math.random() * 10000).toString(16)}`
 }
 
-const Queue = {
-  state: {
+export const state = {
     normal_queue: {},
     urgent_queue: {},
     pending_queue: {},
     trackData: {},
     previousDeleted: null,
     previousDeletedKey: null,
-    ...Note.state,
-  },
-  getters: {
+  }
+export const getters = {
     trackData(state) {
       return state.trackData
     },
@@ -147,9 +90,9 @@ const Queue = {
     pendingNote(state) {
       return state.pending_queue ? state.pending_queue.note : null
     },
-    ...Note.getters,
-  },
-  mutations: {
+  }
+
+export const mutations = {
     clearPreviousDeleted(state) {
       state.previousDeleted = null
       state.previousDeletedKey = null
@@ -172,9 +115,9 @@ const Queue = {
       const orderKey = childSnapshot.key
       state[`${storeTarget}_queue`][orderKey] = childSnapshot.val()
     },
-    ...Note.mutations,
-  },
-  actions: {
+  }
+
+export const actions = {
     add({ getters }, { id, track_name }) {
       const now = Date.now()
       const parameter = {}
@@ -318,8 +261,13 @@ const Queue = {
     clearPendingQueue() {
       pending_queue_ref.set(null)
     },
-    ...Note.actions,
-  },
+  }
+
+const Queue = {
+  state,
+  getters,
+  mutations,
+  actions,
 }
 
 export { Queue, queueConnect2firebase, setQueueRef }
