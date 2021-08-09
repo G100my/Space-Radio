@@ -15,7 +15,7 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
             target[property](...theArguments)
           })
           .catch(error => {
-            console.log('error when refreshAccessToken', error)
+            console.error('error when refreshAccessToken', error)
           })
     }
     return target[property]

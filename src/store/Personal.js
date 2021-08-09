@@ -48,7 +48,6 @@ const Personal = {
       state.display_name = display_name
       localStorage.setItem('jukebox_user_id', id)
       localStorage.setItem('jukebox_user_display_name', display_name)
-      console.log(images)
 
       if (images.length > 0) {
         state.image_url = images[0].url

@@ -15,7 +15,7 @@ speechSynthesis.onvoiceschanged = () => {
   if (!utterance.voice) setTTSVoice()
 }
 utterance.onerror = error => {
-  console.log('utterance error: ', error)
+  console.error('utterance error: ', error)
   resumePlayerVolume()
 }
 utterance.onend = () => {

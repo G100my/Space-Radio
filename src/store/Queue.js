@@ -293,7 +293,7 @@ const Queue = {
       state.previousDeletedKey = nextQueueKey
 
       spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextQueueKey].id}`, error => {
-        error && console.log(error)
+        error && console.error(error)
         if (!error) {
           const order_key = nextQueueKey
           const queue = {}

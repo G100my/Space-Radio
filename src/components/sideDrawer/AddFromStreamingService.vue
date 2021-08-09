@@ -13,7 +13,6 @@ export default {
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
     const store = useStore()
-    console.log(store)
 
     function libraryClickHandler() {
       // emit,  change component

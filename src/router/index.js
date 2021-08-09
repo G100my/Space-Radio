@@ -77,7 +77,6 @@ router.beforeEach(async to => {
     window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
     await fetchAccessToken(authorizationCode, '#' + hashPath).then(() => {
       spotifyAPI.getMe().then(result => {
-        console.log(result)
         store.commit('updateUserData', result)
       })
     })
@@ -88,7 +87,6 @@ router.beforeEach(async to => {
   }
 
   if (to.meta.requiresAuth && !store.getters.isTokenValid) {
-    console.log(store.getters.isTokenValid)
     return { name: 'Hall' }
   }
 })

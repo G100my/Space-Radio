@@ -21,7 +21,6 @@ const playerVolumeReduceRate = 0.7
 function useWatchCurrentVolume(currentVolume) {
   watch(currentVolume, newValue => {
     playerVolume = newValue
-    console.log(`currentVolume: ${currentVolume.value}, newValue: ${newValue} `)
     if (spotifyPlayer !== null) spotifyPlayer.setVolume((newValue / 100) * playerVolumeReduceRate)
   })
 }

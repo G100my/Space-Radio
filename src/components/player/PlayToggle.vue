@@ -26,7 +26,6 @@ export default {
             .transferMyPlayback([device_id])
             .then(() => spotifyAPI.getMyCurrentPlaybackState())
             .then(async response => {
-              console.log(response)
               if (!response.shuffle_state) await spotifyAPI.setShuffle(true, { device_id })
               if (!response.repeat_state) await spotifyAPI.setRepeat('context')
 

@@ -53,7 +53,6 @@ export const PersonalPlaylists = {
             id: i.track.id,
             name: i.track.name,
           }))
-          console.log(transferResult)
           commit('refreshChosenList', transferResult)
         })
     },
