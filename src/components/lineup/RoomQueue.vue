@@ -44,9 +44,9 @@ export default {
       return imageLastObject ? imageLastObject.url : null
     },
     getOrderer(orderKey) {
-      if (this.normalQueue[orderKey]) return this.normalQueue[orderKey].orderer
-      else if (this.urgentQueue[orderKey]) return this.urgentQueue[orderKey].orderer
-      else return this.pendingQueue[orderKey].orderer
+      if (this.normalQueue[orderKey]) return this.normalQueue[orderKey].order_name
+      else if (this.urgentQueue[orderKey]) return this.urgentQueue[orderKey].order_name
+      else return this.pendingQueue[orderKey].order_name
     },
     menuPositionHandler(event, openState) {
       if (!openState && event.clientY > (window.innerHeight * 2) / 3) {
@@ -79,7 +79,7 @@ export default {
     </header>
     <ul class="flex-1 overflow-y-auto space-y-2">
       <li
-        v-for="(key, index) in totalQueue"
+        v-for="(key, index) in Object.keys(totalQueue)"
         :key="key"
         class="_tracks flex items-center gap-x-3 p-3 bg-tertiary-1 bg-opacity-60 rounded-10 hover:bg-opacity-100"
       >
@@ -115,6 +115,7 @@ export default {
           </BaseMarquee>
         </div>
 
+        <template v-if="userId === totalQueue[key].order_id">
         <div class="w-[146px] hidden xs:flex justify-end space-x-3">
           <template v-if="checkLevel('urgent', key)">
             <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
@@ -197,6 +198,8 @@ export default {
             </MenuItems>
           </transition>
         </Menu>
+        </template>
+        <div v-else class="w-[146px] hidden xs:block" />
       </li>
     </ul>
   </div>

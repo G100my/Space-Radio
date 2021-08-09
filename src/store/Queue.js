@@ -131,10 +131,10 @@ const Queue = {
       return state.urgent_queue
     },
     totalQueue(state) {
-      const pending = state.pending_queue ? Object.keys(state.pending_queue) : []
-      const normal = state.normal_queue ? Object.keys(state.normal_queue) : []
-      const urgent = state.urgent_queue ? Object.keys(state.urgent_queue) : []
-      return pending.concat(urgent).concat(normal)
+      const pending = state.pending_queue
+      const normal = state.normal_queue
+      const urgent = state.urgent_queue
+      return Object.assign({}, pending, urgent, normal)
     },
     previousDeleted(state) {
       return state.previousDeleted
@@ -181,7 +181,8 @@ const Queue = {
       const order_key = orderKeyMaker(now)
       parameter[order_key] = {
         id,
-        orderer: getters.userName,
+        order_name: getters.userName,
+        order_id: getters.userId,
         note: false,
         track_name,
         order_key,
@@ -194,7 +195,8 @@ const Queue = {
         const order_key = orderKeyMaker(now)
         urgent_queue_ref.push({
           id,
-          orderer: getters.userName,
+          order_name: getters.userName,
+          order_id: getters.userId,
           note,
           track_name,
           order_key,
@@ -213,7 +215,8 @@ const Queue = {
         const order_key = `${now}-${index}`
         parameter[order_key] = {
           id,
-          orderer: getters.userName,
+          order_name: getters.userName,
+          order_id: getters.userId,
           note: false,
           track_name: names[index],
           order_key,

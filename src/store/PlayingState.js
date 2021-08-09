@@ -30,7 +30,8 @@ const initialTrack = {
 }
 const initialQueue = {
   id: '',
-  orderer: '',
+  order_name: '',
+  oerder_id: '',
   note: false,
   track_name: '',
   order_key: '',
