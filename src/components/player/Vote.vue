@@ -1,7 +1,6 @@
 <script>
 import { useStore } from 'vuex'
 import { computed, watch } from 'vue'
-import { nextTrack } from '@/composables/useSpotifyPlayer'
 
 export default {
   setup() {
@@ -14,6 +13,7 @@ export default {
     const isHostUser = computed(() => store.getters.isHostUser)
     const unwatch = watch(isHostUser, newValue => {
       if (newValue) {
+        const {nextTrack} = import("@/composables/useSpotifyPlayer")
         let dislikeCountdownTimer
         watch(currentDislike, newValue => {
           if (dislikeCountdownTimer) {
