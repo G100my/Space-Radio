@@ -131,7 +131,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
   // 避免中途重啟 pending 會一直常駐，直到下一首歌曲取代目前的 pending
   function checkPending(playerState) {
-    if (pendingQueue.value) {
+    if (pendingQueue.value.length) {
       if (playerState.track_window.next_tracks[0].id !== pendingQueue.value.id) store.dispatch('clearPendingQueue')
     }
     spotifyPlayer.removeListener('player_state_changed', checkPending)
