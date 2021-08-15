@@ -4,6 +4,7 @@ import { refreshAccessToken } from '../utility/PKCE.js'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
 import { TTS } from '../utility/tts.js'
 import { spotifyAPI } from '@/utility/spotifyAPI'
+import { useVolumeControl } from './usePlayerVolumeControl'
 
 let spotifyPlayer
 const isSpotifyPlayerPaused = ref(true)
@@ -13,19 +14,9 @@ const isSpotifyPlayerActived = ref(false)
 const currentActiveDeviceId = ref(null)
 const currentActiveDeviceName = ref(null)
 
-let playerVolume = 50
 const pendingQueue = computed(() => store.getters.pendingQueue)
 
-// player 音量縮小比例，否則語音音量過小
-const playerVolumeReduceRate = 0.7
-function useWatchCurrentVolume(currentVolume) {
-  watch(currentVolume, newValue => {
-    playerVolume = newValue
-    if (spotifyPlayer !== null) spotifyPlayer.setVolume((newValue / 100) * playerVolumeReduceRate)
-  })
-}
-
-// player_state_changed handler
+let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
 let positionStateCounter = 0
 const POSTIION_STATE_LIMIT = 2
@@ -125,8 +116,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     //   }
     // })
     refreshCurrentDevice()
+
+    const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
+    ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
+
     // 等 player 準備完成才 watch playerVolume
-    useWatchCurrentVolume(currentVolume)
+    watch(currentVolume, updatePlayerVolume)
   })
 
   // 避免中途重啟 pending 會一直常駐，直到下一首歌曲取代目前的 pending
@@ -185,69 +180,10 @@ window.onbeforeunload = () => {
   if (isSpotifyPlayerActived.value) spotifyPlayer.disconnect()
 }
 
-// volume reduce/resume control
-
-let recodeVolume
-let adjustProcessTime = 5000
-const adjustStepTime = 100
-const adjustExecuteTimes = adjustProcessTime / adjustStepTime
-const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
-function reducePlayerVolume() {
-  return new Promise(success => {
-    recodeVolume = playerVolume
-    const step = (playerVolume - currentMinimalVolume.value) / adjustExecuteTimes
-    const timer = setInterval(() => {
-      const afterStep = playerVolume - step
-      spotifyPlayer.setVolume(afterStep / 100)
-      if (afterStep < currentMinimalVolume.value) {
-        clearInterval(timer)
-        success()
-        return
-      }
-      playerVolume = afterStep
-    }, adjustStepTime)
-  })
-}
-function resumePlayerVolume() {
-  return new Promise(success => {
-    const step = (recodeVolume - playerVolume) / adjustExecuteTimes
-
-    const timer = setInterval(() => {
-      const afterStep = playerVolume + step
-      spotifyPlayer.setVolume(afterStep / 100)
-      if (afterStep > recodeVolume) {
-        clearInterval(timer)
-        playerVolume = recodeVolume
-        recodeVolume = null
-        success()
-        return
-      }
-      playerVolume = afterStep
-    }, adjustStepTime)
-  })
-}
-function nextTrack(minimalVolume) {
-  const minimalVolumeBackup = minimalVolume
-  const adjustProcessTimeBackup = adjustProcessTime
-  minimalVolume = 0
-  adjustProcessTime = 3000
-
-  let counter = 0
-  const secondPositionStateHandler = ({ position }) => {
-    if (position === 0) counter++
-    // 觀察 state 行為，第二次 position == 0 的 state 發生後才會撥放
-    if (counter >= 2) {
-      spotifyPlayer.removeListener('player_state_changed', secondPositionStateHandler)
-      resumePlayerVolume()
-        .then(() => {
-          minimalVolume = minimalVolumeBackup
-          adjustProcessTime = adjustProcessTimeBackup
-        })
-        .catch(error => console.error(error))
-    }
-  }
-
-  reducePlayerVolume().then(() => {
+const NEXT_REDUCE_PROCESS_TIME = 3000
+const NEXT_RESUME_PROCESS_TIME = 3000
+function nextTrack() {
+  reducePlayerVolume(NEXT_REDUCE_PROCESS_TIME).then(() => {
     store.dispatch('sendNextQueue', () => {
       // 神秘的 reason 參數，並沒有出現在文件，
       // 但是不給會有 error: parameter 'reason' is required
@@ -255,9 +191,11 @@ function nextTrack(minimalVolume) {
         .nextTrack('just wanna listen next one')
         .then(() => {
           console.log('Skipped to next track!')
-          spotifyPlayer.addListener('player_state_changed', secondPositionStateHandler)
+          resumePlayerVolume(NEXT_RESUME_PROCESS_TIME)
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+          console.error(error)
+        })
     })
   })
 }
@@ -265,8 +203,6 @@ function nextTrack(minimalVolume) {
 export {
   spotifyPlayer,
   isSpotifyPlayerActived,
-  resumePlayerVolume,
-  reducePlayerVolume,
   nextTrack,
   isSpotifyPlayerPaused,
   spotifyPlayerId,
