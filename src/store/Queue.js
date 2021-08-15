@@ -192,46 +192,47 @@ const actions = {
     commit('noteDialogToggler', true)
   },
   sendNextQueue({ state }, callback) {
-    const urgentQueueArray = Object.keys(state.urgent_queue)
     let nextOrderId, level
-    if (urgentQueueArray.length === 0) {
-      const normalQueneArray = Object.keys(state.normal_queue)
-      if (normalQueneArray.length === 0) {
-        console.warn('已經沒有任何點播了~~')
-        // set it 'false' to keep it exist
-        pending_queue_ref.set(null)
-        return
-      } else {
-        nextOrderId = normalQueneArray[0]
-        level = 'normal'
-      }
-    } else {
-      nextOrderId = urgentQueueArray[0]
+    const urgentQueueIds = Object.keys(state.urgent_queue)
+    const normalQueneIds = Object.keys(state.normal_queue)
+    if (urgentQueueIds.length) {
+      nextOrderId = urgentQueueIds[0]
       level = 'urgent'
+    } else if (normalQueneIds.length) {
+      nextOrderId = normalQueneIds[0]
+      level = 'normal'
+    } else {
+      console.warn('已經沒有任何點播了~~')
+      pending_queue_ref.set(null)
+      // fixme
+      return
     }
+
     state.previousDeletedKey = nextOrderId
 
-    spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextOrderId].id}`, error => {
-      error && console.error(error)
-      if (!error) {
-        const order_key = nextOrderId
-        const queue = {}
-        queue[nextOrderId] = { ...state[`${level}_queue`][nextOrderId], order_key }
-
-        let targetQueue
-        if (level === 'urgent') {
-          targetQueue = urgent_queue_ref
-        } else {
-          targetQueue = normal_queue_ref
-        }
-        targetQueue
-          .child(nextOrderId)
-          .remove()
-          .then(() => {
-            pending_queue_ref.set(queue)
-          })
-        if (callback) callback()
+    spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextOrderId].track_id}`, error => {
+      if (error) {
+        console.error(error)
+        return
       }
+
+      const order_key = nextOrderId
+      const queue = {}
+      queue[nextOrderId] = { ...state[`${level}_queue`][nextOrderId], order_key }
+
+      let targetQueue
+      if (level === 'urgent') {
+        targetQueue = urgent_queue_ref
+      } else {
+        targetQueue = normal_queue_ref
+      }
+      targetQueue
+        .child(nextOrderId)
+        .remove()
+        .then(() => {
+          pending_queue_ref.set(queue)
+        })
+      if (callback) callback()
     })
   },
   clearPendingQueue() {
