@@ -22,14 +22,4 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
   },
 })
 
-// will remove in future
-export default {
-  install: app => {
-    app.config.globalProperties.$spotifyAPI = spotifyAPI
-    window.$spotifyAPI = spotifyAPI
-
-    app.provide('spotifyAPI', spotifyAPI)
-  },
-}
-
 export { spotifyAPI }
