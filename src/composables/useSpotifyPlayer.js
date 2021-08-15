@@ -32,29 +32,26 @@ function clearPendingQueueHandler(playerState) {
   }
 }
 
-const leftQueueAmount = computed(() => store.getters.leftQueueAmount)
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
 function diffirentPlayingTrackIdHandler(playerStateTrack) {
   // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
   if (playerStateTrack.id !== playerPlayingTrackId.value) store.dispatch('updatePlayingTrack', playerStateTrack)
 }
 
+// 獲得狀態 刷新計時
+// bufferTime < 10 不再更新計時
+// 有沒有歌不再範圍內
+// 快轉不考慮
 let coundDownTimer
 const EXECUTE_BEFORE_END_TIME = 10000
 function setNextQueueTimeoutHandler(playerState) {
-  if (!playerState.paused && leftQueueAmount.value > 0 && !pendingQueue.value) {
-    // 防止開啟多個頁面且登入同樣的 host account 還都執行撥放，造成短時間內重複 dispatch sendNextQueue
-    const randomTime = Math.floor(Math.random() * 5) * 5 * 1000
-    const bufferTime = playerState.duration - playerState.position - EXECUTE_BEFORE_END_TIME - randomTime
-    // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
-    if (bufferTime > 0) {
-      // 每次隨機狀態出現就刷新秒數，避免曲目被快轉
-      if (coundDownTimer) clearTimeout(coundDownTimer)
-      console.log('set coundDownTimer')
-      coundDownTimer = setTimeout(() => {
-        store.dispatch('sendNextQueue')
-      }, bufferTime)
-    }
+  const bufferTime = playerState.duration - playerState.position - EXECUTE_BEFORE_END_TIME
+  if (!playerState.paused && bufferTime > 0) {
+    if (coundDownTimer) clearTimeout(coundDownTimer)
+    console.log('set coundDownTimer')
+    coundDownTimer = setTimeout(() => {
+      store.dispatch('sendNextQueue')
+    }, bufferTime)
   }
 }
 
@@ -211,3 +208,5 @@ export {
   currentActiveDeviceId,
   currentActiveDeviceName,
 }
+// just for test
+export { setNextQueueTimeoutHandler }
