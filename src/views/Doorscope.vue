@@ -1,5 +1,5 @@
 <script>
-import { computed, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import firebase from '../store/firebase.js'
@@ -17,6 +17,7 @@ export default {
     const store = useStore()
     const roomName = ref('')
     const album = computed(() => store.getters.playerPlayingAlbum)
+    const enterButton = ref(null)
 
     const room_ref = firebase.database().ref(roomKey)
     room_ref
@@ -33,6 +34,12 @@ export default {
         roomName.value = snapshot.val()
       })
 
+    onMounted(() => {
+      nextTick(() => {
+        enterButton.value.focus()
+      })
+    })
+
     return {
       roomName,
       album,
@@ -40,6 +47,7 @@ export default {
       PKCE,
       trackName: computed(() => store.getters.playerPlayingTrackName),
       spotifyAPI,
+      enterButton,
     }
   },
 }
@@ -61,7 +69,8 @@ export default {
     <!-- </div> -->
     <!-- <p v-else class="mt-8 text-natural-gray1 whitespace-nowrap">This room is not playing any track now.</p> -->
     <button
-      class="mt-9 btn-primary w-full"
+      ref="enterButton"
+      class="mt-9 btn-primary w-full focus:ring-2"
       type="button"
       @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
     >

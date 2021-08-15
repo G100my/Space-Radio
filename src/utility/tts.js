@@ -1,8 +1,6 @@
-import { resumePlayerVolume } from '../composables/useSpotifyPlayer.js'
-
 const utterance = new window.SpeechSynthesisUtterance()
 utterance.pitch = 1
-utterance.rate = 0.85
+utterance.rate = 0.75
 utterance.volume = 1
 utterance.lang = 'zh-TW'
 
@@ -14,19 +12,21 @@ function setTTSVoice() {
 speechSynthesis.onvoiceschanged = () => {
   if (!utterance.voice) setTTSVoice()
 }
-utterance.onerror = error => {
-  console.error('utterance error: ', error)
-  resumePlayerVolume()
-}
-utterance.onend = () => {
-  console.log('utterance end')
-  resumePlayerVolume()
-}
 
 function TTS(text) {
-  if (utterance.voice === null) setTTSVoice()
-  utterance.text = text
-  speechSynthesis.speak(utterance)
+  return new Promise((resolve, reject) => {
+    utterance.onerror = error => {
+      console.error('utterance error: ', error)
+      reject()
+    }
+    utterance.onend = () => {
+      console.log('utterance end')
+      resolve()
+    }
+    if (utterance.voice === null) setTTSVoice()
+    utterance.text = text
+    speechSynthesis.speak(utterance)
+  })
 }
 
 export { TTS }
