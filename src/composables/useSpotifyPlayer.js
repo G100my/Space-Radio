@@ -28,33 +28,33 @@ function useWatchCurrentVolume(currentVolume) {
 // player_state_changed handler
 
 let positionStateCounter = 0
+const POSTIION_STATE_LIMIT = 2
 function clearPendingQueueHandler(playerState) {
   if (playerState.position === 0) {
     positionStateCounter++
-    if (positionStateCounter >= 2) {
-      positionStateCounter = 0
-      // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
-      if (pendingQueue.value && pendingQueue.value.id === playerState.track_window.current_track.id) {
-        store.dispatch('clearPendingQueue')
-      }
-    }
+  } else if (positionStateCounter >= POSTIION_STATE_LIMIT) {
+    positionStateCounter = 0
+  }
+  // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
+  if (pendingQueue.value && pendingQueue.value.id === playerState.track_window.current_track.id) {
+    store.dispatch('clearPendingQueue')
   }
 }
 
-const executeBeforeEndTime = 10000
-let coundDownTimer
 const leftQueueAmount = computed(() => store.getters.leftQueueAmount)
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
 function diffirentPlayingTrackIdHandler(playerStateTrack) {
   // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
-  playerStateTrack.id !== playerPlayingTrackId.value && store.dispatch('updatePlayingTrack', playerStateTrack)
+  if (playerStateTrack.id !== playerPlayingTrackId.value) store.dispatch('updatePlayingTrack', playerStateTrack)
 }
 
+let coundDownTimer
+const EXECUTE_BEFORE_END_TIME = 10000
 function setNextQueueTimeout(playerState) {
   if (!playerState.paused && leftQueueAmount.value > 0 && !pendingQueue.value) {
     // 防止開啟多個頁面且登入同樣的 host account 還都執行撥放，造成短時間內重複 dispatch sendNextQueue
     const randomTime = Math.floor(Math.random() * 5) * 5 * 1000
-    const bufferTime = playerState.duration - playerState.position - executeBeforeEndTime - randomTime
+    const bufferTime = playerState.duration - playerState.position - EXECUTE_BEFORE_END_TIME - randomTime
     // 目前歌曲結束前幾秒(executeBeforeEndTime)插入新的歌，如果被快轉至小於 executeBeforeEndTime 的剩餘時間就不插入
     if (bufferTime > 0) {
       // 每次隨機狀態出現就刷新秒數，避免曲目被快轉
