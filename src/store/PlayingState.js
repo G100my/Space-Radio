@@ -93,26 +93,26 @@ const PlayingState = {
       if (!newPlayingTrack) state.playing_track = { ...initialTrack }
       else state.playing_track = newPlayingTrack
     },
-    refreshTheLatestQueue(state, newLatestQueue) {
+    _refreshTheLatestQueue(state, newLatestQueue) {
       if (newLatestQueue === null) state.latest_queue = { ...initialQueue }
       else state.latest_queue = newLatestQueue
     },
-    refreshProgress(state, newProgress) {
+    _refreshProgress(state, newProgress) {
       state.playing_progress = newProgress
     },
-    adjustVolume(state, value) {
+    _adjustVolume(state, value) {
       state.volume = value
     },
-    adjustDislike(state, value) {
+    _adjustDislike(state, value) {
       state.dislike = value
     },
-    adjustMinimalVolume(state, value) {
+    _adjustMinimalVolume(state, value) {
       state.minimal_volume = value
     },
-    adjustDislikeThreshold(state, value) {
+    _adjustDislikeThreshold(state, value) {
       state.dislike_threshold = value
     },
-    adjustDislikeCountdown(state, value) {
+    _adjustDislikeCountdown(state, value) {
       state.dislike_countdown = value
     },
   },
@@ -195,31 +195,31 @@ const PlayingState = {
 
 function playingStateConnect2firebase(store) {
   playing_state_ref.child('volume').on('value', snapshot => {
-    store.commit('adjustVolume', snapshot.val())
+    store.commit('_adjustVolume', snapshot.val())
   })
   playing_state_ref.child('playing_track').on('value', snapshot => {
     store.commit('refreshPlayerTrack', snapshot.val())
   })
   playing_state_ref.child('latest_queue').on('value', snapshot => {
-    store.commit('refreshTheLatestQueue', snapshot.val())
+    store.commit('_refreshTheLatestQueue', snapshot.val())
   })
   playing_state_ref.child('playing_progress').on('value', snapshot => {
-    store.commit('refreshProgress', snapshot.val())
+    store.commit('_refreshProgress', snapshot.val())
   })
   playing_state_ref.child('dislike').on('value', snapshot => {
-    store.commit('adjustDislike', snapshot.val())
+    store.commit('_adjustDislike', snapshot.val())
   })
   playing_state_ref.child('voted_users').on('value', snapshot => {
     store.dispatch('adjustIsVoted', snapshot)
   })
   playing_state_ref.child('minimal_volume').on('value', snapshot => {
-    store.commit('adjustMinimalVolume', snapshot.val())
+    store.commit('_adjustMinimalVolume', snapshot.val())
   })
   playing_state_ref.child('dislike_threshold').on('value', snapshot => {
-    store.commit('adjustDislikeThreshold', snapshot.val())
+    store.commit('_adjustDislikeThreshold', snapshot.val())
   })
   playing_state_ref.child('dislike_countdown').on('value', snapshot => {
-    store.commit('adjustDislikeCountdown', snapshot.val())
+    store.commit('_adjustDislikeCountdown', snapshot.val())
   })
 }
 
