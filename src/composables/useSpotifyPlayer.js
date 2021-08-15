@@ -9,7 +9,7 @@ import { useVolumeControl } from './usePlayerVolumeControl'
 let spotifyPlayer
 const isSpotifyPlayerPaused = ref(true)
 const spotifyPlayerId = ref(null)
-const isSpotifyPlayerActived = ref(false)
+const isThisSpotifyPlayerActived = ref(false)
 
 const currentActiveDeviceId = ref(null)
 const currentActiveDeviceName = ref(null)
@@ -41,7 +41,7 @@ function diffirentPlayingTrackIdHandler(playerStateTrack) {
 
 let coundDownTimer
 const EXECUTE_BEFORE_END_TIME = 10000
-function setNextQueueTimeout(playerState) {
+function setNextQueueTimeoutHandler(playerState) {
   if (!playerState.paused && leftQueueAmount.value > 0 && !pendingQueue.value) {
     // 防止開啟多個頁面且登入同樣的 host account 還都執行撥放，造成短時間內重複 dispatch sendNextQueue
     const randomTime = Math.floor(Math.random() * 5) * 5 * 1000
@@ -70,11 +70,19 @@ function updateProgressTimeHandler(playerState) {
   }
 }
 
+function refreshCurrentDevice() {
+  spotifyAPI.getMyCurrentPlaybackState().then(result => {
+    if (!result) return
+    currentActiveDeviceId.value = result.device.id
+    currentActiveDeviceName.value = result.device.name
+  })
+}
+
 const currentVolume = computed(() => store.getters.currentVolume)
 const isTokenValid = computed(() => store.getters.isTokenValid)
 const token = computed(() => store.getters.token)
 
-window.onSpotifyWebPlaybackSDKReady = () => {
+function spotifyWebPlaybackSDKReadyHandler() {
   spotifyPlayer = new window.Spotify.Player({
     name: 'Jukebox player',
     volume: currentVolume.value / 100,
@@ -96,92 +104,86 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     })
   })
 
-  function refreshCurrentDevice() {
-    spotifyAPI.getMyCurrentPlaybackState().then(result => {
-      if (!result) return
-      currentActiveDeviceId.value = result.device.id
-      currentActiveDeviceName.value = result.device.name
-    })
-  }
-
   // Ready
   spotifyPlayer.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id)
     spotifyPlayerId.value = device_id
-    // 把目前 host 帳號可能在其他地方播放的音樂轉移到 player，並且直接撥放
-    // $spotifyAPI.transferMyPlayback([deviceId.value], { play: false }, error => {
-    //   error && console.log(error.response)
-    //   if (!error) {
-    //     deviceActived.value = true
-    //   }
-    // })
     refreshCurrentDevice()
 
     const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
     ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
-
-    // 等 player 準備完成才 watch playerVolume
-    watch(currentVolume, updatePlayerVolume)
   })
-
-  // 避免中途重啟 pending 會一直常駐，直到下一首歌曲取代目前的 pending
-  function checkPending(playerState) {
-    if (pendingQueue.value.length) {
-      if (playerState.track_window.next_tracks[0].id !== pendingQueue.value.id) store.dispatch('clearPendingQueue')
-    }
-    spotifyPlayer.removeListener('player_state_changed', checkPending)
-  }
-  spotifyPlayer.addListener('player_state_changed', checkPending)
 
   // Playback status updates
   spotifyPlayer.addListener('player_state_changed', playerState => {
     console.log(playerState)
+
     // 當不是這個裝置撥放時，斷開連結
     if (playerState === null) {
-      isSpotifyPlayerActived.value = false
+      isThisSpotifyPlayerActived.value = false
       isSpotifyPlayerPaused.value = true
       store.dispatch('clearPlayingTrack')
+      window.onbeforeunload = null
       return
     }
     isSpotifyPlayerPaused.value = playerState.paused
-    if (!isSpotifyPlayerActived.value) refreshCurrentDevice()
+    if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
+
     diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
     clearPendingQueueHandler(playerState)
-    setNextQueueTimeout(playerState)
+    setNextQueueTimeoutHandler(playerState)
     updateProgressTimeHandler(playerState)
   })
+
   spotifyPlayer.connect().then(success => {
+    window.onbeforeunload = () => {
+      store.dispatch('clearPlayingTrack')
+      store.dispatch('clearPendingQueue')
+      if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
+    }
     if (success) console.log('Jukebox player successfully connected to Spotify!')
   })
 }
+
+window.onSpotifyWebPlaybackSDKReady = spotifyWebPlaybackSDKReadyHandler
+
 import('https://sdk.scdn.co/spotify-player.js')
 
-// watch pendingQueue
-watch(pendingQueue, nextQueue => {
-  if (nextQueue && nextQueue.note) {
-    const note = nextQueue.note
-    let messageOutput4TTS = messageOutputMaker(note, nextQueue.track_name)
-    messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
-    store.dispatch('updateTheLatestQueue', nextQueue)
+watch(isThisSpotifyPlayerActived, isActived => {
+  let unwatchPendingQueue
+  let unwatchVolume
+  if (isActived) {
+    // watch pendingQueue
+    unwatchPendingQueue = watch(pendingQueue, nextQueue => {
+      if (nextQueue && nextQueue.note) {
+        const note = nextQueue.note
+        let messageOutput4TTS = messageOutputMaker(note, nextQueue.track_name)
+        messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
+        store.dispatch('updateTheLatestQueue', nextQueue)
 
-    reducePlayerVolume()
-      .then(() => {
-        TTS(messageOutput4TTS)
-      })
-      .catch(error => {
-        console.error(error)
-      })
+        reducePlayerVolume()
+          .then(() => {
+            TTS(messageOutput4TTS)
+          })
+          .catch(error => {
+            console.error(error)
+          })
+      }
+    })
+    // 也必須等 player 準備完成才 watch playerVolume
+    unwatchVolume = watch(currentVolume, updatePlayerVolume)
+  } else {
+    if (unwatchPendingQueue) {
+      unwatchPendingQueue()
+      unwatchVolume()
+      unwatchPendingQueue = null
+      unwatchVolume = null
+    }
   }
 })
 
-window.onbeforeunload = () => {
-  store.dispatch('clearPlayingTrack')
-  store.dispatch('clearPendingQueue')
-  if (isSpotifyPlayerActived.value) spotifyPlayer.disconnect()
-}
-
 const NEXT_REDUCE_PROCESS_TIME = 3000
-const NEXT_RESUME_PROCESS_TIME = 3000
+const NEXT_RESUME_PROCESS_TIME = 2000
 function nextTrack() {
   reducePlayerVolume(NEXT_REDUCE_PROCESS_TIME).then(() => {
     store.dispatch('sendNextQueue', () => {
@@ -202,7 +204,7 @@ function nextTrack() {
 
 export {
   spotifyPlayer,
-  isSpotifyPlayerActived,
+  isThisSpotifyPlayerActived,
   nextTrack,
   isSpotifyPlayerPaused,
   spotifyPlayerId,
