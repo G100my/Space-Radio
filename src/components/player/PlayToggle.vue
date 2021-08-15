@@ -29,7 +29,7 @@ export default {
               if (!response.shuffle_state) await spotifyAPI.setShuffle(true, { device_id })
               if (!response.repeat_state) await spotifyAPI.setRepeat('context')
 
-              if (response.context.type !== 'playlist') {
+              if (!response.context || response.context.type !== 'playlist') {
                 await spotifyAPI.play({ context_uri: `spotify:playlist:${store.getters.roomBasePlaylist}` })
               } else {
                 spotifyPlayer.togglePlay()
