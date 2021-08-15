@@ -20,5 +20,8 @@ export default ({ command }) => {
         '@': '/src',
       },
     },
+    server: {
+      open: true,
+    },
   }
 }
