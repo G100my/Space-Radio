@@ -13,8 +13,8 @@ function setQueueRef(roomKey) {
 }
 
 function bindListener(target, storeTarget, store) {
-  target.on('child_removed', oldChildSnapshot => {
-    store.commit('_deleteOrder', { storeTarget, oldChildSnapshot })
+  target.on('child_removed', order => {
+    store.commit('_deleteOrder', { storeTarget, order })
   })
   target.on('child_added', childSnapshot => {
     const order = new Order(childSnapshot.val())
