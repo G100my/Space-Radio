@@ -3,7 +3,7 @@ import store from '../store'
 import { refreshAccessToken } from '../utility/PKCE.js'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
 import { TTS } from '../utility/tts.js'
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '../utility/spotifyAPI'
 import { useVolumeControl } from './usePlayerVolumeControl'
 
 let spotifyPlayer
@@ -114,8 +114,6 @@ function spotifyWebPlaybackSDKReadyHandler() {
 
   // Playback status updates
   spotifyPlayer.addListener('player_state_changed', playerState => {
-    console.log(playerState)
-
     // 當不是這個裝置撥放時，斷開連結
     if (playerState === null) {
       isThisSpotifyPlayerActived.value = false
@@ -145,7 +143,9 @@ function spotifyWebPlaybackSDKReadyHandler() {
 
 window.onSpotifyWebPlaybackSDKReady = spotifyWebPlaybackSDKReadyHandler
 
-import('https://sdk.scdn.co/spotify-player.js')
+if (import.meta.env.MODE !== 'test') {
+  import('https://sdk.scdn.co/spotify-player.js')
+}
 
 watch(isThisSpotifyPlayerActived, isActived => {
   let unwatchPendingQueue
