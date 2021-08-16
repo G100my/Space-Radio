@@ -44,11 +44,12 @@ function diffirentPlayingTrackIdHandler(playerStateTrack) {
 // 快轉不考慮
 let coundDownTimer
 const EXECUTE_BEFORE_END_TIME = 10000
-function setNextQueueTimeoutHandler(playerState) {
-  const bufferTime = playerState.duration - playerState.position - EXECUTE_BEFORE_END_TIME
-  if (!playerState.paused && bufferTime > 0) {
+function setNextQueueTimeoutHandler({ duration, position, paused }) {
+  if (position == 0) return
+  if (paused && coundDownTimer) clearTimeout(coundDownTimer)
+  const bufferTime = duration - position - EXECUTE_BEFORE_END_TIME
+  if (!paused && bufferTime > 0) {
     if (coundDownTimer) clearTimeout(coundDownTimer)
-    console.log('set coundDownTimer')
     coundDownTimer = setTimeout(() => {
       store.dispatch('sendNextQueue')
     }, bufferTime)
