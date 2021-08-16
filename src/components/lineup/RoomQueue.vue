@@ -115,7 +115,7 @@ export default {
           </BaseMarquee>
         </div>
 
-        <template v-if="userId === totalQueue[key].order_id">
+        <template v-if="userId === totalQueue[key].orderer_id">
         <div class="w-[146px] hidden xs:flex justify-end space-x-3">
           <template v-if="checkLevel('urgent', key)">
             <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
