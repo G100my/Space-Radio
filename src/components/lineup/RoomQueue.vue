@@ -116,88 +116,88 @@ export default {
         </div>
 
         <template v-if="userId === totalQueue[key].orderer_id">
-        <div class="w-[146px] hidden xs:flex justify-end space-x-3">
-          <template v-if="checkLevel('urgent', key)">
-            <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
-              <IconEdit />
-            </button>
-            <button class="btn-tertiary" type="button" @click="$store.dispatch('urgent2normal', key)">
-              <IconArrowDown />
-            </button>
-          </template>
-          <button
-            v-if="checkLevel('normal', key)"
-            class="btn-tertiary"
-            type="button"
-            @click="$store.dispatch('normal2urgent', key)"
-          >
-            <IconArrowUp />
-          </button>
-          <button
-            v-if="!checkLevel('pending', key)"
-            class="btn-tertiary"
-            type="button"
-            @click="remove(key, checkLevel('normal', key) ? 'normal' : 'urgent')"
-          >
-            <IconRemove />
-          </button>
-        </div>
-
-        <Menu
-          v-slot="{ open }"
-          as="div"
-          class="cursor-pointer self-stretch relative xs:hidden cursor-pointer self-stretch"
-        >
-          <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
-            <IconMore />
-          </MenuButton>
-          <transition
-            enter-active-class="transition duration-150 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-75 ease-out"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
-            <MenuItems
-              :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
-              class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-10 space-y-4"
+          <div class="w-[146px] hidden xs:flex justify-end space-x-3">
+            <template v-if="checkLevel('urgent', key)">
+              <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
+                <IconEdit />
+              </button>
+              <button class="btn-tertiary" type="button" @click="$store.dispatch('urgent2normal', key)">
+                <IconArrowDown />
+              </button>
+            </template>
+            <button
+              v-if="checkLevel('normal', key)"
+              class="btn-tertiary"
+              type="button"
+              @click="$store.dispatch('normal2urgent', key)"
             >
-              <template v-if="checkLevel('urgent', key)">
-                <MenuItem v-slot="{ active }">
-                  <li :class="{ active }" class="_menu-item" @click="editNote(key)">
-                    <IconEdit />
-                    <span>Edit order</span>
+              <IconArrowUp />
+            </button>
+            <button
+              v-if="!checkLevel('pending', key)"
+              class="btn-tertiary"
+              type="button"
+              @click="remove(key, checkLevel('normal', key) ? 'normal' : 'urgent')"
+            >
+              <IconRemove />
+            </button>
+          </div>
+
+          <Menu
+            v-slot="{ open }"
+            as="div"
+            class="cursor-pointer self-stretch relative xs:hidden cursor-pointer self-stretch"
+          >
+            <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
+              <IconMore />
+            </MenuButton>
+            <transition
+              enter-active-class="transition duration-150 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-out"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
+            >
+              <MenuItems
+                :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
+                class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-10 space-y-4"
+              >
+                <template v-if="checkLevel('urgent', key)">
+                  <MenuItem v-slot="{ active }">
+                    <li :class="{ active }" class="_menu-item" @click="editNote(key)">
+                      <IconEdit />
+                      <span>Edit order</span>
+                    </li>
+                  </MenuItem>
+                  <MenuItem v-slot="{ active }">
+                    <li :class="{ active }" class="_menu-item" @click="urgent2normal(key)">
+                      <IconArrowDown />
+                      <span>Cancel order</span>
+                    </li>
+                  </MenuItem>
+                </template>
+
+                <MenuItem v-if="checkLevel('normal', key)" v-slot="{ active }">
+                  <li :class="{ active }" class="_menu-item" @click="normal2urgent(key)">
+                    <IconArrowUp />
+                    <span>Order</span>
                   </li>
                 </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <li :class="{ active }" class="_menu-item" @click="urgent2normal(key)">
-                    <IconArrowDown />
-                    <span>Cancel order</span>
+
+                <MenuItem v-if="!checkLevel('pending', key)" v-slot="{ active }">
+                  <li
+                    :class="{ active }"
+                    class="_menu-item"
+                    @click="remove(key, checkLevel('normal', key) ? 'normal' : 'urgent')"
+                  >
+                    <IconRemove />
+                    <span>Delete song</span>
                   </li>
                 </MenuItem>
-              </template>
-
-              <MenuItem v-if="checkLevel('normal', key)" v-slot="{ active }">
-                <li :class="{ active }" class="_menu-item" @click="normal2urgent(key)">
-                  <IconArrowUp />
-                  <span>Order</span>
-                </li>
-              </MenuItem>
-
-              <MenuItem v-if="!checkLevel('pending', key)" v-slot="{ active }">
-                <li
-                  :class="{ active }"
-                  class="_menu-item"
-                  @click="remove(key, checkLevel('normal', key) ? 'normal' : 'urgent')"
-                >
-                  <IconRemove />
-                  <span>Delete song</span>
-                </li>
-              </MenuItem>
-            </MenuItems>
-          </transition>
-        </Menu>
+              </MenuItems>
+            </transition>
+          </Menu>
         </template>
         <div v-else class="w-[146px] hidden xs:block" />
       </li>
