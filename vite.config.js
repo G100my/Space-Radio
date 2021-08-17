@@ -10,7 +10,7 @@ export default ({ command }) => {
       include: ['firebase/app', 'firebase/database', 'firebase/analytics'],
       exclude: ['firebase'],
     },
-    base: command === 'build' ? '/Jukebox/' : './',
+    base: command === 'build' ? '/' : './',
     build: {
       outDir: './docs/',
     },
