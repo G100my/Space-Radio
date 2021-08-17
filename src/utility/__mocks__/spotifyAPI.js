@@ -1,4 +1,1 @@
-export function spotifyAPI() {
-  console.warn('mock spotifyAPI')
-  return
-}
+export const spotifyAPI = {}
