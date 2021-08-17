@@ -2,9 +2,9 @@ import { spotifyAPI } from '../utility/spotifyAPI.js'
 import firebase from './firebase.js'
 import { Order } from '@/prototype/Order.js'
 
-let urgent_queue_ref
-let normal_queue_ref
-let pending_queue_ref
+let urgent_queue_ref = {}
+let normal_queue_ref = {}
+let pending_queue_ref = {}
 
 function setQueueRef(roomKey) {
   urgent_queue_ref = firebase.database().ref(`${roomKey}/urgent_queue`)
@@ -85,6 +85,26 @@ const getters = {
   },
   pendingNote(state) {
     return state.pending_queue ? state.pending_queue.note : null
+  },
+  _nextOrder(state) {
+    const urgentQueueIds = Object.keys(state.urgent_queue)
+    const normalQueneIds = Object.keys(state.normal_queue)
+    if (urgentQueueIds.length) {
+      return {
+        nextOrderId: urgentQueueIds[0],
+        targetQueue: 'urgent_queue',
+      }
+    } else if (normalQueneIds.length) {
+      return {
+        nextOrderId: normalQueneIds[0],
+        targetQueue: 'normal_queue',
+      }
+    } else {
+      console.warn('已經沒有任何點播了~~')
+      pending_queue_ref.set(null)
+      // fixme
+      return false
+    }
   },
 }
 
@@ -191,47 +211,37 @@ const actions = {
     commit('_refreshHandler', handler)
     commit('noteDialogToggler', true)
   },
-  sendNextQueue({ state }, callback) {
-    let nextOrderId, level
-    const urgentQueueIds = Object.keys(state.urgent_queue)
-    const normalQueneIds = Object.keys(state.normal_queue)
-    if (urgentQueueIds.length) {
-      nextOrderId = urgentQueueIds[0]
-      level = 'urgent'
-    } else if (normalQueneIds.length) {
-      nextOrderId = normalQueneIds[0]
-      level = 'normal'
-    } else {
-      console.warn('已經沒有任何點播了~~')
-      pending_queue_ref.set(null)
-      // fixme
-      return
-    }
+  _addQueueSuccess(_context, { targetRef, nextOrder }) {
+    const orderId = nextOrder.id
+    targetRef
+      .child(orderId)
+      .remove()
+      .then(() => {
+        pending_queue_ref.child(orderId).set(nextOrder)
+      })
+  },
+  sendNextQueue({ state, getters, dispatch }, callback) {
+    const result = getters._nextOrder
+    if (!result) return
+
+    const { nextOrderId, targetQueue } = result
 
     state.previousDeletedKey = nextOrderId
-
-    spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextOrderId].track_id}`, error => {
+    const nextOrder = state[targetQueue][nextOrderId]
+    spotifyAPI.queue(`spotify:track:${nextOrder.track_id}`, error => {
       if (error) {
         console.error(error)
         return
       }
 
-      const order_key = nextOrderId
-      const queue = {}
-      queue[nextOrderId] = { ...state[`${level}_queue`][nextOrderId], order_key }
-
-      let targetQueue
-      if (level === 'urgent') {
-        targetQueue = urgent_queue_ref
+      let targetRef
+      if (targetQueue === 'urgent_queue') {
+        targetRef = urgent_queue_ref
       } else {
-        targetQueue = normal_queue_ref
+        targetRef = normal_queue_ref
       }
-      targetQueue
-        .child(nextOrderId)
-        .remove()
-        .then(() => {
-          pending_queue_ref.set(queue)
-        })
+      dispatch('_addQueueSuccess', { targetRef, nextOrder })
+
       if (callback) callback()
     })
   },
@@ -248,3 +258,6 @@ const Queue = {
 }
 
 export { Queue, queueConnect2firebase, setQueueRef }
+
+// for test
+export { state, getters, mutations, actions, normal_queue_ref, urgent_queue_ref, pending_queue_ref }
