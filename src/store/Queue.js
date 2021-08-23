@@ -13,32 +13,14 @@ function setQueueRef(roomKey) {
 }
 
 function bindListener(target, storeTarget, store) {
-  target.on('child_removed', order => {
-    store.commit('_deleteOrder', { storeTarget, order })
+  target.on('child_removed', childSnapshot => {
+    store.commit('_deleteOrder', { storeTarget, childSnapshot })
   })
   target.on('child_added', childSnapshot => {
-    const order = new Order(childSnapshot.val())
-    const trackId = order.track_id
-    if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
-      store.commit('_addOrder', { storeTarget, order, addedTrack: store.getters.previousDeleted })
-      store.commit('_clearPreviousDeleted')
-      return
-    }
-    if (spotifyAPI.getAccessToken()) {
-      spotifyAPI
-        .getTrack(trackId)
-        .then(addedTrack => {
-          store.commit('_addOrder', { storeTarget, order, addedTrack })
-        })
-        .catch(e => {
-          console.error(e, `trackId: ${trackId}`)
-        })
-    } else {
-      console.warn('spotifyAPI.getAccessToken() is ' + spotifyAPI.getAccessToken())
-    }
+    store.dispatch('_addOrder', { storeTarget, childSnapshot })
   })
   target.on('child_changed', childSnapshot => {
-    store.commit('_editOrder', { storeTarget, order: new Order(childSnapshot) })
+    store.commit('_editOrder', { storeTarget, childSnapshot })
   })
 }
 
@@ -119,22 +101,44 @@ const mutations = {
   clearPendingQueue(state) {
     state.pending_queue = {}
   },
-  _deleteOrder(state, { storeTarget, order }) {
-    state.previousDeleted = state.trackData[order.id]
-    delete state.trackData[order.id]
-    delete state[`${storeTarget}_queue`][order.id]
+  _deleteOrder(state, { storeTarget, childSnapshot }) {
+    state.previousDeleted = state.trackData[childSnapshot.key]
+    delete state.trackData[childSnapshot.key]
+    delete state[`${storeTarget}_queue`][childSnapshot.key]
   },
-  _addOrder(state, { storeTarget, order, addedTrack }) {
-    const orderId = order.id
-    state[`${storeTarget}_queue`][orderId] = order
-    state.trackData[orderId] = addedTrack
+  _addOrder(state, { key, order, storeTarget }) {
+    state[`${storeTarget}_queue`][key] = order
   },
-  _editOrder(state, { storeTarget, order }) {
-    state[`${storeTarget}_queue`][order.id] = order
+  _addTrack(state, { key, addedTrack }) {
+    state.trackData[key] = addedTrack
+  },
+  _editOrder(state, { storeTarget, childSnapshot }) {
+    state[`${storeTarget}_queue`][childSnapshot.key] = new Order(childSnapshot)
   },
 }
 
 const actions = {
+  _addOrder({ getters, commit }, { storeTarget, childSnapshot }) {
+    const order = new Order(childSnapshot.val())
+    const trackId = order.track_id
+    const key = storeTarget === 'urgent' ? childSnapshot.key : order.id
+
+    if (getters.previousDeleted && getters.previousDeleted.id === trackId) {
+      commit('_addOrder', { storeTarget, order, key })
+      commit('_addTrack', { key, addedTrack: getters.previousDeleted })
+      commit('_clearPreviousDeleted')
+    } else {
+      spotifyAPI
+        .getTrack(trackId)
+        .then(addedTrack => {
+          commit('_addOrder', { storeTarget, order, key })
+          commit('_addTrack', { key, addedTrack })
+        })
+        .catch(e => {
+          console.error(e, `trackId: ${trackId}`)
+        })
+    }
+  },
   add({ getters }, { id: track_id, track_name }) {
     const orderer_id = getters.userId
     const orderer_name = getters.userName
