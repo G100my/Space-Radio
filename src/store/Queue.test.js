@@ -1,12 +1,4 @@
-import {
-  actions,
-  mutations,
-  state as initState,
-  getters as initGetters,
-  pending_queue_ref,
-  normal_queue_ref,
-  getters,
-} from './Queue'
+import { actions, mutations, state as initState, getters as initGetters, pending_queue_ref, getters } from './Queue'
 import { Order } from '@/prototype/Order'
 import { spotifyAPI } from '@/utility/spotifyAPI'
 
@@ -30,10 +22,11 @@ function deepCopy(obj) {
 describe('mutations', () => {
   it('_addOrder', () => {
     const state = deepCopy(initState)
+    const key = '1111'
 
-    mutations._addOrder(state, { storeTarget: 'normal', order })
+    mutations._addOrder(state, { storeTarget: 'normal', order, key })
     expect(Object.keys(state.normal_queue).length).toBe(1)
-    expect(state.normal_queue[order.id]).toEqual(order)
+    expect(state.normal_queue[key]).toEqual(order)
   })
 })
 
@@ -61,9 +54,10 @@ describe('sendNextQueue', () => {
         track_id: `track_id${num}`,
         track_name: `track_name${num}`,
       })
-      mutations._addOrder(state, { storeTarget: 'normal', order })
+      mutations._addOrder(state, { storeTarget: 'normal', order, key: num })
     })
     expect(getObjectLength(state.normal_queue)).toBe(3)
+    expect(getObjectLength(state.urgent_queue)).toBe(0)
     pending_queue_ref.set = jest.fn()
 
     spotifyAPI.queue = jest.fn((uri, callback) => {
@@ -75,11 +69,12 @@ describe('sendNextQueue', () => {
 
     const dispatch = jest.fn(() => {})
     actions.sendNextQueue({ state, getters, dispatch })
-    const nextOrder = state.normal_queue[getters._nextOrder.nextOrderId]
-    expect(dispatch).toBeCalledTimes(1)
-    expect(dispatch).toBeCalledWith('_addQueueSuccess', {
-      targetRef: normal_queue_ref,
-      nextOrder,
+    const { order, currentOrderId } = getters._nextOrder
+    expect(dispatch).toBeCalledTimes(2)
+    expect(dispatch).toHaveBeenNthCalledWith(1, 'normalRemove', '1')
+    expect(dispatch).toHaveBeenNthCalledWith(2, '_addPendingQueue', {
+      order,
+      currentOrderId,
     })
     expect(spotifyAPI.queue).toBeCalledWith(`spotify:track:track_id1`, expect.anything())
   })
@@ -91,13 +86,14 @@ describe('sendNextQueue', () => {
         track_id: `track_id${num}`,
         track_name: `track_name${num}`,
       })
-      mutations._addOrder(state, { storeTarget: 'urgent', order })
+      mutations._addOrder(state, { storeTarget: 'urgent', order, key: num })
     })
     expect(getObjectLength(state.urgent_queue)).toBe(2)
     const result = getters._nextOrder(state)
-    const nextOrderId = Object.values(state.urgent_queue)[0].id
+    const [currentOrderId, order] = Object.entries(state.urgent_queue)[0]
     expect(result).toEqual({
-      nextOrderId,
+      currentOrderId,
+      order,
       targetQueue: 'urgent_queue',
     })
   })
