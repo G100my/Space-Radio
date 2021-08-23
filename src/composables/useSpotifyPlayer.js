@@ -138,6 +138,7 @@ function spotifyWebPlaybackSDKReadyHandler() {
       if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
     }
     if (success) console.log('Jukebox player successfully connected to Spotify!')
+    if (success && import.meta.env.DEV) window.spotifyPlayer = spotifyPlayer
   })
 }
 

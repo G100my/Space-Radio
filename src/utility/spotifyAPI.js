@@ -22,4 +22,8 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
   },
 })
 
+if (import.meta.env.DEV) {
+  window.spotifyAPI = spotifyAPI
+}
+
 export { spotifyAPI }
