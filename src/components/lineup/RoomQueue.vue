@@ -46,7 +46,7 @@ export default {
     getOrderer(orderKey) {
       if (this.normalQueue[orderKey]) return this.normalQueue[orderKey].orderer_name
       else if (this.urgentQueue[orderKey]) return this.urgentQueue[orderKey].orderer_name
-      else return this.pendingQueue[orderKey].orderer_name
+      else if (this.pendingQueue[orderKey]) return this.pendingQueue[orderKey].orderer_name
     },
     menuPositionHandler(event, openState) {
       if (!openState && event.clientY > (window.innerHeight * 2) / 3) {
