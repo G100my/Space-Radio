@@ -18,16 +18,12 @@ const pendingQueue = computed(() => store.getters.pendingQueue)
 
 let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
-let positionStateCounter = 0
-const POSTIION_STATE_LIMIT = 2
 function clearPendingQueueHandler(playerState) {
-  if (playerState.position === 0) {
-    positionStateCounter++
-  } else if (positionStateCounter >= POSTIION_STATE_LIMIT) {
-    positionStateCounter = 0
-  }
-  // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
-  if (pendingQueue.value && pendingQueue.value.id === playerState.track_window.current_track.id) {
+  if (playerState.position === 0) return
+  const pendingArray = Object.values(pendingQueue.value)
+  const pending = pendingArray.length ? pendingArray[0] : false
+  if (pending && pending.track_id === playerState.track_window.current_track.id) {
+    // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
     store.dispatch('clearPendingQueue')
   }
 }
