@@ -1,5 +1,3 @@
-import { createStore } from 'vuex'
-
 const state = {
   counter: 0,
 }
@@ -7,6 +5,7 @@ const getters = {
   counter(state) {
     return state.counter
   },
+  pendingQueue: {},
 }
 const mutations = {}
 const actions = {
@@ -15,9 +14,15 @@ const actions = {
     state.counter++
   },
 }
-export default createStore({
+const dispatch = jest.fn(actinoType => {
+  if (actinoType === 'clearPendingQueue') {
+    getters.pendingQueue = {}
+  }
+})
+export default {
   state,
   getters,
   mutations,
   actions,
-})
+  dispatch,
+}
