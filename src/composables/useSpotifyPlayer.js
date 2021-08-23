@@ -222,6 +222,9 @@ function togglePlay() {
           }
         })
         .then(() => spotifyAPI.getMyCurrentPlaybackState())
+        .catch(error => {
+          console.error(JSON.parse(error.responseText).error, error)
+        })
     } else {
       spotifyPlayer.togglePlay()
     }
