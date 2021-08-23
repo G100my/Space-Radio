@@ -89,15 +89,18 @@ const getters = {
   _nextOrder(state) {
     const urgentQueueIds = Object.keys(state.urgent_queue)
     const normalQueneIds = Object.keys(state.normal_queue)
+    // currentOrderId: urgent_queue order id is different
     if (urgentQueueIds.length) {
       return {
-        nextOrderId: urgentQueueIds[0],
+        currentOrderId: urgentQueueIds[0],
         targetQueue: 'urgent_queue',
+        order: state.urgent_queue[urgentQueueIds[0]],
       }
     } else if (normalQueneIds.length) {
       return {
-        nextOrderId: normalQueneIds[0],
+        currentOrderId: normalQueneIds[0],
         targetQueue: 'normal_queue',
+        order: state.normal_queue[normalQueneIds[0]],
       }
     } else {
       console.warn('已經沒有任何點播了~~')
@@ -211,42 +214,33 @@ const actions = {
     commit('_refreshHandler', handler)
     commit('noteDialogToggler', true)
   },
-  _addQueueSuccess(_context, { targetRef, nextOrder }) {
-    const orderId = nextOrder.id
-    targetRef
-      .child(orderId)
-      .remove()
-      .then(() => {
-        pending_queue_ref.child(orderId).set(nextOrder)
-      })
-  },
   sendNextQueue({ state, getters, dispatch }, callback) {
     const result = getters._nextOrder
     if (!result) return
+    const { currentOrderId, targetQueue, order } = result
 
-    const { nextOrderId, targetQueue } = result
-
-    state.previousDeletedKey = nextOrderId
-    const nextOrder = state[targetQueue][nextOrderId]
-    spotifyAPI.queue(`spotify:track:${nextOrder.track_id}`, error => {
+    state.previousDeletedKey = currentOrderId
+    spotifyAPI.queue(`spotify:track:${order.track_id}`, error => {
       if (error) {
         console.error(error)
         return
       }
 
-      let targetRef
       if (targetQueue === 'urgent_queue') {
-        targetRef = urgent_queue_ref
+        dispatch('urgentRemove', currentOrderId)
       } else {
-        targetRef = normal_queue_ref
+        dispatch('normalRemove', currentOrderId)
       }
-      dispatch('_addQueueSuccess', { targetRef, nextOrder })
+      dispatch('_addPendingQueue', { order, currentOrderId })
 
       if (callback) callback()
     })
   },
   clearPendingQueue() {
     pending_queue_ref.set(null)
+  },
+  _addPendingQueue(_context, { currentOrderId, order }) {
+    return pending_queue_ref.child(currentOrderId).set(order)
   },
 }
 
