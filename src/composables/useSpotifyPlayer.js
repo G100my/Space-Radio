@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, unref } from 'vue'
 import store from '../store'
 import { refreshAccessToken } from '../utility/PKCE.js'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
@@ -200,7 +200,36 @@ function nextTrack() {
   })
 }
 
+function togglePlay() {
+  const device_id = unref(spotifyPlayerId)
+  spotifyPlayer.getCurrentState().then(state => {
+    if (!state) {
+      console.warn('User is not playing music through the Web Playback SDK')
+      spotifyAPI
+        .transferMyPlayback([device_id])
+        .then((response, reject) => {
+          console.log(response, reject)
+          return spotifyAPI.getMyCurrentPlaybackState()
+        })
+        .then(async response => {
+          if (!response.shuffle_state) await spotifyAPI.setShuffle(true, { device_id })
+          if (!response.repeat_state) await spotifyAPI.setRepeat('context')
+
+          if (!response.context || response.context.type !== 'playlist') {
+            await spotifyAPI.play({ context_uri: `spotify:playlist:${store.getters.roomBasePlaylist}` })
+          } else {
+            spotifyPlayer.togglePlay()
+          }
+        })
+        .then(() => spotifyAPI.getMyCurrentPlaybackState())
+    } else {
+      spotifyPlayer.togglePlay()
+    }
+  })
+}
+
 export {
+  togglePlay,
   spotifyPlayer,
   isThisSpotifyPlayerActived,
   nextTrack,
