@@ -98,13 +98,12 @@ const mutations = {
     state.previousDeleted = null
     state.previousDeletedKey = null
   },
-  clearPendingQueue(state) {
-    state.pending_queue = {}
-  },
   _deleteOrder(state, { storeTarget, childSnapshot }) {
-    state.previousDeleted = state.trackData[childSnapshot.key]
-    delete state.trackData[childSnapshot.key]
-    delete state[`${storeTarget}_queue`][childSnapshot.key]
+    const key = childSnapshot.key
+    if (!key) console.error('key is not exist, _deleteOrder')
+    state.previousDeleted = state.trackData[key]
+    delete state.trackData[key]
+    delete state[`${storeTarget}_queue`][key]
   },
   _addOrder(state, { key, order, storeTarget }) {
     state[`${storeTarget}_queue`][key] = order
@@ -121,7 +120,7 @@ const actions = {
   _addOrder({ getters, commit }, { storeTarget, childSnapshot }) {
     const order = new Order(childSnapshot.val())
     const trackId = order.track_id
-    const key = storeTarget === 'urgent' ? childSnapshot.key : order.id
+    const key = childSnapshot.key
 
     if (getters.previousDeleted && getters.previousDeleted.id === trackId) {
       commit('_addOrder', { storeTarget, order, key })
