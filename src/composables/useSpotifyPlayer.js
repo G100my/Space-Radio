@@ -185,21 +185,18 @@ watch(isThisSpotifyPlayerActived, isActived => {
 const NEXT_REDUCE_PROCESS_TIME = 3000
 const NEXT_RESUME_PROCESS_TIME = 2000
 function nextTrack() {
-  reducePlayerVolume(NEXT_REDUCE_PROCESS_TIME).then(() => {
-    store.dispatch('sendNextQueue', () => {
-      // 神秘的 reason 參數，並沒有出現在文件，
-      // 但是不給會有 error: parameter 'reason' is required
-      spotifyPlayer
-        .nextTrack('just wanna listen next one')
-        .then(() => {
-          console.log('Skipped to next track!')
-          resumePlayerVolume(NEXT_RESUME_PROCESS_TIME)
-        })
-        .catch(error => {
-          console.error(error)
-        })
+  reducePlayerVolume(NEXT_REDUCE_PROCESS_TIME)
+    .then(() => store.dispatch('sendNextQueue'))
+    // 神秘的 reason 參數，並沒有出現在文件，
+    // 但是不給會有 error: parameter 'reason' is required
+    .then(() => spotifyPlayer.nextTrack('just wanna listen next one'))
+    .then(() => {
+      console.log('Skipped to next track!')
+      return resumePlayerVolume(NEXT_RESUME_PROCESS_TIME)
     })
-  })
+    .catch(error => {
+      console.error(error)
+    })
 }
 
 function togglePlay() {

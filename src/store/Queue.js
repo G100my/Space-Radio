@@ -217,26 +217,19 @@ const actions = {
     commit('_refreshHandler', handler)
     commit('noteDialogToggler', true)
   },
-  sendNextQueue({ state, getters, dispatch }, callback) {
+  sendNextQueue({ state, getters, dispatch }) {
     const result = getters._nextOrder
     if (!result) return
     const { currentOrderId, targetQueue, order } = result
 
     state.previousDeletedKey = currentOrderId
-    spotifyAPI.queue(`spotify:track:${order.track_id}`, error => {
-      if (error) {
-        console.error(error)
-        return
-      }
-
+    return spotifyAPI.queue(`spotify:track:${order.track_id}`).then(() => {
       if (targetQueue === 'urgent_queue') {
         dispatch('urgentRemove', currentOrderId)
       } else {
         dispatch('normalRemove', currentOrderId)
       }
       dispatch('_addPendingQueue', { order, currentOrderId })
-
-      if (callback) callback()
     })
   },
   clearPendingQueue() {
