@@ -42,6 +42,7 @@ export default {
       checkSavedTrackState,
       add2savedHandler,
       removeFromSavedHandler,
+      playerPlayingTrackId,
     }
   },
 }
@@ -49,7 +50,8 @@ export default {
 <template>
   <button
     type="button"
-    class="w-10 h-10 flex items-center justify-center"
+    class="w-10 h-10 flex items-center justify-center focus:outline-none"
+    :disabled="!playerPlayingTrackId"
     @click="isTrackSaved ? removeFromSavedHandler() : add2savedHandler()"
   >
     <IconLikeFilled v-show="isTrackSaved" class="text-natural-gray1 w-6 h-6" />
