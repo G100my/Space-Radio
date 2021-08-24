@@ -2,13 +2,8 @@ const getPlaylist = [
   // 'id',
   'name',
   // 'images',
-  'limit',
-  'next',
-  'offset',
-  'previous',
-  'total',
   {
-    'tracks.items': [
+    items: [
       {
         track: [
           {
@@ -36,6 +31,11 @@ const getPlaylist = [
       },
     ],
   },
+  // 'limit',
+  'next',
+  'offset',
+  'previous',
+  'total',
 ]
 
 export const playListFields = JSON.stringify(getPlaylist)
@@ -45,3 +45,5 @@ export const playListFields = JSON.stringify(getPlaylist)
   .replace(/{/g, '')
   .replace(/}/g, '')
   .replace(/]/g, ')')
+
+console.log(playListFields)
