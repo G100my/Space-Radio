@@ -169,6 +169,7 @@ const actions = {
         orderer_name,
         id,
       })
+      return accumulator
     }, {})
     normal_queue_ref.update(parameter)
   },
