@@ -81,7 +81,7 @@ export const PersonalPlaylists = {
     async getSpotifyListContent({ commit }, listId) {
       await spotifyAPI
         .getPlaylist(listId, {
-          fields: playListFields,
+          fields: playlistFields,
         })
         .then(result => {
           const transferResult = result.tracks.items.map(reduceDataCallback)

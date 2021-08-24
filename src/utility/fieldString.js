@@ -38,7 +38,7 @@ const getPlaylist = [
   'total',
 ]
 
-export const playListFields = JSON.stringify(getPlaylist)
+export const playlistFields = JSON.stringify(getPlaylist)
   .slice(1, -1)
   .replace(/"/g, '')
   .replace(/:\[/g, '(')
@@ -46,4 +46,4 @@ export const playListFields = JSON.stringify(getPlaylist)
   .replace(/}/g, '')
   .replace(/]/g, ')')
 
-console.log(playListFields)
+console.log(playlistFields)
