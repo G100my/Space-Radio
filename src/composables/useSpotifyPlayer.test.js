@@ -1,6 +1,6 @@
 require('dotenv').config()
 import store from '../store'
-import { setNextQueueTimeoutHandler, clearPendingQueueHandler } from './useSpotifyPlayer'
+import { setNextQueueTimeoutHandler, clearPendingQueueHandler } from './spotifyPlayerStateHandler'
 import testPlayingState from '../fakeData/testPlayingStateData'
 import { computed } from 'vue'
 
