@@ -15,7 +15,9 @@ export default {
     const store = useStore()
 
     function libraryClickHandler() {
-      // emit,  change component
+      store.commit('refreshChosenListName', 'Liked Songs from Spotify')
+      store.dispatch('getSpotifyLikedSongs_first')
+      emit('activeSideDrawer', 'PlaylistContent')
     }
 
     function playlistClickHandler(spotifyListId, spotifyListname) {

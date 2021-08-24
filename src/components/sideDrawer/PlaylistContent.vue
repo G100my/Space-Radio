@@ -1,5 +1,5 @@
 <script>
-import { computed, onUnmounted, reactive, ref, toRaw } from '@vue/runtime-core'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, toRaw, watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
@@ -10,11 +10,10 @@ export default {
   components: { BaseMarquee, IconPlus, IconArrowUp },
   setup() {
     const store = useStore()
-
+    const listName = computed(() => store.getters.listName)
     const selectMode = ref(false)
     const idSet = reactive(new Set())
     const nameSet = new Set()
-    const playlist = ref(null)
 
     function checkboxHandler(value, id, name) {
       if (value && !idSet.has(id)) {
@@ -39,14 +38,67 @@ export default {
       idSet.clear()
       nameSet.clear()
     }
+    //
+    const list = computed(() => store.getters.chosenList)
+    let observer
+    let infinityContainer
+    let target
+    const next = computed(() => store.getters.spotifyLikedNext)
+    const loadingAnimation = ref(false)
+    let fetchData
+
+    if (listName.value.startsWith('Liked')) {
+      fetchData = () => store.dispatch('getSpotifyLikedSongs_offset')
+    } else {
+      // fixme
+    }
+
+    function nextCallback() {
+      loadingAnimation.value = false
+      if (next.value) {
+        nextTick(() => {
+          target = infinityContainer.lastElementChild
+          observer.observe(target)
+        })
+      }
+    }
+    async function nexthandler() {
+      if (target) observer.unobserve(target)
+      loadingAnimation.value = true
+      await fetchData().then(nextCallback)
+    }
+    onMounted(() => {
+      infinityContainer = document.getElementById('infinity')
+      const observerOptions = {
+        root: infinityContainer,
+        rootMargin: '0px',
+        threshold: 0.5,
+      }
+      const callback = ([entry]) => {
+        if (entry.isIntersecting) nexthandler()
+      }
+      observer = new IntersectionObserver(callback, observerOptions)
+    })
+
+    const unwatch = watch(
+      () => list.value,
+      () => {
+        if (list.value !== 0) {
+          nextTick(() => {
+            target = infinityContainer.lastElementChild
+            if (target) observer.observe(target)
+          })
+          unwatch()
+        }
+      }
+    )
 
     onUnmounted(() => {
       store.commit('refreshChosenList', [])
     })
     return {
-      playlist,
-      listName: computed(() => store.getters.listName),
-      list: computed(() => store.getters.chosenList),
+      listName,
+      list,
       selectMode,
       idSet,
       checkboxHandler,
@@ -71,7 +123,7 @@ export default {
         <button type="button" class="btn-secondary" @click="cancelHandler">Cancel</button>
       </div>
     </header>
-    <ul class="flex-1 mt-7 w-full space-y-4 overflow-y-auto">
+    <ul id="infinity" class="flex-1 mt-7 w-full space-y-4 overflow-y-auto">
       <li v-for="track in list" :key="track.id" class="bg-tertiary-1 bg-opacity-60 rounded-10 flex gap-x-2 py-3 px-4">
         <div
           class="flex-shrink-0 w-11 h-11 md:w-16 md:h-16 object-cover object-center flex justify-center items-center"
