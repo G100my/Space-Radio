@@ -7,12 +7,14 @@ import {
   spotifyPlayerId,
   togglePlay,
 } from '@/composables/useSpotifyPlayer.js'
+import { useVoteWatch } from '@/composables/useVoteWatchControl.js'
 export default {
   components: {
     IconPlay,
     IconPause,
   },
   setup() {
+    useVoteWatch()
     return {
       isSpotifyPlayerPaused,
       currentActiveDeviceId,
