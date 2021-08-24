@@ -18,9 +18,9 @@ const pendingQueue = computed(() => store.getters.pendingQueue)
 
 let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
-function clearPendingQueueHandler(playerState) {
+function clearPendingQueueHandler(playerState, pendingQueueValue) {
   if (playerState.position === 0) return
-  const pendingArray = Object.values(pendingQueue.value)
+  const pendingArray = Object.values(pendingQueueValue)
   const pending = pendingArray.length ? pendingArray[0] : false
   if (pending && pending.track_id === playerState.track_window.current_track.id) {
     // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
@@ -122,7 +122,7 @@ function spotifyWebPlaybackSDKReadyHandler() {
     if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
 
     diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
-    clearPendingQueueHandler(playerState)
+    clearPendingQueueHandler(playerState, pendingQueue.value)
     setNextQueueTimeoutHandler(playerState)
     updateProgressTimeHandler(playerState)
   })
@@ -239,4 +239,4 @@ export {
   currentActiveDeviceName,
 }
 // just for test
-export { setNextQueueTimeoutHandler }
+export { setNextQueueTimeoutHandler, clearPendingQueueHandler }
