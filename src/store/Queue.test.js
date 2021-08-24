@@ -46,7 +46,7 @@ describe('sendNextQueue', () => {
   })
 
   const state = deepCopy(initState)
-  it('has normal queue', () => {
+  it('has normal queue', async () => {
     ;[1, 2, 3].forEach(num => {
       const order = new Order({
         orderer_id: `orderer_id${num}`,
@@ -60,15 +60,13 @@ describe('sendNextQueue', () => {
     expect(getObjectLength(state.urgent_queue)).toBe(0)
     pending_queue_ref.set = jest.fn()
 
-    spotifyAPI.queue = jest.fn((uri, callback) => {
-      callback()
-    })
+    spotifyAPI.queue = jest.fn().mockImplementation(() => Promise.resolve())
 
     const getters = deepCopy(initGetters)
     getters._nextOrder = initGetters._nextOrder(state)
 
     const dispatch = jest.fn(() => {})
-    actions.sendNextQueue({ state, getters, dispatch })
+    await actions.sendNextQueue({ state, getters, dispatch })
     const { order, currentOrderId } = getters._nextOrder
     expect(dispatch).toBeCalledTimes(2)
     expect(dispatch).toHaveBeenNthCalledWith(1, 'normalRemove', '1')
@@ -76,7 +74,7 @@ describe('sendNextQueue', () => {
       order,
       currentOrderId,
     })
-    expect(spotifyAPI.queue).toBeCalledWith(`spotify:track:track_id1`, expect.anything())
+    expect(spotifyAPI.queue).toBeCalledWith(`spotify:track:track_id1`)
   })
   it('has urgent queue', () => {
     ;[1, 2].forEach(num => {
