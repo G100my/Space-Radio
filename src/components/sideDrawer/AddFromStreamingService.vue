@@ -22,7 +22,7 @@ export default {
 
     function playlistClickHandler(spotifyListId, spotifyListname) {
       store.commit('refreshChosenListName', spotifyListname)
-      store.dispatch('getSpotifyListContent', spotifyListId)
+      store.dispatch('getSpotifyListContent_first', spotifyListId)
       emit('activeSideDrawer', 'PlaylistContent')
     }
 

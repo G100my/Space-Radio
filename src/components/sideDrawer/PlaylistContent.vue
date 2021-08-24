@@ -50,7 +50,7 @@ export default {
     if (listName.value.startsWith('Liked')) {
       fetchData = () => store.dispatch('getSpotifyLikedSongs_offset')
     } else {
-      // fixme
+      fetchData = () => store.dispatch('getSpotifyListContent_offset')
     }
 
     function nextCallback() {
