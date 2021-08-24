@@ -77,7 +77,7 @@ export default {
       <h3 class="text-natural-gray2 text-2xl laptop:text-header font-semibold">Next</h3>
       <img src="@/assets/images/Spotify_Logo_CMYK_Green.png" alt="Spotify" class="w-20" />
     </header>
-    <ul class="flex-1 overflow-y-auto space-y-2">
+    <transition-group name="queue" tag="ul" class="flex-1 overflow-y-auto space-y-2 relative">
       <li
         v-for="(key, index) in Object.keys(totalQueue)"
         :key="key"
@@ -201,7 +201,7 @@ export default {
         </template>
         <div v-else class="w-[146px] hidden xs:block" />
       </li>
-    </ul>
+    </transition-group>
   </div>
 </template>
 <style lang="postcss">
@@ -225,5 +225,16 @@ export default {
       @apply fill-current;
     }
   }
+}
+
+.queue-move {
+  @apply transition-transform duration-300 delay-200;
+}
+.queue-leave-active {
+  @apply absolute w-full transition-opacity duration-300;
+}
+.queue-enter-from,
+.queue-leave-to {
+  @apply opacity-0;
 }
 </style>
