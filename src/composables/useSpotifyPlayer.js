@@ -18,11 +18,16 @@ const pendingQueue = computed(() => store.getters.pendingQueue)
 
 let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
-function clearPendingQueueHandler(playerState, pendingQueueValue) {
-  if (playerState.position === 0) return
+// 送出去的點歌可能會因為 spotify 回應不一樣的id...orz，但是歌的內容一樣= =+
+function clearPendingQueueHandler({ position, track_window }, pendingQueueValue) {
+  if (position === 0) return
   const pendingArray = Object.values(pendingQueueValue)
   const pending = pendingArray.length ? pendingArray[0] : false
-  if (pending && pending.track_id === playerState.track_window.current_track.id) {
+
+  if (!pending) return
+
+  const { current_track } = track_window
+  if (pending.track_id === current_track.id || pending.track_id === current_track.linked_from.id) {
     // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
     store.dispatch('clearPendingQueue')
   }
