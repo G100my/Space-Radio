@@ -18,6 +18,7 @@ const pendingQueue = computed(() => store.getters.pendingQueue)
 
 let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
+// 送出去的點歌可能會因為 spotify 回應不一樣的id...orz，但是歌的內容一樣= =+
 function clearPendingQueueHandler(playerState, pendingQueueValue) {
   if (playerState.position === 0) return
   const pendingArray = Object.values(pendingQueueValue)
@@ -29,9 +30,15 @@ function clearPendingQueueHandler(playerState, pendingQueueValue) {
 }
 
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
-function diffirentPlayingTrackIdHandler(playerStateTrack) {
+function diffirentPlayingTrackIdHandler(playerStateTrack, pendingQueueValue) {
   // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
-  if (playerStateTrack.id !== playerPlayingTrackId.value) store.dispatch('updatePlayingTrack', playerStateTrack)
+  if (playerStateTrack.id !== playerPlayingTrackId.value) {
+    store.dispatch('updatePlayingTrack', playerStateTrack)
+
+    const pendingArray = Object.values(pendingQueueValue)
+    const pending = pendingArray.length ? pendingArray[0] : false
+    if (pending) store.dispatch('clearPendingQueue')
+  }
 }
 
 // 獲得狀態 刷新計時
@@ -121,8 +128,8 @@ function spotifyWebPlaybackSDKReadyHandler() {
     isSpotifyPlayerPaused.value = playerState.paused
     if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
 
-    diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
-    clearPendingQueueHandler(playerState, pendingQueue.value)
+    diffirentPlayingTrackIdHandler(playerState.track_window.current_track, pendingQueue.value)
+    // clearPendingQueueHandler(playerState, pendingQueue.value)
     setNextQueueTimeoutHandler(playerState)
     updateProgressTimeHandler(playerState)
   })
