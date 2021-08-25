@@ -20,8 +20,6 @@ const isThisSpotifyPlayerReady = ref(false)
 const currentActiveDeviceId = ref(null)
 const currentActiveDeviceName = ref(null)
 
-const pendingOrder = computed(() => store.getters.pendingOrder)
-
 let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
 function refreshCurrentDevice() {
@@ -78,7 +76,7 @@ function spotifyPlayerStatusChangedHandler(playerState) {
   // if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
 
   diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
-  clearPendingQueueHandler(playerState, pendingOrder.value)
+  clearPendingQueueHandler(playerState)
   setNextQueueTimeoutHandler(playerState)
   updateProgressTimeHandler(playerState)
 }

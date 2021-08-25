@@ -2,7 +2,8 @@ import { computed } from 'vue'
 import store from '@/store'
 
 // 送出去的點歌可能會因為 spotify 回應不一樣的id...orz，但是歌的內容一樣= =+
-function clearPendingQueueHandler({ position, track_window }, pending) {
+function clearPendingQueueHandler({ position, track_window }) {
+  const pending = store.getters.pendingOrder
   if (position === 0) return
   if (!pending) return
 
