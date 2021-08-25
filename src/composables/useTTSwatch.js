@@ -16,6 +16,7 @@ function useTTSonPlayer(reducePlayerVolume, resumePlayerVolume) {
     pending => {
       console.log(pending)
       if (!pending) return
+      else if (!pending.note) return
       else {
         const { track_name, note } = pending
         let messageOutput4TTS = messageOutputMaker(note, track_name)
