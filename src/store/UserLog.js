@@ -76,7 +76,7 @@ function userLogConnect2firebase(store) {
         case 'turnDown':
           if (recordVolumeLogTimer) clearTimeout(recordVolumeLogTimer)
           recordVolumeLogTimer = setTimeout(() => {
-            userLog = { ...maker(action.type), option: { volume: state.PlayingState.volume } }
+            userLog = { ...maker(action.type), option: { volume: state.Volume.volume } }
             user_log_ref.push(userLog)
           }, 3000)
           return
@@ -88,14 +88,14 @@ function userLogConnect2firebase(store) {
         case 'updateMinimalVolume':
           userLog = {
             ...maker(action.type),
-            option: { minimal_volume: state.PlayingState.minimal_volume },
+            option: { minimal_volume: state.Volume.minimal_volume },
           }
           break
         case 'updateDislikeThreshold':
           userLog = {
             ...maker(action.type),
             option: {
-              dislike_threshold: state.PlayingState.dislike_threshold,
+              dislike_threshold: state.Vote.dislike_threshold,
             },
           }
           break
