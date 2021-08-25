@@ -9,7 +9,7 @@ import {
   setNextQueueTimeoutHandler,
   updateProgressTimeHandler,
 } from './spotifyPlayerStateHandler'
-import { useTTSonPlayer } from './useTTSwatch'
+import { TTSbyNote, TTS, useTTSonPlayer } from './useTTSwatch'
 import { useVoteWatch } from '@/composables/useVoteWatchControl.js'
 
 let spotifyPlayer
@@ -138,18 +138,25 @@ if (import.meta.env.MODE !== 'test') {
 
 // ===
 
-const NEXT_REDUCE_PROCESS_TIME = 3000
-const NEXT_RESUME_PROCESS_TIME = 2000
+const NEXT_REDUCE_PROCESS_TIME = 2000
+const NEXT_RESUME_PROCESS_TIME = 3000
 function nextTrack() {
   reducePlayerVolume(NEXT_REDUCE_PROCESS_TIME)
-    .then(() => store.dispatch('sendNextQueue'))
+    .then(() => store.dispatch('nextWithAddToPending'))
+    // { currentOrderId, targetQueue, order }
+    .then(results => {
+      if (results.order.note) TTSbyNote(results.order)
+    })
+    .catch(() => {
+      TTS('已經沒點播了啦')
+    })
     // 神秘的 reason 參數，並沒有出現在文件，
     // 但是不給會有 error: parameter 'reason' is required
-    .then(() => spotifyPlayer.nextTrack('just wanna listen next one'))
     .then(() => {
       console.log('Skipped to next track!')
-      return resumePlayerVolume(NEXT_RESUME_PROCESS_TIME)
+      return spotifyPlayer.nextTrack('just wanna listen next one')
     })
+    .then(() => resumePlayerVolume(NEXT_RESUME_PROCESS_TIME))
     .catch(error => {
       console.error(error)
     })
