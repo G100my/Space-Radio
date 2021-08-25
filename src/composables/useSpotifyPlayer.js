@@ -10,6 +10,7 @@ import {
   updateProgressTimeHandler,
 } from './spotifyPlayerStateHandler'
 import { useTTSonPlayer } from './useTTSwatch'
+import { useVoteWatch } from '@/composables/useVoteWatchControl.js'
 
 let spotifyPlayer
 const thisSpotifyPlayerId = ref(null)
@@ -51,13 +52,19 @@ function spotifyPlayerReadyHandler({ device_id }) {
   //
   watch(isThisSpotifyPlayerActived, isActived => {
     let stopAutoTTS
+    let stopAutoCut
 
     if (isActived) {
       stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
+      stopAutoCut = useVoteWatch()
     } else {
       if (stopAutoTTS) {
         stopAutoTTS()
         stopAutoTTS = null
+      }
+      if (stopAutoCut) {
+        stopAutoCut()
+        stopAutoCut = null
       }
     }
   })
