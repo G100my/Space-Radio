@@ -113,7 +113,7 @@ const mutations = {
     state.trackData[key] = addedTrack
   },
   _editOrder(state, { storeTarget, childSnapshot }) {
-    state[`${storeTarget}_queue`][childSnapshot.key] = new Order(childSnapshot)
+    state[`${storeTarget}_queue`][childSnapshot.key] = new Order(childSnapshot.val())
   },
 }
 
