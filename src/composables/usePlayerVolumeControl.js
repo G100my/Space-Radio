@@ -1,7 +1,15 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import store from '../store'
 
 function useVolumeControl(playerCallback) {
+  // watch currentVolume
+  watch(
+    () => store.getters.currentVolume,
+    newValue => {
+      playerCallback(newValue / 100)
+    }
+  )
+
   let playerVolume = 50
   // player 音量縮小比例，否則語音音量過小
   const PLAYER_VOLUME_REDUCE_RATE = 0.7
