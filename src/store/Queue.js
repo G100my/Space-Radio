@@ -42,7 +42,7 @@ const getters = {
   trackData(state) {
     return state.trackData
   },
-  pendingOrder() {
+  pendingOrder(state) {
     const pending = Object.values(state.pending_queue)
     return pending.length ? pending[0] : null
   },
