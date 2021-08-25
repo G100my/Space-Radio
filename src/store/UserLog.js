@@ -45,8 +45,8 @@ function userLogConnect2firebase(store) {
         case 'normal2urgent':
         case 'urgent2normal': {
           const orderKey = action.payload
-          const track_name = state.Queue.trackData[orderKey].name
-          userLog = { ...maker(action.type), option: { track_name } }
+          const text = state.Queue.trackData[orderKey].name
+          userLog = { ...maker(action.type), option: { text } }
           break
         }
 
@@ -62,7 +62,7 @@ function userLogConnect2firebase(store) {
         case 'add':
         case 'jumpIn': {
           const { track_name } = action.payload
-          userLog = { ...maker(action.type), option: { name: track_name } }
+          userLog = { ...maker(action.type), option: { text: track_name } }
           break
         }
 

@@ -64,7 +64,7 @@ export default {
                   log.action_type
                 )
               "
-              :text="log.option.name"
+              :text="log.option.text"
             />
             <template v-else-if="log.action_type === 'addMultiple'">
               <BaseMarquee v-for="(name, index) in log.option.names" :key="index" class="flex flex-col w-full">
