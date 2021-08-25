@@ -219,20 +219,25 @@ const actions = {
     commit('_refreshHandler', handler)
     commit('noteDialogToggler', true)
   },
-  sendNextQueue({ state, getters, dispatch }) {
+  nextWithAddToPending({ dispatch, getters }) {
     const result = getters._nextOrder
-    if (!result) return
+    if (!result) return Promise.reject()
     const { currentOrderId, targetQueue, order } = result
 
-    state.previousDeletedKey = currentOrderId
     return spotifyAPI.queue(`spotify:track:${order.track_id}`).then(() => {
       if (targetQueue === 'urgent_queue') {
         dispatch('urgentRemove', currentOrderId)
       } else {
         dispatch('normalRemove', currentOrderId)
       }
-      dispatch('_addPendingQueue', { order, currentOrderId })
       dispatch('updateTheLatestOrder', order)
+      return { currentOrderId, targetQueue, order }
+    })
+  },
+  sendNextQueue({ state, dispatch }) {
+    return dispatch('nextWithAddToPending').then(({ order, currentOrderId }) => {
+      dispatch('_addPendingQueue', { order, currentOrderId })
+      state.previousDeletedKey = currentOrderId
     })
   },
   clearPendingQueue() {
