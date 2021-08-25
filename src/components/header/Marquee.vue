@@ -9,13 +9,13 @@ export default {
     BaseMarquee,
   },
   computed: {
-    latestQueue() {
-      return this.$store.getters.latestQueue
+    latestOrder() {
+      return this.$store.getters.latestOrder
     },
     messageOutput() {
-      // fixme, latestQueue shoud be empty after current playing queue finish
-      const trackName = this.latestQueue ? this.latestQueue.track_name : null
-      const note = this.latestQueue ? this.latestQueue.note : false
+      // fixme, latestOrder shoud be empty after current playing queue finish
+      const trackName = this.latestOrder ? this.latestOrder.track_name : null
+      const note = this.latestOrder ? this.latestOrder.note : false
       return messageOutputMaker(note, trackName)
     },
   },

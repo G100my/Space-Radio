@@ -1,5 +1,5 @@
 import { createStore, createLogger } from 'vuex'
-import { PlayingState, LatestQueue, Volume, Vote, Progress } from './PlayingState.js'
+import { PlayingState, LatestOrder, Volume, Vote, Progress } from './PlayingState.js'
 import { Personal } from './Personal.js'
 import { UserLog } from './UserLog.js'
 import { RoomBasic } from './RoomBasic.js'
@@ -14,7 +14,7 @@ const store = createStore({
   modules: {
     Personal,
     PlayingState,
-    LatestQueue,
+    LatestOrder,
     Volume,
     Vote,
     Progress,

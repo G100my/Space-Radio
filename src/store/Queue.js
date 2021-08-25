@@ -231,7 +231,7 @@ const actions = {
         dispatch('normalRemove', currentOrderId)
       }
       dispatch('_addPendingQueue', { order, currentOrderId })
-      dispatch('updateTheLatestQueue', order)
+      dispatch('updateTheLatestOrder', order)
     })
   },
   clearPendingQueue() {

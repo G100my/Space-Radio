@@ -9,33 +9,33 @@ function setPlayingStateRef(roomKey) {
 
 //
 
-const initialQueue = {
+const initialOrder = {
   id: '',
-  order_name: '',
-  oerder_id: '',
+  orderer_id: '',
+  orderer_name: '',
   note: false,
+  track_id: '',
   track_name: '',
-  order_key: '',
 }
-const LatestQueue = {
+const LatestOrder = {
   state: {
-    latest_queue: { ...initialQueue },
+    latest_order: { ...initialOrder },
   },
   getters: {
-    latestQueue(state) {
-      return state.latest_queue
+    latestOrder(state) {
+      return state.latest_order
     },
   },
   mutations: {
-    _refreshTheLatestQueue(state, newLatestQueue) {
-      if (newLatestQueue === null) state.latest_queue = { ...initialQueue }
-      else state.latest_queue = newLatestQueue
+    _refreshTheLatestOrder(state, newLatestOrder) {
+      if (newLatestOrder === null) state.latest_order = { ...initialOrder }
+      else state.latest_order = newLatestOrder
     },
   },
   actions: {
-    updateTheLatestQueue(_context, newQueue) {
-      if (import.meta.env.DEV && !(newQueue instanceof Order)) console.error('data is not current')
-      playing_state_ref.child('latest_queue').set(newQueue)
+    updateTheLatestOrder(_context, order) {
+      if (import.meta.env.DEV && !(order instanceof Order)) console.error('data is not current')
+      playing_state_ref.child('latest_order').set(order)
     },
   },
 }
@@ -241,7 +241,7 @@ const PlayingState = {
     clearPlayingTrack() {
       playing_state_ref.update({
         playing_track: initialTrack,
-        latest_queue: initialQueue,
+        latest_order: initialOrder,
         playing_progress: initProgress,
       })
     },
@@ -257,8 +257,8 @@ function playingStateConnect2firebase(store) {
   playing_state_ref.child('playing_track').on('value', snapshot => {
     store.commit('refreshPlayerTrack', snapshot.val())
   })
-  playing_state_ref.child('latest_queue').on('value', snapshot => {
-    store.commit('_refreshTheLatestQueue', snapshot.val())
+  playing_state_ref.child('latest_order').on('value', snapshot => {
+    store.commit('_refreshTheLatestOrder', snapshot.val())
   })
   playing_state_ref.child('playing_progress').on('value', snapshot => {
     store.commit('_refreshProgress', snapshot.val())
@@ -280,4 +280,4 @@ function playingStateConnect2firebase(store) {
   })
 }
 
-export { LatestQueue, Volume, Vote, Progress, PlayingState, playingStateConnect2firebase, setPlayingStateRef }
+export { LatestOrder, Volume, Vote, Progress, PlayingState, playingStateConnect2firebase, setPlayingStateRef }
