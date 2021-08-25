@@ -18,13 +18,9 @@ function useTTSonPlayer(reducePlayerVolume, resumePlayerVolume) {
       if (!pending) return
       else if (!pending.note) return
       else {
-        const { track_name, note } = pending
-        let messageOutput4TTS = messageOutputMaker(note, track_name)
-        messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
-
         reducePlayerVolume()
           .then(() => {
-            TTS(messageOutput4TTS)
+            TTSbyNote(pending)
           })
           .then(() => resumePlayerVolume())
           .catch(error => {
@@ -37,4 +33,18 @@ function useTTSonPlayer(reducePlayerVolume, resumePlayerVolume) {
   return unwatch
 }
 
-export { useTTSonPlayer }
+/**
+ *
+ * @param {Order} pending
+ * @param {Funtion} reducePlayerVolume
+ * @param {Funtion} resumePlayerVolume
+ * @returns void
+ */
+function TTSbyNote(pending) {
+  const { track_name, note } = pending
+  let messageOutput4TTS = messageOutputMaker(note, track_name)
+  messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
+  return TTS(messageOutput4TTS)
+}
+
+export { useTTSonPlayer, TTSbyNote }
