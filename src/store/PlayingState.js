@@ -1,3 +1,4 @@
+import { Order } from '@/prototype/Order.js'
 import firebase from './firebase.js'
 
 let playing_state_ref
@@ -33,6 +34,7 @@ const LatestQueue = {
   },
   actions: {
     updateTheLatestQueue(_context, newQueue) {
+      if (import.meta.env.DEV && !(newQueue instanceof Order)) console.error('data is not current')
       playing_state_ref.child('latest_queue').set(newQueue)
     },
   },
