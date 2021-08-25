@@ -40,6 +40,52 @@ function refreshCurrentDevice() {
   })
 }
 
+//
+
+function spotifyPlayerReadyHandler({ device_id }) {
+  console.log('Ready with Device ID', device_id)
+  thisSpotifyPlayerId.value = device_id
+  isThisSpotifyPlayerReady.value = true
+
+  const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
+  ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
+
+  watch(
+    () => isThisSpotifyPlayerActived.value,
+    isActived => {
+      let stopAutoTTS
+      // let unwatchVolume
+      if (isActived) {
+        stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
+      } else {
+        if (stopAutoTTS) {
+          stopAutoTTS()
+          stopAutoTTS = null
+        }
+      }
+    }
+  )
+}
+
+function spotifyPlayerStatusChangedHandler(playerState) {
+  if (playerState === null) {
+    refreshCurrentDevice()
+    store.dispatch('clearPlayingTrack')
+    window.onbeforeunload = null
+    return
+  }
+
+  isThisSpotifyPlayerActived.value = true
+  isThisSpotifyPlayerPaused.value = playerState.paused
+  // if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
+
+  diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
+  clearPendingQueueHandler(playerState, pendingQueue.value)
+  setNextQueueTimeoutHandler(playerState)
+  updateProgressTimeHandler(playerState)
+}
+
+//
 const currentVolume = computed(() => store.getters.currentVolume)
 const isTokenValid = computed(() => store.getters.isTokenValid)
 const token = computed(() => store.getters.token)
@@ -66,50 +112,8 @@ function spotifyWebPlaybackSDKReadyHandler() {
     })
   })
 
-  // Ready
-  spotifyPlayer.addListener('ready', ({ device_id }) => {
-    console.log('Ready with Device ID', device_id)
-    thisSpotifyPlayerId.value = device_id
-    isThisSpotifyPlayerReady.value = true
-
-    const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
-    ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
-
-    watch(
-      () => isThisSpotifyPlayerActived.value,
-      isActived => {
-        let stopAutoTTS
-        // let unwatchVolume
-        if (isActived) {
-          stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
-        } else {
-          if (stopAutoTTS) {
-            stopAutoTTS()
-            stopAutoTTS = null
-          }
-        }
-      }
-    )
-  })
-
-  // Playback status updates
-  spotifyPlayer.addListener('player_state_changed', playerState => {
-    if (playerState === null) {
-      refreshCurrentDevice()
-      store.dispatch('clearPlayingTrack')
-      window.onbeforeunload = null
-      return
-    }
-
-    isThisSpotifyPlayerActived.value = true
-    isThisSpotifyPlayerPaused.value = playerState.paused
-    // if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
-
-    diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
-    clearPendingQueueHandler(playerState, pendingQueue.value)
-    setNextQueueTimeoutHandler(playerState)
-    updateProgressTimeHandler(playerState)
-  })
+  spotifyPlayer.addListener('ready', spotifyPlayerReadyHandler)
+  spotifyPlayer.addListener('player_state_changed', spotifyPlayerStatusChangedHandler)
 
   spotifyPlayer.connect().then(success => {
     window.onbeforeunload = () => {
@@ -193,4 +197,7 @@ export {
   currentActiveDeviceId,
   currentActiveDeviceName,
   isThisSpotifyPlayerReady,
+  reducePlayerVolume as reduceSpotifyPlayerVolume,
+  updatePlayerVolume as updateSpotifyPlayerVolume,
+  resumePlayerVolume as resumeSpotifyPlayerVolume,
 }
