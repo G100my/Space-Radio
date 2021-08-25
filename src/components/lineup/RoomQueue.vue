@@ -6,9 +6,10 @@ import IconArrowDown from '@/assets/icons/icon-arrow-down.svg'
 import IconRemove from '@/assets/icons/icon-remove.svg'
 import IconMore from '@/assets/icons/icon-more.svg'
 
-import { mapGetters } from 'vuex'
+import { useStore } from 'vuex'
 import BaseMarquee from '../base/BaseMarquee.vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { computed, ref } from 'vue'
 
 export default {
   components: {
@@ -25,49 +26,61 @@ export default {
     MenuItem,
   },
   emits: ['activeNoteDialog'],
-  data() {
-    return {
-      isMenuPositionUp: false,
+  setup() {
+    const store = useStore()
+    const isMenuPositionUp = ref(false)
+    const trackData = computed(() => store.getters.trackData)
+    const totalQueue = computed(() => store.getters.totalQueue)
+    const normalQueue = computed(() => store.getters.normalQueue)
+    const urgentQueue = computed(() => store.getters.urgentQueue)
+    const pendingQueue = computed(() => store.getters.pendingQueue)
+    const userId = computed(() => store.getters.userId)
+
+    function remove(orderKey, level) {
+      store.dispatch(`${level}Remove`, orderKey)
     }
-  },
-  computed: {
-    ...mapGetters(['trackData', 'totalQueue', 'normalQueue', 'urgentQueue', 'pendingQueue', 'userId']),
-  },
-  methods: {
-    remove(orderKey, level) {
-      this.$store.dispatch(`${level}Remove`, orderKey)
-    },
-    getImageUrl(track) {
+    function getImageUrl(track) {
       const imagesArray = track.album.images
       const imageLastObject = imagesArray[imagesArray.length - 1]
-      // fixme 忘記當初是抓最大張圖片還是最小張
       return imageLastObject ? imageLastObject.url : null
-    },
-    getOrderer(orderKey) {
-      if (this.normalQueue[orderKey]) return this.normalQueue[orderKey].orderer_name
-      else if (this.urgentQueue[orderKey]) return this.urgentQueue[orderKey].orderer_name
-      else if (this.pendingQueue[orderKey]) return this.pendingQueue[orderKey].orderer_name
-    },
-    menuPositionHandler(event, openState) {
+    }
+    function getOrderer(orderKey) {
+      if (normalQueue.value[orderKey]) return normalQueue.value[orderKey].orderer_name
+      else if (urgentQueue.value[orderKey]) return urgentQueue.value[orderKey].orderer_name
+      else if (pendingQueue.value[orderKey]) return pendingQueue.value[orderKey].orderer_name
+    }
+    function menuPositionHandler(event, openState) {
       if (!openState && event.clientY > (window.innerHeight * 2) / 3) {
-        this.isMenuPositionUp = true
+        isMenuPositionUp.value = true
       } else {
-        this.isMenuPositionUp = false
+        isMenuPositionUp.value = false
       }
-    },
-    checkLevel(level, key) {
+    }
+    function checkLevel(level, key) {
       switch (level) {
         case 'normal':
-          return Boolean(this.normalQueue[key])
+          return Boolean(normalQueue.value[key])
         case 'urgent':
-          return Boolean(this.urgentQueue[key])
+          return Boolean(urgentQueue.value[key])
         case 'pending':
-          if (this.pendingQueue) return Boolean(this.pendingQueue[key])
+          if (pendingQueue.value) return Boolean(pendingQueue.value[key])
           else return false
         default:
           return false
       }
-    },
+    }
+    return {
+      isMenuPositionUp,
+      remove,
+      getImageUrl,
+      getOrderer,
+      menuPositionHandler,
+      checkLevel,
+
+      totalQueue,
+      userId,
+      trackData,
+    }
   },
 }
 </script>
