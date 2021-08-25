@@ -1,31 +1,35 @@
 import { computed, watch } from 'vue'
 import store from '../store'
 
+const currentVolume = computed(() => store.getters.currentVolume)
+const ADJUST_PROCESS_TIME = 5000
+const ADJUST_STEP_TIME = 200
+const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
+// player 音量縮小比例，否則語音音量過小
+const PLAYER_VOLUME_REDUCE_RATE = 0.7
+
 function useVolumeControl(playerCallback) {
+  let recodeVolume
+  let playerVolume
+
   // watch currentVolume
   watch(
     () => store.getters.currentVolume,
     newValue => {
-      playerCallback(newValue / 100)
+      updatePlayerVolume(newValue)
     }
   )
 
-  let playerVolume = 50
-  // player 音量縮小比例，否則語音音量過小
-  const PLAYER_VOLUME_REDUCE_RATE = 0.7
+  // 初始先改掉 player default volume
+  updatePlayerVolume(currentVolume.value)
+
   /**
    * 直接設定音量，有打折
-   * @param {*} time
    */
   function updatePlayerVolume(newVolume) {
-    playerVolume = newVolume
-    if (playerCallback !== null) playerCallback((newVolume / 100) * PLAYER_VOLUME_REDUCE_RATE)
+    playerCallback((newVolume / 100) * PLAYER_VOLUME_REDUCE_RATE)
   }
 
-  let recodeVolume
-  const ADJUST_PROCESS_TIME = 5000
-  const ADJUST_STEP_TIME = 200
-  const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
   /**
    * 逐漸減少音量到房間設定的最小音量
    * @param {Number} processTime default: 5000
@@ -33,11 +37,12 @@ function useVolumeControl(playerCallback) {
    */
   function reducePlayerVolume(processTime = ADJUST_PROCESS_TIME) {
     return new Promise((resolve, reject) => {
-      recodeVolume = playerVolume
+      playerVolume = recodeVolume = currentVolume.value
+      console.log(playerVolume)
       const step = (playerVolume - currentMinimalVolume.value) / (processTime / ADJUST_STEP_TIME)
       const timer = setInterval(() => {
         const afterStep = playerVolume - step
-        const targetVolume = (afterStep / 100) * PLAYER_VOLUME_REDUCE_RATE
+        const targetVolume = afterStep / 100
         console.log(targetVolume)
         try {
           playerCallback(targetVolume)
@@ -65,7 +70,7 @@ function useVolumeControl(playerCallback) {
 
       const timer = setInterval(() => {
         const afterStep = playerVolume + step
-        const targetVolume = (afterStep / 100) * PLAYER_VOLUME_REDUCE_RATE
+        const targetVolume = afterStep / 100
         console.log(targetVolume)
         try {
           playerCallback(targetVolume)
