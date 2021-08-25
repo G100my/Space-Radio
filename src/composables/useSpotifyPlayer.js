@@ -166,35 +166,37 @@ function nextTrack() {
 
 function togglePlay() {
   const device_id = unref(thisSpotifyPlayerId)
-  spotifyPlayer.getCurrentState().then(state => {
-    if (!state) {
-      console.warn('User is not playing music through the Web Playback SDK')
-      spotifyAPI
-        .transferMyPlayback([device_id])
-        .then(() => {
-          return spotifyAPI.getMyCurrentPlaybackState()
-        })
-        .then(async response => {
-          if (!response.shuffle_state) await spotifyAPI.setShuffle(true, { device_id })
-          if (!response.repeat_state) await spotifyAPI.setRepeat('context')
+  spotifyPlayer
+    .getCurrentState()
+    .then(state => {
+      if (!state) {
+        console.warn('User is not playing music through the Web Playback SDK')
+        spotifyAPI
+          .transferMyPlayback([device_id])
+          .then(() => {
+            return spotifyAPI.getMyCurrentPlaybackState()
+          })
+          .then(async response => {
+            if (!response.shuffle_state) await spotifyAPI.setShuffle(true, { device_id })
+            if (!response.repeat_state) await spotifyAPI.setRepeat('context')
 
-          if (!response.context || response.context.type !== 'playlist') {
-            await spotifyAPI.play({ context_uri: `spotify:playlist:${store.getters.roomBasePlaylist}` })
-          } else {
-            spotifyPlayer.togglePlay()
-          }
-        })
-        .then(() => spotifyAPI.getMyCurrentPlaybackState())
-        .catch(error => {
-          console.error(JSON.parse(error.responseText).error, error)
-        })
-    } else {
-      spotifyPlayer.togglePlay()
-    }
-  })
-  .then(() => {
-    refreshCurrentDevice()
-  })
+            if (!response.context || response.context.type !== 'playlist') {
+              await spotifyAPI.play({ context_uri: `spotify:playlist:${store.getters.roomBasePlaylist}` })
+            } else {
+              spotifyPlayer.togglePlay()
+            }
+          })
+          .then(() => spotifyAPI.getMyCurrentPlaybackState())
+          .catch(error => {
+            console.error(JSON.parse(error.responseText).error, error)
+          })
+      } else {
+        spotifyPlayer.togglePlay()
+      }
+    })
+    .then(() => {
+      refreshCurrentDevice()
+    })
 }
 
 export {
