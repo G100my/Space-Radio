@@ -80,18 +80,15 @@ export default {
       observer = new IntersectionObserver(callback, observerOptions)
     })
 
-    const unwatch = watch(
-      () => list.value,
-      () => {
-        if (list.value !== 0) {
-          nextTick(() => {
-            target = infinityContainer.lastElementChild
-            if (target) observer.observe(target)
-          })
-          unwatch()
-        }
+    const unwatch = watch(list, () => {
+      if (list.value !== 0) {
+        nextTick(() => {
+          target = infinityContainer.lastElementChild
+          if (target) observer.observe(target)
+        })
+        unwatch()
       }
-    )
+    })
 
     onUnmounted(() => {
       store.commit('refreshChosenList', [])

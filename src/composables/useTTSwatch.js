@@ -12,7 +12,7 @@ const pendingQueue = computed(() => store.getters.pendingQueue)
  */
 function useTTSonPlayer(reducePlayerVolume, resumePlayerVolume) {
   const unwatch = watch(
-    () => pendingQueue.value,
+    pendingQueue,
     pending => {
       console.log(pending)
       if (!pending) return

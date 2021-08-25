@@ -50,21 +50,19 @@ function spotifyPlayerReadyHandler({ device_id }) {
   const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
   ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
 
-  watch(
-    () => isThisSpotifyPlayerActived.value,
-    isActived => {
-      let stopAutoTTS
-      // let unwatchVolume
-      if (isActived) {
-        stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
-      } else {
-        if (stopAutoTTS) {
-          stopAutoTTS()
-          stopAutoTTS = null
-        }
+  //
+  watch(isThisSpotifyPlayerActived, isActived => {
+    let stopAutoTTS
+
+    if (isActived) {
+      stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
+    } else {
+      if (stopAutoTTS) {
+        stopAutoTTS()
+        stopAutoTTS = null
       }
     }
-  )
+  })
 }
 
 function spotifyPlayerStatusChangedHandler(playerState) {
