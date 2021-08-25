@@ -16,6 +16,7 @@ let spotifyPlayer
 const thisSpotifyPlayerId = ref(null)
 const isThisSpotifyPlayerPaused = ref(true)
 const isThisSpotifyPlayerActived = ref(false)
+const isThisSpotifyPlayerReady = ref(false)
 
 const currentActiveDeviceId = ref(null)
 const currentActiveDeviceName = ref(null)
@@ -70,6 +71,7 @@ function spotifyWebPlaybackSDKReadyHandler() {
   spotifyPlayer.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id)
     thisSpotifyPlayerId.value = device_id
+    isThisSpotifyPlayerReady.value = true
 
     const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
     ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
@@ -201,4 +203,5 @@ export {
   thisSpotifyPlayerId,
   currentActiveDeviceId,
   currentActiveDeviceName,
+  isThisSpotifyPlayerReady,
 }
