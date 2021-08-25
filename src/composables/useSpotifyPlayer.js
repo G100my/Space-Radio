@@ -1,8 +1,6 @@
-import { ref, computed, watch, unref } from 'vue'
+import { ref, computed, unref, watch } from 'vue'
 import store from '../store'
 import { refreshAccessToken } from '../utility/PKCE.js'
-import { messageOutputMaker } from '../utility/messageOutputMaker.js'
-import { TTS } from '../utility/tts.js'
 import { spotifyAPI } from '../utility/spotifyAPI'
 import { useVolumeControl } from './usePlayerVolumeControl'
 import {
@@ -11,6 +9,7 @@ import {
   setNextQueueTimeoutHandler,
   updateProgressTimeHandler,
 } from './spotifyPlayerStateHandler'
+import { useTTSonPlayer } from './useTTSwatch'
 
 let spotifyPlayer
 const thisSpotifyPlayerId = ref(null)
@@ -75,6 +74,22 @@ function spotifyWebPlaybackSDKReadyHandler() {
 
     const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
     ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
+
+    watch(
+      () => isThisSpotifyPlayerActived.value,
+      isActived => {
+        let stopAutoTTS
+        // let unwatchVolume
+        if (isActived) {
+          stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
+        } else {
+          if (stopAutoTTS) {
+            stopAutoTTS()
+            stopAutoTTS = null
+          }
+        }
+      }
+    )
   })
 
   // Playback status updates
@@ -114,38 +129,7 @@ if (import.meta.env.MODE !== 'test') {
   import('https://sdk.scdn.co/spotify-player.js')
 }
 
-watch(isThisSpotifyPlayerActived, isActived => {
-  let unwatchPendingQueue
-  let unwatchVolume
-  if (isActived) {
-    // watch pendingQueue
-    unwatchPendingQueue = watch(pendingQueue, nextQueue => {
-      if (nextQueue && nextQueue.note) {
-        const note = nextQueue.note
-        let messageOutput4TTS = messageOutputMaker(note, nextQueue.track_name)
-        messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
-        store.dispatch('updateTheLatestQueue', nextQueue)
-
-        reducePlayerVolume()
-          .then(() => {
-            TTS(messageOutput4TTS)
-          })
-          .catch(error => {
-            console.error(error)
-          })
-      }
-    })
-    // 也必須等 player 準備完成才 watch playerVolume
-    unwatchVolume = watch(currentVolume, updatePlayerVolume)
-  } else {
-    if (unwatchPendingQueue) {
-      unwatchPendingQueue()
-      unwatchVolume()
-      unwatchPendingQueue = null
-      unwatchVolume = null
-    }
-  }
-})
+// ===
 
 const NEXT_REDUCE_PROCESS_TIME = 3000
 const NEXT_RESUME_PROCESS_TIME = 2000
