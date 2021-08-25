@@ -2,7 +2,7 @@
 import IconPlay from '@/assets/icons/icon-play.svg'
 import IconPause from '@/assets/icons/icon-pause.svg'
 import {
-  isSpotifyPlayerPaused,
+  isThisSpotifyPlayerPaused,
   currentActiveDeviceId,
   spotifyPlayerId,
   togglePlay,
@@ -16,7 +16,7 @@ export default {
   setup() {
     useVoteWatch()
     return {
-      isSpotifyPlayerPaused,
+      isThisSpotifyPlayerPaused,
       currentActiveDeviceId,
       spotifyPlayerId,
       togglePlay,
@@ -32,7 +32,7 @@ export default {
     type="button"
     @click="togglePlay"
   >
-    <IconPlay v-show="isSpotifyPlayerPaused" />
-    <IconPause v-show="!isSpotifyPlayerPaused" />
+    <IconPlay v-show="isThisSpotifyPlayerPaused" />
+    <IconPause v-show="!isThisSpotifyPlayerPaused" />
   </button>
 </template>

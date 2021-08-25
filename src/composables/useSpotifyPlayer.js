@@ -13,7 +13,7 @@ import {
 } from './spotifyPlayerStateHandler'
 
 let spotifyPlayer
-const isSpotifyPlayerPaused = ref(true)
+const isThisSpotifyPlayerPaused = ref(true)
 const spotifyPlayerId = ref(null)
 const isThisSpotifyPlayerActived = ref(false)
 
@@ -73,12 +73,13 @@ function spotifyWebPlaybackSDKReadyHandler() {
     // 當不是這個裝置撥放時，斷開連結
     if (playerState === null) {
       isThisSpotifyPlayerActived.value = false
-      isSpotifyPlayerPaused.value = true
+      isThisSpotifyPlayerPaused.value = true
       store.dispatch('clearPlayingTrack')
       window.onbeforeunload = null
       return
     }
-    isSpotifyPlayerPaused.value = playerState.paused
+
+    isThisSpotifyPlayerPaused.value = playerState.paused
     if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
 
     diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
@@ -190,8 +191,7 @@ export {
   spotifyPlayer,
   isThisSpotifyPlayerActived,
   nextTrack,
-  isSpotifyPlayerPaused,
-  spotifyPlayerId,
+  isThisSpotifyPlayerPaused,
   currentActiveDeviceId,
   currentActiveDeviceName,
 }
