@@ -6,28 +6,8 @@ function setPlayingStateRef(roomKey) {
   playing_state_ref = firebase.database().ref(`${roomKey}/playing_state`)
 }
 
-const transformURI2URL = uri => {
-  if (typeof uri !== 'string') return ''
-  const type = uri.split(':')[1]
-  return uri.replace(`spotify:${type}:`, `https://open.spotify.com/${type}/`)
-}
-const volumeStep = 2
-const initialTrack = {
-  id: false,
-  name: '',
-  artists: [
-    {
-      name: 'G100',
-      url: 'https://github.com/G100my/Jukebox',
-    },
-  ],
-  album: {
-    url: '',
-    name: '---',
-    image_url: '',
-  },
-  is_playable: true,
-}
+//
+
 const initialQueue = {
   id: '',
   order_name: '',
@@ -36,84 +16,52 @@ const initialQueue = {
   track_name: '',
   order_key: '',
 }
-const initProgress = {
-  paused: false,
-  duration: 0,
-  position: 0,
+const LatestQueue = {
+  state: {
+    latest_queue: { ...initialQueue },
+  },
+  getters: {
+    latestQueue(state) {
+      return state.latest_queue
+    },
+  },
+  mutations: {
+    _refreshTheLatestQueue(state, newLatestQueue) {
+      if (newLatestQueue === null) state.latest_queue = { ...initialQueue }
+      else state.latest_queue = newLatestQueue
+    },
+  },
+  actions: {
+    updateTheLatestQueue(_context, newQueue) {
+      playing_state_ref.child('latest_queue').set(newQueue)
+    },
+  },
 }
-const PlayingState = {
+
+//
+const volumeStep = 2
+const Volume = {
   state: {
     volume: 30,
     minimal_volume: 20,
-    playing_track: { ...initialTrack },
-    latest_queue: { ...initialQueue },
-    dislike: 0,
-    dislike_threshold: 2,
-    dislike_countdown: false,
-    isVoted: false,
-    playing_progress: { ...initProgress },
   },
   getters: {
-    playerPlayingTrackId(state) {
-      return state.playing_track.id
-    },
-    playerPlayingArtists(state) {
-      return state.playing_track.artists
-    },
-    playerPlayingAlbum(state) {
-      return state.playing_track.album
-    },
-    playerPlayingTrackName(state) {
-      return state.playing_track.name ? state.playing_track.name : 'No track in player'
-    },
     currentVolume(state) {
       return state.volume
     },
     currentMinimalVolume(state) {
       return state.minimal_volume
     },
-    currentDislikeThreshold(state) {
-      return state.dislike_threshold
-    },
-    currentDislike(state) {
-      return state.dislike
-    },
-    currentDislikeCountdown(state) {
-      return state.dislike_countdown
-    },
-    currentProgress(state) {
-      return state.playing_progress
-    },
-    latestQueue(state) {
-      return state.latest_queue
-    },
   },
   mutations: {
-    refreshPlayerTrack(state, newPlayingTrack) {
-      if (!newPlayingTrack) state.playing_track = { ...initialTrack }
-      else state.playing_track = newPlayingTrack
-    },
-    _refreshTheLatestQueue(state, newLatestQueue) {
-      if (newLatestQueue === null) state.latest_queue = { ...initialQueue }
-      else state.latest_queue = newLatestQueue
-    },
-    _refreshProgress(state, newProgress) {
-      state.playing_progress = newProgress
-    },
     _adjustVolume(state, value) {
       state.volume = value
-    },
-    _adjustDislike(state, value) {
-      state.dislike = value
     },
     _adjustMinimalVolume(state, value) {
       state.minimal_volume = value
     },
-    _adjustDislikeThreshold(state, value) {
-      state.dislike_threshold = value
-    },
-    _adjustDislikeCountdown(state, value) {
-      state.dislike_countdown = value
+    updateMinimalVolume(_context, value) {
+      playing_state_ref.child('minimal_volume').set(value)
     },
   },
   actions: {
@@ -125,6 +73,41 @@ const PlayingState = {
       const reduceResult = state.volume - volumeStep
       if (reduceResult >= state.minimal_volume) playing_state_ref.update({ volume: reduceResult })
     },
+  },
+}
+
+//
+
+const Vote = {
+  state: {
+    dislike: 0,
+    dislike_threshold: 2,
+    dislike_countdown: false,
+    isVoted: false,
+  },
+  getters: {
+    currentDislikeThreshold(state) {
+      return state.dislike_threshold
+    },
+    currentDislike(state) {
+      return state.dislike
+    },
+    currentDislikeCountdown(state) {
+      return state.dislike_countdown
+    },
+  },
+  mutations: {
+    _adjustDislike(state, value) {
+      state.dislike = value
+    },
+    _adjustDislikeThreshold(state, value) {
+      state.dislike_threshold = value
+    },
+    _adjustDislikeCountdown(state, value) {
+      state.dislike_countdown = value
+    },
+  },
+  actions: {
     reduceDislike({ state, getters }) {
       const reduceResult = state.dislike - 1
       if (reduceResult >= 0) {
@@ -148,6 +131,94 @@ const PlayingState = {
     adjustIsVoted({ state, getters }, snapshot) {
       if (getters.userId) state.isVoted = snapshot.hasChild(getters.userId)
     },
+    updateDislikeThreshold(_context, value) {
+      playing_state_ref.child('dislike_threshold').set(value)
+    },
+    updateDislikeCountdown(_context, value) {
+      playing_state_ref.child('dislike_countdown').set(value)
+    },
+  },
+}
+
+//
+
+const initProgress = {
+  paused: false,
+  duration: 0,
+  position: 0,
+}
+const Progress = {
+  state: {
+    playing_progress: { ...initProgress },
+  },
+  getters: {
+    currentProgress(state) {
+      return state.playing_progress
+    },
+  },
+  mutations: {
+    _refreshProgress(state, newProgress) {
+      state.playing_progress = newProgress
+    },
+  },
+  actions: {
+    updateProgress(_context, value) {
+      playing_state_ref.child('playing_progress').set(value)
+    },
+    updatePauseProgress() {
+      playing_state_ref.child('playing_progress').update({ paused: true })
+    },
+  },
+}
+
+//
+
+const initialTrack = {
+  id: false,
+  name: '',
+  artists: [
+    {
+      name: 'G100',
+      url: 'https://github.com/G100my/Jukebox',
+    },
+  ],
+  album: {
+    url: '',
+    name: '---',
+    image_url: '',
+  },
+  is_playable: true,
+}
+function transformURI2URL(uri) {
+  if (typeof uri !== 'string') return ''
+  const type = uri.split(':')[1]
+  return uri.replace(`spotify:${type}:`, `https://open.spotify.com/${type}/`)
+}
+const PlayingState = {
+  state: {
+    playing_track: { ...initialTrack },
+  },
+  getters: {
+    playerPlayingTrackId(state) {
+      return state.playing_track.id
+    },
+    playerPlayingArtists(state) {
+      return state.playing_track.artists
+    },
+    playerPlayingAlbum(state) {
+      return state.playing_track.album
+    },
+    playerPlayingTrackName(state) {
+      return state.playing_track.name ? state.playing_track.name : 'No track in player'
+    },
+  },
+  mutations: {
+    refreshPlayerTrack(state, newPlayingTrack) {
+      if (!newPlayingTrack) state.playing_track = { ...initialTrack }
+      else state.playing_track = newPlayingTrack
+    },
+  },
+  actions: {
     updatePlayingTrack(_context, newPlayingTrack) {
       const track = {
         name: newPlayingTrack.name,
@@ -165,9 +236,6 @@ const PlayingState = {
       }
       playing_state_ref.child('playing_track').set(track)
     },
-    updateTheLatestQueue(_context, newQueue) {
-      playing_state_ref.child('latest_queue').set(newQueue)
-    },
     clearPlayingTrack() {
       playing_state_ref.update({
         playing_track: initialTrack,
@@ -175,23 +243,10 @@ const PlayingState = {
         playing_progress: initProgress,
       })
     },
-    updateMinimalVolume(_context, value) {
-      playing_state_ref.child('minimal_volume').set(value)
-    },
-    updateDislikeThreshold(_context, value) {
-      playing_state_ref.child('dislike_threshold').set(value)
-    },
-    updateDislikeCountdown(_context, value) {
-      playing_state_ref.child('dislike_countdown').set(value)
-    },
-    updateProgress(_context, value) {
-      playing_state_ref.child('playing_progress').set(value)
-    },
-    updatePauseProgress() {
-      playing_state_ref.child('playing_progress').update({ paused: true })
-    },
   },
 }
+
+//
 
 function playingStateConnect2firebase(store) {
   playing_state_ref.child('volume').on('value', snapshot => {
@@ -223,4 +278,4 @@ function playingStateConnect2firebase(store) {
   })
 }
 
-export { PlayingState, playingStateConnect2firebase, setPlayingStateRef }
+export { LatestQueue, Volume, Vote, Progress, PlayingState, playingStateConnect2firebase, setPlayingStateRef }
