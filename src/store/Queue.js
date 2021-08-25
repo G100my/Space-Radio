@@ -42,6 +42,10 @@ const getters = {
   trackData(state) {
     return state.trackData
   },
+  pendingOrder() {
+    const pending = Object.values(state.pending_queue)
+    return pending.length ? pending[0] : null
+  },
   pendingQueue(state) {
     return state.pending_queue
   },
@@ -64,9 +68,6 @@ const getters = {
     const urgentQueueArray = Object.keys(state.urgent_queue)
     const normalQueueArray = Object.keys(state.normal_queue)
     return urgentQueueArray.length + normalQueueArray.length
-  },
-  pendingNote(state) {
-    return state.pending_queue ? state.pending_queue.note : null
   },
   _nextOrder(state) {
     const urgentQueueIds = Object.keys(state.urgent_queue)

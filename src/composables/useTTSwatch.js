@@ -3,7 +3,7 @@ import { computed, watch } from 'vue'
 import { messageOutputMaker } from '../utility/messageOutputMaker.js'
 import { TTS } from '../utility/tts.js'
 
-const pendingQueue = computed(() => store.getters.pendingQueue)
+const pendingOrder = computed(() => store.getters.pendingOrder)
 
 /**
  * @param {Function} reducePlayerVolume
@@ -12,7 +12,7 @@ const pendingQueue = computed(() => store.getters.pendingQueue)
  */
 function useTTSonPlayer(reducePlayerVolume, resumePlayerVolume) {
   const unwatch = watch(
-    pendingQueue,
+    pendingOrder,
     pending => {
       console.log(pending)
       if (!pending) return
