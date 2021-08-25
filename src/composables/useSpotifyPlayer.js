@@ -13,8 +13,8 @@ import {
 } from './spotifyPlayerStateHandler'
 
 let spotifyPlayer
+const thisSpotifyPlayerId = ref(null)
 const isThisSpotifyPlayerPaused = ref(true)
-const spotifyPlayerId = ref(null)
 const isThisSpotifyPlayerActived = ref(false)
 
 const currentActiveDeviceId = ref(null)
@@ -61,7 +61,7 @@ function spotifyWebPlaybackSDKReadyHandler() {
   // Ready
   spotifyPlayer.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id)
-    spotifyPlayerId.value = device_id
+    thisSpotifyPlayerId.value = device_id
     refreshCurrentDevice()
 
     const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
@@ -156,7 +156,7 @@ function nextTrack() {
 }
 
 function togglePlay() {
-  const device_id = unref(spotifyPlayerId)
+  const device_id = unref(thisSpotifyPlayerId)
   spotifyPlayer.getCurrentState().then(state => {
     if (!state) {
       console.warn('User is not playing music through the Web Playback SDK')
@@ -192,6 +192,7 @@ export {
   isThisSpotifyPlayerActived,
   nextTrack,
   isThisSpotifyPlayerPaused,
+  thisSpotifyPlayerId,
   currentActiveDeviceId,
   currentActiveDeviceName,
 }
