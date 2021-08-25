@@ -26,9 +26,17 @@ let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
 function refreshCurrentDevice() {
   spotifyAPI.getMyCurrentPlaybackState().then(result => {
-    if (!result) return
-    currentActiveDeviceId.value = result.device.id
-    currentActiveDeviceName.value = result.device.name
+    console.log('CurrentPlaybackState: ', result)
+    // 如果沒有任何裝置會是 null
+    if (!result) {
+      isThisSpotifyPlayerActived.value = false
+      isThisSpotifyPlayerPaused.value = true
+      return
+    }
+    const { device } = result
+    currentActiveDeviceId.value = device.id
+    currentActiveDeviceName.value = device.name
+    isThisSpotifyPlayerActived.value = currentActiveDeviceId.value === thisSpotifyPlayerId.value
   })
 }
 
@@ -62,7 +70,6 @@ function spotifyWebPlaybackSDKReadyHandler() {
   spotifyPlayer.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id)
     thisSpotifyPlayerId.value = device_id
-    refreshCurrentDevice()
 
     const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
     ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
@@ -162,8 +169,7 @@ function togglePlay() {
       console.warn('User is not playing music through the Web Playback SDK')
       spotifyAPI
         .transferMyPlayback([device_id])
-        .then((response, reject) => {
-          console.log(response, reject)
+        .then(() => {
           return spotifyAPI.getMyCurrentPlaybackState()
         })
         .then(async response => {
