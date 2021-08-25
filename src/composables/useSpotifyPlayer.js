@@ -79,17 +79,16 @@ function spotifyWebPlaybackSDKReadyHandler() {
 
   // Playback status updates
   spotifyPlayer.addListener('player_state_changed', playerState => {
-    // 當不是這個裝置撥放時，斷開連結
     if (playerState === null) {
-      isThisSpotifyPlayerActived.value = false
-      isThisSpotifyPlayerPaused.value = true
+      refreshCurrentDevice()
       store.dispatch('clearPlayingTrack')
       window.onbeforeunload = null
       return
     }
 
+    isThisSpotifyPlayerActived.value = true
     isThisSpotifyPlayerPaused.value = playerState.paused
-    if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
+    // if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
 
     diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
     clearPendingQueueHandler(playerState, pendingQueue.value)
@@ -105,6 +104,7 @@ function spotifyWebPlaybackSDKReadyHandler() {
     }
     if (success) console.log('Jukebox player successfully connected to Spotify!')
     if (success && import.meta.env.DEV) window.spotifyPlayer = spotifyPlayer
+    refreshCurrentDevice()
   })
 }
 
@@ -191,6 +191,9 @@ function togglePlay() {
     } else {
       spotifyPlayer.togglePlay()
     }
+  })
+  .then(() => {
+    refreshCurrentDevice()
   })
 }
 
