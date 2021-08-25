@@ -36,7 +36,7 @@ export default {
     </header>
     <section id="plarer-state" class="flex items-start laptop:flex-col">
       <div
-        class="relative bg-tertiary-2 bg-opacity-60 px-5 pt-3 pb-4 laptop:w-10/12 laptop:px-9 laptop:pt-[22px] laptop:pb-7"
+        class="flex-shrink-0 relative bg-tertiary-2 bg-opacity-60 px-5 pt-3 pb-4 laptop:w-10/12 laptop:px-9 laptop:pt-[22px] laptop:pb-7"
       >
         <a :href="playerPlayingAlbum.url" target="_blank">
           <img
@@ -51,7 +51,9 @@ export default {
           class="absolute right-0 bottom-0 translate-y-1/2 translate-x-1/2 laptop:translate-x-3/4 laptop:translate-y-1/2 z-30"
         />
       </div>
-      <section class="flex-1 pl-4 self-stretch flex flex-col justify-end laptop:-mt-4 laptop:pl-0 laptop:min-h-[90px]">
+      <section
+        class="flex-1 w-0 laptop:w-auto pl-4 self-stretch flex flex-col justify-end laptop:-mt-4 laptop:pl-0 laptop:min-h-[90px]"
+      >
         <section class="flex laptop:w-9/12 laptop:relative">
           <p class="flex-1 font-bold text-natural-gray1">{{ playerPlayingTrackName }}</p>
           <LikeButton class="laptop:absolute laptop:-top-2 laptop:right-0 laptop:z-30" />
