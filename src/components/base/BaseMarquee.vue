@@ -73,6 +73,6 @@ export default {
   }
 }
 ._sentence {
-  @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap;
+  @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap space-x-1;
 }
 </style>
