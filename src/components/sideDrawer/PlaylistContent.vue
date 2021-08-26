@@ -3,14 +3,15 @@ import { computed, nextTick, onMounted, onUnmounted, reactive, ref, toRaw, watch
 import { useStore } from 'vuex'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
+import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
 import BaseMarquee from '../base/BaseMarquee.vue'
 
 export default {
   name: 'PlaylistContent',
-  components: { BaseMarquee, IconPlus, IconArrowUp },
+  components: { BaseMarquee, IconPlus, IconArrowUp, IconSpinnerLoader },
   setup() {
     const store = useStore()
-    const listName = computed(() => store.getters.listName)
+    const listName = computed(() => store.getters.chosenName)
     const selectMode = ref(false)
     const idSet = reactive(new Set())
     const nameSet = new Set()
@@ -39,19 +40,17 @@ export default {
       nameSet.clear()
     }
     //
+
+    // first
+    store.dispatch('fetchFirst')
+
     const list = computed(() => store.getters.chosenList)
+    const listTotal = computed(() => store.getters.chosenTotal)
+    const next = computed(() => store.getters.chosenNext)
     let observer
     let infinityContainer
     let target
-    const next = computed(() => store.getters.spotifyLikedGetters('Next'))
     const loadingAnimation = ref(false)
-    let fetchData
-
-    if (listName.value.startsWith('Liked')) {
-      fetchData = () => store.dispatch('getSpotifyLikedSongs_offset')
-    } else {
-      fetchData = () => store.dispatch('getSpotifyListContent_offset')
-    }
 
     function nextCallback() {
       loadingAnimation.value = false
@@ -65,7 +64,7 @@ export default {
     async function nexthandler() {
       if (target) observer.unobserve(target)
       loadingAnimation.value = true
-      await fetchData().then(nextCallback)
+      await store.dispatch('fetchOffset').then(nextCallback)
     }
     onMounted(() => {
       infinityContainer = document.getElementById('infinity')
@@ -96,11 +95,13 @@ export default {
     return {
       listName,
       list,
+      listTotal,
       selectMode,
       idSet,
       checkboxHandler,
       addMultipleHandler,
       cancelHandler,
+      loadingAnimation,
     }
   },
 }
@@ -120,6 +121,13 @@ export default {
         <button type="button" class="btn-secondary" @click="cancelHandler">Cancel</button>
       </div>
     </header>
+    <div class="mt-5 flex gap-x-1 items-baseline">
+      <p class="mr-auto text-natural-gray2 font-bold">
+        <span class="mx-2">{{ list.length }} / {{ listTotal }}</span>
+        <span>results</span>
+        <IconSpinnerLoader v-show="loadingAnimation" class="animate-spin inline-block text-natural-gray2 mx-2" />
+      </p>
+    </div>
     <ul id="infinity" class="flex-1 mt-7 w-full space-y-4 overflow-y-auto">
       <li v-for="track in list" :key="track.id" class="bg-tertiary-1 bg-opacity-60 rounded-10 flex gap-x-2 py-3 px-4">
         <div
