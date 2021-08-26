@@ -43,7 +43,7 @@ export default {
     let observer
     let infinityContainer
     let target
-    const next = computed(() => store.getters.spotifyLikedNext)
+    const next = computed(() => store.getters.spotifyLikedGetters('Next'))
     const loadingAnimation = ref(false)
     let fetchData
 

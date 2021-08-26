@@ -17,26 +17,117 @@ const reduceDataCallback = i => ({
 const increaseOffset = 20
 const increasePplaylistLimet = 100
 
-export const PersonalPlaylists = {
+const spotifyPlaylist = {
   state: {
-    spotifyLists: [],
+    spotifyId: '',
+    spotifyOffset: 0,
+    spotifyTotal: 0,
+    spotifyNext: false,
+  },
+  getters: {
+    playlistGetters: state => type => state[`spotify${type}`],
+  },
+  mutations: {
+    _refreshSpotifyNextOffset(state, { next, offset }) {
+      state.spotifyOffset = offset
+      state.spotifyNext = Boolean(next)
+    },
+    _refreshSpotifyId(state, spotifyId) {
+      state.spotifyId = spotifyId
+    },
+  },
+  actions: {
+    async getSpotifyListContent_first({ commit }, listId) {
+      commit('_refreshSpotifyId', listId)
+      await spotifyAPI
+        .getPlaylistTracks(listId, {
+          fields: playlistFields,
+        })
+        .then(({ items, next, offset, total }) => {
+          commit('_refreshSpotifyNextOffset', { next, offset })
+          state.spotifyTotal = total
 
-    spotifyLikedSongs: [],
-    spotifyLikedSongsTotal: 0,
-    spotifyLikedSongsOffset: 0,
-    spotifyLikedSongsNext: false,
+          const transferResult = items.map(reduceDataCallback)
+          commit('refreshChosenList', transferResult)
+        })
+    },
+    async getSpotifyListContent_offset({ state, commit, getters }) {
+      await spotifyAPI
+        .getPlaylistTracks(state.spotifyId, {
+          fields: playlistFields,
+          offset: getters.playlistGetters('Offset') + increasePplaylistLimet,
+          limit: increasePplaylistLimet,
+        })
+        .then(({ items, next, offset }) => {
+          commit('_refreshSpotifyNextOffset', { next, offset })
+          const transferResult = items.map(reduceDataCallback)
+          commit('refreshChosenList', state.chosenList.concat(transferResult))
+        })
+    },
+  },
+}
 
-    playlistOffset: 0,
-    playlistTotal: 0,
-    playlistNext: false,
-    playlistId: '',
+const spotifyLiked = {
+  state: {
+    spotifyLiked: [],
+    spotifyLikedTotal: 0,
+    spotifyLikedOffset: 0,
+    spotifyLikedNext: false,
+  },
+  getters: {
+    spotifyLiked(state) {
+      return state.spotifyLiked
+    },
+    spotifyLikedGetters: state => type => state[`spotifyLiked${type}`],
+  },
+  mutations: {
+    _resetSpotifyLikeSongs(state, { tracks, total }) {
+      state.spotifyLiked = tracks
+      state.spotifyLikedSongsTotal = total
+    },
+    _increaseSpotifyLikeSongs(state, tracks) {
+      state.spotifyLiked = state.spotifyLiked.concat(tracks)
+    },
+    _refreshSpotifyNextOffset(state, { next, offset }) {
+      state.spotifyLikedSongsOffset = offset
+      state.spotifyLikedSongsNext = Boolean(next)
+    },
+  },
+  actions: {
+    async getSpotifyLikedSongs_first({ commit, getters }) {
+      await spotifyAPI.getMySavedTracks().then(({ items, offset, total, next }) => {
+        if (total != getters.spotifyLikedGetters('Total')) {
+          const transferResult = items.map(reduceDataCallback)
+          commit('_resetSpotifyLikeSongs', { tracks: transferResult, total })
+          commit('_refreshSpotifyNextOffset', { next, offset })
+        }
+        commit('refreshChosenList', getters.spotifyLiked)
+      })
+    },
+    async getSpotifyLikedSongs_offset({ commit, getters }) {
+      await spotifyAPI
+        .getMySavedTracks({ limit: increaseOffset, offset: getters.spotifyLikedGetters('Offset') + increaseOffset })
+        .then(({ items, offset, next }) => {
+          const transferResult = items.map(reduceDataCallback)
+          commit('_increaseSpotifyLikeSongs', transferResult)
+          commit('_refreshSpotifyNextOffset', { next, offset })
+          commit('refreshChosenList', getters.spotifyLiked)
+        })
+    },
+  },
+}
+
+const common = {
+  state: {
+    spotifyPlaylists: [],
 
     chosenListName: '',
     chosenList: [],
+    chosenPrefix: '',
   },
   getters: {
     spotifyLists(state) {
-      return state.spotifyLists
+      return state.spotifyPlaylists
     },
     chosenList(state) {
       return state.chosenList
@@ -44,47 +135,16 @@ export const PersonalPlaylists = {
     listName(state) {
       return state.chosenListName
     },
-    _sLikeOffset(state) {
-      return state.spotifyLikedSongsOffset
-    },
-    _sLikeTotal(state) {
-      return state.spotifyLikedSongsTotal
-    },
-    _sLike(state) {
-      return state.spotifyLikedSongs
-    },
-    _playlistGetters: state => type => state[`playlist${type}`],
-    spotifyLikedNext(state) {
-      return state.spotifyLikedSongsNext
-    },
   },
   mutations: {
     _refreshSpotifyLists(state, newPlaylists) {
-      state.spotifyLists = newPlaylists
+      state.spotifyPlaylists = newPlaylists
     },
     refreshChosenList(state, content) {
       state.chosenList = content
     },
     refreshChosenListName(state, listName) {
       state.chosenListName = listName
-    },
-    _resetSpotifyLikeSongs(state, { tracks, total }) {
-      state.spotifyLikedSongs = tracks
-      state.spotifyLikedSongsTotal = total
-    },
-    _increaseSpotifyLikeSongs(state, tracks) {
-      state.spotifyLikedSongs = state.spotifyLikedSongs.concat(tracks)
-    },
-    _refreshSpotifyNextOffset(state, { next, offset }) {
-      state.spotifyLikedSongsOffset = offset
-      state.spotifyLikedSongsNext = Boolean(next)
-    },
-    _refreshPlaylistNextOffset(state, { next, offset }) {
-      state.playlistOffset = offset
-      state.playlistNext = Boolean(next)
-    },
-    _refreshPlaylistId(state, playlistId) {
-      state.playlistId = playlistId
     },
   },
   actions: {
@@ -93,52 +153,20 @@ export const PersonalPlaylists = {
         commit('_refreshSpotifyLists', result.items)
       })
     },
-    async getSpotifyListContent_first({ commit }, listId) {
-      commit('_refreshPlaylistId', listId)
-      await spotifyAPI
-        .getPlaylistTracks(listId, {
-          fields: playlistFields,
-        })
-        .then(({ items, next, offset, total }) => {
-          commit('_refreshPlaylistNextOffset', { next, offset })
-          state.playlistTotal = total
-
-          const transferResult = items.map(reduceDataCallback)
-          commit('refreshChosenList', transferResult)
-        })
-    },
-    async getSpotifyListContent_offset({ state, commit, getters }) {
-      await spotifyAPI
-        .getPlaylistTracks(state.playlistId, {
-          fields: playlistFields,
-          offset: getters._playlistGetters('Offset') + increasePplaylistLimet,
-          limit: increasePplaylistLimet,
-        })
-        .then(({ items, next, offset }) => {
-          commit('_refreshPlaylistNextOffset', { next, offset })
-          const transferResult = items.map(reduceDataCallback)
-          commit('refreshChosenList', state.chosenList.concat(transferResult))
-        })
-    },
-    async getSpotifyLikedSongs_first({ commit, getters }) {
-      await spotifyAPI.getMySavedTracks().then(({ items, offset, total, next }) => {
-        if (total != getters._sLikeTotal) {
-          const transferResult = items.map(reduceDataCallback)
-          commit('_resetSpotifyLikeSongs', { tracks: transferResult, total })
-          commit('_refreshSpotifyNextOffset', { next, offset })
-        }
-        commit('refreshChosenList', getters._sLike)
-      })
-    },
-    async getSpotifyLikedSongs_offset({ commit, getters }) {
-      await spotifyAPI
-        .getMySavedTracks({ limit: increaseOffset, offset: getters._sLikeOffset + increaseOffset })
-        .then(({ items, offset, next }) => {
-          const transferResult = items.map(reduceDataCallback)
-          commit('_increaseSpotifyLikeSongs', transferResult)
-          commit('_refreshSpotifyNextOffset', { next, offset })
-          commit('refreshChosenList', getters._sLike)
-        })
-    },
   },
 }
+
+export const PersonalPlaylists = [spotifyPlaylist, spotifyLiked, common].reduce(
+  (accumulator, submodule) => {
+    accumulator.state = { ...accumulator.state, ...submodule.state }
+    accumulator.getters = { ...accumulator.getters, ...submodule.getters }
+    accumulator.mutations = { ...accumulator.mutations, ...submodule.mutations }
+    accumulator.actions = { ...accumulator.actions, ...submodule.actions }
+  },
+  {
+    state: {},
+    getters: {},
+    mutations: {},
+    actions: {},
+  }
+)
