@@ -1,7 +1,7 @@
 export class Order {
   /**
    *
-   * @param {Object} paramsObject id, orderer_id, orderer_name, track_name, key, note = false
+   * @param {Object} paramsObject id, orderer_id, orderer_name, track_name, note = false
    */
   constructor({ id, orderer_id, orderer_name, track_name, track_id, note = false }) {
     this.orderer_id = orderer_id
