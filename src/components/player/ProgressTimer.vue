@@ -46,7 +46,11 @@ export default {
         clearTimeDisplay()
         return
       }
-      if (paused) return
+      if (paused) {
+        if (progressTimer.value) clearInterval(progressTimer.value)
+        progressTimer.value = null
+        return
+      }
 
       duration = typeCheck(duration)
       position = typeCheck(position)
