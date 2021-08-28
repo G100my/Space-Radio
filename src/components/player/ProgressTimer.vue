@@ -1,32 +1,9 @@
-<template>
-  <p>
-    <span>{{ positionMin }}:{{ positionSec }}</span
-    ><span class="mx-2">/</span><span>{{ durationMin }}:{{ durationSec }}</span>
-  </p>
-</template>
 <script>
-import { watch, computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { computed } from 'vue'
+import { currentPosition, currentDuration } from '@/composables/useProgressTimer'
 
 export default {
   setup() {
-    const interval = 1000
-
-    const store = useStore()
-    const currentProgress = computed(() => store.getters.currentProgress)
-
-    const progressTimer = ref(null)
-    const durationMin = ref('-')
-    const durationSec = ref('--')
-    const positionMin = ref('-')
-    const positionSec = ref('--')
-
-    function clearTimeDisplay() {
-      positionMin.value = '-'
-      positionSec.value = '--'
-      durationMin.value = '-'
-      durationSec.value = '--'
-    }
     function zeroFormatter(num) {
       return num < 10 ? '0'.concat(num) : num
     }
@@ -38,44 +15,38 @@ export default {
       return item
     }
 
-    watch(currentProgress, newProgress => {
-      clearInterval(progressTimer.value)
-      let { paused, duration, position } = newProgress
+    const position = computed(() => {
+      const current = typeCheck(currentPosition.value)
 
-      if (duration === 0) {
-        clearTimeDisplay()
-        return
+      if (current !== 0) {
+        const min = Math.floor(current / 1000 / 60)
+        const sec = zeroFormatter(Math.floor((current / 1000) % 60))
+        return `${min}:${sec}`
+      } else {
+        return '--:--'
       }
-      if (paused) {
-        if (progressTimer.value) clearInterval(progressTimer.value)
-        progressTimer.value = null
-        return
-      }
-
-      duration = typeCheck(duration)
-      position = typeCheck(position)
-
-      durationMin.value = Math.floor(duration / 1000 / 60)
-      durationSec.value = zeroFormatter(Math.floor((duration / 1000) % 60))
-
-      progressTimer.value = setInterval(() => {
-        position += 1000
-        if (position > duration) {
-          clearInterval(progressTimer.value)
-          clearTimeDisplay()
-        } else {
-          positionMin.value = Math.floor(position / 1000 / 60)
-          positionSec.value = zeroFormatter(Math.floor((position / 1000) % 60))
-        }
-      }, interval)
     })
+    const duration = computed(() => {
+      const current = typeCheck(currentDuration.value)
+      if (current !== 0) {
+        const min = Math.floor(current / 1000 / 60)
+        const sec = zeroFormatter(Math.floor((current / 1000) % 60))
+        return `${min}:${sec}`
+      } else {
+        return '--:--'
+      }
+    })
+
     return {
-      durationMin,
-      durationSec,
-      positionMin,
-      positionSec,
-      currentProgress,
+      position,
+      duration,
     }
   },
 }
 </script>
+<template>
+  <p>
+    <span>{{ position }}</span
+    ><span class="mx-2">/</span><span>{{ duration }}</span>
+  </p>
+</template>
