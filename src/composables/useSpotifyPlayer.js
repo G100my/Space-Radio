@@ -70,6 +70,9 @@ function spotifyPlayerReadyHandler({ device_id }) {
   })
 }
 
+const pendingOrder = computed(() => store.getters.pendingOrder)
+const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
+
 function spotifyPlayerStatusChangedHandler(playerState) {
   if (playerState === null) {
     refreshCurrentDevice()
@@ -82,8 +85,8 @@ function spotifyPlayerStatusChangedHandler(playerState) {
   isThisSpotifyPlayerPaused.value = playerState.paused
   // if (!isThisSpotifyPlayerActived.value) refreshCurrentDevice()
 
-  diffirentPlayingTrackIdHandler(playerState.track_window.current_track)
-  clearPendingQueueHandler(playerState)
+  diffirentPlayingTrackIdHandler(playerState, unref(playerPlayingTrackId))
+  clearPendingQueueHandler(playerState, unref(pendingOrder))
   setNextQueueTimeoutHandler(playerState)
   updateProgressTimeHandler(playerState)
 }

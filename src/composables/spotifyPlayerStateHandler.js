@@ -1,9 +1,8 @@
-import { computed } from 'vue'
 import store from '@/store'
 
 // 送出去的點歌可能會因為 spotify 回應不一樣的id...orz，但是歌的內容一樣= =+
-function clearPendingQueueHandler({ position, track_window }) {
-  const pending = store.getters.pendingOrder
+function clearPendingQueueHandler({ position, track_window }, pending) {
+  // const pending = store.getters.pendingOrder
   if (position === 0) return
   if (!pending) return
 
@@ -16,10 +15,10 @@ function clearPendingQueueHandler({ position, track_window }) {
 
 // ===
 
-const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
-function diffirentPlayingTrackIdHandler(playerStateTrack) {
+function diffirentPlayingTrackIdHandler(playerState, playerPlayingTrackId) {
   // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
-  if (playerStateTrack.id !== playerPlayingTrackId.value) store.dispatch('updatePlayingTrack', playerStateTrack)
+  if (playerState.track_window.current_track.id !== playerPlayingTrackId)
+    store.dispatch('updatePlayingTrack', playerState.track_window.current_track.id)
 }
 
 // ===
