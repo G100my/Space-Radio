@@ -1,6 +1,7 @@
 <script>
 import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { currentPosition, currentDuration } from '@/composables/useProgressTimer'
 
 export default {
   setup() {
@@ -9,12 +10,18 @@ export default {
     const currentDislikeThreshold = computed(() => store.getters.currentDislikeThreshold)
     const currentDislikeCountdown = computed(() => store.getters.currentDislikeCountdown)
 
+    const NO_VOTE_BEFORE_END = 18000
+    const nearEnd = computed(() => {
+      return currentDuration.value - currentPosition.value < NO_VOTE_BEFORE_END
+    })
+
     return {
       isVoted: computed(() => store.state.PlayingState.isVoted),
       currentDislike,
       currentDislikeThreshold,
       currentDislikeCountdown,
       playerPlayingTrackId: computed(() => store.getters.playerPlayingTrackId),
+      nearEnd,
     }
   },
 }
@@ -38,7 +45,7 @@ export default {
     <button
       type="button"
       class="mt-2 btn-secondary"
-      :disabled="!playerPlayingTrackId"
+      :disabled="!playerPlayingTrackId || nearEnd"
       @click="isVoted ? $store.dispatch('reduceDislike') : $store.dispatch('increaseDislike')"
     >
       {{ isVoted ? 'Cancel' : 'Vote for skip' }}
