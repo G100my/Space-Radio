@@ -98,7 +98,7 @@ const token = computed(() => store.getters.token)
 
 function spotifyWebPlaybackSDKReadyHandler() {
   spotifyPlayer = new window.Spotify.Player({
-    name: 'Jukebox player',
+    name: 'Space Radio player',
     volume: currentVolume.value / 100,
     getOAuthToken: callback => {
       if (isTokenValid.value) {
@@ -127,7 +127,7 @@ function spotifyWebPlaybackSDKReadyHandler() {
       store.dispatch('clearPendingQueue')
       if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
     }
-    if (success) console.log('Jukebox player successfully connected to Spotify!')
+    if (success) console.log('Space Radio player successfully connected to Spotify!')
     if (success && import.meta.env.DEV) window.spotifyPlayer = spotifyPlayer
     refreshCurrentDevice()
   })

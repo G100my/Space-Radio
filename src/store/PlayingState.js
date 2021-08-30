@@ -181,7 +181,7 @@ const initialTrack = {
   artists: [
     {
       name: 'G100',
-      url: 'https://github.com/G100my/Jukebox',
+      url: 'https://github.com/G100my/Space Radio',
     },
   ],
   album: {

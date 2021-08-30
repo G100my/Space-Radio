@@ -1,7 +1,7 @@
 export const NoteDialog = {
   state: {
     editingNote: {
-      sender: localStorage.getItem('jukebox_senderName') || '',
+      sender: localStorage.getItem('spaceradio_senderName') || '',
       recipient: '',
       message: '',
     },
@@ -37,7 +37,7 @@ export const NoteDialog = {
     _refreshLocalSenderName(state) {
       const name = state.editingNote.sender
       if (!name) return
-      localStorage.setItem('jukebox_senderName', name)
+      localStorage.setItem('spaceradio_senderName', name)
     },
     _refreshHandler(state, handler) {
       state.submitHandler = handler
@@ -45,7 +45,7 @@ export const NoteDialog = {
   },
   actions: {
     _clearNote({ commit, getters }) {
-      const name = localStorage.getItem('jukebox_senderName') || getters.userName
+      const name = localStorage.getItem('spaceradio_senderName') || getters.userName
       commit('refreshNote', {
         sender: name,
         recipient: '',

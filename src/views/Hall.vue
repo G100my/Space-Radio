@@ -48,7 +48,7 @@ export default {
         }
       }
       if (roomKey) {
-        localStorage.setItem('jukebox_room_key', roomKey)
+        localStorage.setItem('spaceradio_room_key', roomKey)
         router.push({ name: 'Doorscope', params: { roomKey } })
       } else {
         isErrorMessageShow.value = true

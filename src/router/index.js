@@ -49,7 +49,7 @@ const routes = [
     component: Room,
     meta: { requiresAuth: true },
     beforeEnter: () => {
-      const roomKey = localStorage.getItem('jukebox_room_key')
+      const roomKey = localStorage.getItem('spaceradio_room_key')
       setPlayingStateRef(roomKey)
       setUserLogRef(roomKey)
       setQueueRef(roomKey)

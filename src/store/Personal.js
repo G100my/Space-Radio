@@ -2,12 +2,12 @@ import { spotifyAPI } from '../utility/spotifyAPI.js'
 
 const Personal = {
   state: {
-    user_id: localStorage.getItem('jukebox_user_id') || null,
-    display_name: localStorage.getItem('jukebox_user_display_name') || null,
-    image_url: localStorage.getItem('jukebox_user_images') || '',
-    token: localStorage.getItem('jukebox_token') || null,
-    expired_time: Number(localStorage.getItem('jukebox_expired_time')) || null,
-    refresh_token: localStorage.getItem('jukebox_refresh_token') || null,
+    user_id: localStorage.getItem('spaceradio_user_id') || null,
+    display_name: localStorage.getItem('spaceradio_user_display_name') || null,
+    image_url: localStorage.getItem('spaceradio_user_images') || '',
+    token: localStorage.getItem('spaceradio_token') || null,
+    expired_time: Number(localStorage.getItem('spaceradio_expired_time')) || null,
+    refresh_token: localStorage.getItem('spaceradio_refresh_token') || null,
   },
   getters: {
     token(state) {
@@ -37,21 +37,21 @@ const Personal = {
       state.expired_time = expiredTime
       state.refresh_token = refresh_token
 
-      localStorage.setItem('jukebox_token', access_token)
-      localStorage.setItem('jukebox_expired_time', expiredTime)
-      localStorage.setItem('jukebox_refresh_token', refresh_token)
+      localStorage.setItem('spaceradio_token', access_token)
+      localStorage.setItem('spaceradio_expired_time', expiredTime)
+      localStorage.setItem('spaceradio_refresh_token', refresh_token)
 
       spotifyAPI.setAccessToken(access_token)
     },
     updateUserData(state, { id, display_name, images }) {
       state.user_id = id
       state.display_name = display_name
-      localStorage.setItem('jukebox_user_id', id)
-      localStorage.setItem('jukebox_user_display_name', display_name)
+      localStorage.setItem('spaceradio_user_id', id)
+      localStorage.setItem('spaceradio_user_display_name', display_name)
 
       if (images.length > 0) {
         state.image_url = images[0].url
-        localStorage.setItem('jukebox_user_images', images[0].url)
+        localStorage.setItem('spaceradio_user_images', images[0].url)
       }
     },
   },

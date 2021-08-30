@@ -11,7 +11,7 @@ export default ({ command }) => {
       include: ['firebase/app', 'firebase/database', 'firebase/analytics'],
       exclude: ['firebase'],
     },
-    base: command === 'build' ? '/Jukebox/' : './',
+    base: command === 'build' ? '/Space-Radio/' : './',
     build: {
       outDir: './docs/',
     },
@@ -22,6 +22,7 @@ export default ({ command }) => {
     },
     server: {
       open: true,
+      hmr: false,
     },
   }
 }

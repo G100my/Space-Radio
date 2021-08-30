@@ -1,6 +1,6 @@
 {
-  "name": "Jukebox",
-  "short_name": "Jukebox",
+  "name": "Space Radio",
+  "short_name": "Space Radio",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#FF66D8",

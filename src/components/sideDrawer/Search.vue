@@ -62,7 +62,7 @@ export default {
       })
     }
 
-    const recentSearchStrings = JSON.parse(localStorage.getItem('jukebox_recent_search')) || []
+    const recentSearchStrings = JSON.parse(localStorage.getItem('spaceradio_recent_search')) || []
     function searchClickHandler() {
       if (!recentSearchStrings.includes(keywords.value)) recentSearchStrings.push(keywords.value)
       if (recentSearchStrings.length > 30) recentSearchStrings.shift()
@@ -71,7 +71,7 @@ export default {
     }
 
     onUnmounted(() => {
-      localStorage.setItem('jukebox_recent_search', JSON.stringify(recentSearchStrings))
+      localStorage.setItem('spaceradio_recent_search', JSON.stringify(recentSearchStrings))
     })
     return {
       list,

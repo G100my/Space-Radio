@@ -130,7 +130,7 @@ export default {
           },
         })
         .then(() => {
-          localStorage.setItem('jukebox_room_key', roomKey)
+          localStorage.setItem('spaceradio_room_key', roomKey)
           router.push({ name: 'Room' })
         })
     }

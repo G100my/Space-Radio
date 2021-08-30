@@ -46,7 +46,7 @@ export default {
     if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
       spotifyAPI.setAccessToken(store.getters.token)
     }
-    const roomKey = localStorage.getItem('jukebox_room_key')
+    const roomKey = localStorage.getItem('spaceradio_room_key')
     firebase
       .database()
       .ref(`${roomKey}/basic`)
