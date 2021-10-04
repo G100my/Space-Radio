@@ -6,20 +6,10 @@ function setUserLogRef(roomKey) {
   user_log_ref = firebase.database().ref(`user_log/${roomKey}`)
 }
 
+const logLimit = 50
 const UserLog = {
   state: {
-    log: [
-      // {
-      //   action_type: '',
-      //   user_id: '',
-      //   timestamp: 0,
-      //   option: {
-      //     id: '',
-      //     track_name: '',
-      //     volume: 0,
-      //   },
-      // },
-    ],
+    log: [],
   },
   getters: {
     userLog(state) {
@@ -29,13 +19,13 @@ const UserLog = {
   mutations: {
     pushUserLog(state, snapshot) {
       const logLength = state.log.unshift(snapshot)
-      if (logLength > 3) state.log.pop()
+      if (logLength > logLimit) state.log.pop()
     },
   },
 }
 
 function userLogConnect2firebase(store) {
-  const maker = function ({ type }) {
+  const maker = function (type) {
     return {
       action_type: type,
       user_id: store.getters.userId,
@@ -47,20 +37,38 @@ function userLogConnect2firebase(store) {
   let recordVolumeLogTimer = null
 
   store.subscribeAction({
+    before: (action, state) => {
+      let userLog
+      switch (action.type) {
+        case 'normalRemove':
+        case 'urgentRemove':
+        case 'normal2urgent':
+        case 'urgent2normal': {
+          const orderKey = action.payload
+          const text = state.Queue.trackData[orderKey].name
+          userLog = { ...maker(action.type), option: { text } }
+          break
+        }
+
+        default:
+          break
+      }
+      user_log_ref.push(userLog)
+    },
     after: (action, state) => {
       let userLog
 
       switch (action.type) {
         case 'add':
-        case 'jumpIn':
-        case 'normalRemove':
-        case 'urgentRemove':
-        case 'normal2urgent':
-        case 'urgent2normal': {
-          const {
-            payload: { id, trackNameForLog: track_name },
-          } = action
-          userLog = { ...maker(action), option: { id, track_name } }
+        case 'jumpIn': {
+          const { track_name } = action.payload
+          userLog = { ...maker(action.type), option: { text: track_name } }
+          break
+        }
+
+        case 'addMultiple': {
+          const { names } = action.payload
+          userLog = { ...maker(action.type), option: { names } }
           break
         }
 
@@ -68,26 +76,26 @@ function userLogConnect2firebase(store) {
         case 'turnDown':
           if (recordVolumeLogTimer) clearTimeout(recordVolumeLogTimer)
           recordVolumeLogTimer = setTimeout(() => {
-            userLog = { ...maker(action), option: { volume: state.PlayingState.volume } }
+            userLog = { ...maker(action.type), option: { volume: state.Volume.volume } }
             user_log_ref.push(userLog)
           }, 3000)
           return
 
         case 'reduceDislike':
         case 'increaseDislike':
-          userLog = { ...maker(action), option: { id: state.PlayingState.playing_track.id } }
+          userLog = { ...maker(action.type), option: { id: state.PlayingState.playing_track.id } }
           break
         case 'updateMinimalVolume':
           userLog = {
-            ...maker(action),
-            option: { minimal_volume: state.PlayingState.minimal_volume },
+            ...maker(action.type),
+            option: { minimal_volume: state.Volume.minimal_volume },
           }
           break
         case 'updateDislikeThreshold':
           userLog = {
-            ...maker(action),
+            ...maker(action.type),
             option: {
-              dislike_threshold: state.PlayingState.dislike_threshold,
+              dislike_threshold: state.Vote.dislike_threshold,
             },
           }
           break
@@ -98,7 +106,7 @@ function userLogConnect2firebase(store) {
     },
   })
 
-  user_log_ref.limitToLast(3).on('child_added', snapshot => {
+  user_log_ref.limitToLast(logLimit).on('child_added', snapshot => {
     store.commit('pushUserLog', snapshot.val())
   })
 }

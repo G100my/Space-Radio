@@ -1,10 +1,12 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import store from '../store/'
+import Hall from '../views/Hall.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
-import CreateRoom from '../views/CreateRoom.vue'
+import HallShell from '../components/hall/HallShell.vue'
+import CreateRoom from '../views/create-room/CreateRoom.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
-import { spotifyAPI } from '../plugin/spotify-web-api.js'
+import { spotifyAPI } from '../utility/spotifyAPI.js'
 
 import { setPlayingStateRef } from '../store/PlayingState.js'
 import { setUserLogRef } from '../store/UserLog.js'
@@ -13,15 +15,33 @@ import { setQueueRef } from '../store/Queue.js'
 const routes = [
   {
     path: '/',
-    name: 'Lobby',
     meta: { requiresAuth: false },
-    component: Doorscope,
-  },
-  {
-    path: '/doorscope/:roomKey',
-    name: 'Doorscope',
-    meta: { requiresAuth: false },
-    component: Doorscope,
+    component: HallShell,
+    children: [
+      {
+        path: '',
+        name: 'Hall',
+        component: Hall,
+      },
+      {
+        path: '/create',
+        name: 'CreateRoom',
+        meta: { requiresAuth: true },
+        component: CreateRoom,
+      },
+      {
+        path: '/doorscope/:roomKey',
+        name: 'Doorscope',
+        meta: { requiresAuth: false },
+        component: Doorscope,
+      },
+    ],
+    beforeEnter: () => {
+      // avoid user refresh page
+      if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
+        spotifyAPI.setAccessToken(store.getters.token)
+      }
+    },
   },
   {
     path: '/room',
@@ -29,17 +49,11 @@ const routes = [
     component: Room,
     meta: { requiresAuth: true },
     beforeEnter: () => {
-      const roomKey = localStorage.getItem('jukebox_room_key')
+      const roomKey = localStorage.getItem('spaceradio_room_key')
       setPlayingStateRef(roomKey)
       setUserLogRef(roomKey)
       setQueueRef(roomKey)
     },
-  },
-  {
-    path: '/create',
-    name: 'Create',
-    component: CreateRoom,
-    meta: { requiresAuth: true },
   },
 ]
 
@@ -51,7 +65,7 @@ const router = createRouter({
 router.beforeEach(async to => {
   if (window.location.search.includes('?code=')) {
     const [authorizationCode, hashPath] = window.location.href
-      .slice(window.location.href.search(/(code=)[\w+]/) + 5)
+      .slice(window.location.href.search(/code=/) + 5)
       .split('#/')
 
     if (!authorizationCode) return
@@ -63,19 +77,17 @@ router.beforeEach(async to => {
     window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
     await fetchAccessToken(authorizationCode, '#' + hashPath).then(() => {
       spotifyAPI.getMe().then(result => {
-        console.log(result)
         store.commit('updateUserData', result)
       })
     })
   }
 
   if (window.location.search.includes('?error=')) {
-    return { name: 'Lobby' }
+    return { name: 'Hall' }
   }
 
   if (to.meta.requiresAuth && !store.getters.isTokenValid) {
-    console.log(store.getters.isTokenValid)
-    return { name: 'Lobby' }
+    return { name: 'Hall' }
   }
 })
 

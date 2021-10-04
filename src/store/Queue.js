@@ -1,9 +1,10 @@
-import { spotifyAPI } from '../plugin/spotify-web-api.js'
+import { spotifyAPI } from '../utility/spotifyAPI.js'
 import firebase from './firebase.js'
+import { Order } from '@/prototype/Order.js'
 
-let urgent_queue_ref
-let normal_queue_ref
-let pending_queue_ref
+let urgent_queue_ref = {}
+let normal_queue_ref = {}
+let pending_queue_ref = {}
 
 function setQueueRef(roomKey) {
   urgent_queue_ref = firebase.database().ref(`${roomKey}/urgent_queue`)
@@ -12,225 +13,249 @@ function setQueueRef(roomKey) {
 }
 
 function bindListener(target, storeTarget, store) {
-  target.on('child_removed', oldChildSnapshot => {
-    store.commit('deleteQueueTrack', { storeTarget, oldChildSnapshot })
+  target.on('child_removed', childSnapshot => {
+    store.commit('_deleteOrder', { storeTarget, childSnapshot })
   })
   target.on('child_added', childSnapshot => {
-    const trackId = childSnapshot.val().id
-    if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
-      store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack: store.getters.previousDeleted })
-      store.commit('clearPreviousDeleted')
-      return
-    }
-    if (spotifyAPI.getAccessToken()) {
-      spotifyAPI.getTrack(trackId).then(addedTrack => {
-        store.commit('addQueueTrack', { storeTarget, childSnapshot, addedTrack })
-      })
-    } else {
-      console.warn('spotifyAPI.getAccessToken() is ' + spotifyAPI.getAccessToken())
-    }
+    store.dispatch('_addOrder', { storeTarget, childSnapshot })
   })
   target.on('child_changed', childSnapshot => {
-    store.commit('editQueue', { storeTarget, childSnapshot })
+    store.commit('_editOrder', { storeTarget, childSnapshot })
   })
 }
 
 function queueConnect2firebase(store) {
   bindListener(normal_queue_ref, 'normal', store)
   bindListener(urgent_queue_ref, 'urgent', store)
-  pending_queue_ref.on('value', snapshot => {
-    if (!snapshot.val()) {
-      store.commit('clearPendingQueue')
-      return
-    }
-
-    const trackId = snapshot.val().id
-    if (store.getters.previousDeleted && store.getters.previousDeleted.id === trackId) {
-      store.commit('refreshPendingTrack', store.getters.previousDeleted)
-      store.commit('refreshPendingQueue', snapshot.val())
-      store.commit('clearPreviousDeleted')
-      return
-    } else if (spotifyAPI.getAccessToken())
-      spotifyAPI.getTrack(trackId).then(addedTrack => {
-        store.commit('refreshPendingTrack', addedTrack)
-        store.commit('refreshPendingQueue', snapshot.val())
-      })
-  })
+  bindListener(pending_queue_ref, 'pending', store)
 }
 
-const Queue = {
-  state: {
-    normal_queue: {},
-    urgent_queue: {},
-    pending_queue: null,
-    trackData: {
-      pending: null,
-    },
-    previousDeleted: null,
+const state = {
+  normal_queue: {},
+  urgent_queue: {},
+  pending_queue: {},
+  trackData: {},
+  previousDeleted: null,
+  previousDeletedKey: null,
+}
+const getters = {
+  trackData(state) {
+    return state.trackData
   },
-  getters: {
-    trackData(state) {
-      return state.trackData
-    },
-    pendingQueue(state) {
-      return state.pending_queue
-    },
-    normalQueue(state) {
-      return state.normal_queue
-    },
-    urgentQueue(state) {
-      return state.urgent_queue
-    },
-    previousDeleted(state) {
-      return state.previousDeleted
-    },
-    leftQueueAmount(state) {
-      const urgentQueueArray = Object.keys(state.urgent_queue)
-      const normalQueueArray = Object.keys(state.normal_queue)
-      return urgentQueueArray.length + normalQueueArray.length
-    },
-    pendingNote(state) {
-      return state.pending_queue ? state.pending_queue.note : null
-    },
+  pendingOrder(state) {
+    const pending = Object.values(state.pending_queue)
+    return pending.length ? pending[0] : null
   },
-  mutations: {
-    clearPreviousDeleted(state) {
-      state.previousDeleted = null
-    },
-    clearPendingQueue(state) {
-      state.pending_queue = null
-      delete state.trackData.pending
-    },
-    deleteQueueTrack(state, { storeTarget, oldChildSnapshot }) {
-      const queueKey = oldChildSnapshot.key
-      state.previousDeleted = state.trackData[queueKey]
-      delete state.trackData[queueKey]
-      delete state[`${storeTarget}_queue`][queueKey]
-    },
-    addQueueTrack(state, { storeTarget, childSnapshot, addedTrack }) {
-      const queueKey = childSnapshot.key
-      state[`${storeTarget}_queue`][queueKey] = childSnapshot.val()
-      state.trackData[queueKey] = addedTrack
-    },
-    editQueue(state, { storeTarget, childSnapshot }) {
-      const queueKey = childSnapshot.key
-      state[`${storeTarget}_queue`][queueKey] = childSnapshot.val()
-    },
-    refreshPendingQueue(state, queue) {
-      state.pending_queue = queue
-    },
-    refreshPendingTrack(state, track) {
-      state.trackData.pending = track
-    },
+  pendingQueue(state) {
+    return state.pending_queue
   },
-  actions: {
-    add({ getters }, { id, note, trackNameForLog: track_name }) {
-      const now = Date.now()
-      const parameter = {}
-      const userId = getters.userId
-      const orderKey = `${now}-${userId}`
-      parameter[orderKey] = {
-        id,
-        added_time: now,
-        added_by: userId,
-        note,
-        track_name,
+  normalQueue(state) {
+    return state.normal_queue
+  },
+  urgentQueue(state) {
+    return state.urgent_queue
+  },
+  totalQueue(state) {
+    const pending = state.pending_queue
+    const normal = state.normal_queue
+    const urgent = state.urgent_queue
+    return Object.assign({}, pending, urgent, normal)
+  },
+  previousDeleted(state) {
+    return state.previousDeleted
+  },
+  leftQueueAmount(state) {
+    const urgentQueueArray = Object.keys(state.urgent_queue)
+    const normalQueueArray = Object.keys(state.normal_queue)
+    return urgentQueueArray.length + normalQueueArray.length
+  },
+  _nextOrder(state) {
+    const urgentQueueIds = Object.keys(state.urgent_queue)
+    const normalQueneIds = Object.keys(state.normal_queue)
+    // currentOrderId: urgent_queue order id is different
+    if (urgentQueueIds.length) {
+      return {
+        currentOrderId: urgentQueueIds[0],
+        targetQueue: 'urgent_queue',
+        order: state.urgent_queue[urgentQueueIds[0]],
       }
-      normal_queue_ref.update(parameter)
-    },
-    jumpIn({ getters }, { id, note, trackNameForLog: track_name }) {
-      const now = Date.now()
-      const userId = getters.userId
-      urgent_queue_ref.push({
-        id,
-        added_time: now,
-        added_by: userId,
-        note,
-        track_name,
-      })
-    },
-    urgentRemove(_context, { queueKey }) {
-      urgent_queue_ref.child(queueKey).remove()
-    },
-    normalRemove(_context, { queueKey }) {
-      normal_queue_ref.child(queueKey).remove()
-    },
+    } else if (normalQueneIds.length) {
+      return {
+        currentOrderId: normalQueneIds[0],
+        targetQueue: 'normal_queue',
+        order: state.normal_queue[normalQueneIds[0]],
+      }
+    } else {
+      console.warn('已經沒有任何點播了~~')
+      pending_queue_ref.set(null)
+      // fixme
+      return false
+    }
+  },
+}
 
-    urgent2normal({ state }, { queueKey }) {
-      const queue = { ...state.urgent_queue[queueKey] }
-      queue.note = false
-      const orderKey = `${queue.added_time}-${queue.added_by}`
+const mutations = {
+  _clearPreviousDeleted(state) {
+    state.previousDeleted = null
+    state.previousDeletedKey = null
+  },
+  _deleteOrder(state, { storeTarget, childSnapshot }) {
+    const key = childSnapshot.key
+    if (!key) console.error('key is not exist, _deleteOrder')
+    state.previousDeleted = state.trackData[key]
+    delete state.trackData[key]
+    delete state[`${storeTarget}_queue`][key]
+  },
+  _addOrder(state, { key, order, storeTarget }) {
+    state[`${storeTarget}_queue`][key] = order
+  },
+  _addTrack(state, { key, addedTrack }) {
+    state.trackData[key] = addedTrack
+  },
+  _editOrder(state, { storeTarget, childSnapshot }) {
+    state[`${storeTarget}_queue`][childSnapshot.key] = new Order(childSnapshot.val())
+  },
+}
 
-      const parameter = {}
-      parameter[orderKey] = queue
+const actions = {
+  _addOrder({ getters, commit }, { storeTarget, childSnapshot }) {
+    const order = new Order(childSnapshot.val())
+    const trackId = order.track_id
+    const key = childSnapshot.key
 
-      urgent_queue_ref
-        .child(queueKey)
-        .remove()
-        .then(() => {
-          normal_queue_ref.update(parameter)
+    if (getters.previousDeleted && getters.previousDeleted.id === trackId) {
+      commit('_addOrder', { storeTarget, order, key })
+      commit('_addTrack', { key, addedTrack: getters.previousDeleted })
+      commit('_clearPreviousDeleted')
+    } else {
+      spotifyAPI
+        .getTrack(trackId)
+        .then(addedTrack => {
+          commit('_addOrder', { storeTarget, order, key })
+          commit('_addTrack', { key, addedTrack })
         })
-    },
+        .catch(e => {
+          console.error(e, `trackId: ${trackId}`)
+        })
+    }
+  },
+  add({ getters }, { id: track_id, track_name }) {
+    const orderer_id = getters.userId
+    const orderer_name = getters.userName
+    const order = new Order({ track_id, track_name, orderer_id, orderer_name })
+    normal_queue_ref.child(order.id).update(order)
+  },
+  jumpIn({ getters, commit, dispatch }, { id: track_id, track_name }) {
+    function handler(note) {
+      const orderer_name = getters.userName
+      const orderer_id = getters.userId
+      urgent_queue_ref.push(new Order({ track_id, track_name, note, orderer_name, orderer_id }))
+      commit('noteDialogToggler', false)
+      commit('_refreshLocalSenderName')
+    }
+    dispatch('_clearNote')
+    commit('noteDialogToggler', true)
+    commit('_refreshHandler', handler)
+  },
+  addMultiple({ getters }, { ids, names }) {
+    const orderer_name = getters.userName
+    const orderer_id = getters.userId
+    const now = Date.now()
+    const parameter = ids.reduce((accumulator, track_id, index) => {
+      const id = `${now}-${index}`
+      accumulator[id] = new Order({
+        track_id,
+        track_name: names[index],
+        orderer_id,
+        orderer_name,
+        id,
+      })
+      return accumulator
+    }, {})
+    normal_queue_ref.update(parameter)
+  },
+  urgentRemove(_context, orderId) {
+    urgent_queue_ref.child(orderId).remove()
+  },
+  normalRemove(_context, orderId) {
+    normal_queue_ref.child(orderId).remove()
+  },
 
-    normal2urgent({ state }, { queueKey, note }) {
-      const queue = { ...state.normal_queue[queueKey] }
-      queue.note = note
+  urgent2normal({ state }, orderId) {
+    const urgentOrder = state.urgent_queue[orderId]
+    const normalOrder = new Order({ ...urgentOrder, note: false })
 
+    urgent_queue_ref
+      .child(orderId)
+      .remove()
+      .then(() => {
+        normal_queue_ref.child(normalOrder.id).update(normalOrder)
+      })
+  },
+
+  normal2urgent({ state, commit, dispatch }, orderId) {
+    function handler(note) {
+      const queue = new Order({ ...state.normal_queue[orderId], note })
       normal_queue_ref
-        .child(queueKey)
+        .child(orderId)
         .remove()
         .then(() => {
           urgent_queue_ref.push(queue)
         })
-    },
+      commit('noteDialogToggler', false)
+    }
+    dispatch('_clearNote')
+    commit('noteDialogToggler', true)
+    commit('_refreshHandler', handler)
+  },
+  urgentEdit({ commit, state }, orderId) {
+    function handler(newNote) {
+      urgent_queue_ref.child(orderId).update({ note: newNote })
+      commit('_refreshLocalSenderName')
+      commit('noteDialogToggler', false)
+    }
+    const oldNote = state.urgent_queue[orderId].note
+    commit('refreshNote', oldNote)
+    commit('_refreshHandler', handler)
+    commit('noteDialogToggler', true)
+  },
+  nextWithAddToPending({ dispatch, getters }) {
+    const result = getters._nextOrder
+    if (!result) return Promise.reject()
+    const { currentOrderId, targetQueue, order } = result
 
-    urgentEdit(_context, { queueKey, note }) {
-      urgent_queue_ref.child(queueKey).update({ note })
-    },
-    sendNextQueue({ state }, callback) {
-      const urgentQueueArray = Object.keys(state.urgent_queue)
-      let nextQueueKey, level
-      if (urgentQueueArray.length === 0) {
-        const normalQueneArray = Object.keys(state.normal_queue)
-        if (normalQueneArray.length === 0) {
-          console.warn('已經沒有任何點播了~~')
-          // set it 'false' to keep it exist
-          pending_queue_ref.set(null)
-          return
-        } else {
-          nextQueueKey = normalQueneArray[0]
-          level = 'normal'
-        }
+    return spotifyAPI.queue(`spotify:track:${order.track_id}`).then(() => {
+      if (targetQueue === 'urgent_queue') {
+        dispatch('urgentRemove', currentOrderId)
       } else {
-        nextQueueKey = urgentQueueArray[0]
-        level = 'urgent'
+        dispatch('normalRemove', currentOrderId)
       }
-
-      spotifyAPI.queue(`spotify:track:${state[`${level}_queue`][nextQueueKey].id}`, error => {
-        error && console.log(error)
-        if (!error) {
-          const queue = state[`${level}_queue`][nextQueueKey]
-
-          let targetQueue
-          if (level === 'urgent') {
-            targetQueue = urgent_queue_ref
-          } else {
-            targetQueue = normal_queue_ref
-          }
-          targetQueue
-            .child(nextQueueKey)
-            .remove()
-            .then(() => {
-              pending_queue_ref.set(queue)
-            })
-          if (callback) callback()
-        }
-      })
-    },
-    clearPendingQueue() {
-      pending_queue_ref.set(null)
-    },
+      dispatch('updateTheLatestOrder', order)
+      return { currentOrderId, targetQueue, order }
+    })
+  },
+  sendNextQueue({ state, dispatch }) {
+    return dispatch('nextWithAddToPending').then(({ order, currentOrderId }) => {
+      dispatch('_addPendingQueue', { order, currentOrderId })
+      state.previousDeletedKey = currentOrderId
+    })
+  },
+  clearPendingQueue() {
+    pending_queue_ref.set(null)
+  },
+  _addPendingQueue(_context, { currentOrderId, order }) {
+    return pending_queue_ref.child(currentOrderId).set(order)
   },
 }
 
+const Queue = {
+  state,
+  getters,
+  mutations,
+  actions,
+}
+
 export { Queue, queueConnect2firebase, setQueueRef }
+
+// for test
+export { state, getters, mutations, actions, normal_queue_ref, urgent_queue_ref, pending_queue_ref }

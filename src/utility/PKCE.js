@@ -38,7 +38,7 @@ const scope = `user-library-modify user-library-read playlist-modify-public play
 
 async function PKCE(redirectHash) {
   const code_verifier = generateCodeVerifier()
-  localStorage.setItem('jukebox_code_verifier', code_verifier)
+  localStorage.setItem('spaceradio_code_verifier', code_verifier)
 
   const code_challenge = await generateCodeChallengeFromVerifier(code_verifier)
   let url = 'https://accounts.spotify.com/authorize'
@@ -53,8 +53,8 @@ async function PKCE(redirectHash) {
 }
 
 async function fetchAccessToken(code, redirectHash) {
-  const code_verifier = localStorage.getItem('jukebox_code_verifier')
-  localStorage.removeItem('jukebox_code_verifier')
+  const code_verifier = localStorage.getItem('spaceradio_code_verifier')
+  localStorage.removeItem('spaceradio_code_verifier')
 
   let body = 'client_id=' + client_id
   body += '&grant_type=authorization_code'
