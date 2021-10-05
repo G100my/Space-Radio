@@ -5,7 +5,7 @@ import firebase from '../store/firebase.js'
 import { PKCE } from '../utility/PKCE.js'
 import { spotifyAPI } from '../utility/spotifyAPI.js'
 import BaseAlert from '@/components/base/BaseAlert.vue'
-import HallNav from '@/components/Hall/HallNav.vue'
+import HallNav from '@/components/hall/HallNav.vue'
 
 export default {
   components: {
