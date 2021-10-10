@@ -1,5 +1,5 @@
 <script>
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref, toRaw, watch } from '@vue/runtime-core'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, toRaw } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
@@ -39,10 +39,6 @@ export default {
       idSet.clear()
       nameSet.clear()
     }
-    //
-
-    // first
-    store.dispatch('fetchFirst')
 
     const list = computed(() => store.getters.chosenList)
     const listTotal = computed(() => store.getters.chosenTotal)
@@ -52,20 +48,26 @@ export default {
     let target
     const loadingAnimation = ref(false)
 
+    function observeLastElement() {
+      target = infinityContainer.lastElementChild
+      if (target) observer.observe(target)
+    }
     function nextCallback() {
       loadingAnimation.value = false
       if (next.value) {
-        nextTick(() => {
-          target = infinityContainer.lastElementChild
-          observer.observe(target)
-        })
+        nextTick(observeLastElement)
       }
     }
-    async function nexthandler() {
+    function nexthandler() {
       if (target) observer.unobserve(target)
       loadingAnimation.value = true
-      await store.dispatch('fetchOffset').then(nextCallback)
+      store.dispatch('fetchOffset').then(nextCallback)
     }
+
+    store.dispatch('fetchFirst').then(() => {
+      nextTick(observeLastElement)
+    })
+
     onMounted(() => {
       infinityContainer = document.getElementById('infinity')
       const observerOptions = {
@@ -78,20 +80,10 @@ export default {
       }
       observer = new IntersectionObserver(callback, observerOptions)
     })
-
-    const unwatch = watch(list, () => {
-      if (list.value !== 0) {
-        nextTick(() => {
-          target = infinityContainer.lastElementChild
-          if (target) observer.observe(target)
-        })
-        unwatch()
-      }
-    })
-
     onUnmounted(() => {
       store.commit('chosenList', [])
     })
+
     return {
       listName,
       list,
