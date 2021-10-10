@@ -74,14 +74,14 @@ async function fetchAccessToken(code, redirectHash) {
     .then(result => {
       const { access_token, expires_in, refresh_token } = result
       const expiredTime = expires_in * 1000 + Date.now()
-      store.commit('refreshToken', { access_token, expiredTime, refresh_token })
+      store.commit('tokens', { access_token, expiredTime, refresh_token })
     })
 }
 
 async function refreshAccessToken() {
   let body = 'client_id=' + client_id
   body += '&grant_type=refresh_token'
-  body += '&refresh_token=' + store.getters.refreshToken
+  body += '&refresh_token=' + store.getters.refresh_token
 
   return fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
@@ -95,7 +95,7 @@ async function refreshAccessToken() {
     .then(result => {
       const { access_token, expires_in, refresh_token } = result
       const expiredTime = expires_in * 1000 + Date.now()
-      store.commit('refreshToken', { access_token, expiredTime, refresh_token })
+      store.commit('tokens', { access_token, expiredTime, refresh_token })
     })
 }
 window.refreshAccessToken = refreshAccessToken

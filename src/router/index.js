@@ -77,7 +77,7 @@ router.beforeEach(async to => {
     window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
     await fetchAccessToken(authorizationCode, '#' + hashPath).then(() => {
       spotifyAPI.getMe().then(result => {
-        store.commit('updateUserData', result)
+        store.commit('userData', result)
       })
     })
   }

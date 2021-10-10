@@ -27,12 +27,12 @@ const Personal = {
     isHostUser(_state, getters, _rootState, rootGetters) {
       return rootGetters.hostId === getters.userId
     },
-    refreshToken(state) {
+    refresh_token(state) {
       return state.refresh_token
     },
   },
   mutations: {
-    refreshToken(state, { access_token, expiredTime, refresh_token }) {
+    tokens(state, { access_token, expiredTime, refresh_token }) {
       state.token = access_token
       state.expired_time = expiredTime
       state.refresh_token = refresh_token
@@ -43,7 +43,7 @@ const Personal = {
 
       spotifyAPI.setAccessToken(access_token)
     },
-    updateUserData(state, { id, display_name, images }) {
+    userData(state, { id, display_name, images }) {
       state.user_id = id
       state.display_name = display_name
       localStorage.setItem('spaceradio_user_id', id)
