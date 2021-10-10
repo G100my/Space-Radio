@@ -27,7 +27,7 @@ const LatestOrder = {
     },
   },
   mutations: {
-    _refreshTheLatestOrder(state, newLatestOrder) {
+    latestOrder(state, newLatestOrder) {
       if (newLatestOrder === null) state.latest_order = { ...initialOrder }
       else state.latest_order = newLatestOrder
     },
@@ -56,14 +56,11 @@ const Volume = {
     },
   },
   mutations: {
-    _adjustVolume(state, value) {
+    currentVolume(state, value) {
       state.volume = value
     },
-    _adjustMinimalVolume(state, value) {
+    currentMinimalVolume(state, value) {
       state.minimal_volume = value
-    },
-    updateMinimalVolume(_context, value) {
-      playing_state_ref.child('minimal_volume').set(value)
     },
   },
   actions: {
@@ -99,13 +96,13 @@ const Vote = {
     },
   },
   mutations: {
-    _adjustDislike(state, value) {
+    currentDislike(state, value) {
       state.dislike = value
     },
-    _adjustDislikeThreshold(state, value) {
+    currentDislikeThreshold(state, value) {
       state.dislike_threshold = value
     },
-    _adjustDislikeCountdown(state, value) {
+    currentDislikeCountdown(state, value) {
       state.dislike_countdown = value
     },
   },
@@ -154,12 +151,12 @@ const Progress = {
     playing_progress: { ...initProgress },
   },
   getters: {
-    currentProgress(state) {
+    playingProgress(state) {
       return state.playing_progress
     },
   },
   mutations: {
-    _refreshProgress(state, newProgress) {
+    playingProgress(state, newProgress) {
       state.playing_progress = newProgress
     },
   },
@@ -215,7 +212,7 @@ const PlayingState = {
     },
   },
   mutations: {
-    refreshPlayerTrack(state, newPlayingTrack) {
+    playerTrack(state, newPlayingTrack) {
       if (!newPlayingTrack) state.playing_track = { ...initialTrack }
       else state.playing_track = newPlayingTrack
     },
@@ -252,31 +249,31 @@ const PlayingState = {
 
 function playingStateConnect2firebase(store) {
   playing_state_ref.child('volume').on('value', snapshot => {
-    store.commit('_adjustVolume', snapshot.val())
+    store.commit('currentVolume', snapshot.val())
   })
   playing_state_ref.child('playing_track').on('value', snapshot => {
-    store.commit('refreshPlayerTrack', snapshot.val())
+    store.commit('playerTrack', snapshot.val())
   })
   playing_state_ref.child('latest_order').on('value', snapshot => {
-    store.commit('_refreshTheLatestOrder', snapshot.val())
+    store.commit('latestOrder', snapshot.val())
   })
   playing_state_ref.child('playing_progress').on('value', snapshot => {
-    store.commit('_refreshProgress', snapshot.val())
+    store.commit('playingProgress', snapshot.val())
   })
   playing_state_ref.child('dislike').on('value', snapshot => {
-    store.commit('_adjustDislike', snapshot.val())
+    store.commit('currentDislike', snapshot.val())
   })
   playing_state_ref.child('voted_users').on('value', snapshot => {
     store.dispatch('adjustIsVoted', snapshot)
   })
   playing_state_ref.child('minimal_volume').on('value', snapshot => {
-    store.commit('_adjustMinimalVolume', snapshot.val())
+    store.commit('currentMinimalVolume', snapshot.val())
   })
   playing_state_ref.child('dislike_threshold').on('value', snapshot => {
-    store.commit('_adjustDislikeThreshold', snapshot.val())
+    store.commit('currentDislikeThreshold', snapshot.val())
   })
   playing_state_ref.child('dislike_countdown').on('value', snapshot => {
-    store.commit('_adjustDislikeCountdown', snapshot.val())
+    store.commit('currentDislikeCountdown', snapshot.val())
   })
 }
 

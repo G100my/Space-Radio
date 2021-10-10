@@ -7,7 +7,7 @@ import { PersonalPlaylists } from './PersonalPlaylists.js'
 import { FeedbackAlert } from './FeedbackAlert.js'
 import { NoteDialog } from './NoteDialog.js'
 
-const mutationExceptions = ['_refreshProgress', 'pushUserLog']
+const mutationExceptions = ['playingProgress', 'pushUserLog']
 const actionExceptions = ['updateProgress']
 
 const store = createStore({

@@ -25,7 +25,7 @@ export default {
       .get()
       .then(snapshot => {
         const playingTrack = snapshot.val()['playing_track']
-        store.commit('refreshPlayerTrack', playingTrack)
+        store.commit('playerTrack', playingTrack)
       })
     room_ref
       .child('basic/room_name')
