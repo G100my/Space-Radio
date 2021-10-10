@@ -52,7 +52,7 @@ export default {
       .ref(`${roomKey}/basic`)
       .get()
       .then(snapshot => {
-        store.commit('setRoomBasicInfo', snapshot.val())
+        store.commit('roomBasicInfos', snapshot.val())
       })
 
     onMounted(() => {

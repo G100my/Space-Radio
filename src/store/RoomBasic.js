@@ -20,7 +20,7 @@ const RoomBasic = {
     },
   },
   mutations: {
-    setRoomBasicInfo(state, newInfo) {
+    roomBasicInfos(state, newInfo) {
       const { room_key, room_name, host_id, base_playlist } = newInfo
       state.room_key = room_key
       state.room_name = room_name
