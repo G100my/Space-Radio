@@ -56,7 +56,7 @@ export default {
           maxlength="16"
           class="base-input w-32 max-w-full"
           type="text"
-          @change="$store.commit('refreshNote', { sender: $event.target.value })"
+          @change="$store.commit('editingNote', { sender: $event.target.value })"
         />
         <span>order</span>
         <strong>{{ 'fix you' }}</strong>
@@ -65,7 +65,7 @@ export default {
           maxlength="16"
           class="base-input w-32 max-w-full"
           type="text"
-          @change="$store.commit('refreshNote', { recipient: $event.target.value })"
+          @change="$store.commit('editingNote', { recipient: $event.target.value })"
         />
         <span>say</span>
         <textarea
@@ -73,7 +73,7 @@ export default {
           rows="3"
           maxlength="72"
           class="base-input resize-none w-full"
-          @change="$store.commit('refreshNote', { message: $event.target.value })"
+          @change="$store.commit('editingNote', { message: $event.target.value })"
         />
       </div>
       <div class="flex justify-end gap-x-4 py-5 px-8">

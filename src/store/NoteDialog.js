@@ -28,25 +28,25 @@ export const NoteDialog = {
     },
   },
   mutations: {
-    refreshNote(state, payload) {
+    editingNote(state, payload) {
       state.editingNote = { ...state.editingNote, ...payload }
     },
     noteDialogToggler(state, status) {
       state.isDialogOpen = status
     },
-    _refreshLocalSenderName(state) {
+    localSenderName(state) {
       const name = state.editingNote.sender
       if (!name) return
       localStorage.setItem('spaceradio_senderName', name)
     },
-    _refreshHandler(state, handler) {
+    submitHandler(state, handler) {
       state.submitHandler = handler
     },
   },
   actions: {
-    _clearNote({ commit, getters }) {
+    clearNote({ commit, getters }) {
       const name = localStorage.getItem('spaceradio_senderName') || getters.userName
-      commit('refreshNote', {
+      commit('editingNote', {
         sender: name,
         recipient: '',
         message: '',

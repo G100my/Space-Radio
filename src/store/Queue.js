@@ -151,11 +151,11 @@ const actions = {
       const orderer_id = getters.userId
       urgent_queue_ref.push(new Order({ track_id, track_name, note, orderer_name, orderer_id }))
       commit('noteDialogToggler', false)
-      commit('_refreshLocalSenderName')
+      commit('localSenderName')
     }
-    dispatch('_clearNote')
+    dispatch('clearNote')
     commit('noteDialogToggler', true)
-    commit('_refreshHandler', handler)
+    commit('submitHandler', handler)
   },
   addMultiple({ getters }, { ids, names }) {
     const orderer_name = getters.userName
@@ -204,19 +204,19 @@ const actions = {
         })
       commit('noteDialogToggler', false)
     }
-    dispatch('_clearNote')
+    dispatch('clearNote')
     commit('noteDialogToggler', true)
-    commit('_refreshHandler', handler)
+    commit('submitHandler', handler)
   },
   urgentEdit({ commit, state }, orderId) {
     function handler(newNote) {
       urgent_queue_ref.child(orderId).update({ note: newNote })
-      commit('_refreshLocalSenderName')
+      commit('localSenderName')
       commit('noteDialogToggler', false)
     }
     const oldNote = state.urgent_queue[orderId].note
-    commit('refreshNote', oldNote)
-    commit('_refreshHandler', handler)
+    commit('editingNote', oldNote)
+    commit('submitHandler', handler)
     commit('noteDialogToggler', true)
   },
   nextWithAddToPending({ dispatch, getters }) {
