@@ -90,7 +90,7 @@ export default {
     })
 
     onUnmounted(() => {
-      store.commit('refreshChosenList', [])
+      store.commit('chosenList', [])
     })
     return {
       listName,

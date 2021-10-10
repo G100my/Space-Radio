@@ -15,13 +15,13 @@ export default {
     const store = useStore()
 
     function libraryClickHandler() {
-      store.commit('refreshChosenListName', 'Liked Songs from Spotify')
+      store.commit('chosenListName', 'Liked Songs from Spotify')
       store.commit('chosenModule', { module: 'spotifyLiked' })
       emit('activeSideDrawer', 'PlaylistContent')
     }
 
     function playlistClickHandler(spotifyListId, spotifyListname) {
-      store.commit('refreshChosenListName', spotifyListname)
+      store.commit('chosenListName', spotifyListname)
       store.commit('chosenModule', { module: 'spotifyList', specifyId: spotifyListId })
       emit('activeSideDrawer', 'PlaylistContent')
     }

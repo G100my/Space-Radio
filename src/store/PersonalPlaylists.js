@@ -19,14 +19,14 @@ const increasePplaylistLimet = 100
 const spotifyList = {
   state: {
     spotifyList: {
+      // 不儲存 list，直接送到 choosen list
       offset: 0,
       total: 0,
       next: false,
     },
   },
-  getters: {},
   mutations: {
-    _refreshSpotifyList(state, value) {
+    _spotifyList(state, value) {
       state.spotifyList = { ...state.spotifyList, ...value }
     },
   },
@@ -37,9 +37,9 @@ const spotifyList = {
           fields: playlistFields,
         })
         .then(({ items, next, offset, total }) => {
-          commit('_refreshSpotifyList', { next, offset, total })
+          commit('_spotifyList', { next, offset, total })
           const transferResult = items.map(reduceDataCallback)
-          commit('refreshChosenList', transferResult)
+          commit('chosenList', transferResult)
         })
     },
     async _getOffset_spotifyList({ commit, getters, state }) {
@@ -50,9 +50,9 @@ const spotifyList = {
           limit: increasePplaylistLimet,
         })
         .then(({ items, next, offset }) => {
-          commit('_refreshSpotifyList', { next, offset })
+          commit('_spotifyList', { next, offset })
           const transferResult = items.map(reduceDataCallback)
-          commit('refreshChosenList', getters.chosenList.concat(transferResult))
+          commit('chosenList', getters.chosenList.concat(transferResult))
         })
     },
   },
@@ -67,12 +67,8 @@ const spotifyLiked = {
       next: false,
     },
   },
-  getters: {},
   mutations: {
-    _increaseSpotifyLike(state, tracks) {
-      state.spotifyLiked.list = state.spotifyLiked.list.concat(tracks)
-    },
-    _refreshSpotifyLiked(state, value) {
+    spotifyLiked(state, value) {
       state.spotifyLiked = { ...state.spotifyLiked, ...value }
     },
   },
@@ -82,9 +78,9 @@ const spotifyLiked = {
       await spotifyAPI.getMySavedTracks().then(({ items, offset, total, next }) => {
         if (total != state.spotifyLiked.total) {
           const transferResult = items.map(reduceDataCallback)
-          commit('_refreshSpotifyLiked', { next, offset, list: transferResult, total })
+          commit('spotifyLiked', { next, offset, list: transferResult, total })
         }
-        commit('refreshChosenList', state.spotifyLiked.list)
+        commit('chosenList', state.spotifyLiked.list)
       })
     },
     async _getOffset_spotifyLiked({ commit, state }) {
@@ -92,9 +88,12 @@ const spotifyLiked = {
         .getMySavedTracks({ limit: increaseOffset, offset: state.spotifyLiked.offset + increaseOffset })
         .then(({ items, offset, next }) => {
           const transferResult = items.map(reduceDataCallback)
-          commit('_increaseSpotifyLike', transferResult)
-          commit('_refreshSpotifyLiked', { next, offset })
-          commit('refreshChosenList', state.spotifyLiked.list)
+          commit('spotifyLiked', {
+            next,
+            offset,
+            list: state.spotifyLiked.list.concat(transferResult),
+          })
+          commit('chosenList', state.spotifyLiked.list)
         })
     },
   },
@@ -135,13 +134,13 @@ const common = {
     },
   },
   mutations: {
-    _refreshSpotifyLists(state, newPlaylists) {
+    _spotifyLists(state, newPlaylists) {
       state.spotifyPlaylists = newPlaylists
     },
-    refreshChosenList(state, content) {
+    chosenList(state, content) {
       state.chosenList = content
     },
-    refreshChosenListName(state, listName) {
+    chosenListName(state, listName) {
       state.chosenName = listName
     },
     chosenModule(state, { module, specifyId }) {
@@ -153,7 +152,7 @@ const common = {
   actions: {
     getSpotifyLists({ commit }) {
       spotifyAPI.getUserPlaylists({ limit: 50 }).then(result => {
-        commit('_refreshSpotifyLists', result.items)
+        commit('_spotifyLists', result.items)
       })
     },
     fetchFirst({ dispatch, state }) {
