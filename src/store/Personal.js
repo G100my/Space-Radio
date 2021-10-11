@@ -2,12 +2,14 @@ import { spotifyAPI } from '../utility/spotifyAPI.js'
 
 const Personal = {
   state: {
-    user_id: localStorage.getItem('spaceradio_user_id') || null,
-    display_name: localStorage.getItem('spaceradio_user_display_name') || null,
-    image_url: localStorage.getItem('spaceradio_user_images') || '',
     token: localStorage.getItem('spaceradio_token') || null,
     expired_time: Number(localStorage.getItem('spaceradio_expired_time')) || null,
     refresh_token: localStorage.getItem('spaceradio_refresh_token') || null,
+
+    user_id: localStorage.getItem('spaceradio_user_id') || null,
+    display_name: localStorage.getItem('spaceradio_user_display_name') || null,
+    image_url: localStorage.getItem('spaceradio_user_images') || '',
+    product: localStorage.getItem('spaceradio_user_product') || '',
   },
   getters: {
     token(state) {
@@ -23,6 +25,12 @@ const Personal = {
     },
     userName(state) {
       return state.display_name
+    },
+    userImage(state) {
+      return state.image_url
+    },
+    accountLevel(state) {
+      return state.product
     },
     isHostUser(_state, getters, _rootState, rootGetters) {
       return rootGetters.hostId === getters.userId
@@ -43,11 +51,13 @@ const Personal = {
 
       spotifyAPI.setAccessToken(access_token)
     },
-    userData(state, { id, display_name, images }) {
+    userData(state, { id, display_name, images, product }) {
       state.user_id = id
       state.display_name = display_name
+      state.product = product
       localStorage.setItem('spaceradio_user_id', id)
       localStorage.setItem('spaceradio_user_display_name', display_name)
+      localStorage.setItem('spaceradio_user_product', product)
 
       if (images.length > 0) {
         state.image_url = images[0].url
