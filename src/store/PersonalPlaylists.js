@@ -116,6 +116,95 @@ const spotifyRecently = {
   },
 }
 
+const fetchTopWithStaging = async ({ commit, state }, isFirst, submoduleName, time_range) => {
+  const offset = state[submoduleName].offset
+  const listLength = state[submoduleName].list.length
+  if (isFirst && listLength) {
+    commit('chosenList', state[submoduleName].list)
+    return Promise.resolve()
+  }
+
+  await spotifyAPI
+    .getMyTopTracks({
+      limit: increaseOffset,
+      time_range,
+      ...(!isFirst && { offset: offset + increaseOffset }),
+    })
+    .then(({ items, offset, next, total }) => {
+      const transferResult = items.map(({ album, artists, id, name }) => ({
+        album: {
+          name: album.name,
+          externalUrl: album.uri,
+          coverUrl: spotifyCoverPicker(album.images),
+        },
+        artists,
+        id,
+        name,
+      }))
+      commit(submoduleName, {
+        next,
+        offset,
+        total,
+        list: state[submoduleName].list.concat(transferResult),
+      })
+      commit('chosenList', state[submoduleName].list)
+    })
+}
+const spotifyLong = {
+  state: {
+    spotifyLong: {
+      list: [],
+      total: 0,
+      next: 0,
+      offset: 0,
+    },
+  },
+  mutations: {
+    spotifyLong(state, value) {
+      state.spotifyLong = { ...state.spotifyLong, ...value }
+    },
+  },
+  actions: {
+    _fetch_spotifyLong: (context, payload) => fetchTopWithStaging(context, payload, 'spotifyLong', 'long_term'),
+  },
+}
+const spotifyMedium = {
+  state: {
+    spotifyMedium: {
+      list: [],
+      total: 0,
+      next: 0,
+      offset: 0,
+    },
+  },
+  mutations: {
+    spotifyMedium(state, value) {
+      state.spotifyMedium = { ...state.spotifyMedium, ...value }
+    },
+  },
+  actions: {
+    _fetch_spotifyMedium: (context, payload) => fetchTopWithStaging(context, payload, 'spotifyMedium', 'medium_term'),
+  },
+}
+const spotifyShort = {
+  state: {
+    spotifyShort: {
+      list: [],
+      total: 0,
+      next: 0,
+      offset: 0,
+    },
+  },
+  mutations: {
+    spotifyShort(state, value) {
+      state.spotifyShort = { ...state.spotifyShort, ...value }
+    },
+  },
+  actions: {
+    _fetch_spotifyShort: (context, payload) => fetchTopWithStaging(context, payload, 'spotifyShort', 'short_term'),
+  },
+}
+
 const common = {
   state: {
     spotifyPlaylists: [],
@@ -180,7 +269,15 @@ const common = {
   },
 }
 
-export const PersonalPlaylists = [spotifyList, spotifyLiked, spotifyRecently, common].reduce(
+export const PersonalPlaylists = [
+  spotifyList,
+  spotifyLiked,
+  spotifyRecently,
+  spotifyLong,
+  spotifyMedium,
+  spotifyShort,
+  common,
+].reduce(
   (accumulator, submodule) => {
     accumulator.state = { ...accumulator.state, ...submodule.state }
     accumulator.mutations = { ...accumulator.mutations, ...submodule.mutations }

@@ -25,6 +25,18 @@ export default {
           listName = 'Recently played'
           moduleName = 'spotifyRecently'
           break
+        case 'long_term':
+          listName = 'Your totaly Top Tracks'
+          moduleName = 'spotifyLong'
+          break
+        case 'medium_term':
+          listName = 'Your Top Tracks in last 6 months'
+          moduleName = 'spotifyMedium'
+          break
+        case 'short_term':
+          listName = 'Your Top Tracks in last month'
+          moduleName = 'spotifyShort'
+          break
       }
 
       store.commit('chosenListName', listName)
@@ -70,6 +82,24 @@ export default {
         <li>
           <p>Recently Played</p>
           <button class="btn-tertiary" type="button" @click="libraryClickHandler('recently')">
+            <IconArrowRight />
+          </button>
+        </li>
+        <li>
+          <p>Your totaly Top Tracks</p>
+          <button class="btn-tertiary" type="button" @click="libraryClickHandler('long_term')">
+            <IconArrowRight />
+          </button>
+        </li>
+        <li>
+          <p>Your Top Tracks in last 6 months</p>
+          <button class="btn-tertiary" type="button" @click="libraryClickHandler('medium_term')">
+            <IconArrowRight />
+          </button>
+        </li>
+        <li>
+          <p>Your Top Tracks in last month</p>
+          <button class="btn-tertiary" type="button" @click="libraryClickHandler('short_term')">
             <IconArrowRight />
           </button>
         </li>
