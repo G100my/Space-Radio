@@ -111,12 +111,12 @@ export default {
         <button type="button" class="btn-secondary" @click="cancelHandler">Cancel</button>
       </div>
     </header>
-    <div class="mt-5 flex gap-x-1 items-baseline">
+    <div class="mt-5 flex gap-x-1 items-center">
       <p class="mr-auto text-natural-gray2 font-bold">
-        <span class="mx-2">{{ list.length }} / {{ listTotal }}</span>
+        <span class="mx-2">{{ list.length }}{{ listTotal ? ` / ${listTotal}` : '' }}</span>
         <span>results</span>
-        <IconSpinnerLoader v-show="loadingAnimation" class="animate-spin inline-block text-natural-gray2 mx-2" />
       </p>
+      <IconSpinnerLoader v-show="loadingAnimation" class="animate-spin inline-block text-natural-gray2 mx-2" />
     </div>
 
     <InfinityContainer
