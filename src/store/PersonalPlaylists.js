@@ -88,6 +88,34 @@ const spotifyLiked = {
   },
 }
 
+const spotifyRecently = {
+  state: {
+    spotifyRecently: {
+      next: 0,
+    },
+  },
+  mutations: {
+    spotifyRecently(state, value) {
+      state.spotifyRecently = { next: value }
+    },
+  },
+  actions: {
+    async _fetch_spotifyRecently({ commit, getters, state }, isFirst) {
+      await spotifyAPI
+        .getMyRecentlyPlayedTracks({
+          limit: increaseOffset,
+          ...(!isFirst && { before: state.spotifyRecently.next }),
+        })
+        .then(({ items, cursors }) => {
+          const transferResult = items.map(reduceDataCallback)
+          commit('chosenList', getters.chosenList.concat(transferResult))
+
+          commit('spotifyRecently', cursors ? cursors.before : null)
+        })
+    },
+  },
+}
+
 const common = {
   state: {
     spotifyPlaylists: [],
@@ -152,7 +180,7 @@ const common = {
   },
 }
 
-export const PersonalPlaylists = [spotifyList, spotifyLiked, common].reduce(
+export const PersonalPlaylists = [spotifyList, spotifyLiked, spotifyRecently, common].reduce(
   (accumulator, submodule) => {
     accumulator.state = { ...accumulator.state, ...submodule.state }
     accumulator.getters = { ...accumulator.getters, ...submodule.getters }

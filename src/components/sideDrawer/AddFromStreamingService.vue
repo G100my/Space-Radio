@@ -14,9 +14,21 @@ export default {
   setup(_props, { emit }) {
     const store = useStore()
 
-    function libraryClickHandler() {
-      store.commit('chosenListName', 'Liked Songs from Spotify')
-      store.commit('chosenModule', { module: 'spotifyLiked' })
+    function libraryClickHandler(type) {
+      let listName, moduleName
+      switch (type) {
+        case 'liked':
+          listName = 'Liked Songs from Spotify'
+          moduleName = 'spotifyLiked'
+          break
+        case 'recently':
+          listName = 'Recently played'
+          moduleName = 'spotifyRecently'
+          break
+      }
+
+      store.commit('chosenListName', listName)
+      store.commit('chosenModule', { module: moduleName })
       emit('activeSideDrawer', 'PlaylistContent')
     }
 
@@ -50,8 +62,14 @@ export default {
       </h3>
       <ul class="_side_drawer_ul">
         <li>
-          <p class="">Liked Songs from Spotify</p>
-          <button class="btn-tertiary" type="button" @click="libraryClickHandler">
+          <p>Liked Songs from Spotify</p>
+          <button class="btn-tertiary" type="button" @click="libraryClickHandler('liked')">
+            <IconArrowRight />
+          </button>
+        </li>
+        <li>
+          <p>Recently Played</p>
+          <button class="btn-tertiary" type="button" @click="libraryClickHandler('recently')">
             <IconArrowRight />
           </button>
         </li>
