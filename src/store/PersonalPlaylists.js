@@ -183,14 +183,13 @@ const common = {
 export const PersonalPlaylists = [spotifyList, spotifyLiked, spotifyRecently, common].reduce(
   (accumulator, submodule) => {
     accumulator.state = { ...accumulator.state, ...submodule.state }
-    accumulator.getters = { ...accumulator.getters, ...submodule.getters }
     accumulator.mutations = { ...accumulator.mutations, ...submodule.mutations }
     accumulator.actions = { ...accumulator.actions, ...submodule.actions }
     return accumulator
   },
   {
     state: {},
-    getters: {},
+    getters: common.getters,
     mutations: {},
     actions: {},
   }
