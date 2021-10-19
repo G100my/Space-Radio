@@ -70,7 +70,7 @@ function spotifyPlayerReadyHandler(device_id, isHost) {
 
     if (isActived) {
       stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
-      if (isHost) stopAutoCut = useVoteWatch()
+      if (isHost) stopAutoCut = useVoteWatch(nextTrack)
     } else {
       if (stopAutoTTS) {
         stopAutoTTS()
@@ -259,7 +259,6 @@ export {
   isThisSpotifyPlayerActived,
   isThisSpotifyPlayerPaused,
   isThisSpotifyPlayerReady,
-  nextTrack,
   currentActiveDeviceId,
   currentActiveDeviceName,
 }

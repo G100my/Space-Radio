@@ -1,7 +1,5 @@
 import { computed, watch } from 'vue'
 import store from '../store'
-import { nextTrack } from './useSpotifyPlayer'
-// retrun a watch callback?
 
 const minimalVolume = computed(() => store.getters.currentMinimalVolume)
 const currentDislike = computed(() => store.getters.currentDislike)
@@ -16,7 +14,7 @@ let dislikeCountdownTimer
  * 直接執行 watch
  * @returns unwatch function
  */
-export function useVoteWatch() {
+export function useVoteWatch(nextTrack) {
   return watch(currentDislike, newValue => {
     if (dislikeCountdownTimer) {
       clearTimeout(dislikeCountdownTimer)
