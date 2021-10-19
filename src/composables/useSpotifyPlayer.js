@@ -235,13 +235,8 @@ function useHostSpotifyPlayer() {
   return {
     togglePlay: hostTogglePlay,
     spotifyPlayer,
-    isThisSpotifyPlayerActived,
     nextTrack,
-    isThisSpotifyPlayerPaused,
     thisSpotifyPlayerId,
-    currentActiveDeviceId,
-    currentActiveDeviceName,
-    isThisSpotifyPlayerReady,
     reducePlayerVolume,
     updatePlayerVolume,
     resumePlayerVolume,
@@ -258,4 +253,13 @@ function useCustomerSpotifyPlayer() {
   return {}
 }
 
-export { useHostSpotifyPlayer, useCustomerSpotifyPlayer, nextTrack }
+export {
+  useHostSpotifyPlayer,
+  useCustomerSpotifyPlayer,
+  isThisSpotifyPlayerActived,
+  isThisSpotifyPlayerPaused,
+  isThisSpotifyPlayerReady,
+  nextTrack,
+  currentActiveDeviceId,
+  currentActiveDeviceName,
+}
