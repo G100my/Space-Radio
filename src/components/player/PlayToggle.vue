@@ -1,13 +1,7 @@
 <script>
 import IconPlay from '@/assets/icons/icon-play.svg'
 import IconPause from '@/assets/icons/icon-pause.svg'
-import {
-  isThisSpotifyPlayerReady,
-  isThisSpotifyPlayerPaused,
-  currentActiveDeviceId,
-  thisSpotifyPlayerId,
-  togglePlay,
-} from '@/composables/useSpotifyPlayer.js'
+import { useHostSpotifyPlayer } from '@/composables/useSpotifyPlayer.js'
 
 export default {
   components: {
@@ -15,6 +9,13 @@ export default {
     IconPause,
   },
   setup() {
+    const {
+      isThisSpotifyPlayerPaused,
+      isThisSpotifyPlayerReady,
+      currentActiveDeviceId,
+      thisSpotifyPlayerId,
+      togglePlay,
+    } = useHostSpotifyPlayer()
     return {
       isThisSpotifyPlayerReady,
       isThisSpotifyPlayerPaused,

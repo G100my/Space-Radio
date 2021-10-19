@@ -133,12 +133,6 @@ function spotifyWebPlaybackSDKReadyHandler() {
   })
 }
 
-window.onSpotifyWebPlaybackSDKReady = spotifyWebPlaybackSDKReadyHandler
-
-if (import.meta.env.MODE !== 'test') {
-  import('https://sdk.scdn.co/spotify-player.js')
-}
-
 // ===
 
 const NEXT_REDUCE_PROCESS_TIME = 2000
@@ -200,17 +194,28 @@ function togglePlay() {
     })
 }
 
-export {
-  togglePlay,
-  spotifyPlayer,
-  isThisSpotifyPlayerActived,
-  nextTrack,
-  isThisSpotifyPlayerPaused,
-  thisSpotifyPlayerId,
-  currentActiveDeviceId,
-  currentActiveDeviceName,
-  isThisSpotifyPlayerReady,
-  reducePlayerVolume as reduceSpotifyPlayerVolume,
-  updatePlayerVolume as updateSpotifyPlayerVolume,
-  resumePlayerVolume as resumeSpotifyPlayerVolume,
+let hasCreated = false
+function useHostSpotifyPlayer() {
+  if (import.meta.env.MODE === 'test') return
+  if (!hasCreated) {
+    hasCreated = true
+    window.onSpotifyWebPlaybackSDKReady = spotifyWebPlaybackSDKReadyHandler
+    import('https://sdk.scdn.co/spotify-player.js')
+  }
+  return {
+    togglePlay,
+    spotifyPlayer,
+    isThisSpotifyPlayerActived,
+    nextTrack,
+    isThisSpotifyPlayerPaused,
+    thisSpotifyPlayerId,
+    currentActiveDeviceId,
+    currentActiveDeviceName,
+    isThisSpotifyPlayerReady,
+    reducePlayerVolume,
+    updatePlayerVolume,
+    resumePlayerVolume,
+  }
 }
+
+export { useHostSpotifyPlayer, nextTrack }
