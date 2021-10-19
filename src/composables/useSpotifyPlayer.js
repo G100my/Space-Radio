@@ -55,9 +55,7 @@ function refreshCurrentDevice() {
   })
 }
 
-//
-
-function hostPlayerReadyHandler({ device_id }) {
+function spotifyPlayerReadyHandler(device_id, isHost) {
   console.log('Ready with Device ID', device_id)
   thisSpotifyPlayerId.value = device_id
   isThisSpotifyPlayerReady.value = true
@@ -72,19 +70,21 @@ function hostPlayerReadyHandler({ device_id }) {
 
     if (isActived) {
       stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
-      stopAutoCut = useVoteWatch()
+      if (isHost) stopAutoCut = useVoteWatch()
     } else {
       if (stopAutoTTS) {
         stopAutoTTS()
         stopAutoTTS = null
       }
-      if (stopAutoCut) {
+      if (isHost && stopAutoCut) {
         stopAutoCut()
         stopAutoCut = null
       }
     }
   })
 }
+
+//
 
 const pendingOrder = computed(() => store.getters.pendingOrder)
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
@@ -119,7 +119,9 @@ function hostSDKReadyHandler() {
     })
   })
 
-  spotifyPlayer.addListener('ready', hostPlayerReadyHandler)
+  spotifyPlayer.addListener('ready', ({ device_id }) => {
+    spotifyPlayerReadyHandler(device_id, true)
+  })
   spotifyPlayer.addListener('player_state_changed', hostPlayerStatusChangedHandler)
 
   spotifyPlayer.connect().then(success => {
@@ -195,6 +197,33 @@ function hostTogglePlay() {
     })
 }
 
+//
+
+function customerSDKReadyHandler() {
+  spotifyPlayer = new window.Spotify.Player(initSpotifySetting)
+
+  const eventArray = ['initialization_error', 'account_error', 'playback_error', 'authentication_error', 'not_ready']
+  eventArray.forEach(event => {
+    spotifyPlayer.addListener(event, message => {
+      console.log(event, message)
+    })
+  })
+
+  spotifyPlayer.addListener('ready', ({ device_id }) => {
+    spotifyPlayerReadyHandler(device_id, false)
+  })
+  // spotifyPlayer.addListener('player_state_changed', () => {})
+
+  spotifyPlayer.connect().then(() => {
+    window.onbeforeunload = () => {
+      if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
+    }
+    refreshCurrentDevice()
+  })
+}
+
+//
+
 let hasCreated = false
 function useHostSpotifyPlayer() {
   if (import.meta.env.MODE === 'test') return
@@ -219,4 +248,14 @@ function useHostSpotifyPlayer() {
   }
 }
 
-export { useHostSpotifyPlayer, nextTrack }
+function useCustomerSpotifyPlayer() {
+  if (import.meta.env.MODE === 'test') return
+  if (!hasCreated) {
+    hasCreated = true
+    window.onSpotifyWebPlaybackSDKReady = customerSDKReadyHandler
+    import('https://sdk.scdn.co/spotify-player.js')
+  }
+  return {}
+}
+
+export { useHostSpotifyPlayer, useCustomerSpotifyPlayer, nextTrack }
