@@ -66,8 +66,9 @@ export default {
     <header>
       <h2 class="text-natural-gray1 text-subtitle laptop:text-header">Add from Spotify</h2>
     </header>
-
-    <div class="mt-10">
+    
+    <div class="flex-1 mt-10 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-y-hidden">
       <h3 class="mb-4 flex justify-between font-bold">
         <p class="text-natural-white">Your library</p>
         <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
@@ -106,7 +107,7 @@ export default {
       </ul>
     </div>
 
-    <div class="mt-12 flex-1 overflow-y-auto flex flex-col">
+    <div class="flex-1 overflow-y-hidden flex flex-col">
       <h3 class="mb-4 flex justify-between font-bold">
         <p class="text-natural-white">Playlists</p>
         <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
@@ -119,6 +120,8 @@ export default {
           </button>
         </li>
       </ul>
+    </div>
+
     </div>
   </div>
 </template>
