@@ -66,62 +66,61 @@ export default {
     <header>
       <h2 class="text-natural-gray1 text-subtitle laptop:text-header">Add from Spotify</h2>
     </header>
-    
+
     <div class="flex-1 mt-10 flex flex-col overflow-hidden">
-    <div class="flex-1 flex flex-col overflow-y-hidden">
-      <h3 class="mb-4 flex justify-between font-bold">
-        <p class="text-natural-white">Your library</p>
-        <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
-      </h3>
-      <ul class="_side_drawer_ul">
-        <li>
-          <p>Liked Songs from Spotify</p>
-          <button class="btn-tertiary" type="button" @click="libraryClickHandler('liked')">
-            <IconArrowRight />
-          </button>
-        </li>
-        <li>
-          <p>Recently Played</p>
-          <button class="btn-tertiary" type="button" @click="libraryClickHandler('recently')">
-            <IconArrowRight />
-          </button>
-        </li>
-        <li>
-          <p>Your totaly Top Tracks</p>
-          <button class="btn-tertiary" type="button" @click="libraryClickHandler('long_term')">
-            <IconArrowRight />
-          </button>
-        </li>
-        <li>
-          <p>Your Top Tracks in last 6 months</p>
-          <button class="btn-tertiary" type="button" @click="libraryClickHandler('medium_term')">
-            <IconArrowRight />
-          </button>
-        </li>
-        <li>
-          <p>Your Top Tracks in last month</p>
-          <button class="btn-tertiary" type="button" @click="libraryClickHandler('short_term')">
-            <IconArrowRight />
-          </button>
-        </li>
-      </ul>
-    </div>
+      <div class="flex-1 flex flex-col overflow-y-hidden">
+        <h3 class="mb-4 flex justify-between font-bold">
+          <p class="text-natural-white">Your library</p>
+          <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
+        </h3>
+        <ul class="_side_drawer_ul">
+          <li>
+            <p>Liked Songs from Spotify</p>
+            <button class="btn-tertiary" type="button" @click="libraryClickHandler('liked')">
+              <IconArrowRight />
+            </button>
+          </li>
+          <li>
+            <p>Recently Played</p>
+            <button class="btn-tertiary" type="button" @click="libraryClickHandler('recently')">
+              <IconArrowRight />
+            </button>
+          </li>
+          <li>
+            <p>Your totaly Top Tracks</p>
+            <button class="btn-tertiary" type="button" @click="libraryClickHandler('long_term')">
+              <IconArrowRight />
+            </button>
+          </li>
+          <li>
+            <p>Your Top Tracks in last 6 months</p>
+            <button class="btn-tertiary" type="button" @click="libraryClickHandler('medium_term')">
+              <IconArrowRight />
+            </button>
+          </li>
+          <li>
+            <p>Your Top Tracks in last month</p>
+            <button class="btn-tertiary" type="button" @click="libraryClickHandler('short_term')">
+              <IconArrowRight />
+            </button>
+          </li>
+        </ul>
+      </div>
 
-    <div class="flex-1 overflow-y-hidden flex flex-col">
-      <h3 class="mb-4 flex justify-between font-bold">
-        <p class="text-natural-white">Playlists</p>
-        <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
-      </h3>
-      <ul class="_side_drawer_ul">
-        <li v-for="(playlist, index) in spotify" :key="index">
-          <p>{{ playlist.name }}</p>
-          <button class="btn-tertiary" type="button" @click="playlistClickHandler(playlist.id, playlist.name)">
-            <IconArrowRight />
-          </button>
-        </li>
-      </ul>
-    </div>
-
+      <div class="flex-1 overflow-y-hidden flex flex-col">
+        <h3 class="mb-4 flex justify-between font-bold">
+          <p class="text-natural-white">Playlists</p>
+          <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
+        </h3>
+        <ul class="_side_drawer_ul">
+          <li v-for="(playlist, index) in spotify" :key="index">
+            <p>{{ playlist.name }}</p>
+            <button class="btn-tertiary" type="button" @click="playlistClickHandler(playlist.id, playlist.name)">
+              <IconArrowRight />
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
