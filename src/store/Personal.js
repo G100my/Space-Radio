@@ -33,7 +33,8 @@ const Personal = {
       return state.product
     },
     isHostUser(_state, getters, _rootState, rootGetters) {
-      return rootGetters.hostId === getters.userId
+      if (!rootGetters.hostId || !getters.userId) return undefined
+      else return rootGetters.hostId === getters.userId
     },
     refresh_token(state) {
       return state.refresh_token

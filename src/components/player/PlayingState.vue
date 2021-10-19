@@ -23,6 +23,7 @@ export default {
       playerPlayingAlbum: computed(() => store.getters.playerPlayingAlbum),
       playerPlayingArtists: computed(() => store.getters.playerPlayingArtists),
       playerPlayingTrackName: computed(() => store.getters.playerPlayingTrackName),
+      isPremium: computed(() => store.getters.accountLevel === 'premium'),
       isHostUser: computed(() => store.getters.isHostUser),
     }
   },
@@ -47,7 +48,7 @@ export default {
           />
         </a>
         <PlayToggle
-          v-if="isHostUser"
+          v-if="isPremium && isHostUser !== undefined"
           class="absolute right-0 bottom-0 translate-y-1/2 translate-x-1/2 laptop:translate-x-3/4 laptop:translate-y-1/2 z-30"
         />
       </div>
