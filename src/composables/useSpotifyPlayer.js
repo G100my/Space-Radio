@@ -20,6 +20,22 @@ const isThisSpotifyPlayerReady = ref(false)
 
 const currentActiveDeviceId = ref(null)
 const currentActiveDeviceName = ref(null)
+const currentVolume = computed(() => store.getters.currentVolume)
+const isTokenValid = computed(() => store.getters.isTokenValid)
+const token = computed(() => store.getters.token)
+const initSpotifySetting = {
+  name: 'Space Radio player',
+  volume: currentVolume.value / 100,
+  getOAuthToken: callback => {
+    if (isTokenValid.value) {
+      callback(token.value)
+    } else {
+      refreshAccessToken().then(() => {
+        callback(token.value)
+      })
+    }
+  },
+}
 
 let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
@@ -41,7 +57,7 @@ function refreshCurrentDevice() {
 
 //
 
-function spotifyPlayerReadyHandler({ device_id }) {
+function hostPlayerReadyHandler({ device_id }) {
   console.log('Ready with Device ID', device_id)
   thisSpotifyPlayerId.value = device_id
   isThisSpotifyPlayerReady.value = true
@@ -73,7 +89,7 @@ function spotifyPlayerReadyHandler({ device_id }) {
 const pendingOrder = computed(() => store.getters.pendingOrder)
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
 
-function spotifyPlayerStatusChangedHandler(playerState) {
+function hostPlayerStatusChangedHandler(playerState) {
   if (playerState === null) {
     refreshCurrentDevice()
     store.dispatch('clearPlayingTrack')
@@ -92,24 +108,9 @@ function spotifyPlayerStatusChangedHandler(playerState) {
 }
 
 //
-const currentVolume = computed(() => store.getters.currentVolume)
-const isTokenValid = computed(() => store.getters.isTokenValid)
-const token = computed(() => store.getters.token)
 
-function spotifyWebPlaybackSDKReadyHandler() {
-  spotifyPlayer = new window.Spotify.Player({
-    name: 'Space Radio player',
-    volume: currentVolume.value / 100,
-    getOAuthToken: callback => {
-      if (isTokenValid.value) {
-        callback(token.value)
-      } else {
-        refreshAccessToken().then(() => {
-          callback(token.value)
-        })
-      }
-    },
-  })
+function hostSDKReadyHandler() {
+  spotifyPlayer = new window.Spotify.Player(initSpotifySetting)
 
   const eventArray = ['initialization_error', 'account_error', 'playback_error', 'authentication_error', 'not_ready']
   eventArray.forEach(event => {
@@ -118,8 +119,8 @@ function spotifyWebPlaybackSDKReadyHandler() {
     })
   })
 
-  spotifyPlayer.addListener('ready', spotifyPlayerReadyHandler)
-  spotifyPlayer.addListener('player_state_changed', spotifyPlayerStatusChangedHandler)
+  spotifyPlayer.addListener('ready', hostPlayerReadyHandler)
+  spotifyPlayer.addListener('player_state_changed', hostPlayerStatusChangedHandler)
 
   spotifyPlayer.connect().then(success => {
     window.onbeforeunload = () => {
@@ -159,7 +160,7 @@ function nextTrack() {
     })
 }
 
-function togglePlay() {
+function hostTogglePlay() {
   const device_id = unref(thisSpotifyPlayerId)
   spotifyPlayer
     .getCurrentState()
@@ -199,11 +200,11 @@ function useHostSpotifyPlayer() {
   if (import.meta.env.MODE === 'test') return
   if (!hasCreated) {
     hasCreated = true
-    window.onSpotifyWebPlaybackSDKReady = spotifyWebPlaybackSDKReadyHandler
+    window.onSpotifyWebPlaybackSDKReady = hostSDKReadyHandler
     import('https://sdk.scdn.co/spotify-player.js')
   }
   return {
-    togglePlay,
+    togglePlay: hostTogglePlay,
     spotifyPlayer,
     isThisSpotifyPlayerActived,
     nextTrack,
