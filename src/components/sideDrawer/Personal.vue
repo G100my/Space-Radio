@@ -1,3 +1,15 @@
+<script>
+export default {
+  setup() {
+    function localClear() {
+      localStorage.clear()
+    }
+    return {
+      localClear,
+    }
+  },
+}
+</script>
 <template>
   <div class="h-full mx-auto flex flex-col text-natural-gray2 max-w-sm">
     <div class="flex-col gap-5">
@@ -29,7 +41,7 @@
     <!-- 匯出 -->
     <!-- 刪除房間 -->
     <div class="mt-auto mb-7">
-      <button class="btn-primary w-full font-semibold" type="button" @click="() => localStorage.clear()">
+      <button class="btn-primary w-full font-semibold" type="button" @click="localClear">
         Delete all catch on this device.
       </button>
       <!-- 離開房間 -->
