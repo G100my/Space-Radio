@@ -49,6 +49,7 @@ export default {
         </a>
         <PlayToggle
           v-if="isPremium && isHostUser !== undefined"
+          :isHostUser="isHostUser"
           class="absolute right-0 bottom-0 translate-y-1/2 translate-x-1/2 laptop:translate-x-3/4 laptop:translate-y-1/2 z-30"
         />
       </div>
