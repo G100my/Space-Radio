@@ -10,6 +10,8 @@ const Personal = {
     display_name: localStorage.getItem('spaceradio_user_display_name') || null,
     image_url: localStorage.getItem('spaceradio_user_images') || '',
     product: localStorage.getItem('spaceradio_user_product') || '',
+
+    customerPlayerMode: false,
   },
   getters: {
     token(state) {
@@ -39,6 +41,9 @@ const Personal = {
     refresh_token(state) {
       return state.refresh_token
     },
+    customerPlayerMode(state) {
+      return state.customerPlayerMode
+    },
   },
   mutations: {
     tokens(state, { access_token, expiredTime, refresh_token }) {
@@ -64,6 +69,9 @@ const Personal = {
         state.image_url = images[0].url
         localStorage.setItem('spaceradio_user_images', images[0].url)
       }
+    },
+    toggleCustomerPlayer(state, payload) {
+      state.customerPlayerMode = payload
     },
   },
 }
