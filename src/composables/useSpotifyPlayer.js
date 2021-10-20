@@ -21,6 +21,7 @@ const isThisSpotifyPlayerReady = ref(false)
 const currentActiveDeviceId = ref(null)
 const currentActiveDeviceName = ref(null)
 const currentVolume = computed(() => store.getters.currentVolume)
+
 const isTokenValid = computed(() => store.getters.isTokenValid)
 const token = computed(() => store.getters.token)
 const initSpotifySetting = {
@@ -48,9 +49,10 @@ function refreshCurrentDevice() {
       isThisSpotifyPlayerPaused.value = true
       return
     }
-    const { device } = result
+    const { device, is_playing } = result
     currentActiveDeviceId.value = device.id
     currentActiveDeviceName.value = device.name
+    isThisSpotifyPlayerPaused.value = !is_playing
     isThisSpotifyPlayerActived.value = currentActiveDeviceId.value === thisSpotifyPlayerId.value
   })
 }
@@ -199,6 +201,33 @@ function hostTogglePlay() {
 
 //
 
+let unwatchContextUri = null
+function customerTogglePlay() {
+  spotifyPlayer.getCurrentState().then(state => {
+    if (!state) {
+      const context_uri = computed(() => store.getters.playerPlayingTrackUri)
+      customerPlay(context_uri.value)
+      unwatchContextUri = watch(context_uri, newValue => {
+        customerPlay(newValue)
+      })
+    } else {
+      isThisSpotifyPlayerPaused.value = true
+      spotifyPlayer.pause()
+      if (unwatchContextUri) unwatchContextUri()
+    }
+  })
+}
+function customerPlay(context_uri) {
+  const device_id = unref(thisSpotifyPlayerId)
+  const position_ms = store.getters.playingProgress.position
+  spotifyAPI.play({ uris: [context_uri], device_id, position_ms }).then(() => {
+    refreshCurrentDevice()
+  })
+}
+
+const customerPlayerVolume = ref(0)
+let unwatchCustomerPlayerMode = null
+const customerPlayerMode = computed(() => store.getters.customerPlayerMode)
 function customerSDKReadyHandler() {
   spotifyPlayer = new window.Spotify.Player(initSpotifySetting)
 
@@ -211,15 +240,25 @@ function customerSDKReadyHandler() {
 
   spotifyPlayer.addListener('ready', ({ device_id }) => {
     spotifyPlayerReadyHandler(device_id, false)
-  })
-  // spotifyPlayer.addListener('player_state_changed', () => {})
-
-  spotifyPlayer.connect().then(() => {
+    unwatchCustomerPlayerMode = watch(customerPlayerMode, newValue => {
+      if (newValue === false) {
+        spotifyPlayer.disconnect()
+        unwatchCustomerPlayerMode()
+        unwatchCustomerPlayerMode = null
+      }
+    })
     window.onbeforeunload = () => {
       if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
     }
-    refreshCurrentDevice()
+    spotifyAPI.transferMyPlayback([device_id])
+    spotifyPlayer.getVolume().then(result => {
+      customerPlayerVolume.value = Math.floor(result)
+    })
+    window.player = spotifyPlayer
   })
+  // spotifyPlayer.addListener('player_state_changed', () => {})
+
+  spotifyPlayer.connect()
 }
 
 //
@@ -246,11 +285,16 @@ function useHostSpotifyPlayer() {
 function useCustomerSpotifyPlayer() {
   if (import.meta.env.MODE === 'test') return
   if (!hasCreated) {
+    console.log('you are using customer player.')
     hasCreated = true
     window.onSpotifyWebPlaybackSDKReady = customerSDKReadyHandler
     import('https://sdk.scdn.co/spotify-player.js')
   }
-  return {}
+  return {
+    togglePlay: customerTogglePlay,
+    currentActiveDeviceId,
+    customerPlayerVolume,
+  }
 }
 
 export {
