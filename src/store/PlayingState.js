@@ -187,6 +187,7 @@ const initialTrack = {
     image_url: '',
   },
   is_playable: true,
+  context_uri: false,
 }
 function transformURI2URL(uri) {
   if (typeof uri !== 'string') return ''
@@ -210,6 +211,9 @@ const PlayingState = {
     playerPlayingTrackName(state) {
       return state.playing_track.name ? state.playing_track.name : 'No track in player'
     },
+    playerPlayingTrackUri(state) {
+      return state.playing_track.context_uri
+    },
   },
   mutations: {
     playerTrack(state, newPlayingTrack) {
@@ -232,6 +236,7 @@ const PlayingState = {
           image_url: newPlayingTrack.album.images.find(item => item.height >= 300).url,
           url: transformURI2URL(newPlayingTrack.album.uri),
         },
+        context_uri: newPlayingTrack.uri,
       }
       playing_state_ref.child('playing_track').set(track)
     },
