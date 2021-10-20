@@ -10,6 +10,7 @@ import SlideContainer from '../components/SlideContainer.vue'
 import SideDrawer from '../components/sideDrawer/SideDrawer.vue'
 import Header from '../components/header/Header.vue'
 import PlayingState from '../components/player/PlayingState.vue'
+import CustomerVolumeBar from '../components/player/CustomerVolumeBar.vue'
 import VolumnBar from '@/components/VolumnBar.vue'
 import Collection from '@/components/player/Collection.vue'
 import Vote from '@/components/player/Vote.vue'
@@ -38,6 +39,7 @@ export default {
     PlaylistContent,
     Search,
     Personal,
+    CustomerVolumeBar,
   },
   setup() {
     const store = useStore()
@@ -90,12 +92,14 @@ export default {
         <div class="min-h-full flex flex-col laptop:pt-7">
           <PlayingState />
           <VolumnBar
+            v-if="!$store.getters.customerPlayerMode"
             :modelValue="currentVolume"
             disabledBar
             class="mt-7 laptop:mt-3"
             @minus="$store.dispatch('turnDown', $event)"
             @plus="$store.dispatch('turnUp', $event)"
           />
+          <CustomerVolumeBar v-else class="mt-7 laptop:mt-3" />
           <Collection class="mt-4" />
           <Vote class="my-4" />
           <UserLog class="flex-1 max-h-72 hidden laptop:flex" />

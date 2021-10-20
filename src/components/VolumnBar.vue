@@ -29,7 +29,11 @@ export default {
 </script>
 <template>
   <div :class="$attrs.class" class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
-    <span class="text-primary font-bold w-7 flex-shrink-0 text-center">{{ modelValue }}</span>
+    <span
+      :class="{ 'text-natural-gray3': $attrs.disabled }"
+      class="text-primary font-bold w-7 flex-shrink-0 text-center"
+      >{{ modelValue }}</span
+    >
     <IconVolumn class="ml-3" />
 
     <button
