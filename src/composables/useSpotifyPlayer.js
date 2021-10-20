@@ -40,6 +40,7 @@ const initSpotifySetting = {
 
 let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
 
+// ! fixme 有點多餘
 function refreshCurrentDevice() {
   spotifyAPI.getMyCurrentPlaybackState().then(result => {
     console.log('CurrentPlaybackState: ', result)
@@ -47,13 +48,15 @@ function refreshCurrentDevice() {
     if (!result) {
       isThisSpotifyPlayerActived.value = false
       isThisSpotifyPlayerPaused.value = true
-      return
+      console.log('if')
+    } else {
+      console.log('else')
+      const { device, is_playing } = result
+      currentActiveDeviceId.value = device.id
+      currentActiveDeviceName.value = device.name
+      // isThisSpotifyPlayerPaused.value = !is_playing
+      isThisSpotifyPlayerActived.value = currentActiveDeviceId.value === thisSpotifyPlayerId.value
     }
-    const { device, is_playing } = result
-    currentActiveDeviceId.value = device.id
-    currentActiveDeviceName.value = device.name
-    isThisSpotifyPlayerPaused.value = !is_playing
-    isThisSpotifyPlayerActived.value = currentActiveDeviceId.value === thisSpotifyPlayerId.value
   })
 }
 
@@ -96,6 +99,7 @@ function hostPlayerStatusChangedHandler(playerState) {
     refreshCurrentDevice()
     store.dispatch('clearPlayingTrack')
     window.onbeforeunload = null
+    isThisSpotifyPlayerPaused.value = true
     return
   }
 
@@ -258,12 +262,21 @@ function customerSDKReadyHandler() {
       currentActiveDeviceId.value = device_id
     })
     spotifyPlayer.getVolume().then(result => {
-      console.log(result)
       customerPlayerVolume.value = Math.floor(result * 100)
     })
     window.player = spotifyPlayer
   })
-  // spotifyPlayer.addListener('player_state_changed', () => {})
+  spotifyPlayer.addListener('player_state_changed', playerState => {
+    if (playerState === null) {
+      refreshCurrentDevice()
+      window.onbeforeunload = null
+      isThisSpotifyPlayerPaused.value = true
+      return
+    }
+
+    isThisSpotifyPlayerActived.value = true
+    isThisSpotifyPlayerPaused.value = playerState.paused
+  })
 
   spotifyPlayer.connect()
 }
