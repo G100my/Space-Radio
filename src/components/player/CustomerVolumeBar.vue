@@ -8,7 +8,6 @@ export default {
   },
   setup() {
     const { currentActiveDeviceId, customerPlayerVolume } = useCustomerSpotifyPlayer()
-
     function changedHandler(value) {
       spotifyAPI.setVolume(value, { device_id: currentActiveDeviceId.value }).then(() => {
         customerPlayerVolume.value = value

@@ -204,9 +204,13 @@ function hostTogglePlay() {
 let unwatchContextUri = null
 function customerTogglePlay() {
   spotifyPlayer.getCurrentState().then(state => {
-    if (!state) {
+    if (!state || state.paused) {
       const context_uri = computed(() => store.getters.playerPlayingTrackUri)
-      customerPlay(context_uri.value)
+      customerPlay(context_uri.value).then(() => {
+        spotifyPlayer.getVolume().then(r => {
+          customerPlayerVolume.value = Math.floor(r * 100)
+        })
+      })
       unwatchContextUri = watch(context_uri, newValue => {
         customerPlay(newValue)
       })
@@ -217,10 +221,10 @@ function customerTogglePlay() {
     }
   })
 }
-function customerPlay(context_uri) {
+async function customerPlay(context_uri) {
   const device_id = unref(thisSpotifyPlayerId)
   const position_ms = store.getters.playingProgress.position
-  spotifyAPI.play({ uris: [context_uri], device_id, position_ms }).then(() => {
+  await spotifyAPI.play({ uris: [context_uri], device_id, position_ms }).then(() => {
     refreshCurrentDevice()
   })
 }
@@ -250,9 +254,12 @@ function customerSDKReadyHandler() {
     window.onbeforeunload = () => {
       if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
     }
-    spotifyAPI.transferMyPlayback([device_id])
+    spotifyAPI.transferMyPlayback([device_id]).then(() => {
+      currentActiveDeviceId.value = device_id
+    })
     spotifyPlayer.getVolume().then(result => {
-      customerPlayerVolume.value = Math.floor(result)
+      console.log(result)
+      customerPlayerVolume.value = Math.floor(result * 100)
     })
     window.player = spotifyPlayer
   })
