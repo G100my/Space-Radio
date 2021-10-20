@@ -91,7 +91,7 @@ export default {
           <PlayingState />
           <VolumnBar
             :modelValue="currentVolume"
-            disabled
+            disabledBar
             class="mt-7 laptop:mt-3"
             @minus="$store.dispatch('turnDown', $event)"
             @plus="$store.dispatch('turnUp', $event)"

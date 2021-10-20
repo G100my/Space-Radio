@@ -19,6 +19,10 @@ export default {
       type: Number,
       default: 1,
     },
+    disabledBar: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['update:change', 'plus', 'minus'],
 }
@@ -28,10 +32,20 @@ export default {
     <span class="text-primary font-bold w-7 flex-shrink-0 text-center">{{ modelValue }}</span>
     <IconVolumn class="ml-3" />
 
-    <button class="_volumn_bar_button btn-tertiary order-11" type="button" @click="$emit('minus', modelValue - step)">
+    <button
+      :disabled="$attrs.disabled"
+      class="_volumn_bar_button btn-tertiary order-11"
+      type="button"
+      @click="$emit('minus', modelValue - step)"
+    >
       <IconMinus />
     </button>
-    <button class="_volumn_bar_button btn-tertiary order-12" type="button" @click="$emit('plus', modelValue + step)">
+    <button
+      :disabled="$attrs.disabled"
+      class="_volumn_bar_button btn-tertiary order-12"
+      type="button"
+      @click="$emit('plus', modelValue + step)"
+    >
       <IconPlus />
     </button>
     <!-- v-bind="$attrs" 會連 class... 也綁，所以只指定需要的 -->
@@ -39,7 +53,7 @@ export default {
       :value="modelValue"
       :min="$attrs.min"
       :max="$attrs.max"
-      :disabled="$attrs.disabled"
+      :disabled="disabledBar || $attrs.disabled"
       :step="step"
       type="range"
       class="ml-3"
