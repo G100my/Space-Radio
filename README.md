@@ -1,6 +1,6 @@
 # Space radio 空間廣播
 
-[![hackmd-github-sync-badge](https://hackmd.io/KgDx3q1DSm6xyr6oBVDK0Q/badge)](https://hackmd.io/KgDx3q1DSm6xyr6oBVDK0Q)
+**UI Designer:** [Echo](https://echowenchi.myportfolio.com/work)
 
 ---
 
@@ -77,7 +77,9 @@
 
 ---
 
-## v1 自行設計的 UI 介面
+## V1
+
+UI Design by G100
 
 ![v1 hall](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v1hall.png?raw=true)
 
@@ -89,7 +91,9 @@
 
 ---
 
-## v2 UI/UX 設計師夥伴加入，重新設計 UI 介面
+## v2
+
+UI Design by [Echo](https://echowenchi.myportfolio.com/work)
 
 ![v2 hall](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v2hall.jpg?raw=true)
 
