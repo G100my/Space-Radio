@@ -18,8 +18,7 @@
 進行搜尋歌曲、點播歌曲等相關 Spotify 提供的 API 服務。
 經由 Firebase 同步所有的點/插歌，
 最後由 room host 的瀏覽器處理撥放、換歌、切歌等動作。
-
-![space radio work flow](./doc_images/spaceradio-flow.jpg)
+![space radio work flow](https://github.com/G100my/Space-Radio/blob/main/doc_Images/spaceradio-flow.jpg?raw=true)
 
 ### Feature:
 
@@ -80,22 +79,22 @@
 
 ## v1 自行設計的 UI 介面
 
-![v1 hall](./doc_images/v1hall.png =1000x)
+![v1 hall](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v1hall.png?raw=true)
 
-![v1 room](./doc_images/v1room.png =1000x)
+![v1 room](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v1room.png?raw=true)
 
-![v1 main](./doc_images/v1main.png =350x)
+![v1 main](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v1main.png?raw=true)
 
-![v1 list](./doc_images/v1list.png =350x)
+![v1 list](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v1list.png?raw=true)
 
 ---
 
 ## v2 UI/UX 設計師夥伴加入，重新設計 UI 介面
 
-![v2 hall](./doc_images/v2hall.jpg =1000x)
+![v2 hall](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v2hall.jpg?raw=true)
 
-![v2 room](./doc_images/v2room.jpg =1000x)
+![v2 room](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v2room.jpg?raw=true)
 
-![v2 main](./doc_images/v2main.jpg =350x)
+![v2 main](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v2main.jpg?raw=true)
 
-![v2 list](./doc_images/v2list.jpg =350x)
+![v2 list](https://github.com/G100my/Space-Radio/blob/main/doc_Images/v2list.jpg?raw=true)
