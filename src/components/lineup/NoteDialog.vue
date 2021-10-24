@@ -20,6 +20,7 @@ export default {
     const recipient = computed(() => store.getters.noteRecipient)
     const message = computed(() => store.getters.noteMessage)
     const submitHandler = computed(() => store.getters.noteDialogSubmitHandler)
+    const noteTrackName = computed(() => store.getters.noteTrackName)
 
     function cancelHandler() {
       store.commit('noteDialogToggler', false)
@@ -29,6 +30,7 @@ export default {
       isOpen,
 
       sender,
+      noteTrackName,
       recipient,
       message,
       submitHandler,
@@ -59,7 +61,8 @@ export default {
           @change="$store.commit('editingNote', { sender: $event.target.value })"
         />
         <span>order</span>
-        <strong>{{ 'fix you' }}</strong>
+        <strong>{{ noteTrackName }}</strong>
+        <span>to</span>
         <input
           :value="recipient"
           maxlength="16"

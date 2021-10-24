@@ -154,6 +154,7 @@ const actions = {
       commit('localSenderName')
     }
     dispatch('clearNote')
+    commit('noteTrackName', track_name)
     commit('noteDialogToggler', true)
     commit('submitHandler', handler)
   },

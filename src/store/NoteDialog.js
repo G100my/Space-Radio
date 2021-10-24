@@ -5,6 +5,7 @@ export const NoteDialog = {
       recipient: '',
       message: '',
     },
+    noteTrackName: '',
     isDialogOpen: false,
     submitHandler: () => {},
   },
@@ -26,6 +27,9 @@ export const NoteDialog = {
         state.submitHandler(state.editingNote)
       }
     },
+    noteTrackName(state) {
+      return state.noteTrackName
+    },
   },
   mutations: {
     editingNote(state, payload) {
@@ -41,6 +45,9 @@ export const NoteDialog = {
     },
     submitHandler(state, handler) {
       state.submitHandler = handler
+    },
+    noteTrackName(state, value) {
+      state.noteTrackName = value
     },
   },
   actions: {
