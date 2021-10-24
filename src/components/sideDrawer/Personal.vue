@@ -1,5 +1,6 @@
 <script>
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 import { computed } from '@vue/runtime-core'
 export default {
@@ -10,6 +11,7 @@ export default {
   },
   setup() {
     const store = useStore()
+    const router = useRouter()
     const customerPlayerMode = computed(() => store.getters.customerPlayerMode)
     const isHostUser = computed(() => store.getters.isHostUser)
     function changedHandler() {
@@ -17,6 +19,8 @@ export default {
     }
     function localClear() {
       localStorage.clear()
+      router.push({ name: 'Hall' })
+      location.reload()
     }
     return {
       localClear,
@@ -82,7 +86,7 @@ export default {
     <!-- 刪除房間 -->
     <div class="mt-auto mb-7">
       <button class="btn-primary w-full font-semibold" type="button" @click="localClear">
-        Delete all catch on this device.
+        Delete catch on this device & reload window
       </button>
       <!-- 離開房間 -->
     </div>
