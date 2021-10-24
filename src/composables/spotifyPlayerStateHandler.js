@@ -19,6 +19,7 @@ function diffirentPlayingTrackIdHandler(playerState, playerPlayingTrackId) {
   // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
   if (playerState.track_window.current_track.id !== playerPlayingTrackId)
     store.dispatch('updatePlayingTrack', playerState.track_window.current_track)
+  store.dispatch('clearDislikeVote')
 }
 
 // ===
