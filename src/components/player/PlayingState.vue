@@ -57,9 +57,9 @@ export default {
       <section
         class="flex-1 w-0 laptop:w-auto pl-4 self-stretch flex flex-col justify-end laptop:-mt-4 laptop:pl-0 laptop:min-h-[90px]"
       >
-        <section class="flex laptop:w-9/12 laptop:relative">
+        <section class="flex laptop:w-9/12 laptop:relative items-center">
           <p class="flex-1 font-bold text-natural-gray1">{{ playerPlayingTrackName }}</p>
-          <LikeButton class="laptop:absolute laptop:-top-2 laptop:right-0 laptop:z-30" />
+          <LikeButton class="laptop:-top-2 laptop:right-0 laptop:z-30" />
         </section>
 
         <section class="mt-1 laptop:mt-auto">
