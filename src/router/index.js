@@ -4,7 +4,7 @@ import Hall from '../views/Hall.vue'
 import Room from '../views/Room.vue'
 import Doorscope from '../views/Doorscope.vue'
 import HallShell from '../components/hall/HallShell.vue'
-import CreateRoom from '../views/create-room/CreateRoom.vue'
+import CreateRoom from '../views/CreateRoom.vue'
 import { fetchAccessToken } from '../utility/PKCE.js'
 import { spotifyAPI } from '../utility/spotifyAPI.js'
 
