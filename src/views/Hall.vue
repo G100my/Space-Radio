@@ -19,14 +19,22 @@ export default {
 
     let roomListObject = null
 
-    firebase
-      .database()
-      .ref('room_list')
-      .on('value', snapshot => {
-        roomListObject = snapshot.val()
-      })
+    const roomList = firebase.database().ref('room_list')
+
+    roomList.on('value', snapshot => {
+      roomListObject = snapshot.val()
+    })
     onBeforeUnmount(() => {
       firebase.database().ref('room_list').off()
+      // 借助使用者刪除太久沒有使用的 room
+      const deletedRooms = Object.entries(roomListObject).reduce((accumulator, [roomKey, value]) => {
+        if (Date.now() - value.lastest_used > 30 * 24 * 60 * 60 * 1000) {
+          accumulator[roomKey] = null
+        }
+        return accumulator
+      }, {})
+      firebase.database().ref().update(deletedRooms)
+      firebase.database().ref('room_list').update(deletedRooms)
     })
 
     function searchRoom() {
@@ -41,7 +49,7 @@ export default {
         roomKey = searchKeyWordInput
       } else {
         for (let key in roomListObject) {
-          if (roomListObject[key] === searchKeyWordInput.value) {
+          if (roomListObject[key].room_name === searchKeyWordInput.value) {
             roomKey = key
             break
           }

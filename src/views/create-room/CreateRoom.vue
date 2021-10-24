@@ -112,7 +112,10 @@ export default {
     function createHandler() {
       checkRoomNameHandler()
       if (!isVaild.value) return
-      firebase.database().ref(`room_list/${roomKey}`).set(roomName.value)
+      firebase.database().ref(`room_list/${roomKey}`).set({
+        room_name: roomName.value,
+        lastest_used: Date.now(),
+      })
       const room = firebase.database().ref(roomKey)
       room
         .set({
