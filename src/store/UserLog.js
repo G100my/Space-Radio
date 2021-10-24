@@ -3,7 +3,7 @@ import firebase from './firebase.js'
 let user_log_ref
 
 function setUserLogRef(roomKey) {
-  user_log_ref = firebase.database().ref(`user_log/${roomKey}`)
+  user_log_ref = firebase.database().ref(`${roomKey}/user_log/`)
 }
 
 const logLimit = 50
