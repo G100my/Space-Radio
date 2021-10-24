@@ -94,6 +94,9 @@ const Vote = {
     currentDislikeCountdown(state) {
       return state.dislike_countdown
     },
+    isVoted(state) {
+      return state.isVoted
+    },
   },
   mutations: {
     currentDislike(state, value) {
@@ -104,6 +107,9 @@ const Vote = {
     },
     currentDislikeCountdown(state, value) {
       state.dislike_countdown = value
+    },
+    isVoted(state, value) {
+      state.isVoted = value
     },
   },
   actions: {
@@ -118,8 +124,7 @@ const Vote = {
       const reduceResult = state.dislike + 1
       if (reduceResult <= state.dislike_threshold) {
         playing_state_ref.update({ dislike: reduceResult })
-        const parameter = {}
-        parameter[getters.userId] = true
+        const parameter = { [getters.userId]: true }
         playing_state_ref.child('voted_users').update(parameter)
       }
     },
@@ -127,8 +132,8 @@ const Vote = {
       playing_state_ref.child('dislike').set(0)
       playing_state_ref.child('voted_users').set(null)
     },
-    adjustIsVoted({ state, getters }, snapshot) {
-      if (getters.userId) state.isVoted = snapshot.hasChild(getters.userId)
+    adjustIsVoted({ getters, commit }, snapshot) {
+      if (getters.userId) commit('isVoted', snapshot.hasChild(getters.userId))
     },
     updateDislikeThreshold(_context, value) {
       playing_state_ref.child('dislike_threshold').set(value)

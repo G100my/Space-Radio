@@ -16,7 +16,7 @@ export default {
     })
 
     return {
-      isVoted: computed(() => store.state.PlayingState.isVoted),
+      isVoted: computed(() => store.getters.isVoted),
       currentDislike,
       currentDislikeThreshold,
       currentDislikeCountdown,
