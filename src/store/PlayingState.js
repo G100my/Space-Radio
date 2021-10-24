@@ -85,13 +85,13 @@ const Vote = {
     isVoted: false,
   },
   getters: {
-    currentDislikeThreshold(state) {
+    dislikeThreshold(state) {
       return state.dislike_threshold
     },
-    currentDislike(state) {
+    dislike(state) {
       return state.dislike
     },
-    currentDislikeCountdown(state) {
+    dislikeCountdown(state) {
       return state.dislike_countdown
     },
     isVoted(state) {
@@ -99,13 +99,13 @@ const Vote = {
     },
   },
   mutations: {
-    currentDislike(state, value) {
+    dislike(state, value) {
       state.dislike = value
     },
-    currentDislikeThreshold(state, value) {
+    dislikeThreshold(state, value) {
       state.dislike_threshold = value
     },
-    currentDislikeCountdown(state, value) {
+    dislikeCountdown(state, value) {
       state.dislike_countdown = value
     },
     isVoted(state, value) {
@@ -271,7 +271,7 @@ function playingStateConnect2firebase(store) {
     store.commit('playingProgress', snapshot.val())
   })
   playing_state_ref.child('dislike').on('value', snapshot => {
-    store.commit('currentDislike', snapshot.val())
+    store.commit('dislike', snapshot.val())
   })
   playing_state_ref.child('voted_users').on('value', snapshot => {
     store.dispatch('adjustIsVoted', snapshot)
@@ -280,10 +280,10 @@ function playingStateConnect2firebase(store) {
     store.commit('currentMinimalVolume', snapshot.val())
   })
   playing_state_ref.child('dislike_threshold').on('value', snapshot => {
-    store.commit('currentDislikeThreshold', snapshot.val())
+    store.commit('dislikeThreshold', snapshot.val())
   })
   playing_state_ref.child('dislike_countdown').on('value', snapshot => {
-    store.commit('currentDislikeCountdown', snapshot.val())
+    store.commit('dislikeCountdown', snapshot.val())
   })
 }
 

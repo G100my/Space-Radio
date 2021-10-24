@@ -6,9 +6,9 @@ import { currentPosition, currentDuration } from '@/composables/useProgressTimer
 export default {
   setup() {
     const store = useStore()
-    const currentDislike = computed(() => store.getters.currentDislike)
-    const currentDislikeThreshold = computed(() => store.getters.currentDislikeThreshold)
-    const currentDislikeCountdown = computed(() => store.getters.currentDislikeCountdown)
+    const dislike = computed(() => store.getters.dislike)
+    const dislikeThreshold = computed(() => store.getters.dislikeThreshold)
+    const dislikeCountdown = computed(() => store.getters.dislikeCountdown)
 
     const NO_VOTE_BEFORE_END = 18000
     const nearEnd = computed(() => {
@@ -17,9 +17,9 @@ export default {
 
     return {
       isVoted: computed(() => store.getters.isVoted),
-      currentDislike,
-      currentDislikeThreshold,
-      currentDislikeCountdown,
+      dislike,
+      dislikeThreshold,
+      dislikeCountdown,
       playerPlayingTrackId: computed(() => store.getters.playerPlayingTrackId),
       nearEnd,
     }
@@ -28,17 +28,17 @@ export default {
 </script>
 <template>
   <div class="_vote flex flex-col">
-    <template v-if="currentDislikeCountdown">
+    <template v-if="dislikeCountdown">
       <p>
         Will skip current music after
-        <span>{{ currentDislikeCountdown }}</span>
-        second{{ currentDislikeCountdown > 1 ? 's' : '' }}.
+        <span>{{ dislikeCountdown }}</span>
+        second{{ dislikeCountdown > 1 ? 's' : '' }}.
       </p>
     </template>
     <template v-else>
       <p>
-        <span>{{ currentDislikeThreshold - currentDislike }}</span>
-        vote{{ currentDislikeThreshold > 1 ? 's' : '' }}
+        <span>{{ dislikeThreshold - dislike }}</span>
+        vote{{ dislikeThreshold > 1 ? 's' : '' }}
         left for skip.
       </p>
     </template>

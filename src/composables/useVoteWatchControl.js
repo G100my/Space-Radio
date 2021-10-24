@@ -2,9 +2,9 @@ import { computed, watch } from 'vue'
 import store from '../store'
 
 const minimalVolume = computed(() => store.getters.currentMinimalVolume)
-const currentDislike = computed(() => store.getters.currentDislike)
-const currentDislikeThreshold = computed(() => store.getters.currentDislikeThreshold)
-const currentDislikeCountdown = computed(() => store.getters.currentDislikeCountdown)
+const dislike = computed(() => store.getters.dislike)
+const dislikeThreshold = computed(() => store.getters.dislikeThreshold)
+const dislikeCountdown = computed(() => store.getters.dislikeCountdown)
 
 let dislikeCountdownTimer
 
@@ -15,12 +15,12 @@ let dislikeCountdownTimer
  * @returns unwatch function
  */
 export function useVoteWatch(nextTrack) {
-  return watch(currentDislike, newValue => {
+  return watch(dislike, newValue => {
     if (dislikeCountdownTimer) {
       clearTimeout(dislikeCountdownTimer)
       dislikeCountdownTimer = null
     }
-    if (newValue >= currentDislikeThreshold.value) {
+    if (newValue >= dislikeThreshold.value) {
       let counter = 10
       dislikeCountdownTimer = setInterval(() => {
         counter -= 1
@@ -34,7 +34,7 @@ export function useVoteWatch(nextTrack) {
           dislikeCountdownTimer = null
         }
       }, 1000)
-    } else if (newValue < currentDislikeThreshold.value && currentDislikeCountdown.value) {
+    } else if (newValue < dislikeThreshold.value && dislikeCountdown.value) {
       store.dispatch('updateDislikeCountdown', false)
     }
   })
