@@ -4,6 +4,7 @@ export const NoteDialog = {
       sender: localStorage.getItem('spaceradio_senderName') || '',
       recipient: '',
       message: '',
+      tts: false,
     },
     noteTrackName: '',
     isDialogOpen: false,
@@ -18,6 +19,9 @@ export const NoteDialog = {
     },
     noteMessage(state) {
       return state.editingNote.message
+    },
+    noteTTS(state) {
+      return state.editingNote.tts
     },
     isDialogOpen(state) {
       return state.isDialogOpen

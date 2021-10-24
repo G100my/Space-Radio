@@ -49,6 +49,7 @@ function useTTSonPlayer(reducePlayerVolume, resumePlayerVolume) {
       console.log(pending)
       if (!pending) return
       else if (!pending.note) return
+      else if (!pending.note.tts) return
       else {
         reducePlayerVolume()
           .then(() => {
