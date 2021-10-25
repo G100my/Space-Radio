@@ -39,7 +39,7 @@ export default {
       />
       <h2 class="text-natural-white hidden laptop:block laptop:mt-6 laptop:mb-2">@{{ $store.getters.roomName }}</h2>
     </h1>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center relative">
       <Marquee class="mt-5 laptop:mt-0 flex-auto" />
       <!-- absolute base on <header> -->
       <nav class="absolute top-8 right-8 laptop:static">
