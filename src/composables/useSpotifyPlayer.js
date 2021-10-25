@@ -51,10 +51,9 @@ function refreshCurrentDevice() {
       console.log('if')
     } else {
       console.log('else')
-      const { device, is_playing } = result
+      const { device } = result
       currentActiveDeviceId.value = device.id
       currentActiveDeviceName.value = device.name
-      // isThisSpotifyPlayerPaused.value = !is_playing
       isThisSpotifyPlayerActived.value = currentActiveDeviceId.value === thisSpotifyPlayerId.value
     }
   })
@@ -190,7 +189,6 @@ function hostTogglePlay() {
               spotifyPlayer.togglePlay()
             }
           })
-          .then(() => spotifyAPI.getMyCurrentPlaybackState())
           .catch(error => {
             console.error(JSON.parse(error.responseText).error, error)
           })
