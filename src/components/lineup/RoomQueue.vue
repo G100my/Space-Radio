@@ -212,7 +212,60 @@ export default {
             </transition>
           </Menu>
         </template>
-        <div v-else class="w-[146px] hidden xs:block" />
+        <template v-else>
+          <div class="w-[146px] hidden xs:flex justify-end space-x-3">
+            <button
+              v-if="checkLevel('urgent', key)"
+              class="btn-tertiary"
+              type="button"
+              @click="$store.dispatch('urgent2normal', key)"
+            >
+              <IconArrowDown />
+            </button>
+            <button
+              v-else-if="checkLevel('normal', key)"
+              class="btn-tertiary"
+              type="button"
+              @click="$store.dispatch('normal2urgent', key)"
+            >
+              <IconArrowUp />
+            </button>
+          </div>
+
+          <Menu v-slot="{ open }" as="div" class="cursor-pointer self-stretch relative xs:hidden">
+            <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
+              <IconMore />
+            </MenuButton>
+            <transition
+              enter-active-class="transition duration-150 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-out"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
+            >
+              <MenuItems
+                :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
+                class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-10 space-y-4"
+              >
+                <MenuItem v-if="checkLevel('urgent', key)" v-slot="{ active }">
+                  <li :class="{ active }" class="_menu-item" @click="urgent2normal(key)">
+                    <IconArrowDown />
+                    <span>Cancel order</span>
+                  </li>
+                </MenuItem>
+                <MenuItem v-if="checkLevel('normal', key)" v-slot="{ active }">
+                  <li :class="{ active }" class="_menu-item" @click="normal2urgent(key)">
+                    <IconArrowUp />
+                    <span>Order</span>
+                  </li>
+                </MenuItem>
+              </MenuItems>
+            </transition>
+          </Menu>
+        </template>
+
+        <!-- <div v-else class="w-[146px] hidden xs:block" /> -->
       </li>
     </transition-group>
   </div>
