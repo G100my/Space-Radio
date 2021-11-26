@@ -159,7 +159,8 @@ function nextTrack() {
     // 但是不給會有 error: parameter 'reason' is required
     .then(() => {
       console.log('Skipped to next track!')
-      return spotifyPlayer.nextTrack('just wanna listen next one')
+      // return spotifyPlayer.nextTrack('just wanna listen next one')
+      return spotifyAPI.skipToNext()
     })
     .then(() => resumePlayerVolume(NEXT_RESUME_PROCESS_TIME))
     .catch(error => {
