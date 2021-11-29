@@ -2,6 +2,7 @@
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import { currentPosition, currentDuration } from '@/composables/useProgressTimer'
+import { useI18n } from 'vue-i18n'
 
 export default {
   setup() {
@@ -16,6 +17,7 @@ export default {
     })
 
     return {
+      t: useI18n().t,
       isVoted: computed(() => store.getters.isVoted),
       dislike,
       dislikeThreshold,
@@ -29,18 +31,17 @@ export default {
 <template>
   <div class="_vote flex flex-col">
     <template v-if="dislikeCountdown">
-      <p>
-        Will skip current music after
+      <i18n-t keypath="will_cut" tag="p">
         <span>{{ dislikeCountdown }}</span>
-        second{{ dislikeCountdown > 1 ? 's' : '' }}.
-      </p>
+        {{ t('second', dislikeCountdown) }}.
+      </i18n-t>
     </template>
     <template v-else>
-      <p>
-        <span>{{ dislikeThreshold - dislike }}</span>
-        vote{{ dislikeThreshold > 1 ? 's' : '' }}
-        left for skip.
-      </p>
+      <i18n-t keypath="vote_left" tag="p">
+        <template #vote>
+          <span>{{ dislikeThreshold - dislike }}</span>
+        </template>
+      </i18n-t>
     </template>
     <button
       type="button"
@@ -48,7 +49,7 @@ export default {
       :disabled="!playerPlayingTrackId || nearEnd"
       @click="isVoted ? $store.dispatch('reduceDislike') : $store.dispatch('increaseDislike')"
     >
-      {{ isVoted ? 'Cancel' : 'Vote for skip' }}
+      {{ isVoted ? t('cancel') : t('vote_for_skip') }}
     </button>
   </div>
 </template>
@@ -62,3 +63,15 @@ export default {
   }
 }
 </style>
+<i18n>
+en:
+  will_cut: Will skip current music after {0}
+  second: second | seconds
+  vote_left: '{0} vote left for skip. | {0} votes left for skip.'
+  vote_for_skip: Vote for skip
+zh:
+  will_cut: 將在 {0} 之後切歌
+  second: 秒
+  vote_left: 再 {vote} 個投票數後切歌
+  vote_for_skip: 投票切歌
+</i18n>

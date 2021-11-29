@@ -6,4 +6,5 @@ export default {
   choose_base_playlist_ref: '推薦音樂/沒有點播時的基底播放清單',
   choose_one: '選一個',
   create: '建立',
+  cancel: '取消',
 }

@@ -5,6 +5,7 @@ import { spotifyAPI } from '@/utility/spotifyAPI'
 import { computed, onMounted, ref, watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle, DialogDescription } from '@headlessui/vue'
+import { useI18n } from 'vue-i18n'
 export default {
   components: {
     IconSpotifyDark,
@@ -45,6 +46,7 @@ export default {
       })
     }
     return {
+      t: useI18n().t,
       collectHandler,
       playerPlayingTrackId,
       ownPlaylists,
@@ -55,7 +57,7 @@ export default {
 </script>
 <template>
   <div v-bind="$attrs" class="flex flex-col">
-    <label class="text-natural-gray3 font-bold">Collect to Spotify</label>
+    <label class="text-natural-gray3 font-bold">{{ t('collect_to_spotify') }}</label>
     <button type="button" :disabled="!playerPlayingTrackId" class="btn-primary mt-2" @click="isOpen = !isOpen">
       <IconSpotifyDark />
       <span>Collect to Spotify</span>
@@ -85,18 +87,7 @@ export default {
         leave-to="opacity-0 scale-95"
       >
         <div
-          class="
-            absolute
-            inset-0
-            m-auto
-            top-20
-            bottom-20
-            max-w-xs
-            laptop:max-w-xl
-            rounded-10
-            bg-tertiary-1
-            flex flex-col
-          "
+          class="absolute inset-0 m-auto top-20 bottom-20 max-w-xs laptop:max-w-xl rounded-10 bg-tertiary-1 flex flex-col"
         >
           <div class="flex items-center bg-tertiary-2 px-8 py-4">
             <DialogTitle class="flex-1 text-subtitle text-natural-gray2">Collect to Spotify</DialogTitle>
@@ -120,3 +111,9 @@ export default {
     </Dialog>
   </TransitionRoot>
 </template>
+<i18n>
+en:
+  collect_to_spotify: Collect to Spotify
+zh:
+  collect_to_spotify: 收藏到 Spotify
+</i18n>

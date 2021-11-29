@@ -6,4 +6,5 @@ export default {
   choose_base_playlist_ref: 'Choose a playlist as recommendation references',
   choose_one: 'Choose one',
   create: 'Create',
+  cancel: 'Cancel',
 }
