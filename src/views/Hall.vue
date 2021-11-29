@@ -6,6 +6,7 @@ import { PKCE } from '../utility/PKCE.js'
 import { spotifyAPI } from '../utility/spotifyAPI.js'
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import HallNav from '@/components/hall/HallNav.vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   components: {
@@ -13,6 +14,7 @@ export default {
     HallNav,
   },
   setup() {
+    const { t } = useI18n()
     const router = useRouter()
     const searchKeyWordInput = ref('')
     const isErrorMessageShow = ref(false)
@@ -73,6 +75,7 @@ export default {
       searchRoom,
       PKCE,
       enterCreateHandler,
+      t,
     }
   },
 }
@@ -81,13 +84,13 @@ export default {
   <div class="laptop:mt-[33vh]">
     <h2 class="text-subtitle">Enter Room</h2>
     <label class="block mt-6">
-      <p class="text-natural-gray1 font-bold">Room name<span class="text-primary">*</span></p>
+      <p class="text-natural-gray1 font-bold">{{ t('room_name') }}<span class="text-primary">*</span></p>
       <div>
         <input
           v-model="searchKeyWordInput"
           class="base-input mt-1.5 w-full"
           type="text"
-          placeholder="Please enter room name."
+          :placeholder="t('please_enter_room_name')"
           @focus="isErrorMessageShow = false"
           @keydown.prevent.enter="searchRoom"
         />
@@ -96,8 +99,16 @@ export default {
     </label>
     <button class="btn-primary w-full mt-5 laptop:mt-11" type="button" @click="searchRoom">Next</button>
     <button class="btn-secondary w-full mt-3 laptop:mt-4" type="button" @click="enterCreateHandler">
-      Having no room? Create Room
+      {{ t('have_no_room') }}
     </button>
   </div>
   <HallNav class="laptop:mt-20" />
 </template>
+<i18n>
+en:
+  have_no_room: Having no room? Create Room.
+  please_enter_room_name: Please enter room name.
+zh:
+  have_no_room: 開房間
+  please_enter_room_name: 請輸入要進入的房間名稱
+</i18n>

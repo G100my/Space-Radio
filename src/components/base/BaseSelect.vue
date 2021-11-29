@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import IconDropdown from '@/assets/icons/icon-dropdown.svg'
+import { useI18n } from 'vue-i18n'
 
 export default {
   components: {
@@ -20,7 +21,8 @@ export default {
     },
   },
   setup() {
-    const placeholder = { id: null, name: 'Choose one' }
+    const { t } = useI18n()
+    const placeholder = { id: null, name: t('choose_one') }
     return {
       seleted: ref(placeholder),
     }

@@ -13,6 +13,7 @@ import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconMinus from '@/assets/icons/icon-minus.svg'
 import IconClose from '@/assets/icons/icon/close.svg'
+import { useI18n } from 'vue-i18n'
 
 export default {
   components: {
@@ -139,6 +140,7 @@ export default {
     }
 
     return {
+      t: useI18n().t,
       userId,
       roomKey,
       roomName,
@@ -175,7 +177,7 @@ export default {
 <template>
   <div class="py-4 my-auto">
     <h2 class="text-subtitle flex justify-between relative">
-      <span>Create room</span>
+      <span>{{ t('create_room') }}</span>
       <button
         class="btn btn-tertiary laptop:-left-5 laptop:absolute laptop:-top-14"
         type="button"
@@ -188,7 +190,7 @@ export default {
 
     <form class="_create_room_form overflow-y-auto space-y-3 laptop:overflow-y-visible laptop:space-y-3">
       <div>
-        <label for="room-name">Room name</label>
+        <label for="room-name">{{ t('room_name') }}</label>
         <div>
           <input
             v-model.trim="roomName"
@@ -202,7 +204,7 @@ export default {
       </div>
 
       <div>
-        <label for="minimal-volume">Minimal Volume</label>
+        <label for="minimal-volume">{{ t('minimal_volume') }}</label>
         <VolumnBar
           class="laptop:mt-3"
           :step="5"
@@ -215,7 +217,7 @@ export default {
       </div>
 
       <div>
-        <label for="initial-volumn">Initial Volumn</label>
+        <label for="initial-volumn">{{ t('initial_volume') }}</label>
         <VolumnBar
           class="laptop:mt-3"
           :modelValue="volume"
@@ -227,7 +229,7 @@ export default {
       </div>
 
       <div>
-        <label>Skip Song threshold</label>
+        <label>{{ t('skip_song_threshold') }}</label>
         <p class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
           <span class="mr-auto text-primary font-bold w-7 flex-shrink-0 text-center">{{ dislikeThreshold }}</span>
           <button class="btn btn-tertiary" type="button" @click="minusDislikeThreshold">
@@ -240,11 +242,13 @@ export default {
       </div>
 
       <div>
-        <p class="font-bold">Choose a playlist as recommendation references</p>
+        <p class="font-bold">{{ t('choose_base_playlist_ref') }}</p>
         <BaseSelect v-model="basePlaylist" :options="hostPlaylists" class="mt-2" />
       </div>
 
-      <button class="btn btn-primary w-full mt-6 laptop:mt-8" type="button" @click="createHandler">Create</button>
+      <button class="btn btn-primary w-full mt-6 laptop:mt-8" type="button" @click="createHandler">
+        {{ t('create') }}
+      </button>
     </form>
   </div>
 </template>
@@ -256,3 +260,10 @@ export default {
   }
 }
 </style>
+<i18n>
+en:
+  create_room: Create a room
+  
+zh:
+  create_room: 建立房間
+</i18n>

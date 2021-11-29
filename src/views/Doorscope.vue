@@ -7,12 +7,14 @@ import { PKCE } from '../utility/PKCE.js'
 import { spotifyAPI } from '../utility/spotifyAPI.js'
 import initCover from '../assets/vinyl-record.png'
 import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg'
+import { useI18n } from 'vue-i18n'
 
 export default {
   components: {
     IconArrowLeft,
   },
   setup() {
+    const { t } = useI18n()
     const roomKey = useRoute().params.roomKey
     const store = useStore()
     const roomName = ref('')
@@ -48,6 +50,7 @@ export default {
       trackName: computed(() => store.getters.playerPlayingTrackName),
       spotifyAPI,
       enterButton,
+      t,
     }
   },
 }
@@ -64,7 +67,7 @@ export default {
     <h2 class="text-subtitle mb-4">{{ roomName }}</h2>
     <!-- <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" /> -->
     <!-- <div v-if="trackName"> -->
-    <p class="mt-8 font-bold text-natural-gray1 text-body">Now playing</p>
+    <p class="mt-8 font-bold text-natural-gray1 text-body">{{ t('now_playing') }}:</p>
     <p class="mt-3 text-natural-gray1 text-body">{{ trackName }}</p>
     <!-- </div> -->
     <!-- <p v-else class="mt-8 text-natural-gray1 whitespace-nowrap">This room is not playing any track now.</p> -->
@@ -78,3 +81,9 @@ export default {
     </button>
   </div>
 </template>
+<i18n>
+en:
+  now_playing: Now playing
+zh:
+  now_playing: 現正撥放
+</i18n>
