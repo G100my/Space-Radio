@@ -9,13 +9,13 @@ before_script:
 
 pages:
   stage: deploy
-  cache:
-    key:
-      files:
-        - package-lock.json
-      prefix: npm
-    paths:
-      - node_modules/
+  # cache:
+  #   key:
+  #     files:
+  #       - package-lock.json
+  #     prefix: npm
+  #   paths:
+  #     - node_modules/
   script:
     - npm run build -r './'
     - cp -a docs/. public/
