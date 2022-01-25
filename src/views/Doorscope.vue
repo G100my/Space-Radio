@@ -81,7 +81,7 @@ export default {
     </button>
   </div>
 </template>
-<i18n>
+<i18n lang="yaml">
 en:
   now_playing: Now playing
 zh:

@@ -104,7 +104,7 @@ export default {
   </div>
   <HallNav class="laptop:mt-20" />
 </template>
-<i18n>
+<i18n lang="yaml">
 en:
   have_no_room: Having no room? Create Room.
   please_enter_room_name: Please enter room name.

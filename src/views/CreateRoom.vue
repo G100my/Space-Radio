@@ -260,10 +260,10 @@ export default {
   }
 }
 </style>
-<i18n>
+<i18n lang="yaml">
 en:
   create_room: Create a room
-  
+
 zh:
   create_room: 建立房間
 </i18n>

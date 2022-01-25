@@ -111,7 +111,7 @@ export default {
     </Dialog>
   </TransitionRoot>
 </template>
-<i18n>
+<i18n lang="yaml">
 en:
   collect_to_spotify: Collect to Spotify
 zh:

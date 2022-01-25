@@ -63,7 +63,7 @@ export default {
   }
 }
 </style>
-<i18n>
+<i18n lang="yaml">
 en:
   will_cut: Will skip current music after {0}
   second: second | seconds

@@ -12,7 +12,7 @@ export default ({ command }) => {
       vue(),
       svgLoader(),
       vueI18n({
-        defaultSFCLang: 'yml',
+        defaultSFCLang: 'yaml',
         globalSFCScope: true,
         // eslint-disable-next-line no-undef
         include: path.resolve(__dirname, './src/i18n/**'),
