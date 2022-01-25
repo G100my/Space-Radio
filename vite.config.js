@@ -1,6 +1,7 @@
 import vue from '@vitejs/plugin-vue'
 import svgLoader from 'vite-svg-loader'
 import vueI18n from '@intlify/vite-plugin-vue-i18n'
+import path from 'path'
 
 /**
  * @type {import('vite').UserConfig}
@@ -12,8 +13,9 @@ export default ({ command }) => {
       svgLoader(),
       vueI18n({
         defaultSFCLang: 'yml',
-        // you need to set i18n resource including paths !
-        // include: path.resolve(__dirname, './src/i18n/**'),
+        globalSFCScope: true,
+        // eslint-disable-next-line no-undef
+        include: path.resolve(__dirname, './src/i18n/**'),
       }),
     ],
     optimizeDeps: {
