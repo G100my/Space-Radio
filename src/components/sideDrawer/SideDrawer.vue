@@ -71,7 +71,7 @@ export default {
         leave-to="translate-x-full"
       >
         <div
-          :class="{ 'bg-[#303f69] laptop:bg-tertiary-1': isDifferantBgColor, 'bg-tertiary-1': !isDifferantBgColor }"
+          :class="{ 'bg-[#303f69] laptop:bg-tertiary-1': isDifferantBgColor, 'bg-tertiary-2': !isDifferantBgColor }"
           class="bg-opacity-40 w-screen max-w-xl ml-auto h-screen laptop:w-1/2 laptop:max-w-none px-9 laptop:px-20 pt-20 pb-8 relative"
         >
           <button
