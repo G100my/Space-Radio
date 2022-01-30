@@ -6,7 +6,7 @@ import './style/index.css'
 import i18n from './i18n'
 
 if (import.meta.env.PROD) {
-  window.console.log = () => {}
+  console.log = () => {}
 }
 
 // prettier-ignore
