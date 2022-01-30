@@ -6,6 +6,8 @@ import IconPerson from '@/assets/icons/icon/profile.svg'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import FeedbackAlert from './FeedbackAlert.vue'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
+import BaseAlert from '../base/BaseAlert.vue'
 
 export default {
   components: {
@@ -14,6 +16,7 @@ export default {
     IconPerson,
     IconPlus,
     FeedbackAlert,
+    BaseAlert,
   },
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
@@ -21,10 +24,24 @@ export default {
     function activeSideDrawerHandler(componentName) {
       emit('activeSideDrawer', componentName)
     }
+    const store = useStore()
+    const isShow = ref(false)
+    function copyLinkHandler() {
+      console.log(navigator)
+      const inviteUrl = `${location.origin}/#/doorscope/${store.getters.roomKey}`
+      console.log(inviteUrl)
+      navigator.clipboard.writeText(inviteUrl)
+      isShow.value = true
+      setTimeout(() => {
+        isShow.value = false
+      }, 3000)
+    }
     return {
       t: useI18n().t,
       isSearchActive,
       activeSideDrawerHandler,
+      copyLinkHandler,
+      isShow,
     }
   },
 }
@@ -39,7 +56,20 @@ export default {
         class="text-natural-white cursor-pointer"
         @click="$router.push({ name: 'Hall' })"
       />
-      <h2 class="text-natural-white hidden laptop:block laptop:mt-6 laptop:mb-2">@{{ $store.getters.roomName }}</h2>
+      <h2
+        class="text-natural-white hidden justify-between w-full laptop:mt-6 laptop:mb-2 laptop:flex relative"
+        @click="copyLinkHandler"
+      >
+        <span>@{{ $store.getters.roomName }}</span>
+        <span>#{{ $store.getters.roomKey }}</span>
+        <BaseAlert
+          class="absolute bottom-0 translate-y-full right-0"
+          :show="isShow"
+          closeButton
+          :title="t('copied')"
+          :contentText="t('invite_your_friend')"
+        />
+      </h2>
     </h1>
     <div class="flex flex-col laptop:flex-row justify-between items-end laptop:items-center relative">
       <Marquee class="mt-5 laptop:mt-0 flex-auto w-full laptop::w-auto" />
