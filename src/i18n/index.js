@@ -3,7 +3,7 @@ import en from './en.json'
 import zh from './zh-TW.json'
 
 export default createI18n({
-  locale: 'zh',
+  locale: 'zh-TW',
   fallbackLocale: 'en',
   legacy: false,
   messages: {
