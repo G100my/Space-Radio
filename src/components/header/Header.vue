@@ -29,7 +29,7 @@ export default {
 </script>
 <template>
   <header
-    class="flex-col laptop:flex-row relative header z-10 px-8 py-8 laptop:p-0 bg-tertiary-1 bg-opacity-60 laptop:bg-transparent laptop:items-center"
+    class="flex-col laptop:flex-row relative header z-10 px-8 py-5 laptop:p-0 bg-tertiary-1 bg-opacity-60 laptop:bg-transparent laptop:items-center"
   >
     <h1 class="flex items-center justify-start laptop:flex-col laptop:pt-10 laptop:items-start">
       <img
@@ -39,10 +39,10 @@ export default {
       />
       <h2 class="text-natural-white hidden laptop:block laptop:mt-6 laptop:mb-2">@{{ $store.getters.roomName }}</h2>
     </h1>
-    <div class="flex justify-between items-center relative">
-      <Marquee class="mt-5 laptop:mt-0 flex-auto" />
+    <div class="flex flex-col laptop:flex-row justify-between items-end laptop:items-center relative">
+      <Marquee class="mt-5 laptop:mt-0 flex-auto w-full laptop::w-auto" />
       <!-- absolute base on <header> -->
-      <nav class="absolute top-8 right-8 laptop:static">
+      <nav class="static top-8 right-8 laptop:static">
         <ul class="justify-end flex">
           <li>
             <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="activeSideDrawerHandler('Search')">
@@ -56,7 +56,7 @@ export default {
               @click="activeSideDrawerHandler('AddFromStreamingService')"
             >
               <IconPlus />
-              <label class="hidden ml-3 laptop:inline">Add from Spotify</label>
+              <label class="hidden ml-3 whitespace-nowrap laptop:inline">Add from Spotify</label>
             </button>
           </li>
           <li>
