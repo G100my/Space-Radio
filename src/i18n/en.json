@@ -1,10 +1,12 @@
 {
-  "room_name": "Room name",
-  "minimal_volume": "Minimal Volume",
-  "initial_volume": "Initial Volumn",
-  "skip_song_threshold": "Skip Song threshold",
+  "cancel": "Cancel",
   "choose_base_playlist_ref": "Choose a playlist as recommendation references",
   "choose_one": "Choose one",
   "create": "Create",
-  "cancel": "Cancel"
+  "enter": "Enter",
+  "initial_volume": "Initial Volumn",
+  "minimal_volume": "Minimal Volume",
+  "no_playing_track": "No playing track",
+  "room_name": "Room name",
+  "skip_song_threshold": "Skip Song threshold"
 }

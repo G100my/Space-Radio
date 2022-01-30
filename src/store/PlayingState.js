@@ -1,5 +1,6 @@
 import { Order } from '@/prototype/Order.js'
 import firebase from './firebase.js'
+import i18n from '@/i18n/index.js'
 
 let playing_state_ref
 
@@ -214,7 +215,7 @@ const PlayingState = {
       return state.playing_track.album
     },
     playerPlayingTrackName(state) {
-      return state.playing_track.name ? state.playing_track.name : 'No track in player'
+      return state.playing_track.name ? state.playing_track.name : i18n.global.t('no_playing_track')
     },
     playerPlayingTrackUri(state) {
       return state.playing_track.context_uri

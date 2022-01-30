@@ -264,6 +264,6 @@ export default {
 en:
   create_room: Create a room
 
-zh:
+zh-TW:
   create_room: 建立房間
 </i18n>

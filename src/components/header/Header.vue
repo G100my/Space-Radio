@@ -5,6 +5,7 @@ import IconSearch from '@/assets/icons/icon-search.svg'
 import IconPerson from '@/assets/icons/icon/profile.svg'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import FeedbackAlert from './FeedbackAlert.vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   components: {
@@ -21,6 +22,7 @@ export default {
       emit('activeSideDrawer', componentName)
     }
     return {
+      t: useI18n().t,
       isSearchActive,
       activeSideDrawerHandler,
     }
@@ -56,7 +58,7 @@ export default {
               @click="activeSideDrawerHandler('AddFromStreamingService')"
             >
               <IconPlus />
-              <label class="hidden ml-3 whitespace-nowrap laptop:inline">Add from Spotify</label>
+              <label class="hidden ml-3 whitespace-nowrap laptop:inline">{{ t('add_from_spotify') }}</label>
             </button>
           </li>
           <li>
@@ -76,3 +78,9 @@ export default {
     </div>
   </header>
 </template>
+<i18n>
+en:
+  add_from_spotify: Add from Spotify
+zh-TW:
+  add_from_spotify: 從 Spotify 加入音樂
+</i18n>

@@ -82,7 +82,7 @@ export default {
 </script>
 <template>
   <div class="laptop:mt-[33vh]">
-    <h2 class="text-subtitle">Enter Room</h2>
+    <h2 class="text-subtitle">{{ t('enter_room') }}</h2>
     <label class="block mt-6">
       <p class="text-natural-gray1 font-bold">{{ t('room_name') }}<span class="text-primary">*</span></p>
       <div>
@@ -97,7 +97,7 @@ export default {
         <BaseAlert error :show="isErrorMessageShow" :title="`This room name not found.`" />
       </div>
     </label>
-    <button class="btn-primary w-full mt-5 laptop:mt-11" type="button" @click="searchRoom">Next</button>
+    <button class="btn-primary w-full mt-5 laptop:mt-11" type="button" @click="searchRoom">{{ t('next') }}</button>
     <button class="btn-secondary w-full mt-3 laptop:mt-4" type="button" @click="enterCreateHandler">
       {{ t('have_no_room') }}
     </button>
@@ -108,7 +108,11 @@ export default {
 en:
   have_no_room: Having no room? Create Room.
   please_enter_room_name: Please enter room name.
-zh:
+  enter_room: Enter Room
+  next: Next
+zh-TW:
+  enter_room: 進入房間
   have_no_room: 開房間
   please_enter_room_name: 請輸入要進入的房間名稱
+  next: 下一步
 </i18n>

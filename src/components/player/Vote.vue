@@ -69,7 +69,7 @@ en:
   second: second | seconds
   vote_left: '{0} vote left for skip. | {0} votes left for skip.'
   vote_for_skip: Vote for skip
-zh:
+zh-TW:
   will_cut: 將在 {0} 之後切歌
   second: 秒
   vote_left: 再 {vote} 個投票數後切歌
