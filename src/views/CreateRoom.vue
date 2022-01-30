@@ -14,6 +14,7 @@ import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconMinus from '@/assets/icons/icon-minus.svg'
 import IconClose from '@/assets/icons/icon/close.svg'
 import { useI18n } from 'vue-i18n'
+import { Dialog, DialogDescription, DialogOverlay, DialogTitle } from '@headlessui/vue'
 
 export default {
   components: {
@@ -24,6 +25,10 @@ export default {
     IconPlus,
     IconMinus,
     IconClose,
+    Dialog,
+    DialogDescription,
+    DialogOverlay,
+    DialogTitle,
   },
   setup() {
     const roomKey = roomKeyMaker()
@@ -109,7 +114,9 @@ export default {
     })
 
     //
-
+    const inviteURL = ref(`${location.origin}/#/doorscope/${roomKey}`)
+    const inviteURLInput = ref(null)
+    const isOpen = ref(false)
     function createHandler() {
       checkRoomNameHandler()
       if (!isVaild.value) return
@@ -135,8 +142,18 @@ export default {
         })
         .then(() => {
           localStorage.setItem('spaceradio_room_key', roomKey)
-          router.push({ name: 'Room' })
+          isOpen.value = false
+          copyInviteURLHandler()
         })
+    }
+
+    function copyInviteURLHandler() {
+      navigator.clipboard.writeText(inviteURL.value)
+      inviteURLInput.value.focus()
+    }
+
+    function okHandler() {
+      router.push({ name: 'Room' })
     }
 
     return {
@@ -152,6 +169,11 @@ export default {
 
       checkRoomNameHandler,
       createHandler,
+      isOpen,
+      inviteURL,
+      inviteURLInput,
+      copyInviteURLHandler,
+      okHandler,
 
       volume,
       minimalVolume,
@@ -251,6 +273,27 @@ export default {
       </button>
     </form>
   </div>
+  <Dialog class="fixed inset-0 z-40 text-natural-gray4" :open="true" @close="isOpen = false">
+    <DialogOverlay as="p" class="bg-tertiary-1 bg-opacity-60 -z-1 fixed inset-0" />
+    <div class="absolute inset-0 m-auto max-w-md h-fit bg-tertiary-1 p-4 border-2 border-natural-gray2 rounded-md">
+      <DialogTitle as="h2" class="text-2xl text-center">{{ t('create_room_success') }}</DialogTitle>
+
+      <hr class="mt-2 mb-6" />
+
+      <DialogDescription class="text-center">{{ t('you_can_copy_url_to_invite_your_friend') }}</DialogDescription>
+      <div class="flex w-full relative mt-4 items-center justify-between">
+        <input ref="inviteURLInput" type="text" class="base-input" :value="inviteURL" readonly />
+        <button class="btn-primary ml-auto p-2 leading-none" type="button" @click="copyInviteURLHandler">
+          {{ t('copy_again') }}
+        </button>
+      </div>
+
+      <hr class="mt-2 mb-6" />
+      <div class="flex justify-end">
+        <button class="btn-secondary" @click="okHandler">OK</button>
+      </div>
+    </div>
+  </Dialog>
 </template>
 <style lang="postcss">
 ._create_room_form {
@@ -263,7 +306,12 @@ export default {
 <i18n lang="yaml">
 en:
   create_room: Create a room
-
+  copy_again: Copy again!
+  you_can_copy_url_to_invite_your_friend: You can invite your friends by send this URL to your friends.
+  create_room_success: Create Room Success!
 zh-TW:
   create_room: 建立房間
+  copy_again: 再複製一次！
+  you_can_copy_url_to_invite_your_friend: 傳給你的朋朋，邀請他們進來房間～不怕走錯棚～
+  create_room_success: 開房間成功！
 </i18n>

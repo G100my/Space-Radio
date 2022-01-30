@@ -2,11 +2,14 @@
   "cancel": "Cancel",
   "choose_base_playlist_ref": "Choose a playlist as recommendation references",
   "choose_one": "Choose one",
+  "copied": "Copied!",
   "create": "Create",
   "enter": "Enter",
   "initial_volume": "Initial Volumn",
+  "invite_your_friend": "Send this URL to your friend, invite them come in this room.",
   "minimal_volume": "Minimal Volume",
   "no_playing_track": "No playing track",
+  "now_playing": "Now Playing",
   "room_name": "Room name",
   "skip_song_threshold": "Skip Song threshold"
 }
