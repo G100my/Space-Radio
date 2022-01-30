@@ -202,7 +202,7 @@ export default {
   }
 
   &_bar {
-    @apply absolute bg-[#071A4F] h-1.5 rounded-md top-0;
+    @apply absolute bg-primary h-1.5 rounded-sm top-0;
     left: var(--left);
     right: var(--right);
     animation-name: var(--animation);
