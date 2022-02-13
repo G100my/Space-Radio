@@ -1,5 +1,5 @@
 <script>
-import { computed, ref, watch, reactive } from 'vue'
+import { computed, ref, watch, reactive, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import firebase from '@/store/firebase.js'
@@ -118,7 +118,6 @@ export default {
       `${location.origin}${location.pathname !== '/' ? location.pathname : '/'}#/doorscope/${roomKey}`
     )
     console.log(inviteURL.value)
-    const inviteURLInput = ref(null)
     const isOpen = ref(false)
     function createHandler() {
       checkRoomNameHandler()
@@ -152,7 +151,9 @@ export default {
 
     function copyInviteURLHandler() {
       navigator.clipboard.writeText(inviteURL.value)
-      inviteURLInput.value.focus()
+      nextTick(() => {
+        document.getElementById('inviteURLInput').focus()
+      })
     }
 
     function okHandler() {
@@ -174,7 +175,6 @@ export default {
       createHandler,
       isOpen,
       inviteURL,
-      inviteURLInput,
       copyInviteURLHandler,
       okHandler,
 
@@ -285,7 +285,7 @@ export default {
 
       <DialogDescription class="text-center">{{ t('you_can_copy_url_to_invite_your_friend') }}</DialogDescription>
       <div class="relative mt-4 flex w-full items-center justify-between">
-        <input ref="inviteURLInput" type="text" class="base-input" :value="inviteURL" readonly />
+        <input id="inviteURLInput" type="text" class="base-input" :value="inviteURL" readonly />
         <button class="btn-primary ml-auto p-2 leading-none" type="button" @click="copyInviteURLHandler">
           {{ t('copy_again') }}
         </button>
