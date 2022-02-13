@@ -114,7 +114,10 @@ export default {
     })
 
     //
-    const inviteURL = ref(`${location.origin}/#/doorscope/${roomKey}`)
+    const inviteURL = ref(
+      `${location.origin}${location.pathname !== '/' ? location.pathname : '/'}#/doorscope/${roomKey}`
+    )
+    console.log(inviteURL.value)
     const inviteURLInput = ref(null)
     const isOpen = ref(false)
     function createHandler() {
