@@ -1,14 +1,15 @@
 import store from '../store'
+import i18n from '@/i18n'
 
-const defaultMessageOutput = 'Share you like, enjoy your life.'
+const defaultMessageOutput = i18n.global.t('slogan')
 
 const messageOutputMaker = (note, trackName) => {
   if (!note) return defaultMessageOutput
 
-  const { sender, recipient, message } = note
-  const senderOutput = sender ? sender : store.getters.userName
-  const recipientOutput = recipient ? recipient : '所有人'
-  return `${senderOutput} 點播了一首 ${trackName} 給 ${recipientOutput}, ${message}`
+  let { sender, recipient, message } = note
+  sender = sender ? sender : store.getters.userName
+  recipient = recipient ? recipient : i18n.global.t('everybody')
+  return i18n.global.t('oder_to', { sender, trackName, message, recipient })
 }
 
 export { messageOutputMaker }

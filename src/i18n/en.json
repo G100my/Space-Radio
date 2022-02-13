@@ -1,15 +1,27 @@
 {
+  "add_from_spotify": "Add from Spotify",
+  "anyone": "Everybody",
   "cancel": "Cancel",
   "choose_base_playlist_ref": "Choose a playlist as recommendation references",
   "choose_one": "Choose one",
   "copied": "Copied!",
   "create": "Create",
   "enter": "Enter",
+  "everybody": "Everybody",
   "initial_volume": "Initial Volumn",
   "invite_your_friend": "Send this URL to your friend, invite them come in this room.",
+  "liked_songs_from_spotify": "Liked Songs from Spotify",
   "minimal_volume": "Minimal Volume",
   "no_playing_track": "No playing track",
   "now_playing": "Now Playing",
+  "oder_to": "{sender} order a {trackName} to {recipient}, {message}",
+  "playlists": "Playlists",
+  "recently_played": "Recently played",
   "room_name": "Room name",
-  "skip_song_threshold": "Skip Song threshold"
+  "skip_song_threshold": "Skip Song threshold",
+  "slogan": "Share you like, enjoy your life.",
+  "your_library": "Your library",
+  "your_top_tracks_in_last_6_months": "Your Top Tracks in last 6 months",
+  "your_top_tracks_in_last_month": "Your Top Tracks in last month",
+  "your_totally_top_tracks": "Your totaly Top Tracks"
 }

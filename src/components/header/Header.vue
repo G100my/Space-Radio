@@ -108,9 +108,3 @@ export default {
     </div>
   </header>
 </template>
-<i18n>
-en:
-  add_from_spotify: Add from Spotify
-zh-TW:
-  add_from_spotify: 從 Spotify 加入音樂
-</i18n>

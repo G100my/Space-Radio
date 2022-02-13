@@ -31,10 +31,7 @@ export default {
 <template>
   <div class="_vote flex flex-col">
     <template v-if="dislikeCountdown">
-      <i18n-t keypath="will_cut" tag="p">
-        <span>{{ dislikeCountdown }}</span>
-        {{ t('second', dislikeCountdown) }}.
-      </i18n-t>
+      <i18n-t keypath="will_cut" :place="{ vote }" tag="p"> {{ t('second', dislikeCountdown) }}. </i18n-t>
     </template>
     <template v-else>
       <i18n-t keypath="vote_left" tag="p">
@@ -65,12 +62,12 @@ export default {
 </style>
 <i18n lang="yaml">
 en:
-  will_cut: Will skip current music after {0}
+  will_cut: Will skip current music after {second}
   second: second | seconds
-  vote_left: '{0} vote left for skip. | {0} votes left for skip.'
+  vote_left: '{vote} vote left for skip. | {vote} votes left for skip.'
   vote_for_skip: Vote for skip
 zh-TW:
-  will_cut: 將在 {0} 之後切歌
+  will_cut: 將在 {second} 之後切歌
   second: 秒
   vote_left: 再 {vote} 個投票數後切歌
   vote_for_skip: 投票切歌

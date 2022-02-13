@@ -4,6 +4,7 @@ import IconArrowRight from '@/assets/icons/icon-arrow-right.svg'
 
 import { computed } from '@vue/runtime-core'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'AddFromStreamingService',
@@ -13,28 +14,29 @@ export default {
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
     const store = useStore()
+    const { t } = useI18n()
 
     function libraryClickHandler(type) {
       let listName, moduleName
       switch (type) {
         case 'liked':
-          listName = 'Liked Songs from Spotify'
+          listName = t('liked_songs_from_spotify')
           moduleName = 'spotifyLiked'
           break
         case 'recently':
-          listName = 'Recently played'
+          listName = t('recently_played')
           moduleName = 'spotifyRecently'
           break
         case 'long_term':
-          listName = 'Your totaly Top Tracks'
+          listName = t('your_totally_top_tracks')
           moduleName = 'spotifyLong'
           break
         case 'medium_term':
-          listName = 'Your Top Tracks in last 6 months'
+          listName = t('your_top_tracks_in_last_6_months')
           moduleName = 'spotifyMedium'
           break
         case 'short_term':
-          listName = 'Your Top Tracks in last month'
+          listName = t('your_top_tracks_in_last_month')
           moduleName = 'spotifyShort'
           break
       }
@@ -57,6 +59,7 @@ export default {
       libraryClickHandler,
       playlistClickHandler,
       spotify: computed(() => store.getters.spotifyLists),
+      t,
     }
   },
 }
@@ -64,34 +67,34 @@ export default {
 <template>
   <div class="flex h-full flex-col">
     <header>
-      <h2 class="text-subtitle text-natural-gray1 laptop:text-header">Add from Spotify</h2>
+      <h2 class="text-subtitle text-natural-gray1 laptop:text-header">{{ t('add_from_spotify') }}</h2>
     </header>
 
     <div class="mt-4 flex flex-1 flex-col overflow-hidden">
       <div class="flex flex-1 flex-col overflow-y-hidden">
         <h3 class="mb-4 flex justify-between font-bold">
-          <p class="text-natural-white">Your library</p>
+          <p class="text-natural-white">{{ t('your_library') }}</p>
           <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
         </h3>
         <ul class="_side_drawer_ul">
           <li @click="libraryClickHandler('liked')">
-            <p>Liked Songs from Spotify</p>
+            <p>{{ t('liked_songs_from_spotify') }}</p>
             <IconArrowRight />
           </li>
           <li @click="libraryClickHandler('recently')">
-            <p>Recently Played</p>
+            <p>{{ t('recently_played') }}</p>
             <IconArrowRight />
           </li>
           <li @click="libraryClickHandler('long_term')">
-            <p>Your totaly Top Tracks</p>
+            <p>{{ t('your_totally_top_tracks') }}</p>
             <IconArrowRight />
           </li>
           <li @click="libraryClickHandler('medium_term')">
-            <p>Your Top Tracks in last 6 months</p>
+            <p>{{ t('your_top_tracks_in_last_6_months') }}</p>
             <IconArrowRight />
           </li>
           <li @click="libraryClickHandler('short_term')">
-            <p>Your Top Tracks in last month</p>
+            <p>{{ t('your_top_tracks_in_last_month') }}</p>
             <IconArrowRight />
           </li>
         </ul>
@@ -99,7 +102,7 @@ export default {
 
       <div class="mt-4 flex flex-1 flex-col overflow-y-hidden">
         <h3 class="mb-4 flex justify-between font-bold">
-          <p class="text-natural-white">Playlists</p>
+          <p class="text-natural-white">{{ t('playlists') }}</p>
           <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
         </h3>
         <ul class="_side_drawer_ul">

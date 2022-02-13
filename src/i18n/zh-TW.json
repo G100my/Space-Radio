@@ -1,15 +1,27 @@
 {
+  "add_from_spotify": "從 Spotify 加入音樂",
+  "anyone": "",
   "cancel": "取消",
   "choose_base_playlist_ref": "推薦音樂/沒有點播時的基底播放清單",
   "choose_one": "選一個",
   "copied": "已複製！",
   "create": "建立",
   "enter": "進入",
+  "everybody": "所有人",
   "initial_volume": "初始音量",
   "invite_your_friend": "將 URL 發送給您的朋友，邀請他們進來。",
+  "liked_songs_from_spotify": "你在 Spotify 裡所喜愛的歌曲",
   "minimal_volume": "最小音量",
   "no_playing_track": "沒有正在播放的歌曲",
   "now_playing": "現正播放",
+  "oder_to": "{sender} 點了一首 {trackName} 給 {recipient}, {message}",
+  "playlists": "播放清單",
+  "recently_played": "最近播放過的",
   "room_name": "房間名稱",
-  "skip_song_threshold": "切歌投票數門檻"
+  "skip_song_threshold": "切歌投票數門檻",
+  "slogan": "點首歌給周遭的朋朋們吧～",
+  "your_library": "你的音樂庫",
+  "your_top_tracks_in_last_6_months": "你的最近半年排名前50",
+  "your_top_tracks_in_last_month": "你的上個月排名",
+  "your_totally_top_tracks": "你的總排名前50"
 }
