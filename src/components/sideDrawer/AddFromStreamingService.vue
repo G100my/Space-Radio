@@ -62,13 +62,13 @@ export default {
 }
 </script>
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex h-full flex-col">
     <header>
-      <h2 class="text-natural-gray1 text-subtitle laptop:text-header">Add from Spotify</h2>
+      <h2 class="text-subtitle text-natural-gray1 laptop:text-header">Add from Spotify</h2>
     </header>
 
-    <div class="flex-1 mt-4 flex flex-col overflow-hidden">
-      <div class="flex-1 flex flex-col overflow-y-hidden">
+    <div class="mt-4 flex flex-1 flex-col overflow-hidden">
+      <div class="flex flex-1 flex-col overflow-y-hidden">
         <h3 class="mb-4 flex justify-between font-bold">
           <p class="text-natural-white">Your library</p>
           <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
@@ -97,7 +97,7 @@ export default {
         </ul>
       </div>
 
-      <div class="flex-1 mt-4 overflow-y-hidden flex flex-col">
+      <div class="mt-4 flex flex-1 flex-col overflow-y-hidden">
         <h3 class="mb-4 flex justify-between font-bold">
           <p class="text-natural-white">Playlists</p>
           <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
@@ -118,14 +118,14 @@ export default {
 </template>
 <style lang="postcss" scoped>
 ._side_drawer_ul {
-  @apply flex-1 overflow-y-auto space-y-4;
+  @apply flex-1 space-y-4 overflow-y-auto;
   li {
-    @apply min-h-[70px] pl-4 pr-10 py-2 flex justify-between items-center rounded-10 bg-tertiary-1 cursor-pointer;
+    @apply flex min-h-[70px] cursor-pointer items-center justify-between rounded-10 bg-tertiary-1 py-2 pl-4 pr-10;
     & > svg {
       @apply transition;
     }
     &:hover > svg {
-      @apply transform translate-x-4;
+      @apply translate-x-4 transform;
     }
   }
   p {

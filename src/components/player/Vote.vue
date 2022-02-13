@@ -45,7 +45,7 @@ export default {
     </template>
     <button
       type="button"
-      class="mt-2 btn-secondary"
+      class="btn-secondary mt-2"
       :disabled="!playerPlayingTrackId || nearEnd"
       @click="isVoted ? $store.dispatch('reduceDislike') : $store.dispatch('increaseDislike')"
     >
@@ -56,7 +56,7 @@ export default {
 <style lang="postcss">
 ._vote {
   > p {
-    @apply text-natural-gray3 font-bold;
+    @apply font-bold text-natural-gray3;
     > span {
       @apply text-primary;
     }

@@ -48,22 +48,22 @@ export default {
 </script>
 <template>
   <header
-    class="flex-col laptop:flex-row relative header z-10 px-8 py-5 laptop:p-0 bg-tertiary-1 bg-opacity-60 laptop:bg-transparent laptop:items-center"
+    class="header relative z-10 flex-col bg-tertiary-1 bg-opacity-60 px-8 py-5 laptop:flex-row laptop:items-center laptop:bg-transparent laptop:p-0"
   >
-    <h1 class="flex items-center justify-start laptop:flex-col laptop:pt-10 laptop:items-start">
+    <h1 class="flex items-center justify-start laptop:flex-col laptop:items-start laptop:pt-10">
       <img
         src="@/assets/images/logo-large.png"
-        class="text-natural-white cursor-pointer"
+        class="cursor-pointer text-natural-white"
         @click="$router.push({ name: 'Hall' })"
       />
       <h2
-        class="text-natural-white hidden justify-between w-full laptop:mt-6 laptop:mb-2 laptop:flex relative"
+        class="relative hidden w-full justify-between text-natural-white laptop:mt-6 laptop:mb-2 laptop:flex"
         @click="copyLinkHandler"
       >
         <span>@{{ $store.getters.roomName }}</span>
         <span>#{{ $store.getters.roomKey }}</span>
         <BaseAlert
-          class="absolute bottom-0 translate-y-full right-0"
+          class="absolute bottom-0 right-0 translate-y-full"
           :show="isShow"
           closeButton
           :title="t('copied')"
@@ -71,11 +71,11 @@ export default {
         />
       </h2>
     </h1>
-    <div class="flex flex-col laptop:flex-row justify-between items-end laptop:items-center relative">
-      <Marquee class="mt-5 laptop:mt-0 flex-auto w-full laptop::w-auto" />
+    <div class="relative flex flex-col items-end justify-between laptop:flex-row laptop:items-center">
+      <Marquee class="laptop::w-auto mt-5 w-full flex-auto laptop:mt-0" />
       <!-- absolute base on <header> -->
       <nav class="static top-8 right-8 laptop:static">
-        <ul class="justify-end flex">
+        <ul class="flex justify-end">
           <li>
             <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="activeSideDrawerHandler('Search')">
               <IconSearch />
@@ -84,21 +84,21 @@ export default {
           <li>
             <button
               type="button"
-              class="flex text-natural-white laptop:bg-tertiary-1 px-3 laptop:py-2 laptop:px-4 laptop:border laptop:border-natural-gray2"
+              class="flex px-3 text-natural-white laptop:border laptop:border-natural-gray2 laptop:bg-tertiary-1 laptop:py-2 laptop:px-4"
               @click="activeSideDrawerHandler('AddFromStreamingService')"
             >
               <IconPlus />
-              <label class="hidden ml-3 whitespace-nowrap laptop:inline">{{ t('add_from_spotify') }}</label>
+              <label class="ml-3 hidden whitespace-nowrap laptop:inline">{{ t('add_from_spotify') }}</label>
             </button>
           </li>
           <li>
             <button
-              class="flex items-center text-natural-white px-3 laptop:py-2 laptop:px-4"
+              class="flex items-center px-3 text-natural-white laptop:py-2 laptop:px-4"
               type="button"
               @click="activeSideDrawerHandler('Personal')"
             >
               <IconPerson />
-              <label class="hidden ml-3 laptop:inline">{{ $store.getters.userName }}</label>
+              <label class="ml-3 hidden laptop:inline">{{ $store.getters.userName }}</label>
             </button>
           </li>
         </ul>

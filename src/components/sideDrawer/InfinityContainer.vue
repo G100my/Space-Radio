@@ -31,8 +31,8 @@ export default {
 </script>
 <template>
   <ul :id="id" class="space-y-4 overflow-y-auto">
-    <li v-for="track in list" :key="track.id" class="bg-tertiary-1 bg-opacity-60 rounded-10 flex gap-x-2 py-3 px-4">
-      <div class="flex-shrink-0 w-11 h-11 md:w-16 md:h-16 object-cover object-center flex justify-center items-center">
+    <li v-for="track in list" :key="track.id" class="flex gap-x-2 rounded-10 bg-tertiary-1 bg-opacity-60 py-3 px-4">
+      <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center object-cover object-center md:h-16 md:w-16">
         <img
           v-show="!selectMode"
           class="w-full object-cover object-center"
@@ -47,7 +47,7 @@ export default {
         />
       </div>
       <!-- https://www.w3.org/TR/css-flexbox-1/#min-size-auto -->
-      <div class="flex-auto min-w-0">
+      <div class="min-w-0 flex-auto">
         <BaseMarquee class="text-natural-white">
           <span>{{ track.name }}</span>
         </BaseMarquee>

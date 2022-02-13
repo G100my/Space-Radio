@@ -130,7 +130,7 @@ export default {
   <div
     v-bind="$attrs"
     id="slide-container"
-    class="bg-tertiary-1 bg-opacity-60 overflow-y-auto laptop:bg-transparent"
+    class="overflow-y-auto bg-tertiary-1 bg-opacity-60 laptop:bg-transparent"
     @touchstart="touchstartHandler"
     @touchmove.prevent="touchmoveHandler"
     @touchend="touchendHandler"
@@ -138,12 +138,12 @@ export default {
     <div
       id="slide-content"
       ref="slideContent"
-      class="_show_all_flex w-[200%] h-full flex overflow-y-auto items-stretch transition-transform duration-300 laptop:flex-1 laptop:my-0 laptop:w-auto"
+      class="_show_all_flex flex h-full w-[200%] items-stretch overflow-y-auto transition-transform duration-300 laptop:my-0 laptop:w-auto laptop:flex-1"
     >
-      <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto laptop:w-96 laptop:pb-10">
+      <div class="w-1/2 flex-shrink-0 overflow-y-auto px-8 laptop:w-96 laptop:pb-10">
         <slot name="left-side" />
       </div>
-      <div class="flex-shrink-0 w-1/2 px-8 overflow-y-auto laptop:flex-1 laptop:relative laptop:px-0 laptop:pb-0">
+      <div class="w-1/2 flex-shrink-0 overflow-y-auto px-8 laptop:relative laptop:flex-1 laptop:px-0 laptop:pb-0">
         <slot name="right-side" />
       </div>
     </div>
@@ -183,14 +183,14 @@ export default {
 </template>
 <style lang="postcss">
 ._slide_navigation {
-  @apply h-16 p-1.5 flex justify-evenly relative laptop:hidden;
+  @apply relative flex h-16 justify-evenly p-1.5 laptop:hidden;
   > button {
-    @apply h-full w-[77px] rounded-sm flex flex-col items-center focus:outline-none text-natural-gray3;
+    @apply focus:outline-none flex h-full w-[77px] flex-col items-center rounded-sm text-natural-gray3;
     svg {
-      @apply h-7 w-7 mt-auto;
+      @apply mt-auto h-7 w-7;
     }
     span {
-      @apply text-xs mb-auto;
+      @apply mb-auto text-xs;
     }
     svg,
     span {
@@ -202,7 +202,7 @@ export default {
   }
 
   &_bar {
-    @apply absolute bg-primary h-1.5 rounded-sm top-0;
+    @apply absolute top-0 h-1.5 rounded-sm bg-primary;
     left: var(--left);
     right: var(--right);
     animation-name: var(--animation);

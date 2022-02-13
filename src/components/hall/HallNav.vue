@@ -1,5 +1,5 @@
 <template>
-  <div class="my-auto w-full flex items-center space-x-5">
+  <div class="my-auto flex w-full items-center space-x-5">
     <a href="https://echowenchi.myportfolio.com/work" target="_blank"
       >Designer: <strong class="text-primary">Echo</strong></a
     >

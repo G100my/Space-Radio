@@ -9,11 +9,11 @@
   }
 
   input[type='range']::-webkit-slider-runnable-track {
-    @apply w-full h-full min-h-[2px] cursor-pointer transition-colors duration-500;
+    @apply h-full min-h-[2px] w-full cursor-pointer transition-colors duration-500;
     border-radius: inherit;
   }
   input[type='range']::-moz-range-track {
-    @apply w-full h-full min-h-[2px] cursor-pointer transition-colors duration-500;
+    @apply h-full min-h-[2px] w-full cursor-pointer transition-colors duration-500;
     border-radius: inherit;
   }
   input[type='range']:focus::-webkit-slider-runnable-track {
@@ -36,10 +36,10 @@
 
 @layer components {
   .base-input {
-    @apply bg-tertiary-1 border border-tertiary-2 border-opacity-60 -shadow-4 px-4 py-3 text-natural-gray1 rounded text-body;
+    @apply rounded border border-tertiary-2 border-opacity-60 bg-tertiary-1 px-4 py-3 text-body text-natural-gray1 -shadow-4;
   }
   .base-input:focus {
-    @apply border-primary border-opacity-80 outline-none;
+    @apply outline-none border-primary border-opacity-80;
   }
   .base-input::placeholder {
     @apply text-natural-gray3;

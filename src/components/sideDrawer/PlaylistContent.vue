@@ -97,26 +97,26 @@ export default {
 }
 </script>
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex h-full flex-col">
     <header class="relative">
-      <div :class="{ invisible: selectMode }" class="flex justify-between items-center">
-        <h2 class="text-natural-gray1 text-subtitle laptop:text-header laptop:leading-tight">{{ listName }}</h2>
-        <button class="ml-3 btn-primary text-tertiary-1 text-opacity-80" type="button" @click="selectMode = true">
+      <div :class="{ invisible: selectMode }" class="flex items-center justify-between">
+        <h2 class="text-subtitle text-natural-gray1 laptop:text-header laptop:leading-tight">{{ listName }}</h2>
+        <button class="btn-primary ml-3 text-tertiary-1 text-opacity-80" type="button" @click="selectMode = true">
           Select
         </button>
       </div>
-      <div v-show="selectMode" class="flex gap-x-2.5 items-center absolute inset-0">
+      <div v-show="selectMode" class="absolute inset-0 flex items-center gap-x-2.5">
         <p class="text-body font-bold text-natural-gray2">{{ idSet.size }} selected</p>
-        <button type="button" class="ml-auto btn-primary" @click="addMultipleHandler">Add</button>
+        <button type="button" class="btn-primary ml-auto" @click="addMultipleHandler">Add</button>
         <button type="button" class="btn-secondary" @click="cancelHandler">Cancel</button>
       </div>
     </header>
-    <div class="mt-5 flex gap-x-1 items-center">
-      <p class="mr-auto text-natural-gray2 font-bold">
+    <div class="mt-5 flex items-center gap-x-1">
+      <p class="mr-auto font-bold text-natural-gray2">
         <span class="mx-2">{{ list.length }}{{ listTotal ? ` / ${listTotal}` : '' }}</span>
         <span>results</span>
       </p>
-      <IconSpinnerLoader v-show="loadingAnimation" class="animate-spin inline-block text-natural-gray2 mx-2" />
+      <IconSpinnerLoader v-show="loadingAnimation" class="mx-2 inline-block animate-spin text-natural-gray2" />
     </div>
 
     <InfinityContainer
@@ -124,7 +124,7 @@ export default {
       selectable
       :selectMode="selectMode"
       :selectHandler="checkboxHandler"
-      class="flex-auto h-0 mt-7 w-full"
+      class="mt-7 h-0 w-full flex-auto"
     />
   </div>
 </template>

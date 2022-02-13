@@ -81,8 +81,8 @@ export default {
 }
 </script>
 <template>
-  <div class="flex flex-col min-h-full">
-    <header class="flex items-center px-5 py-2 bg-[#253a77] rounded-sm" @click="$refs.searchInput.focus()">
+  <div class="flex min-h-full flex-col">
+    <header class="flex items-center rounded-sm bg-[#253a77] px-5 py-2" @click="$refs.searchInput.focus()">
       <button type="button" class="btn-tertiary" @click.stop="searchClickHandler">
         <IconSearch />
       </button>
@@ -97,14 +97,14 @@ export default {
       />
     </header>
 
-    <div v-show="!keywords" class="flex-auto flex flex-col">
+    <div v-show="!keywords" class="flex flex-auto flex-col">
       <p class="my-5 text-subtitle text-natural-gray2">Recent searches</p>
 
-      <ul class="flex-auto h-0 mt-7 overflow-y-auto px-10">
+      <ul class="mt-7 h-0 flex-auto overflow-y-auto px-10">
         <li
           v-for="recent in recentSearchStrings"
           :key="recent"
-          class="py-3 text-natural-gray2 cursor-pointer transition-colors hover:text-primary"
+          class="cursor-pointer py-3 text-natural-gray2 transition-colors hover:text-primary"
           @click=";(keywords = recent) & $refs.searchInput.focus()"
         >
           {{ recent }}
@@ -112,22 +112,22 @@ export default {
       </ul>
     </div>
 
-    <div v-show="keywords" class="flex-auto flex flex-col">
-      <div class="mt-5 flex gap-x-1 items-baseline">
-        <p class="mr-auto text-natural-gray2 font-bold">
+    <div v-show="keywords" class="flex flex-auto flex-col">
+      <div class="mt-5 flex items-baseline gap-x-1">
+        <p class="mr-auto font-bold text-natural-gray2">
           <span class="mx-2">{{ list.length }} / {{ searchedAmount }}</span>
           <span>results</span>
-          <IconSpinnerLoader v-show="loadingAnimation" class="animate-spin inline-block text-natural-gray2 mx-2" />
+          <IconSpinnerLoader v-show="loadingAnimation" class="mx-2 inline-block animate-spin text-natural-gray2" />
         </p>
       </div>
 
-      <InfinityContainer :list="list" class="flex-auto h-0 mt-7 w-full" />
+      <InfinityContainer :list="list" class="mt-7 h-0 w-full flex-auto" />
     </div>
   </div>
 </template>
 <style lang="postcss">
 ._search_input {
-  @apply bg-transparent text-natural-gray1 h-full flex-1 px-2;
+  @apply h-full flex-1 bg-transparent px-2 text-natural-gray1;
   &::placeholder {
     @apply text-natural-gray3;
   }

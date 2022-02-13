@@ -85,30 +85,30 @@ export default {
 }
 </script>
 <template>
-  <div class="h-full overflow-y-auto flex flex-col laptop:pb-10">
-    <header class="flex justify-between items-center pb-6">
-      <h3 class="text-natural-gray2 text-2xl laptop:text-header font-semibold">Next</h3>
+  <div class="flex h-full flex-col overflow-y-auto laptop:pb-10">
+    <header class="flex items-center justify-between pb-6">
+      <h3 class="text-2xl font-semibold text-natural-gray2 laptop:text-header">Next</h3>
       <img src="@/assets/images/Spotify_Logo_CMYK_Green.png" alt="Spotify" class="w-20" />
     </header>
-    <transition-group name="queue" tag="ul" class="flex-1 overflow-y-auto space-y-2 relative">
+    <transition-group name="queue" tag="ul" class="relative flex-1 space-y-2 overflow-y-auto">
       <li
         v-for="(key, index) in Object.keys(totalQueue)"
         :key="key"
-        class="_tracks flex items-center gap-x-3 p-3 bg-tertiary-1 bg-opacity-60 rounded-10 hover:bg-opacity-100"
+        class="_tracks flex items-center gap-x-3 rounded-10 bg-tertiary-1 bg-opacity-60 p-3 hover:bg-opacity-100"
       >
-        <div class="flex-shrink-0 w-10 flex justify-center items-center">
+        <div class="flex w-10 flex-shrink-0 items-center justify-center">
           <span v-if="checkLevel('normal', key)" class="text-body font-bold text-natural-gray3">{{ index }}</span>
           <IconArrowUp v-else-if="checkLevel('urgent', key)" class="arrow-up" />
           <IconPending v-else class="pending" />
         </div>
 
-        <div class="flex-shrink-0 flex justify-center items-center">
-          <img class="w-11 h-11" :src="getImageUrl(trackData[key])" alt="album photo" />
+        <div class="flex flex-shrink-0 items-center justify-center">
+          <img class="h-11 w-11" :src="getImageUrl(trackData[key])" alt="album photo" />
         </div>
 
-        <div class="_info_1 overflow-hidden w-full">
-          <BaseMarquee class="text-natural-gray1 font-bold text-xs md:text-base" :text="trackData[key].name" />
-          <BaseMarquee class="text-primary text-xs md:text-base" :text="getOrderer(key)" />
+        <div class="_info_1 w-full overflow-hidden">
+          <BaseMarquee class="text-xs font-bold text-natural-gray1 md:text-base" :text="trackData[key].name" />
+          <BaseMarquee class="text-xs text-primary md:text-base" :text="getOrderer(key)" />
         </div>
 
         <div class="_info_2 hidden md:block">
@@ -129,7 +129,7 @@ export default {
         </div>
 
         <template v-if="userId === totalQueue[key].orderer_id">
-          <div class="w-[146px] hidden xs:flex justify-end space-x-3">
+          <div class="hidden w-[146px] justify-end space-x-3 xs:flex">
             <template v-if="checkLevel('urgent', key)">
               <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
                 <IconEdit />
@@ -159,7 +159,7 @@ export default {
           <Menu
             v-slot="{ open }"
             as="div"
-            class="cursor-pointer self-stretch relative xs:hidden cursor-pointer self-stretch"
+            class="relative cursor-pointer cursor-pointer self-stretch self-stretch xs:hidden"
           >
             <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
               <IconMore />
@@ -174,7 +174,7 @@ export default {
             >
               <MenuItems
                 :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
-                class="absolute right-0 bg-tertiary-1 py-2 px-5 z-20 rounded-10 space-y-4"
+                class="absolute right-0 z-20 space-y-4 rounded-10 bg-tertiary-1 py-2 px-5"
               >
                 <template v-if="checkLevel('urgent', key)">
                   <MenuItem v-slot="{ active }">
@@ -212,7 +212,7 @@ export default {
             </transition>
           </Menu>
         </template>
-        <div v-else class="w-[146px] hidden xs:block" />
+        <div v-else class="hidden w-[146px] xs:block" />
       </li>
     </transition-group>
   </div>
@@ -230,7 +230,7 @@ export default {
 }
 
 ._menu-item {
-  @apply whitespace-nowrap flex text-natural-white gap-x-2;
+  @apply flex gap-x-2 whitespace-nowrap text-natural-white;
 
   &.active {
     @apply text-primary;
@@ -241,7 +241,7 @@ export default {
 }
 
 .queue-move {
-  @apply transition-transform duration-300 delay-200;
+  @apply transition-transform delay-200 duration-300;
 }
 .queue-leave-active {
   @apply absolute w-full transition-opacity duration-300;

@@ -32,9 +32,9 @@ export default {
 <template>
   <Listbox v-slot="{ open }" v-model="seleted" as="div" class="relative max-w-lg">
     <ListboxButton
-      class="w-full bg-tertiary-1 text-natural-gray1 border border-tertiary-2 rounded -shadow-4 px-4 py-3 flex justify-between"
+      class="flex w-full justify-between rounded border border-tertiary-2 bg-tertiary-1 px-4 py-3 text-natural-gray1 -shadow-4"
     >
-      <span class="overflow-ellipsis whitespace-nowrap overflow-hidden">{{ seleted.name }}</span>
+      <span class="overflow-hidden overflow-ellipsis whitespace-nowrap">{{ seleted.name }}</span>
       <IconDropdown />
     </ListboxButton>
     <TransitionRoot v-show="open">
@@ -59,7 +59,7 @@ export default {
         leave-to="transform scale-95 opacity-0"
       >
         <ListboxOptions
-          class="pt-1 pb-2 bg-tertiary-1 border border-t-0 border-tertiary-2 rounded rounded-b text-natural-gray3 space-y-0.5 -translate-y-1 overflow-y-auto fixed inset-y-1/4 inset-x-0 max-w-xs mx-auto laptop:absolute laptop:inset-auto z-30 laptop:mx-auto laptop:max-w-none laptop:w-full laptop:max-h-32"
+          class="fixed inset-y-1/4 inset-x-0 z-30 mx-auto max-w-xs -translate-y-1 space-y-0.5 overflow-y-auto rounded rounded-b border border-t-0 border-tertiary-2 bg-tertiary-1 pt-1 pb-2 text-natural-gray3 laptop:absolute laptop:inset-auto laptop:mx-auto laptop:max-h-32 laptop:w-full laptop:max-w-none"
         >
           <ListboxOption
             v-for="(option, index) in options"
@@ -69,7 +69,7 @@ export default {
             as="template"
           >
             <li
-              class="w-full px-4 hover:bg-tertiary-2 cursor-pointer overflow-ellipsis whitespace-nowrap overflow-hidden"
+              class="w-full cursor-pointer overflow-hidden overflow-ellipsis whitespace-nowrap px-4 hover:bg-tertiary-2"
               :class="{ 'text-primary': selected }"
             >
               {{ option.name }}

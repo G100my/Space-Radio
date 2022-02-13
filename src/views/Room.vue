@@ -85,11 +85,11 @@ export default {
 }
 </script>
 <template>
-  <div id="room" class="relative bg-tertiary-1 bg-opacity-80 h-full flex flex-col overflow-hidden laptop:bg-tertiary-2">
+  <div id="room" class="relative flex h-full flex-col overflow-hidden bg-tertiary-1 bg-opacity-80 laptop:bg-tertiary-2">
     <Header class="_show_all_flex _container" @activeSideDrawer="activeSideDrawerHandler" />
     <SlideContainer class="_container flex-1">
       <template #left-side>
-        <div class="min-h-full flex flex-col laptop:pt-7">
+        <div class="flex min-h-full flex-col laptop:pt-7">
           <PlayingState />
           <VolumnBar
             v-if="!$store.getters.customerPlayerMode"
@@ -102,7 +102,7 @@ export default {
           <CustomerVolumeBar v-else class="mt-7 laptop:mt-3" />
           <Collection class="mt-4" />
           <Vote class="my-4" />
-          <UserLog class="flex-1 max-h-72 hidden laptop:flex" />
+          <UserLog class="hidden max-h-72 flex-1 laptop:flex" />
         </div>
       </template>
       <template #right-side>

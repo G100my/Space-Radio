@@ -69,10 +69,10 @@ export default {
       <IconSuccess v-else class="h-full w-full text-system-success2" />
     </label>
 
-    <div class="flex text-body text-natural-black items-center">
+    <div class="flex items-center text-body text-natural-black">
       <p :class="{ 'mb-1': contentText }">{{ title }}</p>
-      <button v-if="closeButton" class="ml-auto h-9 w-9 flex justify-center items-center" @click="$emit('close')">
-        <IconClose class="w-2.5 h-2.5 text-natural-gray3" />
+      <button v-if="closeButton" class="ml-auto flex h-9 w-9 items-center justify-center" @click="$emit('close')">
+        <IconClose class="h-2.5 w-2.5 text-natural-gray3" />
       </button>
     </div>
 
@@ -81,19 +81,19 @@ export default {
 </template>
 <style lang="postcss">
 ._base_alert {
-  @apply overflow-hidden px-4 py-px rounded-sm border translate-y-1 grid;
+  @apply grid translate-y-1 overflow-hidden rounded-sm border px-4 py-px;
   grid-template-columns: min-content 1fr;
 }
 ._alert_error {
-  @apply bg-system-error3 border-system-error2;
+  @apply border-system-error2 bg-system-error3;
 }
 ._alert_success {
-  @apply bg-system-success3 border-system-success2;
+  @apply border-system-success2 bg-system-success3;
 }
 ._alert_icon_sm {
-  @apply h-4 w-4 mr-3;
+  @apply mr-3 h-4 w-4;
 }
 ._alert_icon_lg {
-  @apply h-5 w-5 mr-6;
+  @apply mr-6 h-5 w-5;
 }
 </style>

@@ -197,11 +197,11 @@ export default {
 }
 </script>
 <template>
-  <div class="py-4 my-auto">
-    <h2 class="text-subtitle flex justify-between relative">
+  <div class="my-auto py-4">
+    <h2 class="relative flex justify-between text-subtitle">
       <span>{{ t('create_room') }}</span>
       <button
-        class="btn btn-tertiary laptop:-left-5 laptop:absolute laptop:-top-14"
+        class="btn btn-tertiary laptop:absolute laptop:-left-5 laptop:-top-14"
         type="button"
         @click="$router.push({ name: 'Hall' })"
       >
@@ -210,7 +210,7 @@ export default {
       </button>
     </h2>
 
-    <form class="_create_room_form overflow-y-auto space-y-3 laptop:overflow-y-visible laptop:space-y-3">
+    <form class="_create_room_form space-y-3 overflow-y-auto laptop:space-y-3 laptop:overflow-y-visible">
       <div>
         <label for="room-name">{{ t('room_name') }}</label>
         <div>
@@ -252,8 +252,8 @@ export default {
 
       <div>
         <label>{{ t('skip_song_threshold') }}</label>
-        <p class="h-12 bg-tertiary-1 bg-opacity-60 rounded px-2 flex items-center">
-          <span class="mr-auto text-primary font-bold w-7 flex-shrink-0 text-center">{{ dislikeThreshold }}</span>
+        <p class="flex h-12 items-center rounded bg-tertiary-1 bg-opacity-60 px-2">
+          <span class="mr-auto w-7 flex-shrink-0 text-center font-bold text-primary">{{ dislikeThreshold }}</span>
           <button class="btn btn-tertiary" type="button" @click="minusDislikeThreshold">
             <IconMinus />
           </button>
@@ -268,20 +268,20 @@ export default {
         <BaseSelect v-model="basePlaylist" :options="hostPlaylists" class="mt-2" />
       </div>
 
-      <button class="btn btn-primary w-full mt-6 laptop:mt-8" type="button" @click="createHandler">
+      <button class="btn btn-primary mt-6 w-full laptop:mt-8" type="button" @click="createHandler">
         {{ t('create') }}
       </button>
     </form>
   </div>
   <Dialog class="fixed inset-0 z-40 text-natural-gray4" :open="true" @close="isOpen = false">
-    <DialogOverlay as="p" class="bg-tertiary-1 bg-opacity-60 -z-1 fixed inset-0" />
-    <div class="absolute inset-0 m-auto max-w-md h-fit bg-tertiary-1 p-4 border-2 border-natural-gray2 rounded-md">
-      <DialogTitle as="h2" class="text-2xl text-center">{{ t('create_room_success') }}</DialogTitle>
+    <DialogOverlay as="p" class="fixed inset-0 -z-1 bg-tertiary-1 bg-opacity-60" />
+    <div class="absolute inset-0 m-auto h-fit max-w-md rounded-md border-2 border-natural-gray2 bg-tertiary-1 p-4">
+      <DialogTitle as="h2" class="text-center text-2xl">{{ t('create_room_success') }}</DialogTitle>
 
       <hr class="mt-2 mb-6" />
 
       <DialogDescription class="text-center">{{ t('you_can_copy_url_to_invite_your_friend') }}</DialogDescription>
-      <div class="flex w-full relative mt-4 items-center justify-between">
+      <div class="relative mt-4 flex w-full items-center justify-between">
         <input ref="inviteURLInput" type="text" class="base-input" :value="inviteURL" readonly />
         <button class="btn-primary ml-auto p-2 leading-none" type="button" @click="copyInviteURLHandler">
           {{ t('copy_again') }}
@@ -299,7 +299,7 @@ export default {
 ._create_room_form {
   > div > label:first-child::after {
     content: '*';
-    @apply text-primary mb-1;
+    @apply mb-1 text-primary;
   }
 }
 </style>

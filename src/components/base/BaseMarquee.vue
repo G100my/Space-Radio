@@ -54,14 +54,14 @@ export default {
 }
 
 ._marquee_content {
-  @apply text-0 whitespace-nowrap overflow-hidden overflow-ellipsis;
+  @apply overflow-hidden overflow-ellipsis whitespace-nowrap text-0;
 
   &:hover ._sentence {
     max-width: none;
   }
 
   &.active {
-    @apply relative w-fit overflow-ellipsis overflow-visible;
+    @apply relative w-fit overflow-visible overflow-ellipsis;
     animation: marquee 10s linear 1;
 
     > ._sentence {
@@ -73,6 +73,6 @@ export default {
   }
 }
 ._sentence {
-  @apply inline-block text-base text-opacity-50 max-w-full overflow-ellipsis overflow-hidden whitespace-nowrap space-x-1;
+  @apply inline-block max-w-full space-x-1 overflow-hidden overflow-ellipsis whitespace-nowrap text-base text-opacity-50;
 }
 </style>

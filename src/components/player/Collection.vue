@@ -57,7 +57,7 @@ export default {
 </script>
 <template>
   <div v-bind="$attrs" class="flex flex-col">
-    <label class="text-natural-gray3 font-bold">{{ t('collect_to_spotify') }}</label>
+    <label class="font-bold text-natural-gray3">{{ t('collect_to_spotify') }}</label>
     <button type="button" :disabled="!playerPlayingTrackId" class="btn-primary mt-2" @click="isOpen = !isOpen">
       <IconSpotifyDark />
       <span>{{ t('collect') }}</span>
@@ -75,7 +75,7 @@ export default {
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <DialogOverlay class="w-screen h-screen bg-tertiary-1 bg-opacity-20 absolute -z-1" />
+        <DialogOverlay class="absolute -z-1 h-screen w-screen bg-tertiary-1 bg-opacity-20" />
       </TransitionChild>
       <TransitionChild
         as="template"
@@ -87,7 +87,7 @@ export default {
         leave-to="opacity-0 scale-95"
       >
         <div
-          class="absolute inset-0 m-auto top-20 bottom-20 max-w-xs laptop:max-w-xl rounded-10 bg-tertiary-1 flex flex-col"
+          class="absolute inset-0 top-20 bottom-20 m-auto flex max-w-xs flex-col rounded-10 bg-tertiary-1 laptop:max-w-xl"
         >
           <div class="flex items-center bg-tertiary-2 px-8 py-4">
             <DialogTitle class="flex-1 text-subtitle text-natural-gray2">{{ t('collect_to_spotify') }}</DialogTitle>
@@ -95,11 +95,11 @@ export default {
               <IconClose />
             </button>
           </div>
-          <DialogDescription as="ul" class="flex-1 overflow-y-auto m-11 space-y-3 laptop:mx-8 laptop:mt-8 laptop:mb-14">
+          <DialogDescription as="ul" class="m-11 flex-1 space-y-3 overflow-y-auto laptop:mx-8 laptop:mt-8 laptop:mb-14">
             <li v-for="playlist in ownPlaylists" :key="playlist.id">
               <button
                 type="button"
-                class="btn-secondary w-full hover:text-tertiary-2 hover:bg-natural-gray2"
+                class="btn-secondary w-full hover:bg-natural-gray2 hover:text-tertiary-2"
                 @click="collectHandler(playlist)"
               >
                 {{ playlist.name }}
