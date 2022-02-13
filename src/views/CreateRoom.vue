@@ -142,7 +142,7 @@ export default {
         })
         .then(() => {
           localStorage.setItem('spaceradio_room_key', roomKey)
-          isOpen.value = false
+          isOpen.value = true
           copyInviteURLHandler()
         })
     }
@@ -273,7 +273,7 @@ export default {
       </button>
     </form>
   </div>
-  <Dialog class="fixed inset-0 z-40 text-natural-gray4" :open="true" @close="isOpen = false">
+  <Dialog class="fixed inset-0 z-40 text-natural-gray4" :open="isOpen">
     <DialogOverlay as="p" class="fixed inset-0 -z-1 bg-tertiary-1 bg-opacity-60" />
     <div class="absolute inset-0 m-auto h-fit max-w-md rounded-md border-2 border-natural-gray2 bg-tertiary-1 p-4">
       <DialogTitle as="h2" class="text-center text-2xl">{{ t('create_room_success') }}</DialogTitle>
