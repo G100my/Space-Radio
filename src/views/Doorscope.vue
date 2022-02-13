@@ -65,7 +65,7 @@ export default {
       <IconArrowLeft />
     </button>
     <h2 class="mb-4 text-subtitle">{{ roomName }}</h2>
-    <!-- <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" /> -->
+    <!-- <img class="mx-auto max-w-xs max-h-40 mb-4" :src="album.image_url === '' ? initCover : album.image_url" alt="" /> -->
     <!-- <div v-if="trackName"> -->
     <p class="mt-8 text-body font-bold text-natural-gray1">{{ t('now_playing') }}:</p>
     <p class="mt-3 text-body text-natural-gray1">{{ trackName }}</p>
