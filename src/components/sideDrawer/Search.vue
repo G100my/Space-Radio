@@ -4,21 +4,21 @@ import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { spotifyAPI } from '@/utility/spotifyAPI'
 import { spotifyCoverPicker } from '@/utility/dataFormat'
-import InfinityContainer from './InfinityContainer.vue'
+import TrackListContainer from './TrackListContainer.vue'
 
 export default {
   components: {
     IconSearch,
     IconSpinnerLoader,
-    InfinityContainer,
+    TrackListContainer,
   },
   setup() {
     let observer
-    let infinityContainer
+    let TrackListContainer
     onMounted(() => {
-      infinityContainer = document.getElementById('infinity')
+      TrackListContainer = document.getElementById('infinity')
       const observerOptions = {
-        root: infinityContainer,
+        root: TrackListContainer,
         rootMargin: '0px',
         threshold: 0.5,
       }
@@ -51,7 +51,7 @@ export default {
         if (target) observer.unobserve(target)
         if (next || searchedAmount.value > list.value.length) {
           nextTick(() => {
-            target = infinityContainer.lastElementChild
+            target = TrackListContainer.lastElementChild
             observer.observe(target)
           })
         }
@@ -121,7 +121,7 @@ export default {
         </p>
       </div>
 
-      <InfinityContainer :list="list" class="mt-7 h-0 w-full flex-auto" />
+      <TrackListContainer id="infinity_search" :list="list" class="mt-7 h-0 w-full flex-auto" />
     </div>
   </div>
 </template>

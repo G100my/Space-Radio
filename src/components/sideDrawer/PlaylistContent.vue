@@ -2,11 +2,11 @@
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref, toRaw } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
-import InfinityContainer from './InfinityContainer.vue'
+import TrackListContainer from './TrackListContainer.vue'
 
 export default {
   name: 'PlaylistContent',
-  components: { IconSpinnerLoader, InfinityContainer },
+  components: { IconSpinnerLoader, TrackListContainer },
   setup() {
     const store = useStore()
     const listName = computed(() => store.getters.chosenName)
@@ -119,7 +119,8 @@ export default {
       <IconSpinnerLoader v-show="loadingAnimation" class="mx-2 inline-block animate-spin text-natural-gray2" />
     </div>
 
-    <InfinityContainer
+    <TrackListContainer
+      id="infinity_playlist"
       :list="list"
       selectable
       :selectMode="selectMode"

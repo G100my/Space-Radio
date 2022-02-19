@@ -6,10 +6,6 @@ import BaseMarquee from '../base/BaseMarquee.vue'
 export default {
   components: { BaseMarquee, IconPlus, IconArrowUp },
   props: {
-    id: {
-      type: String,
-      default: 'infinity',
-    },
     list: {
       type: Array,
       required: true,
@@ -30,7 +26,7 @@ export default {
 }
 </script>
 <template>
-  <ul :id="id" class="space-y-4 overflow-y-auto">
+  <ul class="space-y-4 overflow-y-auto">
     <li v-for="track in list" :key="track.id" class="flex gap-x-2 rounded-10 bg-tertiary-1 bg-opacity-60 py-3 px-4">
       <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center object-cover object-center md:h-16 md:w-16">
         <img
