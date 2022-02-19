@@ -15,6 +15,41 @@ const reduceDataCallback = i => ({
 
 const increaseOffset = 25
 
+const fetchTopWithStaging = async ({ commit, state }, isFirst, submoduleName, time_range) => {
+  const offset = state[submoduleName].offset
+  const listLength = state[submoduleName].list.length
+  if (isFirst && listLength) {
+    commit('chosenList', state[submoduleName].list)
+    return Promise.resolve()
+  }
+
+  await spotifyAPI
+    .getMyTopTracks({
+      limit: increaseOffset,
+      time_range,
+      ...(!isFirst && { offset: offset + increaseOffset }),
+    })
+    .then(({ items, offset, next, total }) => {
+      const transferResult = items.map(({ album, artists, id, name }) => ({
+        album: {
+          name: album.name,
+          externalUrl: album.uri,
+          coverUrl: spotifyCoverPicker(album.images),
+        },
+        artists,
+        id,
+        name,
+      }))
+      commit(submoduleName, {
+        next,
+        offset,
+        total,
+        list: state[submoduleName].list.concat(transferResult),
+      })
+      commit('chosenList', state[submoduleName].list)
+    })
+}
+
 const spotifyList = {
   state: {
     spotifyList: {
@@ -114,41 +149,6 @@ const spotifyRecently = {
         })
     },
   },
-}
-
-const fetchTopWithStaging = async ({ commit, state }, isFirst, submoduleName, time_range) => {
-  const offset = state[submoduleName].offset
-  const listLength = state[submoduleName].list.length
-  if (isFirst && listLength) {
-    commit('chosenList', state[submoduleName].list)
-    return Promise.resolve()
-  }
-
-  await spotifyAPI
-    .getMyTopTracks({
-      limit: increaseOffset,
-      time_range,
-      ...(!isFirst && { offset: offset + increaseOffset }),
-    })
-    .then(({ items, offset, next, total }) => {
-      const transferResult = items.map(({ album, artists, id, name }) => ({
-        album: {
-          name: album.name,
-          externalUrl: album.uri,
-          coverUrl: spotifyCoverPicker(album.images),
-        },
-        artists,
-        id,
-        name,
-      }))
-      commit(submoduleName, {
-        next,
-        offset,
-        total,
-        list: state[submoduleName].list.concat(transferResult),
-      })
-      commit('chosenList', state[submoduleName].list)
-    })
 }
 
 const topTracks = ['spotifyLong', 'spotifyMedium', 'spotifyShort'].map(listName => ({
