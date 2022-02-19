@@ -1,10 +1,11 @@
 <script>
 import IconSearch from '@/assets/icons/icon-search.svg'
 import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
-import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { onUnmounted, ref } from 'vue'
 import { spotifyAPI } from '@/utility/spotifyAPI'
 import { spotifyCoverPicker } from '@/utility/dataFormat'
 import TrackListContainer from './TrackListContainer.vue'
+import { useInfinityScroll } from '@/composables/useInfinityScroll'
 
 export default {
   components: {
@@ -13,50 +14,26 @@ export default {
     TrackListContainer,
   },
   setup() {
-    let observer
-    let TrackListContainer
-    onMounted(() => {
-      TrackListContainer = document.getElementById('infinity')
-      const observerOptions = {
-        root: TrackListContainer,
-        rootMargin: '0px',
-        threshold: 0.5,
-      }
-      const callback = ([entry]) => {
-        if (entry.isIntersecting) search(previousOffset + limit)
-      }
-      observer = new IntersectionObserver(callback, observerOptions)
-    })
-
     const list = ref([])
     const keywords = ref('')
     const searchedAmount = ref(0)
-    let previousOffset = 0
-    let target
-    let next
+    let next = ref('')
     const limit = 30
-    const loadingAnimation = ref(false)
     function search(offset = 0) {
-      loadingAnimation.value = true
-      spotifyAPI.search(keywords.value, ['track'], { limit, offset }).then(response => {
+      return spotifyAPI.search(keywords.value, ['track'], { limit, offset }).then(response => {
         response.tracks.items.forEach(i => (i.album.coverUrl = spotifyCoverPicker(i.album.images)))
 
         list.value = list.value.concat(response.tracks.items)
-        next = response.tracks.next
+        next.value = response.tracks.next
         searchedAmount.value = response.tracks.total
-        previousOffset = response.tracks.offset
-
-        loadingAnimation.value = false
-
-        if (target) observer.unobserve(target)
-        if (next || searchedAmount.value > list.value.length) {
-          nextTick(() => {
-            target = TrackListContainer.lastElementChild
-            observer.observe(target)
-          })
-        }
       })
     }
+
+    const { isLoading } = useInfinityScroll({
+      id: 'infinity_search',
+      nextURL: next,
+      fetchCallback: search,
+    })
 
     const recentSearchStrings = JSON.parse(localStorage.getItem('spaceradio_recent_search')) || []
     function searchClickHandler() {
@@ -75,7 +52,7 @@ export default {
       recentSearchStrings,
       searchedAmount,
       searchClickHandler,
-      loadingAnimation,
+      isLoading,
     }
   },
 }
@@ -117,7 +94,7 @@ export default {
         <p class="mr-auto font-bold text-natural-gray2">
           <span class="mx-2">{{ list.length }} / {{ searchedAmount }}</span>
           <span>results</span>
-          <IconSpinnerLoader v-show="loadingAnimation" class="mx-2 inline-block animate-spin text-natural-gray2" />
+          <IconSpinnerLoader v-show="isLoading" class="mx-2 inline-block animate-spin text-natural-gray2" />
         </p>
       </div>
 

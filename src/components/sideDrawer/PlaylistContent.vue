@@ -1,8 +1,9 @@
 <script>
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref, toRaw } from '@vue/runtime-core'
+import { computed, reactive, ref, toRaw } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
 import TrackListContainer from './TrackListContainer.vue'
+import { useInfinityScroll } from '@/composables/useInfinityScroll'
 
 export default {
   name: 'PlaylistContent',
@@ -41,45 +42,13 @@ export default {
     const list = computed(() => store.getters.chosenList)
     const listTotal = computed(() => store.getters.chosenTotal)
     const next = computed(() => store.getters.chosenNext)
-    let observer
-    let infinityContainer
-    let target
-    const loadingAnimation = ref(false)
 
-    function observeLastElement() {
-      target = infinityContainer.lastElementChild
-      if (target) observer.observe(target)
-    }
-    function nextCallback() {
-      loadingAnimation.value = false
-      if (next.value) {
-        nextTick(observeLastElement)
-      }
-    }
-    function nexthandler() {
-      if (target) observer.unobserve(target)
-      loadingAnimation.value = true
-      store.dispatch('fetchOffset').then(nextCallback)
-    }
-
-    store.dispatch('fetchFirst').then(() => {
-      nextTick(observeLastElement)
-    })
-
-    onMounted(() => {
-      infinityContainer = document.getElementById('infinity')
-      const observerOptions = {
-        root: infinityContainer,
-        rootMargin: '0px',
-        threshold: 0.5,
-      }
-      const callback = ([entry]) => {
-        if (entry.isIntersecting) nexthandler()
-      }
-      observer = new IntersectionObserver(callback, observerOptions)
-    })
-    onUnmounted(() => {
-      store.commit('chosenList', [])
+    const { isloading } = useInfinityScroll({
+      id: 'infinity_playlist',
+      nextURL: next,
+      fetchCallback: () => store.dispatch('fetchOffset'),
+      onUnmountedCallback: () => store.commit('chosenList', []),
+      fetchFirstCallback: () => store.dispatch('fetchFirst'),
     })
 
     return {
@@ -91,7 +60,7 @@ export default {
       checkboxHandler,
       addMultipleHandler,
       cancelHandler,
-      loadingAnimation,
+      isloading,
     }
   },
 }
@@ -116,7 +85,7 @@ export default {
         <span class="mx-2">{{ list.length }}{{ listTotal ? ` / ${listTotal}` : '' }}</span>
         <span>results</span>
       </p>
-      <IconSpinnerLoader v-show="loadingAnimation" class="mx-2 inline-block animate-spin text-natural-gray2" />
+      <IconSpinnerLoader v-show="isloading" class="mx-2 inline-block animate-spin text-natural-gray2" />
     </div>
 
     <TrackListContainer
