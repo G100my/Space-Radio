@@ -150,9 +150,10 @@ const fetchTopWithStaging = async ({ commit, state }, isFirst, submoduleName, ti
       commit('chosenList', state[submoduleName].list)
     })
 }
-const spotifyLong = {
+
+const topTracks = ['spotifyLong', 'spotifyMedium', 'spotifyShort'].map(listName => ({
   state: {
-    spotifyLong: {
+    [listName]: {
       list: [],
       total: 0,
       next: 0,
@@ -160,50 +161,14 @@ const spotifyLong = {
     },
   },
   mutations: {
-    spotifyLong(state, value) {
-      state.spotifyLong = { ...state.spotifyLong, ...value }
+    [listName]: function (state, value) {
+      state[listName] = { ...state.listName, ...value }
     },
   },
   actions: {
-    _fetch_spotifyLong: (context, payload) => fetchTopWithStaging(context, payload, 'spotifyLong', 'long_term'),
+    [`_fetch_${listName}`]: (context, payload) => fetchTopWithStaging(context, payload, listName, listName),
   },
-}
-const spotifyMedium = {
-  state: {
-    spotifyMedium: {
-      list: [],
-      total: 0,
-      next: 0,
-      offset: 0,
-    },
-  },
-  mutations: {
-    spotifyMedium(state, value) {
-      state.spotifyMedium = { ...state.spotifyMedium, ...value }
-    },
-  },
-  actions: {
-    _fetch_spotifyMedium: (context, payload) => fetchTopWithStaging(context, payload, 'spotifyMedium', 'medium_term'),
-  },
-}
-const spotifyShort = {
-  state: {
-    spotifyShort: {
-      list: [],
-      total: 0,
-      next: 0,
-      offset: 0,
-    },
-  },
-  mutations: {
-    spotifyShort(state, value) {
-      state.spotifyShort = { ...state.spotifyShort, ...value }
-    },
-  },
-  actions: {
-    _fetch_spotifyShort: (context, payload) => fetchTopWithStaging(context, payload, 'spotifyShort', 'short_term'),
-  },
-}
+}))
 
 const common = {
   state: {
@@ -269,15 +234,7 @@ const common = {
   },
 }
 
-export const PersonalPlaylists = [
-  spotifyList,
-  spotifyLiked,
-  spotifyRecently,
-  spotifyLong,
-  spotifyMedium,
-  spotifyShort,
-  common,
-].reduce(
+export const PersonalPlaylists = [spotifyList, spotifyLiked, spotifyRecently, ...topTracks, common].reduce(
   (accumulator, submodule) => {
     accumulator.state = { ...accumulator.state, ...submodule.state }
     accumulator.mutations = { ...accumulator.mutations, ...submodule.mutations }
