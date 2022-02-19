@@ -42,3 +42,10 @@
     @apply border border-natural-gray2 bg-tertiary-1 bg-opacity-60;
   }
 }
+
+/* used in Header */
+@layer components {
+  .btn-response {
+    @apply btn px-3 text-natural-white laptop:border laptop:border-natural-gray2 laptop:bg-tertiary-1 laptop:py-2 laptop:px-4;
+  }
+}

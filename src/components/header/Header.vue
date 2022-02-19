@@ -8,6 +8,7 @@ import FeedbackAlert from './FeedbackAlert.vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import BaseAlert from '../base/BaseAlert.vue'
+import { LightningBoltIcon } from '@heroicons/vue/outline'
 
 export default {
   components: {
@@ -17,6 +18,7 @@ export default {
     IconPlus,
     FeedbackAlert,
     BaseAlert,
+    LightningBoltIcon,
   },
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
@@ -84,11 +86,17 @@ export default {
           <li>
             <button
               type="button"
-              class="flex px-3 text-natural-white laptop:border laptop:border-natural-gray2 laptop:bg-tertiary-1 laptop:py-2 laptop:px-4"
+              class="btn-response min-h-0"
               @click="activeSideDrawerHandler('AddFromStreamingService')"
             >
               <IconPlus />
               <label class="ml-3 hidden whitespace-nowrap laptop:inline">{{ t('add_from_spotify') }}</label>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="btn-response min-h-0" @click="activeSideDrawerHandler('Recommendation')">
+              <LightningBoltIcon class="h-full w-6" />
+              <label class="ml-3 hidden whitespace-nowrap laptop:inline">{{ t('add_from_recommendation') }}</label>
             </button>
           </li>
           <li>
