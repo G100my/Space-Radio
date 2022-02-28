@@ -1,6 +1,6 @@
 import { playlistFields } from '@/utility/fieldString'
 import { spotifyAPI } from '@/utility/spotifyAPI'
-import { playlistTrackFormater } from '@/utility/dataFormat'
+import { playlistTrackFormater, topTrackFormater } from '@/utility/dataFormat'
 
 const increaseOffset = 25
 
@@ -19,16 +19,7 @@ const fetchTopWithStaging = async ({ commit, state }, isFirst, submoduleName, ti
       ...(!isFirst && { offset: offset + increaseOffset }),
     })
     .then(({ items, offset, next, total }) => {
-      const transferResult = items.map(({ album, artists, id, name }) => ({
-        album: {
-          name: album.name,
-          externalUrl: album.uri,
-          coverUrl: spotifyCoverPicker(album.images),
-        },
-        artists,
-        id,
-        name,
-      }))
+      const transferResult = items.map(topTrackFormater)
       commit(submoduleName, {
         next,
         offset,

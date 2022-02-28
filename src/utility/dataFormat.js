@@ -12,3 +12,12 @@ export const playlistTrackFormater = i => ({
   id: i.track.id,
   name: i.track.name,
 })
+
+export const topTrackFormater = ({ album, artists, id, name }) => ({
+  albumName: album.name,
+  albumExternalUrl: album.uri,
+  albumCoverUrl: spotifyCoverPicker(album.images),
+  artists,
+  id,
+  name,
+})

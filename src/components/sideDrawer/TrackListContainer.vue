@@ -32,8 +32,8 @@ export default {
         <img
           v-show="!selectMode"
           class="w-full object-cover object-center"
-          :src="track.album.coverUrl"
-          :alt="track.album.name"
+          :src="track.albumCoverUrl"
+          :alt="track.albumName"
         />
         <input
           v-if="selectable"
