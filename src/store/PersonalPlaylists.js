@@ -1,6 +1,6 @@
 import { playlistFields } from '@/utility/fieldString'
 import { spotifyAPI } from '@/utility/spotifyAPI'
-import { spotifyCoverPicker, reduceDataCallback } from '@/utility/dataFormat'
+import { playlistTrackFormater } from '@/utility/dataFormat'
 
 const increaseOffset = 25
 
@@ -63,7 +63,7 @@ const spotifyList = {
         })
         .then(({ items, next, offset, total }) => {
           commit('_spotifyList', { next, offset, total })
-          const transferResult = items.map(reduceDataCallback)
+          const transferResult = items.map(playlistTrackFormater)
           commit('chosenList', getters.chosenList.concat(transferResult))
         })
     },
@@ -99,7 +99,7 @@ const spotifyLiked = {
           ...(!isFirst && { offset: offset + increaseOffset }),
         })
         .then(({ items, offset, next, total }) => {
-          const transferResult = items.map(reduceDataCallback)
+          const transferResult = items.map(playlistTrackFormater)
           commit('spotifyLiked', {
             next,
             offset,
@@ -131,7 +131,7 @@ const spotifyRecently = {
           ...(!isFirst && { before: state.spotifyRecently.next }),
         })
         .then(({ items, cursors }) => {
-          const transferResult = items.map(reduceDataCallback)
+          const transferResult = items.map(playlistTrackFormater)
           commit('chosenList', getters.chosenList.concat(transferResult))
 
           commit('spotifyRecently', cursors ? cursors.before : null)
