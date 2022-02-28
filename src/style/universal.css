@@ -23,3 +23,9 @@
     @apply mx-auto w-full max-w-3xl laptop:max-w-none;
   }
 }
+
+@layer components {
+  ._cover {
+    @apply h-11 w-11 object-cover object-center md:h-16 md:w-16;
+  }
+}
