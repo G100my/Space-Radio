@@ -1,17 +1,6 @@
 import { playlistFields } from '@/utility/fieldString'
 import { spotifyAPI } from '@/utility/spotifyAPI'
-import { spotifyCoverPicker } from '@/utility/dataFormat'
-
-const reduceDataCallback = i => ({
-  album: {
-    name: i.track.album.name,
-    externalUrl: i.track.album.external_urls.spotify,
-    coverUrl: spotifyCoverPicker(i.track.album.images),
-  },
-  artists: i.track.artists,
-  id: i.track.id,
-  name: i.track.name,
-})
+import { spotifyCoverPicker, reduceDataCallback } from '@/utility/dataFormat'
 
 const increaseOffset = 25
 
