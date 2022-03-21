@@ -167,8 +167,10 @@ export default {
       type="button"
       @click="sliderToggler('right2left', $event.currentTarget)"
     >
-      <IconNowPlay />
-      <span>Now</span>
+      <slot name="left-btn">
+        <IconNowPlay />
+        <span>Now</span>
+      </slot>
     </button>
     <button
       ref="rightSideButton"
@@ -176,8 +178,10 @@ export default {
       type="button"
       @click="sliderToggler('left2right', $event.currentTarget)"
     >
-      <IconNextPlay />
-      <span>Next</span>
+      <slot name="right-btn">
+        <IconNextPlay />
+        <span>Next</span>
+      </slot>
     </button>
   </div>
 </template>
