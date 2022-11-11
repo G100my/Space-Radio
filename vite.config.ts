@@ -27,7 +27,6 @@ export default defineConfig(({ command }) => ({
     VueI18nPlugin({
       defaultSFCLang: 'yaml',
       globalSFCScope: true,
-      include: path.resolve(__dirname, './src/i18n/**'),
     }),
   ],
 }))

@@ -1,5 +1,5 @@
 import store from '../store'
-import i18n from '@/i18n'
+import i18n from '@/locales'
 
 const defaultMessageOutput = i18n.global.t('slogan')
 
