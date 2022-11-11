@@ -6,7 +6,7 @@ import {
   useCustomerSpotifyPlayer,
   isThisSpotifyPlayerReady,
   isThisSpotifyPlayerPaused,
-} from '@/composables/useSpotifyPlayer.js'
+} from '@/composables/useSpotifyPlayer'
 
 export default {
   components: {

@@ -1,5 +1,5 @@
 import { computed, watch } from 'vue'
-import store from '../store'
+import store from '@/store'
 
 const currentVolume = computed(() => store.getters.currentVolume)
 const ADJUST_PROCESS_TIME = 5000

@@ -1,6 +1,6 @@
-import store from '@/store/index.js'
+import store from '@/store'
 import { computed, watch } from 'vue'
-import { messageOutputMaker } from '../utility/messageOutputMaker.js'
+import { messageOutputMaker } from '@/utility/messageOutputMaker'
 
 const utterance = new window.SpeechSynthesisUtterance()
 utterance.pitch = 1

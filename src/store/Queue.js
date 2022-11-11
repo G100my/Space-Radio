@@ -1,6 +1,6 @@
-import { spotifyAPI } from '../utility/spotifyAPI.js'
-import firebase from './firebase.js'
-import { Order } from '@/prototype/Order.js'
+import { spotifyAPI } from '@/utility/spotifyAPI'
+import firebase from './firebase'
+import { Order } from '@/prototype/Order'
 
 let urgent_queue_ref = {}
 let normal_queue_ref = {}

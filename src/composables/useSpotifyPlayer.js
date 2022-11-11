@@ -1,7 +1,7 @@
 import { ref, computed, unref, watch } from 'vue'
-import store from '../store'
-import { refreshAccessToken } from '../utility/PKCE.js'
-import { spotifyAPI } from '../utility/spotifyAPI'
+import store from '@/store'
+import { refreshAccessToken } from '@/utility/PKCE'
+import { spotifyAPI } from '@/utility/spotifyAPI'
 import { useVolumeControl } from './usePlayerVolumeControl'
 import {
   diffirentPlayingTrackIdHandler,
@@ -10,7 +10,7 @@ import {
   updateProgressTimeHandler,
 } from './spotifyPlayerStateHandler'
 import { TTSbyNote, TTS, useTTSonPlayer } from './useTTSwatch'
-import { useVoteWatch } from '@/composables/useVoteWatchControl.js'
+import { useVoteWatch } from '@/composables/useVoteWatchControl'
 
 let spotifyPlayer
 const thisSpotifyPlayerId = ref(null)

@@ -1,4 +1,4 @@
-import firebase from './firebase.js'
+import firebase from './firebase'
 
 let user_log_ref
 

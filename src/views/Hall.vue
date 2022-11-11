@@ -1,9 +1,9 @@
 <script>
 import { onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import firebase from '../store/firebase.js'
-import { PKCE } from '../utility/PKCE.js'
-import { spotifyAPI } from '../utility/spotifyAPI.js'
+import firebase from '@/store/firebase'
+import { PKCE } from '@/utility/PKCE'
+import { spotifyAPI } from '@/utility/spotifyAPI'
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import HallNav from '@/components/hall/HallNav.vue'
 import { useI18n } from 'vue-i18n'

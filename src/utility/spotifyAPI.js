@@ -1,5 +1,5 @@
-import store from '../store'
-import { refreshAccessToken } from './PKCE.js'
+import store from '@/store'
+import { refreshAccessToken } from './PKCE'
 import SpotifyWebApi from 'spotify-web-api-js'
 
 const spotifyAPI = new Proxy(new SpotifyWebApi(), {

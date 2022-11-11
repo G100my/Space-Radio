@@ -1,16 +1,16 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import store from '../store/'
-import Hall from '../views/Hall.vue'
-import Room from '../views/Room.vue'
-import Doorscope from '../views/Doorscope.vue'
-import HallShell from '../components/hall/HallShell.vue'
-import CreateRoom from '../views/CreateRoom.vue'
-import { fetchAccessToken } from '../utility/PKCE.js'
-import { spotifyAPI } from '../utility/spotifyAPI.js'
+import store from '@/store/'
+import Hall from '@/views/Hall.vue'
+import Room from '@/views/Room.vue'
+import Doorscope from '@/views/Doorscope.vue'
+import HallShell from '@/components/hall/HallShell.vue'
+import CreateRoom from '@/views/CreateRoom.vue'
+import { fetchAccessToken } from '@/utility/PKCE'
+import { spotifyAPI } from '@/utility/spotifyAPI'
 
-import { setPlayingStateRef } from '../store/PlayingState.js'
-import { setUserLogRef } from '../store/UserLog.js'
-import { setQueueRef } from '../store/Queue.js'
+import { setPlayingStateRef } from '@/store/PlayingState'
+import { setUserLogRef } from '@/store/UserLog'
+import { setQueueRef } from '@/store/Queue'
 
 const routes = [
   {

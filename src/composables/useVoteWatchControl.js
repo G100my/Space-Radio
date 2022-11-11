@@ -1,5 +1,5 @@
 import { computed, watch } from 'vue'
-import store from '../store'
+import store from '@/store'
 
 const minimalVolume = computed(() => store.getters.currentMinimalVolume)
 const dislike = computed(() => store.getters.dislike)

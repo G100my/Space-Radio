@@ -1,4 +1,4 @@
-import { spotifyAPI } from '../utility/spotifyAPI.js'
+import { spotifyAPI } from '@/utility/spotifyAPI'
 
 const Personal = {
   state: {
