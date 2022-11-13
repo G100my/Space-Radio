@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import store from '@/store/'
+import store from '@/store'
 import Hall from '@/views/Hall.vue'
 import Room from '@/views/Room.vue'
 import Doorscope from '@/views/Doorscope.vue'
