@@ -1,7 +1,7 @@
 <script lang="ts">
 import IconSpotifyDark from '@/assets/icons/icon/spotify-dark.svg?component'
 import IconClose from '@/assets/icons/icon/close.svg?component'
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { computed, onMounted, ref, watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle, DialogDescription } from '@headlessui/vue'

@@ -6,7 +6,7 @@ import Doorscope from '@/views/Doorscope.vue'
 import HallShell from '@/components/hall/HallShell.vue'
 import CreateRoom from '@/views/CreateRoom.vue'
 import { fetchAccessToken } from '@/utility/PKCE'
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 
 import { setPlayingStateRef } from '@/store/PlayingState'
 import { setUserLogRef } from '@/store/UserLog'

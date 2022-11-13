@@ -1,6 +1,6 @@
 import { actions, mutations, state as initState, getters as initGetters, pending_queue_ref, getters } from './Queue'
 import { Order } from '@/prototype/Order'
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 
 jest.mock('./firebase.js')
 jest.mock('../utility/spotifyAPI.js')

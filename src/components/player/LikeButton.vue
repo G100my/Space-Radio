@@ -1,7 +1,7 @@
 <script>
 import IconLikeFilled from '@/assets/icons/icon/like-filled.svg'
 import IconLikeOutlined from '@/assets/icons/icon/like-outlined.svg'
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 

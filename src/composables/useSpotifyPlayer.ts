@@ -1,7 +1,7 @@
 import { ref, computed, unref, watch, type WatchStopHandle } from 'vue'
 import store from '@/store'
 import { refreshAccessToken } from '@/utility/PKCE'
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { useVolumeControl } from './usePlayerVolumeControl'
 import {
   diffirentPlayingTrackIdHandler,

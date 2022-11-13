@@ -2,7 +2,7 @@
 import IconSearch from '@/assets/icons/icon-search.svg'
 import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
 import { onUnmounted, ref } from 'vue'
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { spotifyCoverPicker } from '@/utility/dataFormat'
 import TrackListContainer from './TrackListContainer.vue'
 import { useInfinityScroll } from '@/composables/useInfinityScroll'

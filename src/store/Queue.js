@@ -1,4 +1,4 @@
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 import firebase from '@/plugins/firebase'
 import { Order } from '@/prototype/Order'
 

@@ -1,5 +1,5 @@
 <script>
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 import VolumnBar from '../VolumnBar.vue'
 import { useCustomerSpotifyPlayer } from '@/composables/useSpotifyPlayer'
 export default {

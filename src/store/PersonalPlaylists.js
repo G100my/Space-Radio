@@ -1,5 +1,5 @@
 import { playlistFields } from '@/utility/fieldString'
-import { spotifyAPI } from '@/utility/spotifyAPI'
+import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { playlistTrackFormater, topTrackFormater } from '@/utility/dataFormat'
 
 const increaseOffset = 25
