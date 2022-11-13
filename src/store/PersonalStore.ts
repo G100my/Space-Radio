@@ -1,7 +1,9 @@
 import { spotifyAPI } from '@/plugins/spotifyAPI'
+import { defineStore } from 'pinia'
+import { useRoomBasicStore } from './RoomBasicStore'
 
-const Personal = {
-  state: {
+export const usePersonalStore = defineStore('PersonalStore', {
+  state: () => ({
     token: localStorage.getItem('spaceradio_token') || null,
     expired_time: Number(localStorage.getItem('spaceradio_expired_time')) || null,
     refresh_token: localStorage.getItem('spaceradio_refresh_token') || null,
@@ -12,44 +14,25 @@ const Personal = {
     product: localStorage.getItem('spaceradio_user_product') || '',
 
     customerPlayerMode: false,
-  },
+  }),
   getters: {
-    token(state) {
-      return state.token
-    },
-    isTokenValid(state) {
+    isTokenValid: state => {
       if (state.expired_time === null) return false
       const now = Date.now()
       return state.expired_time > now
     },
-    userId(state) {
-      return state.user_id
-    },
-    userName(state) {
-      return state.display_name
-    },
-    userImage(state) {
-      return state.image_url
-    },
-    accountLevel(state) {
-      return state.product
-    },
-    isHostUser(_state, getters, _rootState, rootGetters) {
-      if (!rootGetters.hostId || !getters.userId) return undefined
-      else return rootGetters.hostId === getters.userId
-    },
-    refresh_token(state) {
-      return state.refresh_token
-    },
-    customerPlayerMode(state) {
-      return state.customerPlayerMode
+    isPremium: state => state.product === 'premium',
+    isHostUser(state) {
+      const roomBasic = useRoomBasicStore()
+      if (!roomBasic.host_id || !state.user_id) return undefined
+      else return roomBasic.host_id === state.user_id
     },
   },
-  mutations: {
-    tokens(state, { access_token, expiredTime, refresh_token }) {
-      state.token = access_token
-      state.expired_time = expiredTime
-      state.refresh_token = refresh_token
+  actions: {
+    updateToken({ access_token, expiredTime, refresh_token }: unknown) {
+      this.token = access_token
+      this.expired_time = expiredTime
+      this.refresh_token = refresh_token
 
       localStorage.setItem('spaceradio_token', access_token)
       localStorage.setItem('spaceradio_expired_time', expiredTime)
@@ -57,23 +40,21 @@ const Personal = {
 
       spotifyAPI.setAccessToken(access_token)
     },
-    userData(state, { id, display_name, images, product }) {
-      state.user_id = id
-      state.display_name = display_name
-      state.product = product
+    userData({ id, display_name, images, product }: unknown) {
+      this.user_id = id
+      this.display_name = display_name
+      this.product = product
       localStorage.setItem('spaceradio_user_id', id)
       localStorage.setItem('spaceradio_user_display_name', display_name)
       localStorage.setItem('spaceradio_user_product', product)
 
       if (images.length > 0) {
-        state.image_url = images[0].url
+        this.image_url = images[0].url
         localStorage.setItem('spaceradio_user_images', images[0].url)
       }
     },
-    toggleCustomerPlayer(state, payload) {
-      state.customerPlayerMode = payload
+    toggleCustomerPlayer(payload: boolean) {
+      this.customerPlayerMode = payload
     },
   },
-}
-
-export { Personal }
+})

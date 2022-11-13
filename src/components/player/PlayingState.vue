@@ -6,6 +6,7 @@ import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import ProgressTimer from './ProgressTimer.vue'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
 import LikeButton from '@/components/player/LikeButton.vue'
+import { usePersonalStore } from '@/store'
 
 export default {
   components: {
@@ -16,6 +17,7 @@ export default {
   },
   setup() {
     const store = useStore()
+    const personalStore = usePersonalStore()
     return {
       SpotifyLogo,
       logo,
@@ -23,9 +25,9 @@ export default {
       playerPlayingAlbum: computed(() => store.getters.playerPlayingAlbum),
       playerPlayingArtists: computed(() => store.getters.playerPlayingArtists),
       playerPlayingTrackName: computed(() => store.getters.playerPlayingTrackName),
-      isPremium: computed(() => store.getters.accountLevel === 'premium'),
-      isHostUser: computed(() => store.getters.isHostUser),
-      customerPlayerMode: computed(() => store.getters.customerPlayerMode),
+      isPremium: computed(() => personalStore.isPremium),
+      isHostUser: computed(() => personalStore.isHostUser),
+      customerPlayerMode: computed(() => personalStore.customerPlayerMode),
     }
   },
 }

@@ -11,6 +11,7 @@ import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { setPlayingStateRef } from '@/store/PlayingState'
 import { setUserLogRef } from '@/store/UserLog'
 import { setQueueRef } from '@/store/Queue'
+import { usePersonalStore } from '@/store/PersonalStore'
 
 const routes = [
   {
@@ -39,7 +40,7 @@ const routes = [
     beforeEnter: () => {
       // avoid user refresh page
       if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
-        spotifyAPI.setAccessToken(store.getters.token)
+        spotifyAPI.setAccessToken(usePersonalStore().token)
       }
     },
   },
@@ -77,7 +78,7 @@ router.beforeEach(async to => {
     window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
     await fetchAccessToken(authorizationCode, '#' + hashPath).then(() => {
       spotifyAPI.getMe().then(result => {
-        store.commit('userData', result)
+        usePersonalStore().userData(result)
       })
     })
   }

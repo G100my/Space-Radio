@@ -10,7 +10,7 @@ import i18n from './locales'
 // prettier-ignore
 createApp(App)
   .use(router)
-  .use(store)
   .use(createPinia())
+  .use(store)
   .use(i18n)
   .mount('#app')

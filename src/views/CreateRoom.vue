@@ -15,6 +15,7 @@ import IconMinus from '@/assets/icons/icon-minus.svg'
 import IconClose from '@/assets/icons/icon/close.svg'
 import { useI18n } from 'vue-i18n'
 import { Dialog, DialogDescription, DialogOverlay, DialogTitle } from '@headlessui/vue'
+import { usePersonalStore } from '@/store'
 
 export default {
   components: {
@@ -33,7 +34,7 @@ export default {
   setup() {
     const roomKey = roomKeyMaker()
     const store = useStore()
-    const userId = computed(() => store.getters.userId)
+    const userId = usePersonalStore().user_id
     const roomName = ref(null)
     const isVaild = ref(true)
     const router = useRouter()

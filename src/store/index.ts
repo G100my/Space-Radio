@@ -1,9 +1,9 @@
 export * from './AlertStore'
+export * from './PersonalStore'
+export * from './RoomBasicStore'
 import { createStore, createLogger } from 'vuex'
 import { PlayingState, LatestOrder, Volume, Vote, Progress } from './PlayingState'
-import { Personal } from './Personal'
 import { UserLog } from './UserLog'
-import { RoomBasic } from './RoomBasic'
 import { PersonalPlaylists } from './PersonalPlaylists'
 import { NoteDialog } from './NoteDialog'
 
@@ -12,14 +12,12 @@ const actionExceptions = ['updateProgress']
 
 const store = createStore({
   modules: {
-    Personal,
     PlayingState,
     LatestOrder,
     Volume,
     Vote,
     Progress,
     UserLog,
-    RoomBasic,
     PersonalPlaylists,
     NoteDialog,
   },

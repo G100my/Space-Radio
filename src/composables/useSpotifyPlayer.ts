@@ -1,5 +1,5 @@
 import { ref, computed, unref, watch, type WatchStopHandle } from 'vue'
-import store from '@/store'
+import store, { useRoomBasicStore } from '@/store'
 import { refreshAccessToken } from '@/utility/PKCE'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { useVolumeControl } from './usePlayerVolumeControl'
@@ -11,6 +11,7 @@ import {
 } from './spotifyPlayerStateHandler'
 import { TTSbyNote, TTS, useTTSonPlayer } from './useTTSwatch'
 import { useVoteWatch } from '@/composables/useVoteWatchControl'
+import { usePersonalStore } from '@/store/PersonalStore'
 
 let spotifyPlayer: Spotify.Player
 const thisSpotifyPlayerId = ref<string>()
@@ -22,18 +23,17 @@ const currentActiveDeviceId = ref<string | null>(null)
 const currentActiveDeviceName = ref<string | null>(null)
 const currentVolume = computed(() => store.getters.currentVolume)
 
-const isTokenValid = computed(() => store.getters.isTokenValid)
-const token = computed(() => store.getters.token)
 const initSpotifySetting = {
   name: 'Space Radio player',
   volume: currentVolume.value / 100,
   // @ts-expect-error
   getOAuthToken: callback => {
-    if (isTokenValid.value) {
-      callback(token.value)
+    const { token, isTokenValid } = usePersonalStore()
+    if (isTokenValid) {
+      callback(token)
     } else {
       refreshAccessToken().then(() => {
-        callback(token.value)
+        callback(token)
       })
     }
   },
@@ -196,7 +196,7 @@ function hostTogglePlay() {
             if (!response.repeat_state) await spotifyAPI.setRepeat('context')
 
             if (!response.context) {
-              await spotifyAPI.play({ context_uri: `spotify:playlist:${store.getters.roomBasePlaylist}` })
+              await spotifyAPI.play({ context_uri: `spotify:playlist:${useRoomBasicStore().base_playlist}` })
             } else {
               spotifyPlayer.togglePlay()
             }
@@ -245,7 +245,7 @@ async function customerPlay(context_uri: string) {
 
 const customerPlayerVolume = ref(0)
 let unwatchCustomerPlayerMode: WatchStopHandle | null = null
-const customerPlayerMode = computed(() => store.getters.customerPlayerMode)
+const customerPlayerMode = computed(() => usePersonalStore().customerPlayerMode)
 function customerSDKReadyHandler() {
   spotifyPlayer = new window.Spotify.Player(initSpotifySetting)
 

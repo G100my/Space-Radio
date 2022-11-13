@@ -1,4 +1,5 @@
 import firebase from '@/plugins/firebase'
+import { usePersonalStore } from './PersonalStore'
 
 let user_log_ref
 
@@ -26,10 +27,11 @@ const UserLog = {
 
 function userLogConnect2firebase(store) {
   const maker = function (type) {
+    const personalStore = usePersonalStore()
     return {
       action_type: type,
-      user_id: store.getters.userId,
-      user_name: store.getters.userName,
+      user_id: personalStore.user_id,
+      user_name: personalStore.display_name,
       timestamp: Date.now(),
     }
   }

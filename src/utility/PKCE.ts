@@ -1,4 +1,4 @@
-import store from '@/store'
+import { usePersonalStore } from '@/store'
 
 function dec2hex(dec: number) {
   const tmp = '0' + dec.toString(16)
@@ -73,17 +73,14 @@ async function fetchAccessToken(code: string, redirectHash: string) {
       if (response.ok) return response.json()
       else console.error('something wrong in fetchAccessToken', response)
     })
-    .then(result => {
-      const { access_token, expires_in, refresh_token } = result
-      const expiredTime = expires_in * 1000 + Date.now()
-      store.commit('tokens', { access_token, expiredTime, refresh_token })
-    })
+    .then(storeToken)
 }
 
 async function refreshAccessToken() {
+  const personalStore = usePersonalStore()
   let body = 'client_id=' + client_id
   body += '&grant_type=refresh_token'
-  body += '&refresh_token=' + store.getters.refresh_token
+  body += '&refresh_token=' + personalStore.refresh_token
 
   return fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
@@ -94,11 +91,14 @@ async function refreshAccessToken() {
       if (response.ok) return response.json()
       else console.error('something wrong in refreshAccessToken', response)
     })
-    .then(result => {
-      const { access_token, expires_in, refresh_token } = result
-      const expiredTime = expires_in * 1000 + Date.now()
-      store.commit('tokens', { access_token, expiredTime, refresh_token })
-    })
+    .then(storeToken)
+}
+
+function storeToken(result: unknown) {
+  const personalStore = usePersonalStore()
+  const { access_token, expires_in, refresh_token } = result
+  const expiredTime = expires_in * 1000 + Date.now()
+  personalStore.updateToken({ access_token, expiredTime, refresh_token })
 }
 
 export { PKCE, fetchAccessToken, refreshAccessToken }

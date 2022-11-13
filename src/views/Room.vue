@@ -22,6 +22,8 @@ import Personal from '@/components/sideDrawer/Personal.vue'
 import NoteDialog from '@/components/lineup/NoteDialog.vue'
 import RoomQueue from '@/components/lineup/RoomQueue.vue'
 import { useStore } from 'vuex'
+import { usePersonalStore } from '@/store/PersonalStore'
+import { useRoomBasicStore } from '@/store'
 
 export default {
   components: {
@@ -43,12 +45,13 @@ export default {
   },
   setup() {
     const store = useStore()
+    const roomBasicStore = useRoomBasicStore()
     if (!store.hasModule('Queue')) {
       store.registerModule('Queue', QueueStore)
     }
     // avoid user refresh page
     if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
-      spotifyAPI.setAccessToken(store.getters.token)
+      spotifyAPI.setAccessToken(usePersonalStore().token)
     }
     const roomKey = localStorage.getItem('spaceradio_room_key')
     firebase
@@ -56,7 +59,7 @@ export default {
       .ref(`${roomKey}/basic`)
       .get()
       .then(snapshot => {
-        store.commit('roomBasicInfos', snapshot.val())
+        roomBasicStore.update(snapshot.val())
       })
 
     onMounted(() => {

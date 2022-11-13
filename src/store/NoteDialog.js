@@ -1,3 +1,5 @@
+import { usePersonalStore } from './PersonalStore'
+
 export const NoteDialog = {
   state: {
     editingNote: {
@@ -56,7 +58,7 @@ export const NoteDialog = {
   },
   actions: {
     clearNote({ commit, getters }) {
-      const name = localStorage.getItem('spaceradio_senderName') || getters.userName
+      const name = localStorage.getItem('spaceradio_senderName') || usePersonalStore().display_name
       commit('editingNote', {
         sender: name,
         recipient: '',

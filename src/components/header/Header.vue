@@ -1,14 +1,15 @@
-<script>
+<script lang="ts">
 import { ref } from 'vue'
 import Marquee from '@/components/header/Marquee.vue'
-import IconSearch from '@/assets/icons/icon-search.svg'
-import IconPerson from '@/assets/icons/icon/profile.svg'
-import IconPlus from '@/assets/icons/icon-plus.svg'
+import IconSearch from '@/assets/icons/icon-search.svg?component'
+import IconPerson from '@/assets/icons/icon/profile.svg?component'
+import IconPlus from '@/assets/icons/icon-plus.svg?component'
 import FeedbackAlert from './FeedbackAlert.vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import BaseAlert from '../base/BaseAlert.vue'
 import { LightningBoltIcon } from '@heroicons/vue/outline'
+import { usePersonalStore, useRoomBasicStore } from '@/store'
 
 export default {
   components: {
@@ -23,14 +24,14 @@ export default {
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
     const isSearchActive = ref(false)
-    function activeSideDrawerHandler(componentName) {
+    function activeSideDrawerHandler(componentName: string) {
       emit('activeSideDrawer', componentName)
     }
-    const store = useStore()
+    const roomBasic = useRoomBasicStore()
     const isShow = ref(false)
     function copyLinkHandler() {
       console.log(navigator)
-      const inviteUrl = `${location.origin}/#/doorscope/${store.getters.roomKey}`
+      const inviteUrl = `${location.origin}/#/doorscope/${roomBasic.room_key}`
       console.log(inviteUrl)
       navigator.clipboard.writeText(inviteUrl)
       isShow.value = true
@@ -44,6 +45,8 @@ export default {
       activeSideDrawerHandler,
       copyLinkHandler,
       isShow,
+      personalStore: usePersonalStore(),
+      roomBasic,
     }
   },
 }
@@ -62,8 +65,8 @@ export default {
         class="relative hidden w-full justify-between text-natural-white laptop:mt-6 laptop:mb-2 laptop:flex"
         @click="copyLinkHandler"
       >
-        <span>@{{ $store.getters.roomName }}</span>
-        <span>#{{ $store.getters.roomKey }}</span>
+        <span>@{{ roomBasic.room_name }}</span>
+        <span>#{{ roomBasic.room_key }}</span>
         <BaseAlert
           class="absolute bottom-0 right-0 translate-y-full"
           :show="isShow"
@@ -106,7 +109,7 @@ export default {
               @click="activeSideDrawerHandler('Personal')"
             >
               <IconPerson />
-              <label class="ml-3 hidden laptop:inline">{{ $store.getters.userName }}</label>
+              <label class="ml-3 hidden laptop:inline">{{ personalStore.display_name }}</label>
             </button>
           </li>
         </ul>

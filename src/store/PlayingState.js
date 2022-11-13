@@ -1,6 +1,7 @@
 import { Order } from '@/prototype/Order'
 import firebase from '@/plugins/firebase'
 import i18n from '@/locales'
+import { usePersonalStore } from './PersonalStore'
 
 let playing_state_ref
 
@@ -115,17 +116,19 @@ const Vote = {
   },
   actions: {
     reduceDislike({ state, getters }) {
+      const userId = usePersonalStore().user_id
       const reduceResult = state.dislike - 1
       if (reduceResult >= 0) {
         playing_state_ref.update({ dislike: reduceResult })
-        playing_state_ref.child(`voted_users/${getters.userId}`).remove()
+        playing_state_ref.child(`voted_users/${userId}`).remove()
       }
     },
     increaseDislike({ state, getters }) {
+      const userId = usePersonalStore().user_id
       const reduceResult = state.dislike + 1
       if (reduceResult <= state.dislike_threshold) {
         playing_state_ref.update({ dislike: reduceResult })
-        const parameter = { [getters.userId]: true }
+        const parameter = { [userId]: true }
         playing_state_ref.child('voted_users').update(parameter)
       }
     },
@@ -134,7 +137,8 @@ const Vote = {
       playing_state_ref.child('voted_users').set(null)
     },
     adjustIsVoted({ getters, commit }, snapshot) {
-      if (getters.userId) commit('isVoted', snapshot.hasChild(getters.userId))
+      const userId = usePersonalStore().user_id
+      if (userId) commit('isVoted', snapshot.hasChild(userId))
     },
     updateDislikeThreshold(_context, value) {
       playing_state_ref.child('dislike_threshold').set(value)

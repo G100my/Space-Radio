@@ -1,15 +1,16 @@
-<script>
-import IconPending from '@/assets/icons/icon-spinner-loader.svg'
-import IconEdit from '@/assets/icons/icon/edit.svg'
-import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
-import IconArrowDown from '@/assets/icons/icon-arrow-down.svg'
-import IconRemove from '@/assets/icons/icon-remove.svg'
-import IconMore from '@/assets/icons/icon-more.svg'
+<script lang="ts">
+import IconPending from '@/assets/icons/icon-spinner-loader.svg?component'
+import IconEdit from '@/assets/icons/icon/edit.svg?component'
+import IconArrowUp from '@/assets/icons/icon-arrow-up.svg?component'
+import IconArrowDown from '@/assets/icons/icon-arrow-down.svg?component'
+import IconRemove from '@/assets/icons/icon-remove.svg?component'
+import IconMore from '@/assets/icons/icon-more.svg?component'
 
 import { useStore } from 'vuex'
 import BaseMarquee from '../base/BaseMarquee.vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { computed, ref } from 'vue'
+import { usePersonalStore } from '@/store/PersonalStore'
 
 export default {
   components: {
@@ -27,6 +28,9 @@ export default {
   },
   emits: ['activeNoteDialog'],
   setup() {
+    const personalStore = usePersonalStore()
+    const userId = computed(() => personalStore.user_id)
+
     const store = useStore()
     const isMenuPositionUp = ref(false)
     const trackData = computed(() => store.getters.trackData)
@@ -34,29 +38,28 @@ export default {
     const normalQueue = computed(() => store.getters.normalQueue)
     const urgentQueue = computed(() => store.getters.urgentQueue)
     const pendingQueue = computed(() => store.getters.pendingQueue)
-    const userId = computed(() => store.getters.userId)
 
-    function remove(orderKey, level) {
+    function remove(orderKey: string, level: string) {
       store.dispatch(`${level}Remove`, orderKey)
     }
-    function getImageUrl(track) {
+    function getImageUrl(track: Spotify.Track) {
       const imagesArray = track.album.images
       const imageLastObject = imagesArray[imagesArray.length - 1]
       return imageLastObject ? imageLastObject.url : null
     }
-    function getOrderer(orderKey) {
+    function getOrderer(orderKey: string) {
       if (normalQueue.value[orderKey]) return normalQueue.value[orderKey].orderer_name
       else if (urgentQueue.value[orderKey]) return urgentQueue.value[orderKey].orderer_name
       else if (pendingQueue.value[orderKey]) return pendingQueue.value[orderKey].orderer_name
     }
-    function menuPositionHandler(event, openState) {
+    function menuPositionHandler(event: MouseEvent, openState: boolean) {
       if (!openState && event.clientY > (window.innerHeight * 2) / 3) {
         isMenuPositionUp.value = true
       } else {
         isMenuPositionUp.value = false
       }
     }
-    function checkLevel(level, key) {
+    function checkLevel(level: 'normal' | 'urgent' | 'pending', key: string) {
       switch (level) {
         case 'normal':
           return Boolean(normalQueue.value[key])
@@ -156,11 +159,7 @@ export default {
             </button>
           </div>
 
-          <Menu
-            v-slot="{ open }"
-            as="div"
-            class="relative cursor-pointer cursor-pointer self-stretch self-stretch xs:hidden"
-          >
+          <Menu v-slot="{ open }" as="div" class="relative cursor-pointer self-stretch xs:hidden">
             <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
               <IconMore />
             </MenuButton>
