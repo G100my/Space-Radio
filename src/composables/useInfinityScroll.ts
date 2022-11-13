@@ -1,18 +1,6 @@
 import { isRef, nextTick, onMounted, onUnmounted, ref } from 'vue'
 
-/**
- * @typedef UseInfinityScrollParams
- * @property {string} id
- * @property {ref<string>} nextURL
- * @property {Promise} fetchCallback
- * @property {Function} onUnmountedCallback
- * @property {Promise} fetchFirstCallback
- */
-
-/**
- * @param {UseInfinityScrollParams} UseInfinityScrollParams
- * @returns
- */
+interface UseInfinityScrollParams {}
 export function useInfinityScroll({ id, fetchCallback, nextURL, onUnmountedCallback, fetchFirstCallback }) {
   if (!isRef(nextURL)) {
     console.error(`nextURL is not ref`, nextURL)

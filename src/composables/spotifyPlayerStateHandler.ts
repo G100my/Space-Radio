@@ -28,7 +28,7 @@ function diffirentPlayingTrackIdHandler(playerState, playerPlayingTrackId) {
 // bufferTime < 10 不再更新計時
 // 有沒有歌不再範圍內
 // 快轉不考慮
-let coundDownTimer
+let coundDownTimer: ReturnType<typeof setTimeout>
 const EXECUTE_BEFORE_END_TIME = 10000
 function setNextQueueTimeoutHandler({ duration, position, paused }) {
   if (position == 0) return

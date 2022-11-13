@@ -1,6 +1,6 @@
-import { unref } from 'vue'
+import { unref, type Ref } from 'vue'
 
-export function usePlusMinusHandler(reactiveTarget, step, minLimit, maxLimit) {
+export function usePlusMinusHandler(reactiveTarget: Ref<number>, step: number, minLimit: number, maxLimit: number) {
   return {
     plus() {
       if (reactiveTarget.value + step <= unref(maxLimit)) reactiveTarget.value += step

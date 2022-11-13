@@ -45,5 +45,3 @@ export const playlistFields = JSON.stringify(getPlaylist)
   .replace(/{/g, '')
   .replace(/}/g, '')
   .replace(/]/g, ')')
-
-console.log(playlistFields)

@@ -4,7 +4,7 @@ import { computed, ref, watch } from 'vue'
 const INTERVAL = 1000
 const playingProgress = computed(() => store.getters.playingProgress)
 
-let progressTimer = null
+let progressTimer: null | ReturnType<typeof setInterval> = null
 
 const currentDuration = ref(0)
 const currentPosition = ref(0)
@@ -13,7 +13,7 @@ let unwatch
 if (!unwatch) {
   console.log('init watch')
   unwatch = watch(playingProgress, newProgress => {
-    clearInterval(progressTimer)
+    if (progressTimer) clearInterval(progressTimer)
     if (newProgress === null) return
     let { paused, duration, position } = newProgress
     currentDuration.value = duration
@@ -26,7 +26,7 @@ if (!unwatch) {
     }
 
     progressTimer = setInterval(() => {
-      if (currentPosition.value + 1000 > currentDuration.value) {
+      if (currentPosition.value + 1000 > currentDuration.value && progressTimer) {
         clearInterval(progressTimer)
       }
       currentPosition.value += 1000

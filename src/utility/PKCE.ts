@@ -1,7 +1,8 @@
 import store from '@/store'
 
-function dec2hex(dec) {
-  return ('0' + dec.toString(16)).substr(-2)
+function dec2hex(dec: number) {
+  const tmp = '0' + dec.toString(16)
+  return tmp.substring(tmp.length - 2)
 }
 function generateCodeVerifier() {
   let array = new Uint32Array(56 / 2)
@@ -9,13 +10,13 @@ function generateCodeVerifier() {
   return Array.from(array, dec2hex).join('')
 }
 
-function sha256(plain) {
+function sha256(plain: string) {
   const encoder = new TextEncoder()
   const data = encoder.encode(plain)
   // returns promise ArrayBuffer
   return window.crypto.subtle.digest('SHA-256', data)
 }
-function base64urlencode(hashedString) {
+function base64urlencode(hashedString: number) {
   let str = ''
   let bytes = new Uint8Array(hashedString)
   let len = bytes.byteLength
@@ -25,9 +26,10 @@ function base64urlencode(hashedString) {
   return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
-async function generateCodeChallengeFromVerifier(codeVerifier) {
+async function generateCodeChallengeFromVerifier(codeVerifier: string) {
   let hashed = await sha256(codeVerifier)
-  let base64encoded = base64urlencode(hashed)
+  // ! fixme hashed type
+  let base64encoded = base64urlencode(hashed as unknown as number)
   return base64encoded
 }
 
@@ -36,7 +38,7 @@ const client_id = import.meta.env.VITE_CLIENT_ID
 const redirect_uri = import.meta.env.VITE_REDIRECT_URI
 const scope = `user-library-modify user-library-read playlist-modify-public playlist-modify-private user-read-recently-played user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming user-read-email user-read-private`
 
-async function PKCE(redirectHash) {
+async function PKCE(redirectHash: string) {
   const code_verifier = generateCodeVerifier()
   localStorage.setItem('spaceradio_code_verifier', code_verifier)
 
@@ -49,10 +51,10 @@ async function PKCE(redirectHash) {
   url += '&code_challenge_method=S256'
   url += '&code_challenge=' + code_challenge
 
-  window.location = url
+  window.location = url as Location & string
 }
 
-async function fetchAccessToken(code, redirectHash) {
+async function fetchAccessToken(code: string, redirectHash: string) {
   const code_verifier = localStorage.getItem('spaceradio_code_verifier')
   localStorage.removeItem('spaceradio_code_verifier')
 
@@ -98,6 +100,5 @@ async function refreshAccessToken() {
       store.commit('tokens', { access_token, expiredTime, refresh_token })
     })
 }
-window.refreshAccessToken = refreshAccessToken
 
 export { PKCE, fetchAccessToken, refreshAccessToken }

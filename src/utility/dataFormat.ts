@@ -1,9 +1,11 @@
 import ImageVinylRecord from '@/assets/vinyl-record.png'
 
-export function spotifyCoverPicker(images) {
-  return images.length ? images[images.length - 1].url : ImageVinylRecord
+// @ts-expect-error
+export function spotifyCoverPicker(imagesUrl) {
+  return imagesUrl.length ? imagesUrl[imagesUrl.length - 1].url : ImageVinylRecord
 }
 
+// @ts-expect-error
 export const playlistTrackFormater = i => ({
   albumName: i.track.album.name,
   albumExternalUrl: i.track.album.external_urls.spotify,
@@ -13,6 +15,7 @@ export const playlistTrackFormater = i => ({
   name: i.track.name,
 })
 
+// @ts-expect-error
 export const topTrackFormater = ({ album, artists, id, name }) => ({
   albumName: album.name,
   albumExternalUrl: album.uri,

@@ -6,18 +6,17 @@ const dislike = computed(() => store.getters.dislike)
 const dislikeThreshold = computed(() => store.getters.dislikeThreshold)
 const dislikeCountdown = computed(() => store.getters.dislikeCountdown)
 
-let dislikeCountdownTimer
-
-// const isHostUser = computed(() => store.getters.isHostUser)
+let dislikeCountdownTimer: ReturnType<typeof setInterval> | null
 
 /**
  * 直接執行 watch
  * @returns unwatch function
  */
+// @ts-expect-error
 export function useVoteWatch(nextTrack) {
   return watch(dislike, newValue => {
     if (dislikeCountdownTimer) {
-      clearTimeout(dislikeCountdownTimer)
+      clearInterval(dislikeCountdownTimer)
       dislikeCountdownTimer = null
     }
     if (newValue >= dislikeThreshold.value) {
@@ -28,7 +27,7 @@ export function useVoteWatch(nextTrack) {
         if (counter <= 0) {
           nextTrack(minimalVolume.value)
 
-          clearInterval(dislikeCountdownTimer)
+          if (dislikeCountdownTimer) clearInterval(dislikeCountdownTimer)
           store.dispatch('clearDislikeVote')
           store.dispatch('updateDislikeCountdown', false)
           dislikeCountdownTimer = null

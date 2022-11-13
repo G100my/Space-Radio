@@ -10,15 +10,15 @@ utterance.lang = 'zh-TW'
 
 function setTTSVoice() {
   const voice = speechSynthesis.getVoices().find(item => item.name.includes('Google') && item.lang.includes('zh-TW'))
-  if (voice !== null) utterance.voice = voice
+  if (voice) utterance.voice = voice
 }
 
 speechSynthesis.onvoiceschanged = () => {
   if (!utterance.voice) setTTSVoice()
 }
 
-function TTS(text) {
-  return new Promise((resolve, reject) => {
+function TTS(text: string) {
+  return new Promise<void>((resolve, reject) => {
     utterance.onerror = error => {
       console.error('utterance error: ', error)
       reject()
@@ -42,7 +42,7 @@ const pendingOrder = computed(() => store.getters.pendingOrder)
  * @param {Function} resumePlayerVolume
  * @returns unwatch function
  */
-function useTTSonPlayer(reducePlayerVolume, resumePlayerVolume) {
+function useTTSonPlayer(reducePlayerVolume: () => Promise<any>, resumePlayerVolume: () => Promise<any>) {
   const unwatch = watch(
     pendingOrder,
     pending => {
@@ -73,6 +73,7 @@ function useTTSonPlayer(reducePlayerVolume, resumePlayerVolume) {
  * @param {Funtion} resumePlayerVolume
  * @returns void
  */
+// @ts-expect-error
 function TTSbyNote(pending) {
   const { track_name, note } = pending
   let messageOutput4TTS = messageOutputMaker(note, track_name)

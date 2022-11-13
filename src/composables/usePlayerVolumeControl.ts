@@ -1,16 +1,16 @@
 import { computed, watch } from 'vue'
 import store from '@/store'
 
-const currentVolume = computed(() => store.getters.currentVolume)
+const currentVolume = computed((): number => store.getters.currentVolume)
 const ADJUST_PROCESS_TIME = 5000
 const ADJUST_STEP_TIME = 200
 const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
 // player 音量縮小比例，否則語音音量過小
 const PLAYER_VOLUME_REDUCE_RATE = 0.7
 
-function useVolumeControl(playerCallback) {
-  let recodeVolume
-  let playerVolume
+function useVolumeControl(playerCallback: (volume: number) => void) {
+  let recodeVolume: number
+  let playerVolume: number
 
   // watch currentVolume
   watch(
@@ -26,7 +26,7 @@ function useVolumeControl(playerCallback) {
   /**
    * 直接設定音量，有打折
    */
-  function updatePlayerVolume(newVolume) {
+  function updatePlayerVolume(newVolume: number) {
     playerCallback((newVolume / 100) * PLAYER_VOLUME_REDUCE_RATE)
   }
 
@@ -36,7 +36,7 @@ function useVolumeControl(playerCallback) {
    * @returns Promise
    */
   function reducePlayerVolume(processTime = ADJUST_PROCESS_TIME) {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       playerVolume = recodeVolume = currentVolume.value
       console.log(playerVolume)
       const step = (playerVolume - currentMinimalVolume.value) / (processTime / ADJUST_STEP_TIME)
@@ -65,7 +65,7 @@ function useVolumeControl(playerCallback) {
    * @returns Promise
    */
   function resumePlayerVolume(processTime = ADJUST_PROCESS_TIME) {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const step = (recodeVolume - playerVolume) / (processTime / ADJUST_STEP_TIME)
 
       const timer = setInterval(() => {
@@ -81,7 +81,6 @@ function useVolumeControl(playerCallback) {
         if (afterStep > recodeVolume) {
           clearInterval(timer)
           playerVolume = recodeVolume
-          recodeVolume = null
           resolve()
           return
         }

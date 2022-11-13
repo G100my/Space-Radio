@@ -8,21 +8,24 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
       return target[property]
     }
     if (!store.getters.isTokenValid) {
-      return (...theArguments) =>
+      return (...theArguments: any[]) =>
         refreshAccessToken()
           .then(() => {
             spotifyAPI.setAccessToken(store.getters.token)
+            // @ts-expect-error
             target[property](...theArguments)
           })
           .catch(error => {
             console.error('error when refreshAccessToken', error)
           })
     }
+    // @ts-expect-error
     return target[property]
   },
 })
 
 if (import.meta.env.DEV) {
+  // @ts-expect-error
   window.spotifyAPI = spotifyAPI
 }
 

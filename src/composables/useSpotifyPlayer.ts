@@ -1,4 +1,4 @@
-import { ref, computed, unref, watch } from 'vue'
+import { ref, computed, unref, watch, type WatchStopHandle } from 'vue'
 import store from '@/store'
 import { refreshAccessToken } from '@/utility/PKCE'
 import { spotifyAPI } from '@/utility/spotifyAPI'
@@ -12,14 +12,14 @@ import {
 import { TTSbyNote, TTS, useTTSonPlayer } from './useTTSwatch'
 import { useVoteWatch } from '@/composables/useVoteWatchControl'
 
-let spotifyPlayer
-const thisSpotifyPlayerId = ref(null)
+let spotifyPlayer: Spotify.Player
+const thisSpotifyPlayerId = ref<string | null>(null)
 const isThisSpotifyPlayerPaused = ref(true)
 const isThisSpotifyPlayerActived = ref(false)
 const isThisSpotifyPlayerReady = ref(false)
 
-const currentActiveDeviceId = ref(null)
-const currentActiveDeviceName = ref(null)
+const currentActiveDeviceId = ref<string | null>(null)
+const currentActiveDeviceName = ref<string | null>(null)
 const currentVolume = computed(() => store.getters.currentVolume)
 
 const isTokenValid = computed(() => store.getters.isTokenValid)
@@ -27,6 +27,7 @@ const token = computed(() => store.getters.token)
 const initSpotifySetting = {
   name: 'Space Radio player',
   volume: currentVolume.value / 100,
+  // @ts-expect-error
   getOAuthToken: callback => {
     if (isTokenValid.value) {
       callback(token.value)
@@ -38,7 +39,9 @@ const initSpotifySetting = {
   },
 }
 
-let resumePlayerVolume, reducePlayerVolume, updatePlayerVolume
+let resumePlayerVolume
+let reducePlayerVolume
+let updatePlayerVolume
 
 // ! fixme 有點多餘
 function refreshCurrentDevice() {
@@ -59,12 +62,12 @@ function refreshCurrentDevice() {
   })
 }
 
-function spotifyPlayerReadyHandler(device_id, isHost) {
+function spotifyPlayerReadyHandler(device_id: string, isHost: boolean) {
   console.log('Ready with Device ID', device_id)
   thisSpotifyPlayerId.value = device_id
   isThisSpotifyPlayerReady.value = true
 
-  const playerSetVolumeCallback = volume => spotifyPlayer.setVolume(volume)
+  const playerSetVolumeCallback = (volume: number) => spotifyPlayer.setVolume(volume)
   ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
 
   //
@@ -204,7 +207,7 @@ function hostTogglePlay() {
 
 //
 
-let unwatchContextUri = null
+let unwatchContextUri: WatchStopHandle | null = null
 function customerTogglePlay() {
   spotifyPlayer.getCurrentState().then(state => {
     if (!state || state.paused) {
@@ -224,7 +227,7 @@ function customerTogglePlay() {
     }
   })
 }
-async function customerPlay(context_uri) {
+async function customerPlay(context_uri: string) {
   const device_id = unref(thisSpotifyPlayerId)
   const position_ms = store.getters.playingProgress.position
   await spotifyAPI.play({ uris: [context_uri], device_id, position_ms }).then(() => {
@@ -233,12 +236,17 @@ async function customerPlay(context_uri) {
 }
 
 const customerPlayerVolume = ref(0)
-let unwatchCustomerPlayerMode = null
+let unwatchCustomerPlayerMode: WatchStopHandle | null = null
 const customerPlayerMode = computed(() => store.getters.customerPlayerMode)
 function customerSDKReadyHandler() {
   spotifyPlayer = new window.Spotify.Player(initSpotifySetting)
 
-  const eventArray = ['initialization_error', 'account_error', 'playback_error', 'authentication_error', 'not_ready']
+  const eventArray: Spotify.ErrorTypes[] = [
+    'initialization_error',
+    'account_error',
+    'playback_error',
+    'authentication_error',
+  ]
   eventArray.forEach(event => {
     spotifyPlayer.addListener(event, message => {
       console.log(event, message)
@@ -250,8 +258,10 @@ function customerSDKReadyHandler() {
     unwatchCustomerPlayerMode = watch(customerPlayerMode, newValue => {
       if (newValue === false) {
         spotifyPlayer.disconnect()
-        unwatchCustomerPlayerMode()
-        unwatchCustomerPlayerMode = null
+        if (unwatchCustomerPlayerMode) {
+          unwatchCustomerPlayerMode()
+          unwatchCustomerPlayerMode = null
+        }
       }
     })
     window.onbeforeunload = () => {
@@ -263,7 +273,6 @@ function customerSDKReadyHandler() {
     spotifyPlayer.getVolume().then(result => {
       customerPlayerVolume.value = Math.floor(result * 100)
     })
-    window.player = spotifyPlayer
   })
   spotifyPlayer.addListener('player_state_changed', playerState => {
     if (playerState === null) {
