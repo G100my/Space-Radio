@@ -8,7 +8,7 @@ const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
 // player 音量縮小比例，否則語音音量過小
 const PLAYER_VOLUME_REDUCE_RATE = 0.7
 
-function useVolumeControl(playerCallback: (volume: number) => void) {
+export function useVolumeControl(playerCallback: (volume: number) => void) {
   let recodeVolume: number
   let playerVolume: number
 
@@ -95,5 +95,3 @@ function useVolumeControl(playerCallback: (volume: number) => void) {
     updatePlayerVolume,
   }
 }
-
-export { useVolumeControl }

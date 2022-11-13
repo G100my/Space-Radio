@@ -1,7 +1,19 @@
-import { isRef, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { isRef, nextTick, onMounted, onUnmounted, ref, type Ref } from 'vue'
 
-interface UseInfinityScrollParams {}
-export function useInfinityScroll({ id, fetchCallback, nextURL, onUnmountedCallback, fetchFirstCallback }) {
+interface UseInfinityScrollParams {
+  id: string
+  fetchCallback: (...args: any[]) => Promise<void>
+  nextURL: Ref<string>
+  onUnmountedCallback: (...args: any[]) => void
+  fetchFirstCallback: (...args: any[]) => Promise<void>
+}
+export function useInfinityScroll({
+  id,
+  fetchCallback,
+  nextURL,
+  onUnmountedCallback,
+  fetchFirstCallback,
+}: UseInfinityScrollParams) {
   if (!isRef(nextURL)) {
     console.error(`nextURL is not ref`, nextURL)
   }
@@ -9,14 +21,14 @@ export function useInfinityScroll({ id, fetchCallback, nextURL, onUnmountedCallb
   /**
    * @type HTMLElement
    */
-  const infinityContainer = ref(null)
-  let ScrollObserver
-  let target
+  const infinityContainer = ref<HTMLElement>()
+  let ScrollObserver: IntersectionObserver
+  let target: Element | null | undefined
   const isLoading = ref(false)
 
   const mutationObserverConfig = { childList: true }
   function observeLastElement() {
-    target = infinityContainer.value.lastElementChild
+    target = infinityContainer.value?.lastElementChild
     if (target) ScrollObserver.observe(target)
     else {
       console.error('target element is not a Element', target)
@@ -33,7 +45,10 @@ export function useInfinityScroll({ id, fetchCallback, nextURL, onUnmountedCallb
   }
 
   onMounted(() => {
-    infinityContainer.value = document.getElementById(id)
+    const container = document.getElementById(id)
+    if (container === null) throw new Error(`can not found element with '${id}' id.`)
+    infinityContainer.value = container
+
     if (fetchFirstCallback) {
       fetchFirstCallback().then(() => {
         nextTick(observeLastElement)
@@ -50,7 +65,7 @@ export function useInfinityScroll({ id, fetchCallback, nextURL, onUnmountedCallb
       rootMargin: '0px',
       threshold: 0.5,
     }
-    const callback = ([entry]) => {
+    const callback: IntersectionObserverCallback = ([entry]) => {
       if (entry.isIntersecting) nexthandler()
     }
     ScrollObserver = new IntersectionObserver(callback, observerOptions)
