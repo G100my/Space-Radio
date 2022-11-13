@@ -1,11 +1,13 @@
-<script>
-import IconSpotifyDark from '@/assets/icons/icon/spotify-dark.svg'
-import IconClose from '@/assets/icons/icon/close.svg'
+<script lang="ts">
+import IconSpotifyDark from '@/assets/icons/icon/spotify-dark.svg?component'
+import IconClose from '@/assets/icons/icon/close.svg?component'
 import { spotifyAPI } from '@/utility/spotifyAPI'
 import { computed, onMounted, ref, watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle, DialogDescription } from '@headlessui/vue'
 import { useI18n } from 'vue-i18n'
+import { useAlertStore } from '@/store'
+
 export default {
   components: {
     IconSpotifyDark,
@@ -19,29 +21,30 @@ export default {
   },
   setup() {
     const store = useStore()
+    const alertStore = useAlertStore()
     const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
 
-    const ownPlaylists = ref([])
+    const ownPlaylists = ref<SpotifyApi.PlaylistObjectSimplified[]>([])
     spotifyAPI.getUserPlaylists().then(results => {
       ownPlaylists.value = results.items
     })
 
-    let roomElement
+    let roomElement: HTMLElement | null
     onMounted(() => {
       roomElement = document.getElementById('room')
     })
 
     const isOpen = ref(false)
     watch(isOpen, value => {
-      if (value) roomElement.classList.add('blur-sm')
-      else roomElement.classList.remove('blur-sm')
+      if (value) roomElement?.classList.add('blur-sm')
+      else roomElement?.classList.remove('blur-sm')
     })
 
-    function collectHandler({ id, name }) {
+    function collectHandler({ id, name }: SpotifyApi.PlaylistObjectSimplified) {
       spotifyAPI.addTracksToPlaylist(id, [`spotify:track:${playerPlayingTrackId.value}`]).then(result => {
         if (result.snapshot_id) {
           isOpen.value = false
-          store.dispatch('pushFeedback', `Collect to ${name} successful!`)
+          alertStore.pushFeedback(`Collect to ${name} successful!`)
         }
       })
     }

@@ -1,10 +1,10 @@
+export * from './AlertStore'
 import { createStore, createLogger } from 'vuex'
 import { PlayingState, LatestOrder, Volume, Vote, Progress } from './PlayingState'
 import { Personal } from './Personal'
 import { UserLog } from './UserLog'
 import { RoomBasic } from './RoomBasic'
 import { PersonalPlaylists } from './PersonalPlaylists'
-import { FeedbackAlert } from './FeedbackAlert'
 import { NoteDialog } from './NoteDialog'
 
 const mutationExceptions = ['playingProgress', 'pushUserLog']
@@ -21,7 +21,6 @@ const store = createStore({
     UserLog,
     RoomBasic,
     PersonalPlaylists,
-    FeedbackAlert,
     NoteDialog,
   },
   plugins: [
