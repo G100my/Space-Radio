@@ -13,7 +13,7 @@ import { TTSbyNote, TTS, useTTSonPlayer } from './useTTSwatch'
 import { useVoteWatch } from '@/composables/useVoteWatchControl'
 
 let spotifyPlayer: Spotify.Player
-const thisSpotifyPlayerId = ref<string | null>(null)
+const thisSpotifyPlayerId = ref<string>()
 const isThisSpotifyPlayerPaused = ref(true)
 const isThisSpotifyPlayerActived = ref(false)
 const isThisSpotifyPlayerReady = ref(false)
@@ -39,11 +39,10 @@ const initSpotifySetting = {
   },
 }
 
-let resumePlayerVolume
-let reducePlayerVolume
-let updatePlayerVolume
+let resumePlayerVolume: ReturnType<typeof useVolumeControl>['resumePlayerVolume']
+let reducePlayerVolume: ReturnType<typeof useVolumeControl>['reducePlayerVolume']
+let updatePlayerVolume: ReturnType<typeof useVolumeControl>['updatePlayerVolume']
 
-// ! fixme 有點多餘
 function refreshCurrentDevice() {
   spotifyAPI.getMyCurrentPlaybackState().then(result => {
     console.log('CurrentPlaybackState: ', result)
@@ -72,7 +71,7 @@ function spotifyPlayerReadyHandler(device_id: string, isHost: boolean) {
 
   //
   watch(isThisSpotifyPlayerActived, isActived => {
-    let stopAutoTTS
+    let stopAutoTTS: ReturnType<typeof useTTSonPlayer>
     let stopAutoCut
 
     if (isActived) {
@@ -96,7 +95,7 @@ function spotifyPlayerReadyHandler(device_id: string, isHost: boolean) {
 const pendingOrder = computed(() => store.getters.pendingOrder)
 const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
 
-function hostPlayerStatusChangedHandler(playerState) {
+function hostPlayerStatusChangedHandler(playerState: Spotify.PlaybackState) {
   if (playerState === null) {
     refreshCurrentDevice()
     store.dispatch('clearPlayingTrack')
@@ -120,7 +119,12 @@ function hostPlayerStatusChangedHandler(playerState) {
 function hostSDKReadyHandler() {
   spotifyPlayer = new window.Spotify.Player(initSpotifySetting)
 
-  const eventArray = ['initialization_error', 'account_error', 'playback_error', 'authentication_error', 'not_ready']
+  const eventArray: Spotify.ErrorTypes[] = [
+    'initialization_error',
+    'account_error',
+    'playback_error',
+    'authentication_error',
+  ]
   eventArray.forEach(event => {
     spotifyPlayer.addListener(event, message => {
       console.log(event, message)
@@ -139,6 +143,7 @@ function hostSDKReadyHandler() {
       if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
     }
     if (success) console.log('Space Radio player successfully connected to Spotify!')
+    // @ts-expect-error
     if (success && import.meta.env.DEV) window.spotifyPlayer = spotifyPlayer
     refreshCurrentDevice()
   })
@@ -173,6 +178,9 @@ function nextTrack() {
 
 function hostTogglePlay() {
   const device_id = unref(thisSpotifyPlayerId)
+  if (!device_id) {
+    throw new Error(`!device_id: ${device_id}`)
+  }
   spotifyPlayer
     .getCurrentState()
     .then(state => {

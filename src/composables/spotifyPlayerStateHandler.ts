@@ -1,7 +1,7 @@
 import store from '@/store'
 
 // 送出去的點歌可能會因為 spotify 回應不一樣的id...orz，但是歌的內容一樣= =+
-function clearPendingQueueHandler({ position, track_window }, pending) {
+function clearPendingQueueHandler({ position, track_window }: Spotify.PlaybackState, pending) {
   // const pending = store.getters.pendingOrder
   if (position === 0) return
   if (!pending) return
@@ -15,7 +15,10 @@ function clearPendingQueueHandler({ position, track_window }, pending) {
 
 // ===
 
-function diffirentPlayingTrackIdHandler(playerState, playerPlayingTrackId) {
+function diffirentPlayingTrackIdHandler(
+  playerState: Spotify.PlaybackState,
+  playerPlayingTrackId: Spotify.PlaybackState['playback_id']
+) {
   // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
   if (playerState.track_window.current_track.id !== playerPlayingTrackId)
     store.dispatch('updatePlayingTrack', playerState.track_window.current_track)
@@ -30,7 +33,7 @@ function diffirentPlayingTrackIdHandler(playerState, playerPlayingTrackId) {
 // 快轉不考慮
 let coundDownTimer: ReturnType<typeof setTimeout>
 const EXECUTE_BEFORE_END_TIME = 10000
-function setNextQueueTimeoutHandler({ duration, position, paused }) {
+function setNextQueueTimeoutHandler({ duration, position, paused }: Spotify.PlaybackState) {
   if (position == 0) return
   if (paused && coundDownTimer) clearTimeout(coundDownTimer)
   const bufferTime = duration - position - EXECUTE_BEFORE_END_TIME
@@ -45,7 +48,7 @@ function setNextQueueTimeoutHandler({ duration, position, paused }) {
 // ===
 
 let lastTimestamp = 0
-function updateProgressTimeHandler(playerState) {
+function updateProgressTimeHandler(playerState: Spotify.PlaybackState) {
   const { paused, duration, position, timestamp } = playerState
   if (timestamp - lastTimestamp < 1500) {
     lastTimestamp = timestamp
