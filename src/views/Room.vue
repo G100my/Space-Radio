@@ -1,6 +1,6 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
-import firebase from '@/store/firebase'
+import firebase from '@/plugins/firebase'
 import { spotifyAPI } from '@/utility/spotifyAPI'
 import { Queue as QueueStore, queueConnect2firebase } from '@/store/Queue'
 import { playingStateConnect2firebase } from '@/store/PlayingState'

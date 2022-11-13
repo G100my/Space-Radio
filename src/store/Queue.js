@@ -1,5 +1,5 @@
 import { spotifyAPI } from '@/utility/spotifyAPI'
-import firebase from './firebase'
+import firebase from '@/plugins/firebase'
 import { Order } from '@/prototype/Order'
 
 let urgent_queue_ref = {}

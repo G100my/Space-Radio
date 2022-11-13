@@ -2,7 +2,7 @@
 import { computed, ref, watch, reactive, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import firebase from '@/store/firebase'
+import firebase from '@/plugins/firebase'
 import { usePlusMinusHandler } from '@/composables/usePlusMinusHandler'
 import { roomKeyMaker } from '@/utility/randomMaker'
 import { spotifyAPI } from '@/utility/spotifyAPI'

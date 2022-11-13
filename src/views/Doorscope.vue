@@ -2,7 +2,7 @@
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import firebase from '@/store/firebase'
+import firebase from '@/plugins/firebase'
 import { PKCE } from '@/utility/PKCE'
 import { spotifyAPI } from '@/utility/spotifyAPI'
 import initCover from '@/assets/vinyl-record.png'

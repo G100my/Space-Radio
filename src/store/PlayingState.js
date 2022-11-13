@@ -1,5 +1,5 @@
 import { Order } from '@/prototype/Order'
-import firebase from './firebase'
+import firebase from '@/plugins/firebase'
 import i18n from '@/locales'
 
 let playing_state_ref
