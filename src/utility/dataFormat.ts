@@ -1,22 +1,38 @@
 import ImageVinylRecord from '@/assets/vinyl-record.png'
 
-// @ts-expect-error
-export function spotifyCoverPicker(imagesUrl) {
+export function spotifyCoverPicker(imagesUrl: SpotifyApi.AlbumObjectSimplified['images']): string {
   return imagesUrl.length ? imagesUrl[imagesUrl.length - 1].url : ImageVinylRecord
 }
 
-// @ts-expect-error
-export const playlistTrackFormater = i => ({
-  albumName: i.track.album.name,
-  albumExternalUrl: i.track.album.external_urls.spotify,
-  albumCoverUrl: spotifyCoverPicker(i.track.album.images),
-  artists: i.track.artists,
-  id: i.track.id,
-  name: i.track.name,
-})
+export interface FormattedTrack {
+  albumName: SpotifyApi.AlbumObjectSimplified['name']
+  albumExternalUrl: SpotifyApi.AlbumObjectSimplified['external_urls']['spotify']
+  albumCoverUrl: string
+  artists: SpotifyApi.ArtistObjectSimplified[]
+  id: string
+  name: string
+}
+export const playlistTrackFormater = (
+  i: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified
+): FormattedTrack => {
+  const base = {
+    artists: i.artists,
+    id: i.id,
+    name: i.name,
+  }
+  if ('album' in i) {
+    return {
+      albumName: i.album.name,
+      albumExternalUrl: i.album.external_urls.spotify,
+      albumCoverUrl: spotifyCoverPicker(i.album.images),
+      ...base,
+    }
+  } else {
+    return { albumName: '', albumExternalUrl: '', albumCoverUrl: '', ...base }
+  }
+}
 
-// @ts-expect-error
-export const topTrackFormater = ({ album, artists, id, name }) => ({
+export const topTrackFormater = ({ album, artists, id, name }: SpotifyApi.TrackObjectFull): FormattedTrack => ({
   albumName: album.name,
   albumExternalUrl: album.uri,
   albumCoverUrl: spotifyCoverPicker(album.images),
