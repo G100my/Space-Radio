@@ -29,4 +29,7 @@ export default defineConfig(({ command }) => ({
       globalSFCScope: true,
     }),
   ],
+  server: {
+    port: 3000,
+  },
 }))
