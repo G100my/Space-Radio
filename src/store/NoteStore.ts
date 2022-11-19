@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { usePersonalStore } from './PersonalStore'
+import type { OrderRaw } from './PlayingStateStore'
 
 const initNote = {
   sender: localStorage.getItem('spaceradio_senderName') || '',

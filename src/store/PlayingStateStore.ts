@@ -19,11 +19,11 @@ const initialOrder = {
   track_id: '',
   track_name: '',
 }
-export type Order = typeof initialOrder
+export type OrderRaw = typeof initialOrder
 const useLatestOrderStore = defineStore('LatestOrderStore', {
   state: () => ({ latest_order: { ...initialOrder } }),
   actions: {
-    updateTheLatestOrder(order: Order) {
+    updateTheLatestOrder(order: OrderRaw) {
       playing_state_ref.child('latest_order').set(order)
     },
   },

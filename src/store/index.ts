@@ -4,6 +4,7 @@ export * from './RoomBasicStore'
 export * from './NoteStore'
 export * from './PersonalPlaylists'
 export * from './PlayingStateStore'
+export * from './QueueStore'
 import { createStore, createLogger } from 'vuex'
 import { UserLog } from './UserLog'
 
