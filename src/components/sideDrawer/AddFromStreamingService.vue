@@ -20,19 +20,19 @@ export default {
       let listName
       switch (type) {
         case 'spotifyLiked':
-          listName = t('liked_songs_from_spotify')
+          listName = t('list_name.liked_songs_from_spotify')
           break
         case 'spotifyRecently':
-          listName = t('recently_played')
+          listName = t('list_name.recently_played')
           break
         case 'spotifyLong':
-          listName = t('your_totally_top_tracks')
+          listName = t('list_name.your_totally_top_tracks')
           break
         case 'spotifyMedium':
-          listName = t('your_top_tracks_in_last_6_months')
+          listName = t('list_name.your_top_tracks_in_last_6_months')
           break
         case 'spotifyShort':
-          listName = t('your_top_tracks_in_last_month')
+          listName = t('list_name.your_top_tracks_in_last_month')
           break
       }
 
