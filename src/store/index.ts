@@ -2,10 +2,10 @@ export * from './AlertStore'
 export * from './PersonalStore'
 export * from './RoomBasicStore'
 export * from './NoteStore'
+export * from './PersonalPlaylists'
 import { createStore, createLogger } from 'vuex'
 import { PlayingState, LatestOrder, Volume, Vote, Progress } from './PlayingState'
 import { UserLog } from './UserLog'
-import { PersonalPlaylists } from './PersonalPlaylists'
 
 const mutationExceptions = ['playingProgress', 'pushUserLog']
 const actionExceptions = ['updateProgress']
@@ -18,7 +18,6 @@ const store = createStore({
     Vote,
     Progress,
     UserLog,
-    PersonalPlaylists,
   },
   plugins: [
     createLogger({
