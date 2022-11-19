@@ -1,9 +1,9 @@
-import { isRef, nextTick, onMounted, onUnmounted, ref, type Ref } from 'vue'
+import { isRef, nextTick, onMounted, onUnmounted, ref, type ComputedRef, type Ref } from 'vue'
 
 interface UseInfinityScrollParams {
   id: string
   fetchCallback: (...args: any[]) => Promise<void>
-  nextURL: Ref<string>
+  nextURL: Ref<string> | ComputedRef<string | number>
   onUnmountedCallback: (...args: any[]) => void
   fetchFirstCallback: (...args: any[]) => Promise<void>
 }

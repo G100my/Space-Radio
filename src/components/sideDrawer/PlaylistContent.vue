@@ -1,21 +1,23 @@
-<script>
+<script lang="ts">
 import { computed, reactive, ref, toRaw } from '@vue/runtime-core'
 import { useStore } from 'vuex'
-import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
+import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg?component'
 import TrackListContainer from './TrackListContainer.vue'
 import { useInfinityScroll } from '@/composables/useInfinityScroll'
+import { usePersonalPlaylistStore } from '@/store'
 
 export default {
   name: 'PlaylistContent',
   components: { IconSpinnerLoader, TrackListContainer },
   setup() {
     const store = useStore()
-    const listName = computed(() => store.getters.chosenName)
+    const listStore = usePersonalPlaylistStore()
+    const listName = computed(() => listStore.chosenName)
     const selectMode = ref(false)
     const idSet = reactive(new Set())
     const nameSet = new Set()
 
-    function checkboxHandler(value, id, name) {
+    function checkboxHandler(value: unknown, id: number, name: string) {
       if (value && !idSet.has(id)) {
         idSet.add(id)
         nameSet.add(name)
@@ -39,16 +41,16 @@ export default {
       nameSet.clear()
     }
 
-    const list = computed(() => store.getters.chosenList)
-    const listTotal = computed(() => store.getters.chosenTotal)
-    const next = computed(() => store.getters.chosenNext)
+    const list = computed(() => listStore.chosenList)
+    const listTotal = computed(() => listStore.chosenTotal)
+    const next = computed(() => listStore.chosenNext)
 
-    const { isloading } = useInfinityScroll({
+    const { isLoading } = useInfinityScroll({
       id: 'infinity_playlist',
       nextURL: next,
-      fetchCallback: () => store.dispatch('fetchOffset'),
-      onUnmountedCallback: () => store.commit('chosenList', []),
-      fetchFirstCallback: () => store.dispatch('fetchFirst'),
+      fetchCallback: listStore.fetchOffset,
+      onUnmountedCallback: () => (listStore.chosenList = []),
+      fetchFirstCallback: listStore.fetchFirst,
     })
 
     return {
@@ -60,7 +62,7 @@ export default {
       checkboxHandler,
       addMultipleHandler,
       cancelHandler,
-      isloading,
+      isLoading,
     }
   },
 }
@@ -85,7 +87,7 @@ export default {
         <span class="mx-2">{{ list.length }}{{ listTotal ? ` / ${listTotal}` : '' }}</span>
         <span>results</span>
       </p>
-      <IconSpinnerLoader v-show="isloading" class="mx-2 inline-block animate-spin text-natural-gray2" />
+      <IconSpinnerLoader v-show="isLoading" class="mx-2 inline-block animate-spin text-natural-gray2" />
     </div>
 
     <TrackListContainer
