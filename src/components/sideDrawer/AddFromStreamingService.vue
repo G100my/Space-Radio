@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
-import IconArrowRight from '@/assets/icons/icon-arrow-right.svg'
+import IconArrowRight from '@/assets/icons/icon-arrow-right.svg?component'
 
 import { computed } from '@vue/runtime-core'
-import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
+import { usePersonalPlaylistStore, type PersonalPlaylistStoreState } from '@/store'
 
 export default {
   name: 'AddFromStreamingService',
@@ -13,52 +13,47 @@ export default {
   },
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
-    const store = useStore()
+    const store = usePersonalPlaylistStore()
     const { t } = useI18n()
 
-    function libraryClickHandler(type) {
-      let listName, moduleName
+    function libraryClickHandler(type: PersonalPlaylistStoreState['chosenModule']) {
+      let listName
       switch (type) {
-        case 'liked':
+        case 'spotifyLiked':
           listName = t('liked_songs_from_spotify')
-          moduleName = 'spotifyLiked'
           break
-        case 'recently':
+        case 'spotifyRecently':
           listName = t('recently_played')
-          moduleName = 'spotifyRecently'
           break
-        case 'long_term':
+        case 'spotifyLong':
           listName = t('your_totally_top_tracks')
-          moduleName = 'spotifyLong'
           break
-        case 'medium_term':
+        case 'spotifyMedium':
           listName = t('your_top_tracks_in_last_6_months')
-          moduleName = 'spotifyMedium'
           break
-        case 'short_term':
+        case 'spotifyShort':
           listName = t('your_top_tracks_in_last_month')
-          moduleName = 'spotifyShort'
           break
       }
 
-      store.commit('chosenListName', listName)
-      store.commit('chosenModule', { module: moduleName })
+      store.chosenName = listName
+      store.chosenModule = type
       emit('activeSideDrawer', 'PlaylistContent')
     }
 
-    function playlistClickHandler(spotifyListId, spotifyListname) {
-      store.commit('chosenListName', spotifyListname)
-      store.commit('chosenModule', { module: 'spotifyList', specifyId: spotifyListId })
+    function playlistClickHandler(spotifyListId: string, spotifyListname: string) {
+      store.chosenName = spotifyListname
+      store.$patch({ chosenModule: 'spotifyList', specifyId: spotifyListId })
       emit('activeSideDrawer', 'PlaylistContent')
     }
 
-    store.dispatch('getSpotifyLists')
+    store.getSpotifyLists()
 
     return {
       SpotifyLogo,
       libraryClickHandler,
       playlistClickHandler,
-      spotify: computed(() => store.getters.spotifyLists),
+      spotify: computed(() => store.spotifyPlaylists),
       t,
     }
   },
@@ -77,23 +72,23 @@ export default {
           <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
         </h3>
         <ul class="_side_drawer_ul">
-          <li @click="libraryClickHandler('liked')">
+          <li @click="libraryClickHandler('spotifyLiked')">
             <p>{{ t('liked_songs_from_spotify') }}</p>
             <IconArrowRight />
           </li>
-          <li @click="libraryClickHandler('recently')">
+          <li @click="libraryClickHandler('spotifyRecently')">
             <p>{{ t('recently_played') }}</p>
             <IconArrowRight />
           </li>
-          <li @click="libraryClickHandler('long_term')">
+          <li @click="libraryClickHandler('spotifyLong')">
             <p>{{ t('your_totally_top_tracks') }}</p>
             <IconArrowRight />
           </li>
-          <li @click="libraryClickHandler('medium_term')">
+          <li @click="libraryClickHandler('spotifyMedium')">
             <p>{{ t('your_top_tracks_in_last_6_months') }}</p>
             <IconArrowRight />
           </li>
-          <li @click="libraryClickHandler('short_term')">
+          <li @click="libraryClickHandler('spotifyShort')">
             <p>{{ t('your_top_tracks_in_last_month') }}</p>
             <IconArrowRight />
           </li>

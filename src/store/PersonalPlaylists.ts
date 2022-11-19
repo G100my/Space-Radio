@@ -28,7 +28,7 @@ export type TimeRange = `${SpotifyTopListMap}`
 
 type SpotifyTopLists = Record<SpotifyTopListNames, CustomListPaging & { items: FormattedTrack[] }>
 
-interface State extends SpotifyTopLists {
+export interface PersonalPlaylistStoreState extends SpotifyTopLists {
   spotifyPlaylists: SpotifyApi.PlaylistObjectSimplified[]
   spotifyList: CustomListPaging
   spotifyLiked: CustomListPaging & { items: FormattedTrack[] }
@@ -37,7 +37,7 @@ interface State extends SpotifyTopLists {
     total: SpotifyApi.UsersRecentlyPlayedTracksResponse['total']
   }
 
-  chosenName: string
+  chosenName: string | undefined
   chosenList: FormattedTrack[]
 
   specifyId: string
@@ -45,7 +45,7 @@ interface State extends SpotifyTopLists {
 }
 
 export const usePersonalPlaylistStore = defineStore('PersonalPlaylistStore', {
-  state: (): State => {
+  state: (): PersonalPlaylistStoreState => {
     const topTracks = spotifyTopListNames.reduce<SpotifyTopLists>((acc, listName) => {
       return {
         ...acc,
@@ -164,7 +164,7 @@ export const usePersonalPlaylistStore = defineStore('PersonalPlaylistStore', {
           this.chosenList = this[submoduleName].items
         })
     },
-    choose(params: { moduleName: State['chosenModule']; specifyId: string }) {
+    choose(params: { moduleName: PersonalPlaylistStoreState['chosenModule']; specifyId: string }) {
       this.chosenModule = params.moduleName
       this.specifyId = params.specifyId
     },
