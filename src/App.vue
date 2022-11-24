@@ -1,13 +1,13 @@
 <template>
   <router-view />
 </template>
-<script>
+<script lang="ts">
 export default {}
 </script>
 <style>
 html,
 body,
-main#app {
+#app {
   height: 100%;
 }
 </style>
