@@ -2,7 +2,6 @@
 module.exports = {
   mode: 'jit',
   purge: ['src/index.css', './src/**/*.vue'],
-  darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
       inter: ['Inter', 'sans-serif'],

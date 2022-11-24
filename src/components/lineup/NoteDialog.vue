@@ -2,7 +2,7 @@
 import IconClose from '@/assets/icons/icon/close.svg?component'
 import { useNoteStore } from '@/store'
 import { Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue'
-import { computed } from '@vue/runtime-core'
+import { computed } from 'vue'
 import BaseSwitch from '../base/BaseSwitch.vue'
 
 export default {

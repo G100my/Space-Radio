@@ -1,5 +1,5 @@
 <script>
-import { computed } from '@vue/runtime-core'
+import { computed } from 'vue'
 import BaseAlert from '../base/BaseAlert.vue'
 import { useStore } from 'vuex'
 

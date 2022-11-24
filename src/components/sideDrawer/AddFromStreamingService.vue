@@ -2,7 +2,7 @@
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import IconArrowRight from '@/assets/icons/icon-arrow-right.svg?component'
 
-import { computed } from '@vue/runtime-core'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePersonalPlaylistStore, type PersonalPlaylistStoreState } from '@/store'
 

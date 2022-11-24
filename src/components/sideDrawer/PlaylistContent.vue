@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, reactive, ref, toRaw } from '@vue/runtime-core'
+import { computed, reactive, ref, toRaw } from 'vue'
 import { useStore } from 'vuex'
 import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg?component'
 import TrackListContainer from './TrackListContainer.vue'

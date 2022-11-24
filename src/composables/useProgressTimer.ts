@@ -15,7 +15,7 @@ if (!unwatch) {
   unwatch = watch(playingProgress, newProgress => {
     if (progressTimer) clearInterval(progressTimer)
     if (newProgress === null) return
-    let { paused, duration, position } = newProgress
+    const { paused, duration, position } = newProgress
     currentDuration.value = duration
     currentPosition.value = position
 

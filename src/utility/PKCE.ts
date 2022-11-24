@@ -5,7 +5,7 @@ function dec2hex(dec: number) {
   return tmp.substring(tmp.length - 2)
 }
 function generateCodeVerifier() {
-  let array = new Uint32Array(56 / 2)
+  const array = new Uint32Array(56 / 2)
   window.crypto.getRandomValues(array)
   return Array.from(array, dec2hex).join('')
 }
@@ -18,8 +18,8 @@ function sha256(plain: string) {
 }
 function base64urlencode(hashedString: number) {
   let str = ''
-  let bytes = new Uint8Array(hashedString)
-  let len = bytes.byteLength
+  const bytes = new Uint8Array(hashedString)
+  const len = bytes.byteLength
   for (let i = 0; i < len; i++) {
     str += String.fromCharCode(bytes[i])
   }
@@ -27,9 +27,9 @@ function base64urlencode(hashedString: number) {
 }
 
 async function generateCodeChallengeFromVerifier(codeVerifier: string) {
-  let hashed = await sha256(codeVerifier)
+  const hashed = await sha256(codeVerifier)
   // ! fixme hashed type
-  let base64encoded = base64urlencode(hashed as unknown as number)
+  const base64encoded = base64urlencode(hashed as unknown as number)
   return base64encoded
 }
 

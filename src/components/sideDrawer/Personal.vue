@@ -1,7 +1,7 @@
 <script lang="ts">
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { computed } from '@vue/runtime-core'
+import { computed } from 'vue'
 import BaseSwitch from '../base/BaseSwitch.vue'
 import { usePersonalStore } from '@/store/PersonalStore'
 import { useRoomBasicStore } from '@/store'
