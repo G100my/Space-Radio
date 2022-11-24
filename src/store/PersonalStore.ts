@@ -40,15 +40,15 @@ export const usePersonalStore = defineStore('PersonalStore', {
 
       spotifyAPI.setAccessToken(access_token)
     },
-    userData({ id, display_name, images, product }: unknown) {
+    userData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
       this.user_id = id
-      this.display_name = display_name
+      this.display_name = display_name ?? id
       this.product = product
       localStorage.setItem('spaceradio_user_id', id)
-      localStorage.setItem('spaceradio_user_display_name', display_name)
+      localStorage.setItem('spaceradio_user_display_name', this.display_name)
       localStorage.setItem('spaceradio_user_product', product)
 
-      if (images.length > 0) {
+      if (images && images.length > 0) {
         this.image_url = images[0].url
         localStorage.setItem('spaceradio_user_images', images[0].url)
       }

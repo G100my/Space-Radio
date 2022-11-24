@@ -8,9 +8,9 @@ import CreateRoom from '@/views/CreateRoom.vue'
 import { fetchAccessToken } from '@/utility/PKCE'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 
-import { setPlayingStateRef } from '@/store/PlayingState'
+import { setPlayingStateRef } from '@/store/PlayingStateStore'
 import { setUserLogRef } from '@/store/UserLog'
-import { setQueueRef } from '@/store/Queue'
+import { setQueueRef } from '@/store/QueueStore'
 import { usePersonalStore } from '@/store/PersonalStore'
 
 const routes = [
@@ -51,9 +51,11 @@ const routes = [
     meta: { requiresAuth: true },
     beforeEnter: () => {
       const roomKey = localStorage.getItem('spaceradio_room_key')
-      setPlayingStateRef(roomKey)
-      setUserLogRef(roomKey)
-      setQueueRef(roomKey)
+      if (roomKey) {
+        setPlayingStateRef(roomKey)
+        setUserLogRef(roomKey)
+        setQueueRef(roomKey)
+      }
     },
   },
 ]

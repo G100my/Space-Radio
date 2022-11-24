@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import firebase from '@/plugins/firebase'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
-import { Queue as QueueStore, queueConnect2firebase } from '@/store/Queue'
-import { playingStateConnect2firebase } from '@/store/PlayingState'
+import { queueConnect2firebase } from '@/store/QueueStore'
+import { playingStateConnect2firebase, useVolumeStore } from '@/store/PlayingStateStore'
 import { userLogConnect2firebase } from '@/store/UserLog'
 
 import SlideContainer from '@/components/SlideContainer.vue'
 import SideDrawer from '@/components/sideDrawer/SideDrawer.vue'
-import Header from '@/components/header/Header.vue'
+import RoomHeader, { type ComponentName } from '@/components/header/RoomHeader.vue'
 import PlayingState from '@/components/player/PlayingState.vue'
 import CustomerVolumeBar from '@/components/player/CustomerVolumeBar.vue'
 import VolumnBar from '@/components/VolumnBar.vue'
@@ -29,7 +29,7 @@ export default {
   components: {
     SlideContainer,
     SideDrawer,
-    Header,
+    RoomHeader,
     PlayingState,
     VolumnBar,
     Collection,
@@ -46,9 +46,6 @@ export default {
   setup() {
     const store = useStore()
     const roomBasicStore = useRoomBasicStore()
-    if (!store.hasModule('Queue')) {
-      store.registerModule('Queue', QueueStore)
-    }
     // avoid user refresh page
     if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
       spotifyAPI.setAccessToken(usePersonalStore().token)
@@ -63,15 +60,15 @@ export default {
       })
 
     onMounted(() => {
-      queueConnect2firebase(store)
-      playingStateConnect2firebase(store)
+      queueConnect2firebase()
+      playingStateConnect2firebase()
       userLogConnect2firebase(store)
     })
 
     const isSideDrawerShow = ref(false)
-    const activeComponent = ref(null)
+    const activeComponent = ref<ComponentName | null>(null)
 
-    function activeSideDrawerHandler(componentName) {
+    function activeSideDrawerHandler(componentName: ComponentName) {
       isSideDrawerShow.value = true
       activeComponent.value = componentName
     }
@@ -80,6 +77,8 @@ export default {
       isSideDrawerShow,
       activeComponent,
       activeSideDrawerHandler,
+      personalStore: usePersonalStore(),
+      volumeStore: useVolumeStore(),
 
       mobileMode: computed(() => (window.innerWidth < 768 ? true : false)),
       currentVolume: computed(() => store.getters.currentVolume),
@@ -89,18 +88,18 @@ export default {
 </script>
 <template>
   <div id="room" class="relative flex h-full flex-col overflow-hidden bg-tertiary-1 bg-opacity-80 laptop:bg-tertiary-2">
-    <Header class="_show_all_flex _container" @activeSideDrawer="activeSideDrawerHandler" />
+    <RoomHeader class="_show_all_flex _container" @activeSideDrawer="activeSideDrawerHandler" />
     <SlideContainer class="_container flex-1">
       <template #left-side>
         <div class="flex min-h-full flex-col laptop:pt-7">
           <PlayingState />
           <VolumnBar
-            v-if="!$store.getters.customerPlayerMode"
+            v-if="!personalStore.customerPlayerMode"
             :modelValue="currentVolume"
             disabledBar
             class="mt-7 laptop:mt-3"
-            @minus="$store.dispatch('turnDown', $event)"
-            @plus="$store.dispatch('turnUp', $event)"
+            @minus="volumeStore.turnDown"
+            @plus="volumeStore.turnUp"
           />
           <CustomerVolumeBar v-else class="mt-7 laptop:mt-3" />
           <Collection class="mt-4" />
