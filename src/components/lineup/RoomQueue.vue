@@ -6,11 +6,11 @@ import IconArrowDown from '@/assets/icons/icon-arrow-down.svg?component'
 import IconRemove from '@/assets/icons/icon-remove.svg?component'
 import IconMore from '@/assets/icons/icon-more.svg?component'
 
-import { useStore } from 'vuex'
 import BaseMarquee from '../base/BaseMarquee.vue'
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { Menu as HMenu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { computed, ref } from 'vue'
 import { usePersonalStore } from '@/store/PersonalStore'
+import { useNoteStore, useQueueStore } from '@/store'
 
 export default {
   components: {
@@ -21,7 +21,7 @@ export default {
     IconRemove,
     IconMore,
     BaseMarquee,
-    Menu,
+    HMenu,
     MenuButton,
     MenuItems,
     MenuItem,
@@ -31,21 +31,21 @@ export default {
     const personalStore = usePersonalStore()
     const userId = computed(() => personalStore.user_id)
 
-    const store = useStore()
+    const queueStore = useQueueStore()
     const isMenuPositionUp = ref(false)
-    const trackData = computed(() => store.getters.trackData)
-    const totalQueue = computed(() => store.getters.totalQueue)
-    const normalQueue = computed(() => store.getters.normalQueue)
-    const urgentQueue = computed(() => store.getters.urgentQueue)
-    const pendingQueue = computed(() => store.getters.pendingQueue)
+    const trackData = computed(() => queueStore.trackData)
+    const totalQueue = computed(() => queueStore.totalQueue)
+    const normalQueue = computed(() => queueStore.normal_queue)
+    const urgentQueue = computed(() => queueStore.urgent_queue)
+    const pendingQueue = computed(() => queueStore.pending_queue)
 
-    function remove(orderKey: string, level: string) {
-      store.dispatch(`${level}Remove`, orderKey)
+    function remove(orderKey: string, level: 'normal' | 'urgent') {
+      queueStore[`${level}Remove`](orderKey)
     }
-    function getImageUrl(track: Spotify.Track) {
+    function getImageUrl(track: SpotifyApi.SingleTrackResponse) {
       const imagesArray = track.album.images
       const imageLastObject = imagesArray[imagesArray.length - 1]
-      return imageLastObject ? imageLastObject.url : null
+      return imageLastObject ? imageLastObject.url : undefined
     }
     function getOrderer(orderKey: string) {
       if (normalQueue.value[orderKey]) return normalQueue.value[orderKey].orderer_name
@@ -83,6 +83,8 @@ export default {
       totalQueue,
       userId,
       trackData,
+      queueStore,
+      noteStore: useNoteStore(),
     }
   },
 }
@@ -134,10 +136,10 @@ export default {
         <template v-if="userId === totalQueue[key].orderer_id">
           <div class="hidden w-[146px] justify-end space-x-3 xs:flex">
             <template v-if="checkLevel('urgent', key)">
-              <button class="btn-tertiary" type="button" @click="$store.dispatch('urgentEdit', key)">
+              <button class="btn-tertiary" type="button" @click="queueStore.urgentEdit(key)">
                 <IconEdit />
               </button>
-              <button class="btn-tertiary" type="button" @click="$store.dispatch('urgent2normal', key)">
+              <button class="btn-tertiary" type="button" @click="queueStore.urgent2normal(key)">
                 <IconArrowDown />
               </button>
             </template>
@@ -145,7 +147,7 @@ export default {
               v-if="checkLevel('normal', key)"
               class="btn-tertiary"
               type="button"
-              @click="$store.dispatch('normal2urgent', key)"
+              @click="queueStore.normal2urgent(key)"
             >
               <IconArrowUp />
             </button>
@@ -159,7 +161,7 @@ export default {
             </button>
           </div>
 
-          <Menu v-slot="{ open }" as="div" class="relative cursor-pointer self-stretch xs:hidden">
+          <HMenu v-slot="{ open }" as="div" class="relative cursor-pointer self-stretch xs:hidden">
             <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
               <IconMore />
             </MenuButton>
@@ -183,7 +185,7 @@ export default {
                     </li>
                   </MenuItem>
                   <MenuItem v-slot="{ active }">
-                    <li :class="{ active }" class="_menu-item" @click="urgent2normal(key)">
+                    <li :class="{ active }" class="_menu-item" @click="queueStore.urgent2normal(key)">
                       <IconArrowDown />
                       <span>Cancel order</span>
                     </li>
@@ -191,7 +193,7 @@ export default {
                 </template>
 
                 <MenuItem v-if="checkLevel('normal', key)" v-slot="{ active }">
-                  <li :class="{ active }" class="_menu-item" @click="normal2urgent(key)">
+                  <li :class="{ active }" class="_menu-item" @click="queueStore.normal2urgent(key)">
                     <IconArrowUp />
                     <span>Order</span>
                   </li>
@@ -209,7 +211,7 @@ export default {
                 </MenuItem>
               </MenuItems>
             </transition>
-          </Menu>
+          </HMenu>
         </template>
         <div v-else class="hidden w-[146px] xs:block" />
       </li>

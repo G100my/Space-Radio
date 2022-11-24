@@ -15,6 +15,7 @@ export type ComponentName = 'Recommendation' | 'Search' | 'Personal' | 'AddFromS
 export default {
   components: {
     IconSearch,
+    // eslint-disable-next-line vue/no-reserved-component-names
     Marquee,
     IconPerson,
     IconPlus,

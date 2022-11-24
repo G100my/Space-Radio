@@ -4,7 +4,14 @@ import IconClose from '@/assets/icons/icon/close.svg?component'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle, DialogDescription } from '@headlessui/vue'
+import {
+  TransitionRoot,
+  TransitionChild,
+  Dialog as HDialog,
+  DialogOverlay,
+  DialogTitle,
+  DialogDescription,
+} from '@headlessui/vue'
 import { useI18n } from 'vue-i18n'
 import { useAlertStore } from '@/store'
 
@@ -13,7 +20,7 @@ export default {
     IconSpotifyDark,
     TransitionRoot,
     TransitionChild,
-    Dialog,
+    HDialog,
     DialogTitle,
     DialogOverlay,
     DialogDescription,
@@ -68,7 +75,7 @@ export default {
   </div>
 
   <TransitionRoot appear :show="isOpen" as="template">
-    <Dialog class="fixed inset-0" @close="isOpen = false">
+    <HDialog class="fixed inset-0" @close="isOpen = false">
       <TransitionChild
         as="template"
         enter="duration-200 ease-out"
@@ -111,7 +118,7 @@ export default {
           </DialogDescription>
         </div>
       </TransitionChild>
-    </Dialog>
+    </HDialog>
   </TransitionRoot>
 </template>
 <i18n lang="yaml">

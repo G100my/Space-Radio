@@ -1,13 +1,13 @@
 <script lang="ts">
 import IconClose from '@/assets/icons/icon/close.svg?component'
 import { useNoteStore } from '@/store'
-import { Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue'
+import { Dialog as HDialog, DialogOverlay, DialogTitle } from '@headlessui/vue'
 import { computed } from 'vue'
 import BaseSwitch from '../base/BaseSwitch.vue'
 
 export default {
   components: {
-    Dialog,
+    HDialog,
     DialogOverlay,
     DialogTitle,
     IconClose,
@@ -29,7 +29,7 @@ export default {
 }
 </script>
 <template>
-  <Dialog :open="noteStore.isDialogOpen" class="fixed inset-0 z-40 text-natural-gray4" @close="cancelHandler">
+  <HDialog :open="noteStore.isDialogOpen" class="fixed inset-0 z-40 text-natural-gray4" @close="cancelHandler">
     <DialogOverlay class="absolute -z-1 h-screen w-screen bg-tertiary-1 bg-opacity-60" />
 
     <div class="absolute inset-0 m-auto h-fit max-w-xs rounded-10 bg-tertiary-2 md:max-w-xl lg:max-w-2xl">
@@ -81,5 +81,5 @@ export default {
         <button class="btn-secondary flex-1" @click="cancelHandler">Cancel</button>
       </div>
     </div>
-  </Dialog>
+  </HDialog>
 </template>

@@ -1,6 +1,5 @@
 <script>
 import { computed, ref, watch, reactive, nextTick } from 'vue'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import firebase from '@/plugins/firebase'
 import { usePlusMinusHandler } from '@/composables/usePlusMinusHandler'
@@ -14,7 +13,7 @@ import IconPlus from '@/assets/icons/icon-plus.svg'
 import IconMinus from '@/assets/icons/icon-minus.svg'
 import IconClose from '@/assets/icons/icon/close.svg'
 import { useI18n } from 'vue-i18n'
-import { Dialog, DialogDescription, DialogOverlay, DialogTitle } from '@headlessui/vue'
+import { Dialog as HDialog, DialogDescription, DialogOverlay, DialogTitle } from '@headlessui/vue'
 import { usePersonalStore } from '@/store'
 
 export default {
@@ -26,14 +25,13 @@ export default {
     IconPlus,
     IconMinus,
     IconClose,
-    Dialog,
+    HDialog,
     DialogDescription,
     DialogOverlay,
     DialogTitle,
   },
   setup() {
     const roomKey = roomKeyMaker()
-    const store = useStore()
     const userId = usePersonalStore().user_id
     const roomName = ref(null)
     const isVaild = ref(true)
@@ -277,7 +275,7 @@ export default {
       </button>
     </form>
   </div>
-  <Dialog class="fixed inset-0 z-40 text-natural-gray4" :open="isOpen">
+  <HDialog class="fixed inset-0 z-40 text-natural-gray4" :open="isOpen">
     <DialogOverlay as="p" class="fixed inset-0 -z-1 bg-tertiary-1 bg-opacity-60" />
     <div class="absolute inset-0 m-auto h-fit max-w-md rounded-md border-2 border-natural-gray2 bg-tertiary-1 p-4">
       <DialogTitle as="h2" class="text-center text-2xl">{{ t('create_room_success') }}</DialogTitle>
@@ -297,7 +295,7 @@ export default {
         <button class="btn-secondary" @click="okHandler">OK</button>
       </div>
     </div>
-  </Dialog>
+  </HDialog>
 </template>
 <style lang="postcss">
 ._create_room_form {

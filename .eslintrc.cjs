@@ -19,4 +19,11 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   ignorePatterns: ['_*.*', '*.test.*', '__mocks__'],
+  globals: {
+    Spotify: 'readonly',
+    SpotifyApi: 'readonly',
+  },
+  rules: {
+    'vue/multi-word-component-names': ['off'],
+  },
 }

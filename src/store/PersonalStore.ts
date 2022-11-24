@@ -8,8 +8,8 @@ export const usePersonalStore = defineStore('PersonalStore', {
     expired_time: Number(localStorage.getItem('spaceradio_expired_time')) || null,
     refresh_token: localStorage.getItem('spaceradio_refresh_token') || null,
 
-    user_id: localStorage.getItem('spaceradio_user_id') || null,
-    display_name: localStorage.getItem('spaceradio_user_display_name') || null,
+    user_id: localStorage.getItem('spaceradio_user_id') || '',
+    display_name: localStorage.getItem('spaceradio_user_display_name') || '',
     image_url: localStorage.getItem('spaceradio_user_images') || '',
     product: localStorage.getItem('spaceradio_user_product') || '',
 

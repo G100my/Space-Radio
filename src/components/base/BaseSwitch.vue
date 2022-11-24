@@ -1,9 +1,9 @@
 <script>
-import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
+import { Switch as SwitchItem, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 
 export default {
   components: {
-    Switch,
+    SwitchItem,
     SwitchGroup,
     SwitchLabel,
   },
@@ -23,7 +23,7 @@ export default {
 <template>
   <SwitchGroup as="div">
     <SwitchLabel class="mr-4 text-xl">{{ label }}</SwitchLabel>
-    <Switch
+    <SwitchItem
       :value="modelValue"
       :class="modelValue ? 'bg-primary' : 'bg-natural-gray3'"
       class="focus:outline-none relative inline-flex h-[22px] w-[38px] flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
@@ -40,6 +40,6 @@ export default {
         :class="modelValue ? 'translate-x-4' : 'translate-x-0'"
         class="pointer-events-none inline-block h-[18px] w-[18px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
       />
-    </Switch>
+    </SwitchItem>
   </SwitchGroup>
 </template>
