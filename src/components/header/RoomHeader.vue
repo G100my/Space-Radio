@@ -6,10 +6,11 @@ import IconPerson from '@/assets/icons/icon/profile.svg?component'
 import IconPlus from '@/assets/icons/icon-plus.svg?component'
 import FeedbackAlert from './FeedbackAlert.vue'
 import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
 import BaseAlert from '../base/BaseAlert.vue'
 import { LightningBoltIcon } from '@heroicons/vue/outline'
 import { usePersonalStore, useRoomBasicStore } from '@/store'
+
+export type ComponentName = 'Recommendation' | 'Search' | 'Personal' | 'AddFromStreamingService'
 
 export default {
   components: {
@@ -24,7 +25,7 @@ export default {
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
     const isSearchActive = ref(false)
-    function activeSideDrawerHandler(componentName: string) {
+    function activeSideDrawerHandler(componentName: ComponentName) {
       emit('activeSideDrawer', componentName)
     }
     const roomBasic = useRoomBasicStore()
