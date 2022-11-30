@@ -14,7 +14,7 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
           .then(() => {
             spotifyAPI.setAccessToken(usePersonalStore().token)
             // @ts-expect-error
-            target[property](...theArguments)
+            return target[property](...theArguments)
           })
           .catch(error => {
             console.error('error when refreshAccessToken', error)
