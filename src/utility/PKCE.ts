@@ -64,16 +64,14 @@ async function fetchAccessToken(code: string, redirectHash: string) {
   body += '&redirect_uri=' + redirect_uri + redirectHash
   body += '&code_verifier=' + code_verifier
 
-  return fetch('https://accounts.spotify.com/api/token', {
+  const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
     body,
   })
-    .then(response => {
-      if (response.ok) return response.json()
-      else console.error('something wrong in fetchAccessToken', response)
-    })
-    .then(storeToken)
+
+  if (response.ok) return await response.json().then(storeToken)
+  else console.error('something wrong in fetchAccessToken', response)
 }
 
 async function refreshAccessToken() {
@@ -94,7 +92,14 @@ async function refreshAccessToken() {
     .then(storeToken)
 }
 
-function storeToken(result: unknown) {
+interface FetchTokenResponse {
+  access_token: string
+  token_type: 'Bearer'
+  expires_in: 3600
+  refresh_token: string
+  scope: 'playlist-modify-private user-read-email user-read-private streaming user-modify-playback-state user-library-read user-library-modify playlist-modify-public user-read-playback-state user-read-currently-playing user-read-recently-played user-read-playback-position user-top-read'
+}
+function storeToken(result: FetchTokenResponse) {
   const personalStore = usePersonalStore()
   const { access_token, expires_in, refresh_token } = result
   const expiredTime = expires_in * 1000 + Date.now()
