@@ -78,11 +78,9 @@ router.beforeEach(async to => {
     // 造成 vue router webHashHistory mode 無法如預期運作，
     // to, from 都會是 '/'，因此手動清除。
     window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
-    await fetchAccessToken(authorizationCode, '#' + hashPath).then(() => {
-      spotifyAPI.getMe().then(result => {
-        usePersonalStore().updateUserData(result)
-      })
-    })
+    await fetchAccessToken(authorizationCode, '#' + hashPath)
+    const userData = await spotifyAPI.getMe()
+    usePersonalStore().updateUserData(userData)
   }
 
   if (window.location.search.includes('?error=')) {
