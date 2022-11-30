@@ -1,4 +1,3 @@
-import store from '@/store'
 import { usePersonalStore } from '@/store/PersonalStore'
 import { refreshAccessToken } from '@/utility/PKCE'
 import SpotifyWebApi from 'spotify-web-api-js'
@@ -8,7 +7,8 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
     if (property === 'getAccessToken' || property === 'setAccessToken') {
       return target[property]
     }
-    if (!store.getters.isTokenValid) {
+    const personalStore = usePersonalStore()
+    if (!personalStore.isTokenValid) {
       return (...theArguments: any[]) =>
         refreshAccessToken()
           .then(() => {
