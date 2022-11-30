@@ -40,7 +40,7 @@ export const usePersonalStore = defineStore('PersonalStore', {
 
       spotifyAPI.setAccessToken(params.access_token)
     },
-    userData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
+    updateUserData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
       this.user_id = id
       this.display_name = display_name ?? id
       this.product = product
