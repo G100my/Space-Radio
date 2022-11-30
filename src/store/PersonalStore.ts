@@ -29,16 +29,16 @@ export const usePersonalStore = defineStore('PersonalStore', {
     },
   },
   actions: {
-    updateToken({ access_token, expiredTime, refresh_token }: unknown) {
-      this.token = access_token
-      this.expired_time = expiredTime
-      this.refresh_token = refresh_token
+    updateToken(params: { access_token: string; expiredTime: number; refresh_token: string }) {
+      this.token = params.access_token
+      this.expired_time = params.expiredTime
+      this.refresh_token = params.refresh_token
 
-      localStorage.setItem('spaceradio_token', access_token)
-      localStorage.setItem('spaceradio_expired_time', expiredTime)
-      localStorage.setItem('spaceradio_refresh_token', refresh_token)
+      localStorage.setItem('spaceradio_token', params.access_token)
+      localStorage.setItem('spaceradio_expired_time', params.expiredTime.toString())
+      localStorage.setItem('spaceradio_refresh_token', params.refresh_token)
 
-      spotifyAPI.setAccessToken(access_token)
+      spotifyAPI.setAccessToken(params.access_token)
     },
     userData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
       this.user_id = id
