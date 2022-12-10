@@ -3,7 +3,6 @@ import IconSpotifyDark from '@/assets/icons/icon/spotify-dark.svg?component'
 import IconClose from '@/assets/icons/icon/close.svg?component'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useStore } from 'vuex'
 import {
   TransitionRoot,
   TransitionChild,
@@ -13,7 +12,7 @@ import {
   DialogDescription,
 } from '@headlessui/vue'
 import { useI18n } from 'vue-i18n'
-import { useAlertStore } from '@/store'
+import { useAlertStore, usePlayingStore } from '@/store'
 
 export default {
   components: {
@@ -27,9 +26,9 @@ export default {
     IconClose,
   },
   setup() {
-    const store = useStore()
     const alertStore = useAlertStore()
-    const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
+    const playingStore = usePlayingStore()
+    const playerPlayingTrackId = computed(() => playingStore.playerPlayingTrackId)
 
     const ownPlaylists = ref<SpotifyApi.PlaylistObjectSimplified[]>([])
     spotifyAPI.getUserPlaylists().then(results => {

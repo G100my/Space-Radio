@@ -147,6 +147,7 @@ const usePlayingStore = defineStore('PlayingTrackStore', {
     playing_track: { ...initialPlayingTrack },
   }),
   getters: {
+    playerPlayingTrackId: state => state.playing_track.id,
     playerPlayingTrackName: state =>
       state.playing_track.name ? state.playing_track.name : i18n.global.t('no_playing_track'),
     playerPlayingArtists: state => state.playing_track.artists,
