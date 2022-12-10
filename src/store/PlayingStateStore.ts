@@ -85,7 +85,7 @@ const useVoteStore = defineStore('VoteStore', {
     updateDislikeThreshold(value: number) {
       playing_state_ref.child('dislike_threshold').set(value)
     },
-    updateDislikeCountdown(value: number) {
+    updateDislikeCountdown(value: number | false) {
       playing_state_ref.child('dislike_countdown').set(value)
     },
   },
@@ -152,6 +152,7 @@ const usePlayingStore = defineStore('PlayingTrackStore', {
       state.playing_track.name ? state.playing_track.name : i18n.global.t('no_playing_track'),
     playerPlayingArtists: state => state.playing_track.artists,
     playerPlayingAlbum: state => state.playing_track.album,
+    playerPlayingTrackUri: state => state.playing_track.context_uri,
   },
   actions: {
     updatePlayerTrack(newPlayingTrack: Spotify.Track) {

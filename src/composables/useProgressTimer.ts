@@ -1,8 +1,8 @@
-import store from '@/store'
+import { useProgressStore } from '@/store'
 import { computed, ref, watch } from 'vue'
 
 const INTERVAL = 1000
-const playingProgress = computed(() => store.getters.playingProgress)
+const playingProgress = computed(() => useProgressStore().playing_progress)
 
 let progressTimer: null | ReturnType<typeof setInterval> = null
 

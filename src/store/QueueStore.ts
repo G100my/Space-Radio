@@ -104,14 +104,12 @@ export const useQueueStore = defineStore('QueueStore', {
       if (!key) throw new Error('key is not exist, _deleteOrder')
       this.previousDeleted = this.trackData[key]
       delete this.trackData[key]
-      // @ts-expect-error
       delete this[`${storeTarget}_queue`][key]
     },
     _addTrack(key: string, addedTrack: SpotifyApi.SingleTrackResponse) {
       this.trackData[key] = addedTrack
     },
     _editOrder(storeTarget: string, childSnapshot: firebase.database.DataSnapshot) {
-      // @ts-expect-error
       this[`${storeTarget}_queue`][childSnapshot.key] = new Order(childSnapshot.val())
     },
 
@@ -123,7 +121,6 @@ export const useQueueStore = defineStore('QueueStore', {
       if (!key) throw new Error('key is not exist.')
 
       if (this.previousDeleted && this.previousDeleted.id === trackId) {
-        // @ts-expect-error
         this[`${storeTarget}_queue`][key] = order
         this.trackData[key] = this.previousDeleted
         this._clearPreviousDeleted()
@@ -131,7 +128,6 @@ export const useQueueStore = defineStore('QueueStore', {
         spotifyAPI
           .getTrack(trackId)
           .then(addedTrack => {
-            // @ts-expect-error
             this[`${storeTarget}_queue`][key] = order
             this.trackData[key] = addedTrack
           })
@@ -162,7 +158,7 @@ export const useQueueStore = defineStore('QueueStore', {
       noteStore.isDialogOpen = true
       noteStore.submitHandler = handler
     },
-    addMultiple(ids: string[], names: string[]) {
+    addMultiple(ids: number[], names: string[]) {
       const personalStore = usePersonalStore()
       const orderer_name = personalStore.display_name
       const orderer_id = personalStore.user_id

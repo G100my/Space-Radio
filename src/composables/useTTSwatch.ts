@@ -1,6 +1,7 @@
-import store from '@/store'
 import { computed, watch } from 'vue'
 import { messageOutputMaker } from '@/utility/messageOutputMaker'
+import { useQueueStore } from '@/store'
+import type { Order } from '@/prototype/Order'
 
 const utterance = new window.SpeechSynthesisUtterance()
 utterance.pitch = 1
@@ -35,7 +36,7 @@ function TTS(text: string) {
 
 export { TTS }
 
-const pendingOrder = computed(() => store.getters.pendingOrder)
+const pendingOrder = computed(() => useQueueStore().pendingOrder)
 
 /**
  * @param {Function} reducePlayerVolume
@@ -73,8 +74,7 @@ function useTTSonPlayer(reducePlayerVolume: () => Promise<any>, resumePlayerVolu
  * @param {Funtion} resumePlayerVolume
  * @returns void
  */
-// @ts-expect-error
-function TTSbyNote(pending) {
+function TTSbyNote(pending: Order) {
   const { track_name, note } = pending
   let messageOutput4TTS = messageOutputMaker(note, track_name)
   messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')

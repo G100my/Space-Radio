@@ -4,7 +4,7 @@ import firebase from '@/plugins/firebase'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { queueConnect2firebase } from '@/store/QueueStore'
 import { playingStateConnect2firebase, useVolumeStore } from '@/store/PlayingStateStore'
-import { userLogConnect2firebase } from '@/store/UserLog'
+// import { userLogConnect2firebase } from '@/store/UserLog'
 
 import SlideContainer from '@/components/SlideContainer.vue'
 import SideDrawer from '@/components/sideDrawer/SideDrawer.vue'
@@ -21,7 +21,6 @@ import Search from '@/components/sideDrawer/Search.vue'
 import Personal from '@/components/sideDrawer/Personal.vue'
 import NoteDialog from '@/components/lineup/NoteDialog.vue'
 import RoomQueue from '@/components/lineup/RoomQueue.vue'
-import { useStore } from 'vuex'
 import { usePersonalStore } from '@/store/PersonalStore'
 import { useRoomBasicStore } from '@/store'
 
@@ -44,10 +43,12 @@ export default {
     CustomerVolumeBar,
   },
   setup() {
-    const store = useStore()
+    const personalStore = usePersonalStore()
     const roomBasicStore = useRoomBasicStore()
+    const volumeStore = useVolumeStore()
+
     // avoid user refresh page
-    if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
+    if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid) {
       spotifyAPI.setAccessToken(usePersonalStore().token)
     }
     const roomKey = localStorage.getItem('spaceradio_room_key')
@@ -62,7 +63,8 @@ export default {
     onMounted(() => {
       queueConnect2firebase()
       playingStateConnect2firebase()
-      userLogConnect2firebase(store)
+      // ! fixme
+      // userLogConnect2firebase(store)
     })
 
     const isSideDrawerShow = ref(false)
@@ -81,7 +83,7 @@ export default {
       volumeStore: useVolumeStore(),
 
       mobileMode: computed(() => (window.innerWidth < 768 ? true : false)),
-      currentVolume: computed(() => store.getters.currentVolume),
+      currentVolume: computed(() => volumeStore.volume),
     }
   },
 }

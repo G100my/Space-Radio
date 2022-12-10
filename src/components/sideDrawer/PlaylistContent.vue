@@ -13,8 +13,8 @@ export default {
     const listStore = usePersonalPlaylistStore()
     const listName = computed(() => listStore.chosenName)
     const selectMode = ref(false)
-    const idSet = reactive(new Set())
-    const nameSet = new Set()
+    const idSet = reactive<Set<number>>(new Set())
+    const nameSet = new Set<string>()
 
     function checkboxHandler(value: unknown, id: number, name: string) {
       if (value && !idSet.has(id)) {
@@ -27,7 +27,7 @@ export default {
     }
 
     function addMultipleHandler() {
-      queueStore.addMultiple({ ids: Array.from(toRaw(idSet)), names: Array.from(nameSet) })
+      queueStore.addMultiple(Array.from(toRaw(idSet)), Array.from(nameSet))
       clearSet()
     }
     function cancelHandler() {

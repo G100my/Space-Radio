@@ -1,10 +1,10 @@
+import { useVolumeStore } from '@/store'
 import { computed, watch } from 'vue'
-import store from '@/store'
 
-const currentVolume = computed((): number => store.getters.currentVolume)
+const currentVolume = computed((): number => useVolumeStore().volume)
 const ADJUST_PROCESS_TIME = 5000
 const ADJUST_STEP_TIME = 200
-const currentMinimalVolume = computed(() => store.getters.currentMinimalVolume)
+const currentMinimalVolume = computed(() => useVolumeStore().minimal_volume)
 // player 音量縮小比例，否則語音音量過小
 const PLAYER_VOLUME_REDUCE_RATE = 0.7
 
@@ -13,12 +13,9 @@ export function useVolumeControl(playerCallback: (volume: number) => void) {
   let playerVolume: number
 
   // watch currentVolume
-  watch(
-    () => store.getters.currentVolume,
-    newValue => {
-      updatePlayerVolume(newValue)
-    }
-  )
+  watch(currentVolume, newValue => {
+    updatePlayerVolume(newValue)
+  })
 
   // 初始先改掉 player default volume
   updatePlayerVolume(currentVolume.value)

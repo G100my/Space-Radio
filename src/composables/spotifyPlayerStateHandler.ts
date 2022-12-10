@@ -1,7 +1,8 @@
-import store from '@/store'
+import type { Order } from '@/prototype/Order'
+import { usePlayingStore, useProgressStore, useQueueStore, useVoteStore } from '@/store'
 
 // 送出去的點歌可能會因為 spotify 回應不一樣的id...orz，但是歌的內容一樣= =+
-function clearPendingQueueHandler({ position, track_window }: Spotify.PlaybackState, pending) {
+function clearPendingQueueHandler({ position, track_window }: Spotify.PlaybackState, pending: Order | null) {
   // const pending = store.getters.pendingOrder
   if (position === 0) return
   if (!pending) return
@@ -9,7 +10,7 @@ function clearPendingQueueHandler({ position, track_window }: Spotify.PlaybackSt
   const { current_track } = track_window
   if (pending.track_id === current_track.id || pending.track_id === current_track.linked_from.id) {
     // 如果已經有 pending queue 而且跟現在正在撥放的是同一首歌，清空 pending
-    store.dispatch('clearPendingQueue')
+    useQueueStore().clearPendingQueue()
   }
 }
 
@@ -17,12 +18,13 @@ function clearPendingQueueHandler({ position, track_window }: Spotify.PlaybackSt
 
 function diffirentPlayingTrackIdHandler(
   playerState: Spotify.PlaybackState,
-  playerPlayingTrackId: Spotify.PlaybackState['playback_id']
+  playerPlayingTrackId: Spotify.PlaybackState['playback_id'] | null
 ) {
   // 更新 playingState, 如果 playingState 的 track id 和 player 回傳的 id 不一樣
-  if (playerState.track_window.current_track.id !== playerPlayingTrackId)
-    store.dispatch('updatePlayingTrack', playerState.track_window.current_track)
-  store.dispatch('clearDislikeVote')
+  if (playerState.track_window.current_track.id !== playerPlayingTrackId) {
+    usePlayingStore().updatePlayingTrack(playerState.track_window.current_track)
+  }
+  useVoteStore().clearDislikeVote()
 }
 
 // ===
@@ -40,7 +42,7 @@ function setNextQueueTimeoutHandler({ duration, position, paused }: Spotify.Play
   if (!paused && bufferTime > 0) {
     if (coundDownTimer) clearTimeout(coundDownTimer)
     coundDownTimer = setTimeout(() => {
-      store.dispatch('sendNextQueue')
+      useQueueStore().sendNextQueue()
     }, bufferTime)
   }
 }
@@ -49,13 +51,13 @@ function setNextQueueTimeoutHandler({ duration, position, paused }: Spotify.Play
 
 let lastTimestamp = 0
 function updateProgressTimeHandler(playerState: Spotify.PlaybackState) {
-  const { paused, duration, position, timestamp } = playerState
+  const { paused, position, timestamp } = playerState
   if (timestamp - lastTimestamp < 1500) {
     lastTimestamp = timestamp
   } else if (position !== 0 && !paused) {
-    store.dispatch('updateProgress', { paused, duration, position })
+    useProgressStore().updateProgress(position)
   } else if (paused) {
-    store.dispatch('updatePauseProgress')
+    useProgressStore().updatePauseProgress()
   }
 }
 

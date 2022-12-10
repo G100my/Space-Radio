@@ -1,5 +1,5 @@
 import { ref, computed, unref, watch, type WatchStopHandle } from 'vue'
-import store, { useRoomBasicStore } from '@/store'
+import { usePlayingStore, useProgressStore, useQueueStore, useRoomBasicStore } from '@/store'
 import { refreshAccessToken } from '@/utility/PKCE'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { useVolumeControl } from './usePlayerVolumeControl'
@@ -11,7 +11,7 @@ import {
 } from './spotifyPlayerStateHandler'
 import { TTSbyNote, TTS, useTTSonPlayer } from './useTTSwatch'
 import { useVoteWatch } from '@/composables/useVoteWatchControl'
-import { usePersonalStore } from '@/store/PersonalStore'
+import { usePersonalStore, useVolumeStore } from '@/store'
 
 let spotifyPlayer: Spotify.Player
 const thisSpotifyPlayerId = ref<string>()
@@ -21,12 +21,11 @@ const isThisSpotifyPlayerReady = ref(false)
 
 const currentActiveDeviceId = ref<string | null>(null)
 const currentActiveDeviceName = ref<string | null>(null)
-const currentVolume = computed(() => store.getters.currentVolume)
+const currentVolume = computed(() => useVolumeStore().volume)
 
 const initSpotifySetting = {
   name: 'Space Radio player',
   volume: currentVolume.value / 100,
-  // @ts-expect-error
   getOAuthToken: callback => {
     const { token, isTokenValid } = usePersonalStore()
     if (isTokenValid) {
@@ -70,10 +69,9 @@ function spotifyPlayerReadyHandler(device_id: string, isHost: boolean) {
   ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
 
   //
+  let stopAutoTTS: ReturnType<typeof useTTSonPlayer> | null
+  let stopAutoCut: ReturnType<typeof useVoteWatch> | null
   watch(isThisSpotifyPlayerActived, isActived => {
-    let stopAutoTTS: ReturnType<typeof useTTSonPlayer>
-    let stopAutoCut
-
     if (isActived) {
       stopAutoTTS = useTTSonPlayer(reducePlayerVolume, resumePlayerVolume)
       if (isHost) stopAutoCut = useVoteWatch(nextTrack)
@@ -91,14 +89,13 @@ function spotifyPlayerReadyHandler(device_id: string, isHost: boolean) {
 }
 
 //
-
-const pendingOrder = computed(() => store.getters.pendingOrder)
-const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
+const pendingOrder = computed(() => useQueueStore().pendingOrder)
+const playerPlayingTrackId = computed(() => usePlayingStore().playerPlayingTrackId)
 
 function hostPlayerStatusChangedHandler(playerState: Spotify.PlaybackState) {
   if (playerState === null) {
     refreshCurrentDevice()
-    store.dispatch('clearPlayingTrack')
+    usePlayingStore().clearPlayingTrack()
     window.onbeforeunload = null
     isThisSpotifyPlayerPaused.value = true
     return
@@ -138,12 +135,12 @@ function hostSDKReadyHandler() {
 
   spotifyPlayer.connect().then(success => {
     window.onbeforeunload = () => {
-      store.dispatch('clearPlayingTrack')
-      store.dispatch('clearPendingQueue')
+      usePlayingStore().clearPlayingTrack()
+      useQueueStore().clearPendingQueue()
       if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
     }
     if (success) console.log('Space Radio player successfully connected to Spotify!')
-    // @ts-expect-error
+    // @ts-ignore
     if (success && import.meta.env.DEV) window.spotifyPlayer = spotifyPlayer
     refreshCurrentDevice()
   })
@@ -155,7 +152,7 @@ const NEXT_REDUCE_PROCESS_TIME = 2000
 const NEXT_RESUME_PROCESS_TIME = 3000
 function nextTrack() {
   reducePlayerVolume(NEXT_REDUCE_PROCESS_TIME)
-    .then(() => store.dispatch('nextWithAddToPending'))
+    .then(() => useQueueStore().nextWithAddToPending())
     // { currentOrderId, targetQueue, order }
     .then(results => {
       if (results.order.note) TTSbyNote(results.order)
@@ -219,7 +216,7 @@ let unwatchContextUri: WatchStopHandle | null = null
 function customerTogglePlay() {
   spotifyPlayer.getCurrentState().then(state => {
     if (!state || state.paused) {
-      const context_uri = computed(() => store.getters.playerPlayingTrackUri)
+      const context_uri = computed(() => usePlayingStore().playerPlayingTrackUri)
       customerPlay(context_uri.value).then(() => {
         spotifyPlayer.getVolume().then(r => {
           customerPlayerVolume.value = Math.floor(r * 100)
@@ -237,7 +234,7 @@ function customerTogglePlay() {
 }
 async function customerPlay(context_uri: string) {
   const device_id = unref(thisSpotifyPlayerId)
-  const position_ms = store.getters.playingProgress.position
+  const position_ms = useProgressStore().playing_progress.position
   await spotifyAPI.play({ uris: [context_uri], device_id, position_ms }).then(() => {
     refreshCurrentDevice()
   })

@@ -3,7 +3,6 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import store from './store'
 import './style/index.css'
 import i18n from './locales'
 
@@ -11,6 +10,5 @@ import i18n from './locales'
 createApp(App)
   .use(router)
   .use(createPinia())
-  .use(store)
   .use(i18n)
   .mount('#app')
