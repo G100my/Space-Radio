@@ -1,37 +1,37 @@
 import { useProgressStore } from '@/store'
-import { computed, ref, watch } from 'vue'
+import { ref, watch, type WatchStopHandle } from 'vue'
 
 const INTERVAL = 1000
-const playingProgress = computed(() => useProgressStore().playing_progress)
 
 let progressTimer: null | ReturnType<typeof setInterval> = null
 
 const currentDuration = ref(0)
 const currentPosition = ref(0)
 
-let unwatch
-if (!unwatch) {
-  console.log('init watch')
-  unwatch = watch(playingProgress, newProgress => {
-    if (progressTimer) clearInterval(progressTimer)
-    if (newProgress === null) return
-    const { paused, duration, position } = newProgress
-    currentDuration.value = duration
-    currentPosition.value = position
+let unwatch: WatchStopHandle
 
-    if (paused) {
+export function useProgressTimer() {
+  if (!unwatch) {
+    unwatch = watch(useProgressStore().playing_progress, newProgress => {
       if (progressTimer) clearInterval(progressTimer)
-      progressTimer = null
-      return
-    }
+      if (newProgress === null) return
+      const { paused, duration, position } = newProgress
+      currentDuration.value = duration
+      currentPosition.value = position
 
-    progressTimer = setInterval(() => {
-      if (currentPosition.value + 1000 > currentDuration.value && progressTimer) {
-        clearInterval(progressTimer)
+      if (paused) {
+        if (progressTimer) clearInterval(progressTimer)
+        progressTimer = null
+        return
       }
-      currentPosition.value += 1000
-    }, INTERVAL)
-  })
-}
 
-export { currentDuration, currentPosition, unwatch }
+      progressTimer = setInterval(() => {
+        if (currentPosition.value + 1000 > currentDuration.value && progressTimer) {
+          clearInterval(progressTimer)
+        }
+        currentPosition.value += 1000
+      }, INTERVAL)
+    })
+  }
+  return { currentDuration, currentPosition, unwatch }
+}

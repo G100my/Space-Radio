@@ -1,11 +1,12 @@
 <script>
 import { useStore } from 'vuex'
 import { computed } from 'vue'
-import { currentPosition, currentDuration } from '@/composables/useProgressTimer'
+import { useProgressTimer } from '@/composables/useProgressTimer'
 import { useI18n } from 'vue-i18n'
 
 export default {
   setup() {
+    const { currentPosition, currentDuration } = useProgressTimer()
     const store = useStore()
     const dislike = computed(() => store.getters.dislike)
     const dislikeThreshold = computed(() => store.getters.dislikeThreshold)

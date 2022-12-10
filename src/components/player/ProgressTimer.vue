@@ -1,9 +1,10 @@
 <script>
 import { computed } from 'vue'
-import { currentPosition, currentDuration } from '@/composables/useProgressTimer'
+import { useProgressTimer } from '@/composables/useProgressTimer'
 
 export default {
   setup() {
+    const { currentDuration, currentPosition } = useProgressTimer()
     function zeroFormatter(num) {
       return num < 10 ? '0'.concat(num) : num
     }
