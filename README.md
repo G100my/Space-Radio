@@ -88,6 +88,12 @@
 - SpotifyApi, Firebase - Realtime database
 - Tailwind CSS, HeadlessUI
 
+#### v2
+
+- Vue3, Vite, Pinia, Vue Router, typescript
+- SpotifyApi, Firebase - Realtime database
+- Tailwind CSS, HeadlessUI
+
 ## V1
 
 UI Design by G100
