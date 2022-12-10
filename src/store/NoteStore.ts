@@ -1,14 +1,19 @@
 import { defineStore } from 'pinia'
 import { usePersonalStore } from './PersonalStore'
 
-const initNote = {
+export type Note = {
+  sender: string
+  recipient: string
+  message: string
+  tts: boolean
+}
+
+const initNote: Note = {
   sender: localStorage.getItem('spaceradio_senderName') || '',
   recipient: '',
   message: '',
   tts: false,
 }
-
-export type Note = typeof initNote
 
 export const useNoteStore = defineStore('NoteStore', {
   state: (): {

@@ -299,7 +299,6 @@ function customerSDKReadyHandler() {
 
 let hasCreated = false
 function useHostSpotifyPlayer() {
-  if (import.meta.env.MODE === 'test') return
   if (!hasCreated) {
     hasCreated = true
     window.onSpotifyWebPlaybackSDKReady = hostSDKReadyHandler
@@ -317,7 +316,6 @@ function useHostSpotifyPlayer() {
 }
 
 function useCustomerSpotifyPlayer() {
-  if (import.meta.env.MODE === 'test') return
   if (!hasCreated) {
     console.log('you are using customer player.')
     hasCreated = true

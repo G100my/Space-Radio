@@ -3,7 +3,6 @@ import { usePlayingStore, useProgressStore, useQueueStore, useVoteStore } from '
 
 // 送出去的點歌可能會因為 spotify 回應不一樣的id...orz，但是歌的內容一樣= =+
 function clearPendingQueueHandler({ position, track_window }: Spotify.PlaybackState, pending: Order | null) {
-  // const pending = store.getters.pendingOrder
   if (position === 0) return
   if (!pending) return
 

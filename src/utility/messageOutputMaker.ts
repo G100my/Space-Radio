@@ -3,7 +3,7 @@ import i18n from '@/locales'
 
 const defaultMessageOutput = i18n.global.t('slogan')
 
-const messageOutputMaker = (note: Note, trackName: string) => {
+const messageOutputMaker = (note: Note | false, trackName: string): string => {
   if (!note) return defaultMessageOutput
 
   let { sender, recipient } = note

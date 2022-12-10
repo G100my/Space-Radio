@@ -1,7 +1,6 @@
 <script>
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import { computed } from 'vue'
-import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { reactive, ref, shallowReactive, watch } from 'vue'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
@@ -13,13 +12,13 @@ import IconMinusRaw from '@/assets/icons/icon-minus.svg?raw'
 import IconPlusRaw from '@/assets/icons/icon-plus.svg?raw'
 import IconPlus from '@/assets/icons/icon-plus.svg'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import { usePersonalPlaylistStore } from '@/store'
 
 export default {
   name: 'Recommendation',
   components: { BaseMarquee, IconSearch, IconPlus, TabGroup, TabList, TabPanel, TabPanels, Tab },
   emits: ['activeSideDrawer'],
   setup() {
-    const store = useStore()
     const { t } = useI18n()
     const autherSeeds = ref([])
     const keywordArtist = ref('')
@@ -90,7 +89,7 @@ export default {
 
     return {
       SpotifyLogo,
-      spotify: computed(() => store.getters.spotifyLists),
+      spotify: computed(() => usePersonalPlaylistStore().spotifyPlaylists),
       t,
       autherSeeds,
       keyword: keywordArtist,

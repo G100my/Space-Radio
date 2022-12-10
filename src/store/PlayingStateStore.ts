@@ -2,6 +2,8 @@ import firebase from '@/plugins/firebase'
 import i18n from '@/locales'
 import { usePersonalStore } from './PersonalStore'
 import { defineStore } from 'pinia'
+import type { Order } from '@/prototype/Order'
+import type { Note } from './NoteStore'
 
 let playing_state_ref: firebase.database.Reference
 
@@ -10,8 +12,7 @@ function setPlayingStateRef(roomKey: string) {
 }
 
 //
-
-const initialOrder = {
+const initialOrder: LatestOrderState['latest_order'] = {
   id: '',
   orderer_id: '',
   orderer_name: '',
@@ -19,11 +20,21 @@ const initialOrder = {
   track_id: '',
   track_name: '',
 }
-export type OrderRaw = typeof initialOrder
+type LatestOrderState = {
+  latest_order: {
+    id: string
+    orderer_id: string
+    orderer_name: string
+    note: Note | false
+    track_id: string
+    track_name: string
+  }
+}
+
 const useLatestOrderStore = defineStore('LatestOrderStore', {
-  state: () => ({ latest_order: { ...initialOrder } }),
+  state: (): LatestOrderState => ({ latest_order: { ...initialOrder } }),
   actions: {
-    updateTheLatestOrder(order: OrderRaw) {
+    updateTheLatestOrder(order: Order) {
       playing_state_ref.child('latest_order').set(order)
     },
   },

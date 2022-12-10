@@ -1,16 +1,16 @@
 <script>
-import { useStore } from 'vuex'
 import { computed } from 'vue'
 import { useProgressTimer } from '@/composables/useProgressTimer'
 import { useI18n } from 'vue-i18n'
+import { usePlayingStore, useVoteStore } from '@/store'
 
 export default {
   setup() {
     const { currentPosition, currentDuration } = useProgressTimer()
-    const store = useStore()
-    const dislike = computed(() => store.getters.dislike)
-    const dislikeThreshold = computed(() => store.getters.dislikeThreshold)
-    const dislikeCountdown = computed(() => store.getters.dislikeCountdown)
+    const store = useVoteStore()
+    const dislike = computed(() => store.dislike)
+    const dislikeThreshold = computed(() => store.dislike_threshold)
+    const dislikeCountdown = computed(() => store.dislike_countdown)
 
     const NO_VOTE_BEFORE_END = 18000
     const nearEnd = computed(() => {
@@ -19,11 +19,11 @@ export default {
 
     return {
       t: useI18n().t,
-      isVoted: computed(() => store.getters.isVoted),
+      isVoted: computed(() => store.isVoted),
       dislike,
       dislikeThreshold,
       dislikeCountdown,
-      playerPlayingTrackId: computed(() => store.getters.playerPlayingTrackId),
+      playerPlayingTrackId: computed(() => usePlayingStore().playerPlayingTrackId),
       nearEnd,
     }
   },

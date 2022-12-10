@@ -11,6 +11,7 @@ import { Menu as HMenu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { computed, ref } from 'vue'
 import { usePersonalStore } from '@/store/PersonalStore'
 import { useNoteStore, useQueueStore } from '@/store'
+import type { Order } from '@/prototype/Order'
 
 export default {
   components: {
@@ -27,7 +28,7 @@ export default {
     MenuItem,
   },
   emits: ['activeNoteDialog'],
-  setup() {
+  setup(_props, context) {
     const personalStore = usePersonalStore()
     const userId = computed(() => personalStore.user_id)
 
@@ -72,6 +73,13 @@ export default {
           return false
       }
     }
+    function editNote(orderKey: string) {
+      const trackNameForLog = trackData.value[orderKey].name
+      const submitFunction = () => {
+        queueStore.urgentEdit(orderKey)
+      }
+      context.emit('activeNoteDialog', { orderKey, trackNameForLog, submitFunction })
+    }
     return {
       isMenuPositionUp,
       remove,
@@ -79,6 +87,7 @@ export default {
       getOrderer,
       menuPositionHandler,
       checkLevel,
+      editNote,
 
       totalQueue,
       userId,

@@ -1,14 +1,14 @@
 <script>
+import { useAlertStore } from '@/store'
 import { computed } from 'vue'
 import BaseAlert from '../base/BaseAlert.vue'
-import { useStore } from 'vuex'
 
 export default {
   components: { BaseAlert },
   setup() {
-    const store = useStore()
+    const store = useAlertStore()
     return {
-      feedbacks: computed(() => store.getters.feedbacks),
+      feedbacks: computed(() => store.feedbacks),
     }
   },
 }
@@ -22,7 +22,7 @@ export default {
       :iconSize="'lg'"
       :error="feedback.error"
       :title="feedback.message"
-      @close="$store.dispatch('closeFeedback', index)"
+      @close="store.closeFeedback(index)"
     />
   </div>
 </template>

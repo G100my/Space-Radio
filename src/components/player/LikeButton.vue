@@ -2,8 +2,8 @@
 import IconLikeFilled from '@/assets/icons/icon/like-filled.svg'
 import IconLikeOutlined from '@/assets/icons/icon/like-outlined.svg'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
+import { usePlayingStore } from '@/store'
 import { computed, ref, watch } from 'vue'
-import { useStore } from 'vuex'
 
 export default {
   components: {
@@ -11,9 +11,9 @@ export default {
     IconLikeOutlined,
   },
   setup() {
-    const store = useStore()
+    const store = usePlayingStore()
     const isTrackSaved = ref(false)
-    const playerPlayingTrackId = computed(() => store.getters.playerPlayingTrackId)
+    const playerPlayingTrackId = computed(() => store.playerPlayingTrackId)
 
     function checkSavedTrackState(trackId) {
       spotifyAPI.containsMySavedTracks([trackId]).then(result => {

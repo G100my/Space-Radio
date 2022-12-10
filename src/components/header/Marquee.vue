@@ -1,23 +1,26 @@
-<script>
+<script lang="ts">
 import { messageOutputMaker } from '@/utility/messageOutputMaker'
-import IconSpeaker from '@/assets/icons/icon-announcing.svg'
+import IconSpeaker from '@/assets/icons/icon-announcing.svg?component'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
+import { computed } from 'vue'
+import { useLatestOrderStore } from '@/store'
 
 export default {
   components: {
     IconSpeaker,
     BaseMarquee,
   },
-  computed: {
-    latestOrder() {
-      return this.$store.getters.latestOrder
-    },
-    messageOutput() {
-      // fixme, latestOrder shoud be empty after current playing queue finish
-      const trackName = this.latestOrder ? this.latestOrder.track_name : null
-      const note = this.latestOrder ? this.latestOrder.note : false
-      return messageOutputMaker(note, trackName)
-    },
+  setup() {
+    const latestOrder = computed(() => useLatestOrderStore().latest_order)
+    return {
+      latestOrder,
+      messageOutput: computed(() => {
+        // fixme, latestOrder shoud be empty after current playing queue finish
+        const trackName = latestOrder.value ? latestOrder.value.track_name : ''
+        const note = latestOrder.value ? latestOrder.value.note : false
+        return messageOutputMaker(note, trackName)
+      }),
+    }
   },
 }
 </script>
