@@ -6,7 +6,7 @@
     "composite": true,
     "baseUrl": ".",
     "resolveJsonModule": true,
-    "allowJs": true,
+    "allowJs": false,
     "paths": {
       "@/*": ["./src/*"]
     }
