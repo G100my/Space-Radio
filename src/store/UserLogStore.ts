@@ -104,7 +104,7 @@ function userLogConnect2firebase() {
       switch (name) {
         case 'reduceDislike':
         case 'increaseDislike': {
-          const userLog = { ...userLogMaker(name), payload: usePlayingStore().playing_track.id }
+          const userLog = { ...userLogMaker(name), payload: store.dislike }
           user_log_ref.push(userLog)
           break
         }

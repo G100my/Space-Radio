@@ -74,6 +74,8 @@ export default {
             <span v-else-if="['turnUp', 'turnDown'].includes(log.action_type)">Adjust Volumn: {{ log.payload }}</span>
             <span v-else-if="log.action_type === 'updateMinimalVolume'">Minimal Volume: {{ log.payload }}</span>
             <span v-else-if="log.action_type === 'updateDislikeThreshold'">Skip threshold: {{ log.payload }} </span>
+            <span v-else-if="log.action_type === 'reduceDislike'">Someone want to skip: {{ log.payload }} </span>
+            <span v-else-if="log.action_type === 'increaseDislike'">Someone cancel skip: {{ log.payload }} </span>
           </div>
         </div>
       </li>
