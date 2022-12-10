@@ -23,6 +23,7 @@ import NoteDialog from '@/components/lineup/NoteDialog.vue'
 import RoomQueue from '@/components/lineup/RoomQueue.vue'
 import { usePersonalStore } from '@/store/PersonalStore'
 import { useRoomBasicStore } from '@/store'
+import { userLogConnect2firebase } from '@/store/UserLogStore'
 
 export default {
   components: {
@@ -63,8 +64,7 @@ export default {
     onMounted(() => {
       queueConnect2firebase()
       playingStateConnect2firebase()
-      // ! fixme
-      // userLogConnect2firebase(store)
+      userLogConnect2firebase()
     })
 
     const isSideDrawerShow = ref(false)

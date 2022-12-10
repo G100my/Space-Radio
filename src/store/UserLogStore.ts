@@ -37,7 +37,7 @@ const useUserLogStore = defineStore('UserLogStore', {
   },
 })
 
-function userLogConnect2firebase(store: ReturnType<typeof useUserLogStore>) {
+function userLogConnect2firebase() {
   let recordVolumeLogTimer: ReturnType<typeof setTimeout> | null = null
 
   const unsubscribeQueueStore = useQueueStore().$onAction(({ name, store, args, after, onError }) => {
@@ -118,7 +118,7 @@ function userLogConnect2firebase(store: ReturnType<typeof useUserLogStore>) {
   })
 
   user_log_ref.limitToLast(logLimit).on('child_added', snapshot => {
-    store.pushUserLog(snapshot.val())
+    useUserLogStore().pushUserLog(snapshot.val())
   })
 
   return {
