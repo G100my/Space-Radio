@@ -1,16 +1,15 @@
 <script lang="ts">
 import { computed, reactive, ref, toRaw } from 'vue'
-import { useStore } from 'vuex'
 import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg?component'
 import TrackListContainer from './TrackListContainer.vue'
 import { useInfinityScroll } from '@/composables/useInfinityScroll'
-import { usePersonalPlaylistStore } from '@/store'
+import { usePersonalPlaylistStore, useQueueStore } from '@/store'
 
 export default {
   name: 'PlaylistContent',
   components: { IconSpinnerLoader, TrackListContainer },
   setup() {
-    const store = useStore()
+    const queueStore = useQueueStore()
     const listStore = usePersonalPlaylistStore()
     const listName = computed(() => listStore.chosenName)
     const selectMode = ref(false)
@@ -28,7 +27,7 @@ export default {
     }
 
     function addMultipleHandler() {
-      store.dispatch('addMultiple', { ids: Array.from(toRaw(idSet)), names: Array.from(nameSet) })
+      queueStore.addMultiple({ ids: Array.from(toRaw(idSet)), names: Array.from(nameSet) })
       clearSet()
     }
     function cancelHandler() {
