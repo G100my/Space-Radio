@@ -1,4 +1,4 @@
-import type { Order } from '@/prototype/Order'
+import type { Order } from '@/store'
 import { usePlayingStore, useProgressStore, useQueueStore, useVoteStore } from '@/store'
 
 // 送出去的點歌可能會因為 spotify 回應不一樣的id...orz，但是歌的內容一樣= =+

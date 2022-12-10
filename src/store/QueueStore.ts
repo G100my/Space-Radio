@@ -1,6 +1,5 @@
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import firebase from '../plugins/firebase'
-import { Order } from '@/prototype/Order'
 import { useNoteStore, type Note } from './NoteStore'
 import { defineStore } from 'pinia'
 import { usePersonalStore } from './PersonalStore'
@@ -32,6 +31,22 @@ function bindListener(
   target.on('child_changed', childSnapshot => {
     store._editOrder(storeTarget, childSnapshot)
   })
+}
+
+export interface Order {
+  id: string
+  orderer_id: string
+  orderer_name: string
+  track_name: string
+  track_id: string
+  note: Note | false
+}
+
+const orderMaker = (params: Omit<Order, 'id' | 'note'> & { id?: Order['id']; note?: Order['note'] }): Order => {
+  if (!params.id) {
+    params.id = `${Date.now().toString()}-${Math.floor(Math.random() * 10000).toString(16)}`
+  }
+  return params as Order
 }
 
 function queueConnect2firebase() {
@@ -113,11 +128,11 @@ export const useQueueStore = defineStore('QueueStore', {
     },
     _editOrder(storeTarget: storeNames, childSnapshot: firebase.database.DataSnapshot) {
       if (childSnapshot.key === null) throw new Error('childSnapshot.key is null.')
-      this[`${storeTarget}_queue`][childSnapshot.key] = new Order(childSnapshot.val())
+      this[`${storeTarget}_queue`][childSnapshot.key] = orderMaker(childSnapshot.val())
     },
 
     _addOrder(storeTarget: storeNames, childSnapshot: firebase.database.DataSnapshot) {
-      const order = new Order(childSnapshot.val())
+      const order = orderMaker(childSnapshot.val())
       const trackId = order.track_id
       const key = childSnapshot.key
 
@@ -143,7 +158,7 @@ export const useQueueStore = defineStore('QueueStore', {
       const personalStore = usePersonalStore()
       const orderer_id = personalStore.user_id
       const orderer_name = personalStore.display_name
-      const order = new Order({ track_id, track_name, orderer_id, orderer_name })
+      const order = orderMaker({ track_id, track_name, orderer_id, orderer_name })
       normal_queue_ref.child(order.id).update(order)
     },
     jumpIn(track_id: string, track_name: string) {
@@ -152,7 +167,7 @@ export const useQueueStore = defineStore('QueueStore', {
         const personalStore = usePersonalStore()
         const orderer_name = personalStore.display_name
         const orderer_id = personalStore.user_id
-        urgent_queue_ref.push(new Order({ track_id, track_name, note, orderer_name, orderer_id }))
+        urgent_queue_ref.push(orderMaker({ track_id, track_name, note, orderer_name, orderer_id }))
         noteStore.isDialogOpen = false
         noteStore.recordSenderNameInLocal()
       }
@@ -161,13 +176,13 @@ export const useQueueStore = defineStore('QueueStore', {
       noteStore.isDialogOpen = true
       noteStore.submitHandler = handler
     },
-    addMultiple(ids: number[], names: string[]) {
+    addMultiple(ids: string[], names: string[]) {
       const personalStore = usePersonalStore()
       const orderer_name = personalStore.display_name
       const orderer_id = personalStore.user_id
       const parameter = ids.reduce<State['normal_queue']>((accumulator, track_id, index) => {
         const id = `${Date.now()}-${index}`
-        accumulator[id] = new Order({
+        accumulator[id] = orderMaker({
           track_id,
           track_name: names[index],
           orderer_id,
@@ -187,7 +202,7 @@ export const useQueueStore = defineStore('QueueStore', {
 
     urgent2normal(orderId: string) {
       const urgentOrder = this.urgent_queue[orderId]
-      const normalOrder = new Order({ ...urgentOrder, note: false })
+      const normalOrder = orderMaker({ ...urgentOrder, note: false })
 
       urgent_queue_ref
         .child(orderId)
@@ -200,7 +215,7 @@ export const useQueueStore = defineStore('QueueStore', {
     normal2urgent(orderId: string) {
       const noteStore = useNoteStore()
       const handler = (note: Note) => {
-        const queue = new Order({ ...this.normal_queue[orderId], note })
+        const queue = orderMaker({ ...this.normal_queue[orderId], note })
         normal_queue_ref
           .child(orderId)
           .remove()

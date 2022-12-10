@@ -13,10 +13,10 @@ export default {
     const listStore = usePersonalPlaylistStore()
     const listName = computed(() => listStore.chosenName)
     const selectMode = ref(false)
-    const idSet = reactive<Set<number>>(new Set())
+    const idSet = reactive<Set<string>>(new Set())
     const nameSet = new Set<string>()
 
-    function checkboxHandler(value: unknown, id: number, name: string) {
+    function checkboxHandler(value: string, id: string, name: string) {
       if (value && !idSet.has(id)) {
         idSet.add(id)
         nameSet.add(name)

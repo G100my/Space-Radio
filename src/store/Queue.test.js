@@ -5,7 +5,7 @@ import { spotifyAPI } from '@/plugins/spotifyAPI'
 jest.mock('./firebase.js')
 jest.mock('../utility/spotifyAPI.js')
 
-const order = new Order({
+const order = orderMaker({
   orderer_id: 'g100',
   orderer_name: 'g100my',
   track_name: 'lalala',
@@ -48,7 +48,7 @@ describe('sendNextQueue', () => {
   const state = deepCopy(initState)
   it('has normal queue', async () => {
     ;[1, 2, 3].forEach(num => {
-      const order = new Order({
+      const order = orderMaker({
         orderer_id: `orderer_id${num}`,
         orderer_name: `orderer_name${num}`,
         track_id: `track_id${num}`,
@@ -78,7 +78,7 @@ describe('sendNextQueue', () => {
   })
   it('has urgent queue', () => {
     ;[1, 2].forEach(num => {
-      const order = new Order({
+      const order = orderMaker({
         orderer_id: `orderer_id${num}`,
         orderer_name: `orderer_name${num}`,
         track_id: `track_id${num}`,

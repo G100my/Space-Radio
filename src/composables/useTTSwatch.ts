@@ -1,7 +1,7 @@
 import { watch, type WatchStopHandle } from 'vue'
 import { messageOutputMaker } from '@/utility/messageOutputMaker'
 import { useQueueStore } from '@/store'
-import type { Order } from '@/prototype/Order'
+import type { Order } from '@/store'
 
 const utterance = new window.SpeechSynthesisUtterance()
 utterance.pitch = 1

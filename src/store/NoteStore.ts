@@ -28,7 +28,7 @@ export const useNoteStore = defineStore('NoteStore', {
     submitHandler: () => {},
   }),
   actions: {
-    updateEditingNote(payload: Partial<Note>) {
+    updateEditingNote(payload: Partial<Note> | false) {
       this.editingNote = { ...this.editingNote, ...payload }
     },
     recordSenderNameInLocal() {

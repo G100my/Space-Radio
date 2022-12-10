@@ -2,7 +2,7 @@ import firebase from '@/plugins/firebase'
 import i18n from '@/locales'
 import { usePersonalStore } from './PersonalStore'
 import { defineStore } from 'pinia'
-import type { Order } from '@/prototype/Order'
+import type { Order } from '@/store'
 import type { Note } from './NoteStore'
 
 let playing_state_ref: firebase.database.Reference
