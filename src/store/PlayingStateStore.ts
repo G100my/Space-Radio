@@ -54,6 +54,10 @@ const useVolumeStore = defineStore('VolumeStore', {
       const reduceResult = this.volume - volumeStep
       if (reduceResult >= this.minimal_volume) playing_state_ref.update({ volume: reduceResult })
     },
+    updateMinimalVolume(value: number) {
+      if (value >= 0 && value <= 100) playing_state_ref.update({ minimal_volume: value })
+      else throw new Error('minimal_volume is not correct.')
+    },
   },
 })
 

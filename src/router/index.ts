@@ -8,7 +8,7 @@ import { fetchAccessToken } from '@/utility/PKCE'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 
 import { setPlayingStateRef } from '@/store/PlayingStateStore'
-import { setUserLogRef } from '@/store/UserLog'
+import { setUserLogRef } from '@/store/UserLogStore'
 import { setQueueRef } from '@/store/QueueStore'
 import { usePersonalStore } from '@/store/PersonalStore'
 
