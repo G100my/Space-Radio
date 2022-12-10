@@ -17,15 +17,21 @@ export default {
       return progress.currentDuration.value - progress.currentPosition.value < NO_VOTE_BEFORE_END
     })
 
+    function handleClick() {
+      if (store.isVoted) store.reduceDislike()
+      else store.increaseDislike()
+      store.isVoted = !store.isVoted
+    }
+
     return {
       t: useI18n().t,
-      isVoted: computed(() => store.isVoted),
       dislike,
       dislikeThreshold,
       dislikeCountdown,
-      playerPlayingTrackId: computed(() => usePlayingStore().playerPlayingTrackId),
-      nearEnd,
       store: useVoteStore(),
+
+      isDisable: computed(() => !usePlayingStore().playerPlayingTrackId || nearEnd.value),
+      handleClick,
     }
   },
 }
@@ -42,13 +48,8 @@ export default {
         </template>
       </i18n-t>
     </template>
-    <button
-      type="button"
-      class="btn-secondary mt-2"
-      :disabled="!playerPlayingTrackId || nearEnd"
-      @click="isVoted ? store.reduceDislike() : store.increaseDislike()"
-    >
-      {{ isVoted ? t('cancel') : t('vote_for_skip') }}
+    <button type="button" class="btn-secondary mt-2" :disabled="isDisable" @click="handleClick">
+      {{ store.isVoted ? t('cancel') : t('vote_for_skip') }}
     </button>
   </div>
 </template>
