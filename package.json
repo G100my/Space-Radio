@@ -21,8 +21,7 @@
     "spotify-web-api-js": "^1.5.2",
     "vue": "^3.2.44",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.1.6",
-    "vuex": "^4.0.0"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^0.7.1",
