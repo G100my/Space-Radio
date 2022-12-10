@@ -14,9 +14,6 @@ export const useAlertStore = defineStore('AlertStore', {
   state: (): { feedbacks: Feedback[] } => ({
     feedbacks: [],
   }),
-  getters: {
-    feedbacks: state => state.feedbacks,
-  },
   actions: {
     _feedbackTimeout(randomKey: number) {
       setTimeout(() => {
