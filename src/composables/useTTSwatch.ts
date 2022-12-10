@@ -1,4 +1,4 @@
-import { computed, watch } from 'vue'
+import { watch, type WatchStopHandle } from 'vue'
 import { messageOutputMaker } from '@/utility/messageOutputMaker'
 import { useQueueStore } from '@/store'
 import type { Order } from '@/prototype/Order'
@@ -9,16 +9,18 @@ utterance.rate = 0.75
 utterance.volume = 1
 utterance.lang = 'zh-TW'
 
-function setTTSVoice() {
+export function setTTSVoice() {
   const voice = speechSynthesis.getVoices().find(item => item.name.includes('Google') && item.lang.includes('zh-TW'))
   if (voice) utterance.voice = voice
 }
 
-speechSynthesis.onvoiceschanged = () => {
-  if (!utterance.voice) setTTSVoice()
+if (!speechSynthesis.onvoiceschanged) {
+  speechSynthesis.onvoiceschanged = () => {
+    if (!utterance.voice) setTTSVoice()
+  }
 }
 
-function TTS(text: string) {
+export function TTS(text: string) {
   return new Promise<void>((resolve, reject) => {
     utterance.onerror = error => {
       console.error('utterance error: ', error)
@@ -34,51 +36,44 @@ function TTS(text: string) {
   })
 }
 
-export { TTS }
-
-const pendingOrder = computed(() => useQueueStore().pendingOrder)
-
-/**
- * @param {Function} reducePlayerVolume
- * @param {Function} resumePlayerVolume
- * @returns unwatch function
- */
-function useTTSonPlayer(reducePlayerVolume: () => Promise<any>, resumePlayerVolume: () => Promise<any>) {
-  const unwatch = watch(
-    pendingOrder,
-    pending => {
-      console.log(pending)
-      if (!pending) return
-      else if (!pending.note) return
-      else if (!pending.note.tts) return
-      else {
-        reducePlayerVolume()
-          .then(() => {
-            TTSbyNote(pending)
-          })
-          .then(() => resumePlayerVolume())
-          .catch(error => {
-            console.error(error)
-          })
-      }
-    },
-    { deep: true }
-  )
-  return unwatch
-}
-
-/**
- *
- * @param {Order} pending
- * @param {Funtion} reducePlayerVolume
- * @param {Funtion} resumePlayerVolume
- * @returns void
- */
-function TTSbyNote(pending: Order) {
+export function TTSbyNote(pending: Order) {
   const { track_name, note } = pending
   let messageOutput4TTS = messageOutputMaker(note, track_name)
   messageOutput4TTS = messageOutput4TTS.replace(/[^\w^\s^\u4e00-\u9fa5]/gi, '')
   return TTS(messageOutput4TTS)
 }
 
-export { useTTSonPlayer, TTSbyNote }
+let unwatch: WatchStopHandle | null = null
+
+export function useTTSonPlayer(reducePlayerVolume: () => Promise<void>, resumePlayerVolume: () => Promise<void>) {
+  if (!unwatch) {
+    unwatch = watch(
+      () => useQueueStore().pendingOrder,
+      pending => {
+        console.log(pending)
+        if (!pending) return
+        else if (!pending.note) return
+        else if (!pending.note.tts) return
+        else {
+          reducePlayerVolume()
+            .then(() => {
+              TTSbyNote(pending)
+            })
+            .then(() => resumePlayerVolume())
+            .catch(error => {
+              console.error(error)
+            })
+        }
+      },
+      { deep: true }
+    )
+  }
+  return () => {
+    if (unwatch) {
+      unwatch()
+      unwatch = null
+    } else {
+      throw new Error("useTTSwatch did't watch any thing.")
+    }
+  }
+}
