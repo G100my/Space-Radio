@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import store from '@/store'
 import Hall from '@/views/Hall.vue'
 import Room from '@/views/Room.vue'
 import Doorscope from '@/views/Doorscope.vue'
@@ -38,8 +37,9 @@ const routes = [
       },
     ],
     beforeEnter: () => {
+      const personalStore = usePersonalStore()
       // avoid user refresh page
-      if (!spotifyAPI.getAccessToken() && store.getters.isTokenValid) {
+      if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid) {
         spotifyAPI.setAccessToken(usePersonalStore().token)
       }
     },
@@ -86,8 +86,8 @@ router.beforeEach(async to => {
   if (window.location.search.includes('?error=')) {
     return { name: 'Hall' }
   }
-
-  if (to.meta.requiresAuth && !store.getters.isTokenValid) {
+  const personalStore = usePersonalStore()
+  if (to.meta.requiresAuth && !personalStore.isTokenValid) {
     return { name: 'Hall' }
   }
 })
