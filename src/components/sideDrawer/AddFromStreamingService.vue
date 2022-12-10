@@ -73,23 +73,23 @@ export default {
         </h3>
         <ul class="_side_drawer_ul">
           <li @click="libraryClickHandler('spotifyLiked')">
-            <p>{{ t('liked_songs_from_spotify') }}</p>
+            <p>{{ t('list_name.liked_songs_from_spotify') }}</p>
             <IconArrowRight />
           </li>
           <li @click="libraryClickHandler('spotifyRecently')">
-            <p>{{ t('recently_played') }}</p>
+            <p>{{ t('list_name.recently_played') }}</p>
             <IconArrowRight />
           </li>
           <li @click="libraryClickHandler('spotifyLong')">
-            <p>{{ t('your_totally_top_tracks') }}</p>
+            <p>{{ t('list_name.your_totally_top_tracks') }}</p>
             <IconArrowRight />
           </li>
           <li @click="libraryClickHandler('spotifyMedium')">
-            <p>{{ t('your_top_tracks_in_last_6_months') }}</p>
+            <p>{{ t('list_name.your_top_tracks_in_last_6_months') }}</p>
             <IconArrowRight />
           </li>
           <li @click="libraryClickHandler('spotifyShort')">
-            <p>{{ t('your_top_tracks_in_last_month') }}</p>
+            <p>{{ t('list_name.your_top_tracks_in_last_month') }}</p>
             <IconArrowRight />
           </li>
         </ul>
