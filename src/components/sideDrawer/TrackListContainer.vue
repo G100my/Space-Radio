@@ -1,45 +1,27 @@
-<script lang="ts">
+<script setup lang="ts">
 import IconPlus from '@/assets/icons/icon-plus.svg?component'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg?component'
 import BaseMarquee from '../base/BaseMarquee.vue'
-import { defineComponent } from 'vue'
 import type { FormattedTrack } from '@/utility/dataFormat'
 import { useQueueStore } from '@/store'
 
-export default defineComponent({
-  components: { BaseMarquee, IconPlus, IconArrowUp },
-  props: {
-    list: {
-      type: Array,
-      required: true,
-    },
-    selectable: {
-      type: Boolean,
-      default: false,
-    },
-    selectMode: {
-      type: Boolean,
-      default: false,
-    },
-    selectHandler: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  setup(props) {
-    return { trackList: props.list as FormattedTrack[], store: useQueueStore() }
-  },
-})
+withDefaults(
+  defineProps<{
+    list: FormattedTrack[]
+    selectable?: boolean
+    selectMode?: boolean
+    selectHandler?: (value: string, id: string, name: string) => void
+  }>(),
+  { selectHandler: () => {} }
+)
+
+const store = useQueueStore()
 </script>
 <template>
   <ul class="space-y-4 overflow-y-auto">
-    <li
-      v-for="track in trackList"
-      :key="track.id"
-      class="flex gap-x-2 rounded-10 bg-tertiary-1 bg-opacity-60 py-3 px-4"
-    >
+    <li v-for="track in list" :key="track.id" class="flex gap-x-2 rounded-10 bg-tertiary-1 bg-opacity-60 py-3 px-4">
       <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center md:h-16 md:w-16">
-        <img v-show="!selectMode" class="_cover" :src="track.albumCoverUrl" :alt="track.albumName" />
+        <img v-show="!selectMode" class="_cover" :src="track.coverUrl" :alt="track.albumName" />
         <input
           v-if="selectable"
           v-show="selectMode"

@@ -7,7 +7,7 @@ export function spotifyCoverPicker(imagesUrl: SpotifyApi.AlbumObjectSimplified['
 export interface FormattedTrack {
   albumName: SpotifyApi.AlbumObjectSimplified['name']
   albumExternalUrl: SpotifyApi.AlbumObjectSimplified['external_urls']['spotify']
-  albumCoverUrl: string
+  coverUrl: string
   artists: SpotifyApi.ArtistObjectSimplified[]
   id: string
   name: string
@@ -24,18 +24,18 @@ export const playlistTrackFormater = (
     return {
       albumName: i.album.name,
       albumExternalUrl: i.album.external_urls.spotify,
-      albumCoverUrl: spotifyCoverPicker(i.album.images),
+      coverUrl: spotifyCoverPicker(i.album.images),
       ...base,
     }
   } else {
-    return { albumName: '', albumExternalUrl: '', albumCoverUrl: '', ...base }
+    return { albumName: '', albumExternalUrl: '', coverUrl: '', ...base }
   }
 }
 
 export const topTrackFormater = ({ album, artists, id, name }: SpotifyApi.TrackObjectFull): FormattedTrack => ({
   albumName: album.name,
   albumExternalUrl: album.uri,
-  albumCoverUrl: spotifyCoverPicker(album.images),
+  coverUrl: spotifyCoverPicker(album.images),
   artists,
   id,
   name,

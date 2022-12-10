@@ -3,7 +3,7 @@ import IconSearch from '@/assets/icons/icon-search.svg?component'
 import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg?component'
 import { onUnmounted, ref } from 'vue'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
-import { spotifyCoverPicker } from '@/utility/dataFormat'
+import { playlistTrackFormater, type FormattedTrack } from '@/utility/dataFormat'
 import TrackListContainer from './TrackListContainer.vue'
 import { useInfinityScroll } from '@/composables/useInfinityScroll'
 
@@ -14,20 +14,14 @@ export default {
     TrackListContainer,
   },
   setup() {
-    interface FormattedSearchTrack extends SpotifyApi.TrackObjectFull {
-      coverUrl: string
-    }
-    const list = ref<FormattedSearchTrack[]>([])
+    const list = ref<FormattedTrack[]>([])
     const keywords = ref('')
     const searchedAmount = ref(0)
     let next = ref('')
     const limit = 30
     function search(offset = 0) {
       return spotifyAPI.search(keywords.value, ['track'], { limit, offset }).then(response => {
-        const formattedTracks: FormattedSearchTrack[] = response.tracks!.items.map(i => ({
-          ...i,
-          coverUrl: spotifyCoverPicker(i.album.images),
-        }))
+        const formattedTracks: FormattedTrack[] = response.tracks!.items.map(playlistTrackFormater)
 
         list.value = list.value.concat(formattedTracks)
         next.value = response.tracks!.next
