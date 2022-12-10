@@ -6,7 +6,7 @@ import { usePlayingStore, useVoteStore } from '@/store'
 
 export default {
   setup() {
-    const { currentPosition, currentDuration } = useProgressTimer()
+    const progress = useProgressTimer()
     const store = useVoteStore()
     const dislike = computed(() => store.dislike)
     const dislikeThreshold = computed(() => store.dislike_threshold)
@@ -14,7 +14,7 @@ export default {
 
     const NO_VOTE_BEFORE_END = 18000
     const nearEnd = computed(() => {
-      return currentDuration.value - currentPosition.value < NO_VOTE_BEFORE_END
+      return progress.currentDuration.value - progress.currentPosition.value < NO_VOTE_BEFORE_END
     })
 
     return {

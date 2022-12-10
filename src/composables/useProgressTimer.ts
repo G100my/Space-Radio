@@ -12,26 +12,29 @@ let unwatch: WatchStopHandle
 
 export function useProgressTimer() {
   if (!unwatch) {
-    unwatch = watch(useProgressStore().playing_progress, newProgress => {
-      if (progressTimer) clearInterval(progressTimer)
-      if (newProgress === null) return
-      const { paused, duration, position } = newProgress
-      currentDuration.value = duration
-      currentPosition.value = position
-
-      if (paused) {
+    unwatch = watch(
+      () => useProgressStore().playing_progress,
+      newProgress => {
         if (progressTimer) clearInterval(progressTimer)
-        progressTimer = null
-        return
-      }
+        if (newProgress === null) return
+        const { paused, duration, position } = newProgress
+        currentDuration.value = duration
+        currentPosition.value = position
 
-      progressTimer = setInterval(() => {
-        if (currentPosition.value + 1000 > currentDuration.value && progressTimer) {
-          clearInterval(progressTimer)
+        if (paused) {
+          if (progressTimer) clearInterval(progressTimer)
+          progressTimer = null
+          return
         }
-        currentPosition.value += 1000
-      }, INTERVAL)
-    })
+
+        progressTimer = setInterval(() => {
+          if (currentPosition.value + 1000 > currentDuration.value && progressTimer) {
+            clearInterval(progressTimer)
+          }
+          currentPosition.value += 1000
+        }, INTERVAL)
+      }
+    )
   }
   return { currentDuration, currentPosition, unwatch }
 }
