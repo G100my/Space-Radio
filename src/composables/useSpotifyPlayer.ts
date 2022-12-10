@@ -10,7 +10,7 @@ import {
   updateProgressTimeHandler,
 } from './spotifyPlayerStateHandler'
 import { TTSbyNote, TTS, useTTSonPlayer } from './useTTSwatch'
-import { useVoteWatch } from '@/composables/useVoteWatchControl'
+import { useVoteWatch } from '@/composables/useVoteWatch'
 import { usePersonalStore, useVolumeStore } from '@/store'
 
 let spotifyPlayer: Spotify.Player
