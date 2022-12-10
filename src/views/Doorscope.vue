@@ -1,13 +1,13 @@
 <script>
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
 import firebase from '@/plugins/firebase'
 import { PKCE } from '@/utility/PKCE'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import initCover from '@/assets/vinyl-record.png'
 import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg'
 import { useI18n } from 'vue-i18n'
+import { usePlayingStore } from '@/store'
 
 export default {
   components: {
@@ -15,10 +15,10 @@ export default {
   },
   setup() {
     const { t } = useI18n()
+    const playingStore = usePlayingStore()
     const roomKey = useRoute().params.roomKey
-    const store = useStore()
     const roomName = ref('')
-    const album = computed(() => store.getters.playerPlayingAlbum)
+    const album = computed(() => playingStore.playing_track.album)
     const enterButton = ref(null)
 
     const room_ref = firebase.database().ref(roomKey)
@@ -27,7 +27,7 @@ export default {
       .get()
       .then(snapshot => {
         const playingTrack = snapshot.val()['playing_track']
-        store.commit('playerTrack', playingTrack)
+        playingStore.updatePlayerTrack(playingTrack)
       })
     room_ref
       .child('basic/room_name')
@@ -47,7 +47,7 @@ export default {
       album,
       initCover,
       PKCE,
-      trackName: computed(() => store.getters.playerPlayingTrackName),
+      trackName: computed(() => playingStore.playing_track.name),
       spotifyAPI,
       enterButton,
       t,

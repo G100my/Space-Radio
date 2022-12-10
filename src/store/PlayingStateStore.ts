@@ -112,22 +112,30 @@ const useProgressStore = defineStore('ProgressStore', {
 
 //
 
-const initialTrack = {
-  id: false,
-  name: '',
-  artists: [
-    {
-      name: 'G100',
-      url: 'https://github.com/G100my/Space Radio',
+function getFormattedPlayingTrack(playingTrack: Spotify.Track) {
+  const { name, id, uri: context_uri } = playingTrack
+  return {
+    name,
+    id,
+    artists: playingTrack.artists.map(item => {
+      item.url = transformURI2URL(item.uri)
+      return item
+    }),
+    album: {
+      name: playingTrack.album.name,
+      image_url: playingTrack.album?.images?.find(item => Number(item.height) >= 300)?.url,
+      url: transformURI2URL(playingTrack.album.uri),
     },
-  ],
-  album: {
-    url: '',
-    name: '---',
-    image_url: '',
-  },
-  is_playable: true,
-  context_uri: false,
+    context_uri,
+  }
+}
+
+const initialPlayingTrack: ReturnType<typeof getFormattedPlayingTrack> = {
+  id: '',
+  name: '',
+  artists: [{ name: 'G100', url: 'https://github.com/G100my/Space Radio', uri: '' }],
+  album: { url: '', name: '---', image_url: '' },
+  context_uri: '',
 }
 function transformURI2URL(uri: unknown) {
   if (typeof uri !== 'string') return ''
@@ -136,34 +144,24 @@ function transformURI2URL(uri: unknown) {
 }
 const usePlayingStore = defineStore('PlayingTrackStore', {
   state: () => ({
-    playing_track: { ...initialTrack },
+    playing_track: { ...initialPlayingTrack },
   }),
   getters: {
     playerPlayingTrackName: state =>
       state.playing_track.name ? state.playing_track.name : i18n.global.t('no_playing_track'),
   },
   actions: {
+    updatePlayerTrack(newPlayingTrack: Spotify.Track) {
+      if (!newPlayingTrack) this.playing_track = { ...initialPlayingTrack }
+      else this.playing_track = { ...this.playing_track, ...getFormattedPlayingTrack(newPlayingTrack) }
+    },
     updatePlayingTrack(newPlayingTrack: Spotify.Track) {
-      const { name, id, uri: context_uri } = newPlayingTrack
-      const track = {
-        name,
-        id,
-        artists: newPlayingTrack.artists.map(item => {
-          item.url = transformURI2URL(item.uri)
-          return item
-        }),
-        album: {
-          name: newPlayingTrack.album.name,
-          image_url: newPlayingTrack.album.images.find(item => Number(item.height) >= 300)?.url,
-          url: transformURI2URL(newPlayingTrack.album.uri),
-        },
-        context_uri,
-      }
+      const track = getFormattedPlayingTrack(newPlayingTrack)
       playing_state_ref.child('playing_track').set(track)
     },
     clearPlayingTrack() {
       playing_state_ref.update({
-        playing_track: initialTrack,
+        playing_track: initialPlayingTrack,
         latest_order: initialOrder,
         playing_progress: initProgress,
       })
@@ -182,7 +180,7 @@ function playingStateConnect2firebase() {
   })
 
   playing_state_ref.child('playing_track').on('value', snapshot => {
-    usePlayingStore().playing_track = snapshot.val() ?? { ...initialTrack }
+    usePlayingStore().playing_track = snapshot.val() ?? { ...initialPlayingTrack }
   })
   playing_state_ref.child('latest_order').on('value', snapshot => {
     useLatestOrderStore().latest_order = snapshot.val() ?? { ...initialOrder }
