@@ -149,6 +149,8 @@ const usePlayingStore = defineStore('PlayingTrackStore', {
   getters: {
     playerPlayingTrackName: state =>
       state.playing_track.name ? state.playing_track.name : i18n.global.t('no_playing_track'),
+    playerPlayingArtists: state => state.playing_track.artists,
+    playerPlayingAlbum: state => state.playing_track.album,
   },
   actions: {
     updatePlayerTrack(newPlayingTrack: Spotify.Track) {

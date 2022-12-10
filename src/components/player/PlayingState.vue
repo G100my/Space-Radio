@@ -1,12 +1,11 @@
 <script>
 import { computed, defineAsyncComponent } from 'vue'
-import { useStore } from 'vuex'
 import logo from '@/assets/vinyl-record.png'
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import ProgressTimer from './ProgressTimer.vue'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
 import LikeButton from '@/components/player/LikeButton.vue'
-import { usePersonalStore } from '@/store'
+import { usePersonalStore, usePlayingStore } from '@/store'
 
 export default {
   components: {
@@ -16,15 +15,15 @@ export default {
     PlayToggle: defineAsyncComponent(() => import('@/components/player/PlayToggle.vue')),
   },
   setup() {
-    const store = useStore()
+    const store = usePlayingStore()
     const personalStore = usePersonalStore()
     return {
       SpotifyLogo,
       logo,
 
-      playerPlayingAlbum: computed(() => store.getters.playerPlayingAlbum),
-      playerPlayingArtists: computed(() => store.getters.playerPlayingArtists),
-      playerPlayingTrackName: computed(() => store.getters.playerPlayingTrackName),
+      playerPlayingAlbum: computed(() => store.playerPlayingAlbum),
+      playerPlayingArtists: computed(() => store.playerPlayingArtists),
+      playerPlayingTrackName: computed(() => store.playerPlayingTrackName),
       isPremium: computed(() => personalStore.isPremium),
       isHostUser: computed(() => personalStore.isHostUser),
       customerPlayerMode: computed(() => personalStore.customerPlayerMode),
@@ -49,6 +48,7 @@ export default {
             :title="playerPlayingAlbum.name"
             class="h-20 w-20 laptop:h-auto laptop:w-full"
           />
+          <span class="sr-only">playing track album</span>
         </a>
         <PlayToggle
           v-if="isPremium && isHostUser !== undefined && (customerPlayerMode || isHostUser)"
