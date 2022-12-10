@@ -2,7 +2,7 @@ import { ref, computed, unref, watch, type WatchStopHandle } from 'vue'
 import { usePlayingStore, useProgressStore, useQueueStore, useRoomBasicStore } from '@/store'
 import { refreshAccessToken } from '@/utility/PKCE'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
-import { useVolumeControl } from './usePlayerVolumeControl'
+import { usePlayerVolumeControl } from '@/composables/usePlayerVolumeControl'
 import {
   diffirentPlayingTrackIdHandler,
   clearPendingQueueHandler,
@@ -21,11 +21,10 @@ const isThisSpotifyPlayerReady = ref(false)
 
 const currentActiveDeviceId = ref<string | null>(null)
 const currentActiveDeviceName = ref<string | null>(null)
-const currentVolume = computed(() => useVolumeStore().volume)
 
-const initSpotifySetting: Spotify.PlayerInit = {
+const getSpotifyInitSetting = (): Spotify.PlayerInit => ({
   name: 'Space Radio player',
-  volume: currentVolume.value / 100,
+  volume: useVolumeStore().volume / 100,
   getOAuthToken: callback => {
     const { token, isTokenValid } = usePersonalStore()
     if (isTokenValid) {
@@ -36,11 +35,11 @@ const initSpotifySetting: Spotify.PlayerInit = {
       })
     }
   },
-}
+})
 
-let resumePlayerVolume: ReturnType<typeof useVolumeControl>['resumePlayerVolume']
-let reducePlayerVolume: ReturnType<typeof useVolumeControl>['reducePlayerVolume']
-let updatePlayerVolume: ReturnType<typeof useVolumeControl>['updatePlayerVolume']
+let resumePlayerVolume: ReturnType<typeof usePlayerVolumeControl>['resumePlayerVolume']
+let reducePlayerVolume: ReturnType<typeof usePlayerVolumeControl>['reducePlayerVolume']
+let updatePlayerVolume: ReturnType<typeof usePlayerVolumeControl>['updatePlayerVolume']
 
 function refreshCurrentDevice() {
   spotifyAPI.getMyCurrentPlaybackState().then(result => {
@@ -66,7 +65,7 @@ function spotifyPlayerReadyHandler(device_id: string, isHost: boolean) {
   isThisSpotifyPlayerReady.value = true
 
   const playerSetVolumeCallback = (volume: number) => spotifyPlayer.setVolume(volume)
-  ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = useVolumeControl(playerSetVolumeCallback))
+  ;({ reducePlayerVolume, updatePlayerVolume, resumePlayerVolume } = usePlayerVolumeControl(playerSetVolumeCallback))
 
   //
   let stopAutoTTS: ReturnType<typeof useTTSonPlayer> | null
@@ -114,7 +113,7 @@ function hostPlayerStatusChangedHandler(playerState: Spotify.PlaybackState) {
 //
 
 function hostSDKReadyHandler() {
-  spotifyPlayer = new window.Spotify.Player(initSpotifySetting)
+  spotifyPlayer = new window.Spotify.Player(getSpotifyInitSetting())
 
   const eventArray: Spotify.ErrorTypes[] = [
     'initialization_error',
@@ -242,9 +241,8 @@ async function customerPlay(context_uri: string) {
 
 const customerPlayerVolume = ref(0)
 let unwatchCustomerPlayerMode: WatchStopHandle | null = null
-const customerPlayerMode = computed(() => usePersonalStore().customerPlayerMode)
 function customerSDKReadyHandler() {
-  spotifyPlayer = new window.Spotify.Player(initSpotifySetting)
+  spotifyPlayer = new window.Spotify.Player(getSpotifyInitSetting())
 
   const eventArray: Spotify.ErrorTypes[] = [
     'initialization_error',
@@ -260,15 +258,18 @@ function customerSDKReadyHandler() {
 
   spotifyPlayer.addListener('ready', ({ device_id }) => {
     spotifyPlayerReadyHandler(device_id, false)
-    unwatchCustomerPlayerMode = watch(customerPlayerMode, newValue => {
-      if (newValue === false) {
-        spotifyPlayer.disconnect()
-        if (unwatchCustomerPlayerMode) {
-          unwatchCustomerPlayerMode()
-          unwatchCustomerPlayerMode = null
+    unwatchCustomerPlayerMode = watch(
+      () => usePersonalStore().customerPlayerMode,
+      newValue => {
+        if (newValue === false) {
+          spotifyPlayer.disconnect()
+          if (unwatchCustomerPlayerMode) {
+            unwatchCustomerPlayerMode()
+            unwatchCustomerPlayerMode = null
+          }
         }
       }
-    })
+    )
     window.onbeforeunload = () => {
       if (isThisSpotifyPlayerActived.value) spotifyPlayer.disconnect()
     }
