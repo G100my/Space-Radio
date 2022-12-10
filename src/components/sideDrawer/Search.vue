@@ -1,6 +1,6 @@
-<script>
-import IconSearch from '@/assets/icons/icon-search.svg'
-import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg'
+<script lang="ts">
+import IconSearch from '@/assets/icons/icon-search.svg?component'
+import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg?component'
 import { onUnmounted, ref } from 'vue'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { spotifyCoverPicker } from '@/utility/dataFormat'
@@ -14,18 +14,24 @@ export default {
     TrackListContainer,
   },
   setup() {
-    const list = ref([])
+    interface FormattedSearchTrack extends SpotifyApi.TrackObjectFull {
+      coverUrl: string
+    }
+    const list = ref<FormattedSearchTrack[]>([])
     const keywords = ref('')
     const searchedAmount = ref(0)
     let next = ref('')
     const limit = 30
     function search(offset = 0) {
       return spotifyAPI.search(keywords.value, ['track'], { limit, offset }).then(response => {
-        response.tracks.items.forEach(i => (i.album.coverUrl = spotifyCoverPicker(i.album.images)))
+        const formattedTracks: FormattedSearchTrack[] = response.tracks!.items.map(i => ({
+          ...i,
+          coverUrl: spotifyCoverPicker(i.album.images),
+        }))
 
-        list.value = list.value.concat(response.tracks.items)
-        next.value = response.tracks.next
-        searchedAmount.value = response.tracks.total
+        list.value = list.value.concat(formattedTracks)
+        next.value = response.tracks!.next
+        searchedAmount.value = response.tracks!.total
       })
     }
 
@@ -35,7 +41,8 @@ export default {
       fetchCallback: search,
     })
 
-    const recentSearchStrings = JSON.parse(localStorage.getItem('spaceradio_recent_search')) || []
+    const record = localStorage.getItem('spaceradio_recent_search')
+    const recentSearchStrings = record ? JSON.parse(record) : []
     function searchClickHandler() {
       if (!recentSearchStrings.includes(keywords.value)) recentSearchStrings.push(keywords.value)
       if (recentSearchStrings.length > 30) recentSearchStrings.shift()
@@ -53,13 +60,14 @@ export default {
       searchedAmount,
       searchClickHandler,
       isLoading,
+      searchInput: ref<HTMLInputElement>(),
     }
   },
 }
 </script>
 <template>
   <div class="flex min-h-full flex-col">
-    <header class="flex items-center rounded-sm bg-[#253a77] px-5 py-2" @click="$refs.searchInput.focus()">
+    <header class="flex items-center rounded-sm bg-[#253a77] px-5 py-2" @click="searchInput!.focus()">
       <button type="button" class="btn-tertiary" @click.stop="searchClickHandler">
         <IconSearch />
       </button>
@@ -82,7 +90,7 @@ export default {
           v-for="recent in recentSearchStrings"
           :key="recent"
           class="cursor-pointer py-3 text-natural-gray2 transition-colors hover:text-primary"
-          @click=";(keywords = recent) & $refs.searchInput.focus()"
+          @click=";(keywords = recent) && searchInput!.focus()"
         >
           {{ recent }}
         </li>

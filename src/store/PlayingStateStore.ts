@@ -131,7 +131,7 @@ function getFormattedPlayingTrack(playingTrack: Spotify.Track) {
   const { name, id, uri: context_uri } = playingTrack
   return {
     name,
-    id,
+    id: id ?? '',
     artists: playingTrack.artists.map(item => {
       item.url = transformURI2URL(item.uri)
       return item

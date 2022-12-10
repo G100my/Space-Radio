@@ -50,7 +50,7 @@ export default {
       spotifyAPI.addTracksToPlaylist(id, [`spotify:track:${playerPlayingTrackId.value}`]).then(result => {
         if (result.snapshot_id) {
           isOpen.value = false
-          alertStore.pushFeedback(`Collect to ${name} successful!`)
+          alertStore.pushAlert(`Collect to ${name} successful!`)
         }
       })
     }

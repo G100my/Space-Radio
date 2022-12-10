@@ -19,7 +19,7 @@ const isThisSpotifyPlayerPaused = ref(true)
 const isThisSpotifyPlayerActived = ref(false)
 const isThisSpotifyPlayerReady = ref(false)
 
-const currentActiveDeviceId = ref<string | null>(null)
+const currentActiveDeviceId = ref<string | null>()
 const currentActiveDeviceName = ref<string | null>(null)
 
 const getSpotifyInitSetting = (): Spotify.PlayerInit => ({

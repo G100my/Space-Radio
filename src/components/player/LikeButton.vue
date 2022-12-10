@@ -1,6 +1,6 @@
-<script>
-import IconLikeFilled from '@/assets/icons/icon/like-filled.svg'
-import IconLikeOutlined from '@/assets/icons/icon/like-outlined.svg'
+<script lang="ts">
+import IconLikeFilled from '@/assets/icons/icon/like-filled.svg?component'
+import IconLikeOutlined from '@/assets/icons/icon/like-outlined.svg?component'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { usePlayingStore } from '@/store'
 import { computed, ref, watch } from 'vue'
@@ -13,25 +13,25 @@ export default {
   setup() {
     const store = usePlayingStore()
     const isTrackSaved = ref(false)
-    const playerPlayingTrackId = computed(() => store.playerPlayingTrackId)
+    const id = computed(() => store.playerPlayingTrackId)
 
-    function checkSavedTrackState(trackId) {
+    function checkSavedTrackState(trackId: string) {
       spotifyAPI.containsMySavedTracks([trackId]).then(result => {
         isTrackSaved.value = result[0]
       })
     }
     function add2savedHandler() {
-      spotifyAPI.addToMySavedTracks([playerPlayingTrackId.value]).then(() => {
-        checkSavedTrackState(playerPlayingTrackId.value)
+      spotifyAPI.addToMySavedTracks([id.value]).then(() => {
+        checkSavedTrackState(id.value)
       })
     }
     function removeFromSavedHandler() {
-      spotifyAPI.removeFromMySavedTracks([playerPlayingTrackId.value]).then(() => {
-        checkSavedTrackState(playerPlayingTrackId.value)
+      spotifyAPI.removeFromMySavedTracks([id.value]).then(() => {
+        checkSavedTrackState(id.value)
       })
     }
 
-    watch(playerPlayingTrackId, newTrackId => {
+    watch(id, newTrackId => {
       if (!newTrackId) return
       checkSavedTrackState(newTrackId)
     })
@@ -42,7 +42,7 @@ export default {
       checkSavedTrackState,
       add2savedHandler,
       removeFromSavedHandler,
-      playerPlayingTrackId,
+      playerPlayingTrackId: id,
     }
   },
 }

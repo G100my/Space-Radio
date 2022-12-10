@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
 import logo from '@/assets/vinyl-record.png'
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'

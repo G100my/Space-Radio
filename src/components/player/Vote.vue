@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { useProgressTimer } from '@/composables/useProgressTimer'
 import { useI18n } from 'vue-i18n'
@@ -25,6 +25,7 @@ export default {
       dislikeCountdown,
       playerPlayingTrackId: computed(() => usePlayingStore().playerPlayingTrackId),
       nearEnd,
+      store: useVoteStore(),
     }
   },
 }
@@ -32,7 +33,7 @@ export default {
 <template>
   <div class="_vote flex flex-col">
     <template v-if="dislikeCountdown">
-      <i18n-t keypath="will_cut" :place="{ vote }" tag="p"> {{ t('second', dislikeCountdown) }}. </i18n-t>
+      <i18n-t keypath="will_cut" tag="p"> {{ t('second') }}. </i18n-t>
     </template>
     <template v-else>
       <i18n-t keypath="vote_left" tag="p">
@@ -45,7 +46,7 @@ export default {
       type="button"
       class="btn-secondary mt-2"
       :disabled="!playerPlayingTrackId || nearEnd"
-      @click="isVoted ? $store.dispatch('reduceDislike') : $store.dispatch('increaseDislike')"
+      @click="isVoted ? store.reduceDislike() : store.increaseDislike()"
     >
       {{ isVoted ? t('cancel') : t('vote_for_skip') }}
     </button>

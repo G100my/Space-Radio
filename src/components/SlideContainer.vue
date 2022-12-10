@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 import { onMounted, ref } from 'vue'
-import IconNowPlay from '@/assets/icons/icon-nowplay.svg'
-import IconNextPlay from '@/assets/icons/icon-nextplay.svg'
+import IconNowPlay from '@/assets/icons/icon-nowplay.svg?component'
+import IconNextPlay from '@/assets/icons/icon-nextplay.svg?component'
 
 export default {
   components: {
@@ -9,20 +9,23 @@ export default {
     IconNextPlay,
   },
   setup() {
-    const slideContent = ref(null)
-    const leftSideButton = ref(null)
-    const rightSideButton = ref(null)
+    const slideContent = ref<HTMLDivElement>()
+    const leftSideButton = ref<HTMLButtonElement>()
+    const rightSideButton = ref<HTMLButtonElement>()
     let isMainSide = ref(true)
+
+    type SliderDirection = 'left2right' | 'right2left' | 'resume'
 
     const left = ref(0)
     const targetLeft = ref(0)
     const right = ref(0)
     const targetRight = ref(0)
-    const animationType = ref(null)
+    const animationType = ref<SliderDirection>()
 
-    function computeLeftRight(element) {
+    function computeLeftRight(element: HTMLButtonElement | undefined) {
+      if (!element) return { leftValue: 0, rightValue: 0 }
       const leftValue = element.offsetLeft
-      const rightValue = element.parentElement.offsetWidth - element.offsetLeft - element.offsetWidth
+      const rightValue = element.parentElement!.offsetWidth - element.offsetLeft - element.offsetWidth
       return { leftValue, rightValue }
     }
     function animationendHandler() {
@@ -30,7 +33,7 @@ export default {
       right.value = targetRight.value
     }
 
-    function sliderToggler(direction, element) {
+    function sliderToggler(direction: SliderDirection, element?: HTMLButtonElement) {
       if (element) {
         const { leftValue, rightValue } = computeLeftRight(element)
         targetLeft.value = leftValue
@@ -40,29 +43,29 @@ export default {
 
       switch (direction) {
         case 'right2left':
-          slideContent.value.style.transform = ''
+          slideContent.value!.style.transform = ''
           isMainSide.value = true
           break
         case 'left2right':
-          slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
+          slideContent.value!.style.transform = `translate(${-slideContent.value!.offsetWidth / 2}px, 0)`
           isMainSide.value = false
           break
         case 'resume':
           if (isMainSide.value) {
-            slideContent.value.style.transform = ''
+            slideContent.value!.style.transform = ''
           } else {
-            slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2}px, 0)`
+            slideContent.value!.style.transform = `translate(${-slideContent.value!.offsetWidth / 2}px, 0)`
           }
           break
       }
     }
-    let touchStartPosition
-    function touchstartHandler(event) {
+    let touchStartPosition: number
+    function touchstartHandler(event: TouchEvent) {
       touchStartPosition = event.touches[0].clientX
     }
     const moveThreshold = 30
     const disableLimit = 50
-    function touchmoveHandler(event) {
+    function touchmoveHandler(event: TouchEvent) {
       const currentDistance = event.touches[0].clientX - touchStartPosition
       const absoluteDistance = Math.abs(currentDistance)
       const mainSide = isMainSide.value
@@ -73,13 +76,15 @@ export default {
       if (!mainSide && currentDistance < -disableLimit) return
 
       if (mainSide) {
-        slideContent.value.style.transform = `translate(${currentDistance}px, 0)`
+        slideContent.value!.style.transform = `translate(${currentDistance}px, 0)`
       } else {
-        slideContent.value.style.transform = `translate(${-slideContent.value.offsetWidth / 2 + currentDistance}px, 0)`
+        slideContent.value!.style.transform = `translate(${
+          -slideContent.value!.offsetWidth / 2 + currentDistance
+        }px, 0)`
       }
     }
     const toggleThreshold = 70
-    function touchendHandler(event) {
+    function touchendHandler(event: TouchEvent) {
       const currentDistance = touchStartPosition - event.changedTouches[0].clientX
       if (Math.abs(currentDistance) < moveThreshold) return
 
@@ -165,7 +170,7 @@ export default {
       ref="leftSideButton"
       :class="{ active: isMainSide }"
       type="button"
-      @click="sliderToggler('right2left', $event.currentTarget)"
+      @click="sliderToggler('right2left', $event.currentTarget as HTMLButtonElement)"
     >
       <slot name="left-btn">
         <IconNowPlay />
@@ -176,7 +181,7 @@ export default {
       ref="rightSideButton"
       :class="{ active: !isMainSide }"
       type="button"
-      @click="sliderToggler('left2right', $event.currentTarget)"
+      @click="sliderToggler('left2right', $event.currentTarget as HTMLButtonElement)"
     >
       <slot name="right-btn">
         <IconNextPlay />

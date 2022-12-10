@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 import { ref } from 'vue'
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import IconDropdown from '@/assets/icons/icon-dropdown.svg'
+import IconDropdown from '@/assets/icons/icon-dropdown.svg?component'
 import { useI18n } from 'vue-i18n'
 
 export default {
@@ -65,14 +65,14 @@ export default {
             v-for="(option, index) in options"
             v-slot="{ selected }"
             :key="index"
-            :value="option"
+            :value="option as Record<string, any>"
             as="template"
           >
             <li
               class="w-full cursor-pointer overflow-hidden overflow-ellipsis whitespace-nowrap px-4 hover:bg-tertiary-2"
               :class="{ 'text-primary': selected }"
             >
-              {{ option.name }}
+              {{ (option as Record<string, any>).name }}
             </li>
           </ListboxOption>
         </ListboxOptions>

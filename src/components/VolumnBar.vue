@@ -1,7 +1,7 @@
-<script>
-import IconVolumn from '@/assets/icons/icon/volumn.svg'
-import IconPlus from '@/assets/icons/icon-plus.svg'
-import IconMinus from '@/assets/icons/icon-minus.svg'
+<script lang="ts">
+import IconVolumn from '@/assets/icons/icon/volumn.svg?component'
+import IconPlus from '@/assets/icons/icon-plus.svg?component'
+import IconMinus from '@/assets/icons/icon-minus.svg?component'
 
 export default {
   components: {
@@ -37,7 +37,7 @@ export default {
     <IconVolumn class="ml-3" />
 
     <button
-      :disabled="$attrs.disabled"
+      :disabled="!!$attrs.disabled"
       class="_volumn_bar_button btn-tertiary order-11"
       type="button"
       @click="$emit('minus', modelValue - step)"
@@ -45,7 +45,7 @@ export default {
       <IconMinus />
     </button>
     <button
-      :disabled="$attrs.disabled"
+      :disabled="!!$attrs.disabled"
       class="_volumn_bar_button btn-tertiary order-12"
       type="button"
       @click="$emit('plus', modelValue + step)"
@@ -55,13 +55,13 @@ export default {
     <!-- v-bind="$attrs" 會連 class... 也綁，所以只指定需要的 -->
     <input
       :value="modelValue"
-      :min="$attrs.min"
-      :max="$attrs.max"
-      :disabled="disabledBar || $attrs.disabled"
+      :min="($attrs.min as number)"
+      :max="($attrs.max as number)"
+      :disabled="disabledBar || !!$attrs.disabled"
       :step="step"
       type="range"
       class="ml-3"
-      @input="$emit('update:change', Number($event.target.value))"
+      @input="$emit('update:change', Number(($event.target as HTMLInputElement).value))"
     />
   </div>
 </template>

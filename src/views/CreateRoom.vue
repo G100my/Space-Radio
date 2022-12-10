@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { computed, ref, watch, reactive, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import firebase from '@/plugins/firebase'
@@ -8,10 +8,10 @@ import { spotifyAPI } from '@/plugins/spotifyAPI'
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import BaseSelect from '@/components/base/BaseSelect.vue'
 import VolumnBar from '@/components/VolumnBar.vue'
-import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg'
-import IconPlus from '@/assets/icons/icon-plus.svg'
-import IconMinus from '@/assets/icons/icon-minus.svg'
-import IconClose from '@/assets/icons/icon/close.svg'
+import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg?component'
+import IconPlus from '@/assets/icons/icon-plus.svg?component'
+import IconMinus from '@/assets/icons/icon-minus.svg?component'
+import IconClose from '@/assets/icons/icon/close.svg?component'
 import { useI18n } from 'vue-i18n'
 import { Dialog as HDialog, DialogDescription, DialogOverlay, DialogTitle } from '@headlessui/vue'
 import { usePersonalStore } from '@/store'
@@ -32,12 +32,12 @@ export default {
   },
   setup() {
     const roomKey = roomKeyMaker()
-    const userId = usePersonalStore().user_id
-    const roomName = ref(null)
+    const userId = computed(() => usePersonalStore().user_id)
+    const roomName = ref('')
     const isVaild = ref(true)
     const router = useRouter()
 
-    let roomNameArray = []
+    let roomNameArray: string[] = []
 
     const room_list_ref = firebase.database().ref('room_list')
     room_list_ref.on('value', snapshot => {
@@ -82,24 +82,24 @@ export default {
       if (volume.value < newValue) volume.value = newValue
     })
 
-    function minimalVolumeInputHandler(eventValue) {
+    function minimalVolumeInputHandler(eventValue: number) {
       if (eventValue >= minimalLimit) minimalVolume.value = Number(eventValue)
       else minimalVolume.value = minimalLimit
     }
-    function volumeInputHandler(eventValue) {
+    function volumeInputHandler(eventValue: number) {
       if (eventValue >= minimalVolume.value) volume.value = Number(eventValue)
       else volume.value = minimalVolume.value
     }
 
     const { plus: plusMinimal, minus: minusMinimal } = usePlusMinusHandler(minimalVolume, step, 10, 100)
-    const { plus: plusVolume, minus: minusVolume } = usePlusMinusHandler(volume, step, minimalVolume, 100)
+    const { plus: plusVolume, minus: minusVolume } = usePlusMinusHandler(volume, step, minimalVolume.value, 100)
     const { plus: plusDislikeThreshold, minus: minusDislikeThreshold } = usePlusMinusHandler(dislikeThreshold, 1, 1, 5)
 
     //
 
-    let hostPlaylists = reactive([])
+    let hostPlaylists = reactive<{ id: string; name: string }[]>([])
     const basePlaylist = ref(null)
-    spotifyAPI.getUserPlaylists({ limit: 50 }, (error, sucess) => {
+    spotifyAPI.getUserPlaylists(undefined, { limit: 50 }, (error, sucess) => {
       if (error) {
         console.warn('something wrong when try to get host playlist.')
         return
@@ -151,7 +151,7 @@ export default {
     function copyInviteURLHandler() {
       navigator.clipboard.writeText(inviteURL.value)
       nextTick(() => {
-        document.getElementById('inviteURLInput').focus()
+        document.getElementById('inviteURLInput')!.focus()
       })
     }
 

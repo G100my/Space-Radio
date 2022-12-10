@@ -1,5 +1,5 @@
-<script>
-import IconClose from '@/assets/icons/icon/close.svg'
+<script lang="ts">
+import IconClose from '@/assets/icons/icon/close.svg?component'
 import { TransitionRoot, TransitionChild } from '@headlessui/vue'
 import { onMounted, ref, watch } from 'vue'
 
@@ -14,10 +14,14 @@ export default {
       type: Boolean,
       required: true,
     },
+    componentName: {
+      type: String,
+      required: true,
+    },
   },
   emits: ['update:modelValue'],
   setup(props, { emit, slots }) {
-    let roomElement
+    let roomElement: HTMLDivElement
     const isDifferantBgColor = ref(false)
 
     function closeHandler() {
@@ -25,8 +29,9 @@ export default {
     }
 
     onMounted(() => {
-      roomElement = document.getElementById('room')
-      isDifferantBgColor.value = ['AddFromStreamingService', 'PlaylistContent'].includes(slots.default()[0].type.name)
+      roomElement = document.getElementById('room') as HTMLDivElement
+      if (!slots.default) throw new Error('Must place default solt.')
+      isDifferantBgColor.value = ['AddFromStreamingService', 'PlaylistContent'].includes(props.componentName)
     })
 
     watch(

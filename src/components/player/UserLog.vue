@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
-import IconVolumn from '@/assets/icons/icon/volumn.svg'
-import IconArrowUp from '@/assets/icons/icon-arrow-up.svg'
-import IconArrowDown from '@/assets/icons/icon-arrow-down.svg'
-import IconPlus from '@/assets/icons/icon-plus.svg'
-import IconClose from '@/assets/icons/icon/close.svg'
-import IconSkipSong from '@/assets/icons/icon/skipsong.svg'
-import IconRoomSetting from '@/assets/icons/icon-roomsetting.svg'
+import IconVolumn from '@/assets/icons/icon/volumn.svg?component'
+import IconArrowUp from '@/assets/icons/icon-arrow-up.svg?component'
+import IconArrowDown from '@/assets/icons/icon-arrow-down.svg?component'
+import IconPlus from '@/assets/icons/icon-plus.svg?component'
+import IconClose from '@/assets/icons/icon/close.svg?component'
+import IconSkipSong from '@/assets/icons/icon/skipsong.svg?component'
+import IconRoomSetting from '@/assets/icons/icon-roomsetting.svg?component'
 import BaseMarquee from '../base/BaseMarquee.vue'
+import { useUserLogStore } from '@/store/UserLogStore'
 
 export default {
   components: {
@@ -22,16 +22,16 @@ export default {
     BaseMarquee,
   },
   setup() {
-    const store = useStore()
-    function addZero(num) {
+    const store = useUserLogStore()
+    function addZero(num: number) {
       return num < 10 ? '0' + num.toString() : num.toString()
     }
-    function timeTransfer(timestamp) {
+    function timeTransfer(timestamp: string | number) {
       const time = new Date(timestamp)
       return addZero(time.getHours()) + ':' + addZero(time.getMinutes())
     }
     return {
-      logs: computed(() => store.getters.userLog),
+      logs: computed(() => store.logs),
       // fixme 音量變成紀錄 音量偏移量
       // currentVolume: computed(() => store.getters.currentVolume),
       timeTransfer,
@@ -64,22 +64,16 @@ export default {
                   log.action_type
                 )
               "
-              :text="log.option.text"
+              :text="(log.payload as string)"
             />
             <template v-else-if="log.action_type === 'addMultiple'">
-              <BaseMarquee v-for="(name, index) in log.option.names" :key="index" class="flex w-full flex-col">
+              <BaseMarquee v-for="(name, index) in log.payload" :key="index" class="flex w-full flex-col">
                 <span>{{ name }}</span>
               </BaseMarquee>
             </template>
-            <span v-else-if="['turnUp', 'turnDown'].includes(log.action_type)"
-              >Adjust Volumn: {{ log.option.volume }}</span
-            >
-            <span v-else-if="log.action_type === 'updateMinimalVolume'"
-              >Minimal Volume: {{ log.option.minimal_volume }}</span
-            >
-            <span v-else-if="log.action_type === 'updateDislikeThreshold'"
-              >Skip threshold: {{ log.option.dislike_threshold }}
-            </span>
+            <span v-else-if="['turnUp', 'turnDown'].includes(log.action_type)">Adjust Volumn: {{ log.payload }}</span>
+            <span v-else-if="log.action_type === 'updateMinimalVolume'">Minimal Volume: {{ log.payload }}</span>
+            <span v-else-if="log.action_type === 'updateDislikeThreshold'">Skip threshold: {{ log.payload }} </span>
           </div>
         </div>
       </li>

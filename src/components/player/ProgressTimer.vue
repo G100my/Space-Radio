@@ -1,23 +1,15 @@
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { useProgressTimer } from '@/composables/useProgressTimer'
 
 export default {
   setup() {
     const { currentDuration, currentPosition } = useProgressTimer()
-    function zeroFormatter(num) {
-      return num < 10 ? '0'.concat(num) : num
+    function zeroFormatter(num: number) {
+      return num < 10 ? '0'.concat(String(num)) : num
     }
-    function typeCheck(item) {
-      if (typeof item !== 'number') {
-        console.log(`progress time value is not Number, it's ${typeof item}`)
-        return Number(item)
-      }
-      return item
-    }
-
     const position = computed(() => {
-      const current = typeCheck(currentPosition.value)
+      const current = currentPosition.value
 
       if (current !== 0) {
         const min = Math.floor(current / 1000 / 60)
@@ -28,7 +20,7 @@ export default {
       }
     })
     const duration = computed(() => {
-      const current = typeCheck(currentDuration.value)
+      const current = currentDuration.value
       if (current !== 0) {
         const min = Math.floor(current / 1000 / 60)
         const sec = zeroFormatter(Math.floor((current / 1000) % 60))

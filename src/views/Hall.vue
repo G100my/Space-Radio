@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import firebase from '@/plugins/firebase'
@@ -19,7 +19,7 @@ export default {
     const searchKeyWordInput = ref('')
     const isErrorMessageShow = ref(false)
 
-    let roomListObject = null
+    let roomListObject: { [roomkey: string]: any } = {}
 
     const roomList = firebase.database().ref('room_list')
 
@@ -29,12 +29,15 @@ export default {
     onBeforeUnmount(() => {
       firebase.database().ref('room_list').off()
       // 借助使用者刪除太久沒有使用的 room
-      const deletedRooms = Object.entries(roomListObject).reduce((accumulator, [roomKey, value]) => {
-        if (Date.now() - value.lastest_used > 30 * 24 * 60 * 60 * 1000) {
-          accumulator[roomKey] = null
-        }
-        return accumulator
-      }, {})
+      const deletedRooms = Object.entries(roomListObject).reduce<{ [roomKey: string]: any }>(
+        (accumulator, [roomKey, value]) => {
+          if (Date.now() - value.lastest_used > 30 * 24 * 60 * 60 * 1000) {
+            accumulator[roomKey] = null
+          }
+          return accumulator
+        },
+        {}
+      )
       firebase.database().ref().update(deletedRooms)
       firebase.database().ref('room_list').update(deletedRooms)
     })
@@ -45,10 +48,10 @@ export default {
         return
       }
 
-      let roomKey
+      let roomKey: string = ''
       // 可以搜尋 room key 或者搜尋 room name
-      if (Object.prototype.hasOwnProperty.call(roomListObject, searchKeyWordInput)) {
-        roomKey = searchKeyWordInput
+      if (Object.prototype.hasOwnProperty.call(roomListObject, searchKeyWordInput.value)) {
+        roomKey = searchKeyWordInput.value
       } else {
         for (let key in roomListObject) {
           if (roomListObject[key].room_name === searchKeyWordInput.value) {
@@ -57,11 +60,11 @@ export default {
           }
         }
       }
-      if (roomKey) {
+      if (!roomKey) {
+        isErrorMessageShow.value = true
+      } else {
         localStorage.setItem('spaceradio_room_key', roomKey)
         router.push({ name: 'Doorscope', params: { roomKey } })
-      } else {
-        isErrorMessageShow.value = true
       }
     }
 

@@ -4,8 +4,8 @@ interface UseInfinityScrollParams {
   id: string
   fetchCallback: (...args: any[]) => Promise<void>
   nextURL: Ref<string> | ComputedRef<string | number>
-  onUnmountedCallback: (...args: any[]) => void
-  fetchFirstCallback: (...args: any[]) => Promise<void>
+  onUnmountedCallback?: (...args: any[]) => void
+  fetchFirstCallback?: (...args: any[]) => Promise<void>
 }
 export function useInfinityScroll({
   id,

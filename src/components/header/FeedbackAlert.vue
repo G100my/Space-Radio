@@ -1,6 +1,5 @@
-<script>
+<script lang="ts">
 import { useAlertStore } from '@/store'
-import { computed } from 'vue'
 import BaseAlert from '../base/BaseAlert.vue'
 
 export default {
@@ -8,7 +7,8 @@ export default {
   setup() {
     const store = useAlertStore()
     return {
-      feedbacks: computed(() => store.feedbacks),
+      items: store.items,
+      closeAlert: store.closeAlert,
     }
   },
 }
@@ -16,13 +16,13 @@ export default {
 <template>
   <div>
     <BaseAlert
-      v-for="(feedback, index) in feedbacks"
-      :key="feedback.randomKey"
+      v-for="(item, index) in items"
+      :key="item.randomKey"
       :closeButton="true"
       :iconSize="'lg'"
-      :error="feedback.error"
-      :title="feedback.message"
-      @close="store.closeFeedback(index)"
+      :error="item.error"
+      :title="item.message"
+      @close="closeAlert(index)"
     />
   </div>
 </template>

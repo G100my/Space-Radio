@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import firebase from '@/plugins/firebase'
 import { PKCE } from '@/utility/PKCE'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import initCover from '@/assets/vinyl-record.png'
-import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg'
+import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg?component'
 import { useI18n } from 'vue-i18n'
 import { usePlayingStore } from '@/store'
 
@@ -16,10 +16,10 @@ export default {
   setup() {
     const { t } = useI18n()
     const playingStore = usePlayingStore()
-    const roomKey = useRoute().params.roomKey
+    const roomKey = useRoute().params.roomKey as string
     const roomName = ref('')
     const album = computed(() => playingStore.playing_track.album)
-    const enterButton = ref(null)
+    const enterButton = ref<HTMLButtonElement>()
 
     const room_ref = firebase.database().ref(roomKey)
     room_ref
@@ -38,7 +38,7 @@ export default {
 
     onMounted(() => {
       nextTick(() => {
-        enterButton.value.focus()
+        enterButton.value!.focus()
       })
     })
 

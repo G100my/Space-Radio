@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -7,10 +7,10 @@ import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { spotifyCoverPicker } from '@/utility/dataFormat'
 import fakedata from '@/fakeData/search.json'
 import BaseMarquee from '../base/BaseMarquee.vue'
-import IconSearch from '@/assets/icons/icon-search.svg'
+import IconSearch from '@/assets/icons/icon-search.svg?component'
 import IconMinusRaw from '@/assets/icons/icon-minus.svg?raw'
 import IconPlusRaw from '@/assets/icons/icon-plus.svg?raw'
-import IconPlus from '@/assets/icons/icon-plus.svg'
+import IconPlus from '@/assets/icons/icon-plus.svg?component'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { usePersonalPlaylistStore } from '@/store'
 

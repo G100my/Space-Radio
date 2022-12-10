@@ -50,7 +50,7 @@ export default {
     </p>
     <div v-if="personalStore.isHostUser !== undefined && !personalStore.isHostUser">
       <BaseSwitch
-        :modelValue="personalStore.customerPlayerMode"
+        :modelValue="!!personalStore.customerPlayerMode"
         label="Enable local player"
         class="flex items-end justify-between"
         @update:modelValue="personalStore.customerPlayerMode = $event"

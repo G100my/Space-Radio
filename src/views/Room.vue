@@ -68,7 +68,7 @@ export default {
     })
 
     const isSideDrawerShow = ref(false)
-    const activeComponent = ref<ComponentName | null>(null)
+    const activeComponent = ref<ComponentName>('Personal')
 
     function activeSideDrawerHandler(componentName: ComponentName) {
       isSideDrawerShow.value = true
@@ -117,7 +117,7 @@ export default {
     <NoteDialog id="note" />
 
     <!-- accept 'Search', 'AddFromStreamingService', 'Personal', 'PlaylistContent' those emited from Header -->
-    <SideDrawer v-model="isSideDrawerShow">
+    <SideDrawer v-model="isSideDrawerShow" :componentName="activeComponent">
       <component :is="activeComponent" @activeSideDrawer="activeSideDrawerHandler" />
     </SideDrawer>
   </div>

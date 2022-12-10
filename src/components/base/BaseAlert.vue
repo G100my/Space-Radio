@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
 import { TransitionRoot } from '@headlessui/vue'
 import { computed } from 'vue'
-import IconError from '@/assets/icons/icon/error.svg'
-import IconSuccess from '@/assets/icons/icon/successfully.svg'
-import IconClose from '@/assets/icons/icon/close.svg'
+import IconError from '@/assets/icons/icon/error.svg?component'
+import IconSuccess from '@/assets/icons/icon/successfully.svg?component'
+import IconClose from '@/assets/icons/icon/close.svg?component'
 
 export default {
   components: {
@@ -37,7 +37,7 @@ export default {
     iconSize: {
       type: String,
       default: 'sm',
-      validator(value) {
+      validator(value: string) {
         return ['sm', 'lg'].includes(value)
       },
     },

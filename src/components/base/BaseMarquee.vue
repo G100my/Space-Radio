@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 // root element is <div>, can't not place in <p>
 
 import { ref } from 'vue'
@@ -12,14 +12,14 @@ export default {
     },
   },
   setup() {
-    const mainChild = ref(null)
+    const mainChild = ref<HTMLSpanElement>()
     const isFilled = ref(false)
-    const innerHTML = ref(null)
+    const innerHTML = ref('')
 
-    const mouseenterHandler = event => {
-      const mainChild = event.currentTarget
+    const mouseenterHandler = (event: MouseEvent) => {
+      const mainChild = event.currentTarget as HTMLSpanElement
 
-      if (mainChild.offsetWidth > mainChild.parentElement.offsetWidth) {
+      if (mainChild.offsetWidth > mainChild.parentElement!.offsetWidth) {
         isFilled.value = true
         innerHTML.value = mainChild.innerHTML
       }

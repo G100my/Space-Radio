@@ -11,7 +11,6 @@ import { Menu as HMenu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { computed, ref } from 'vue'
 import { usePersonalStore } from '@/store/PersonalStore'
 import { useNoteStore, useQueueStore } from '@/store'
-import type { Order } from '@/prototype/Order'
 
 export default {
   components: {

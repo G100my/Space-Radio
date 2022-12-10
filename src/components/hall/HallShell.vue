@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import desktopBackground from '@/assets/images/desktop-bg.jpg'
 import mobileBackground from '@/assets/images/mobile-bg.jpg'
 
