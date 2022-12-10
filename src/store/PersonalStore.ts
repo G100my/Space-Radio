@@ -4,7 +4,7 @@ import { useRoomBasicStore } from './RoomBasicStore'
 
 export const usePersonalStore = defineStore('PersonalStore', {
   state: () => ({
-    token: localStorage.getItem('spaceradio_token') || null,
+    token: localStorage.getItem('spaceradio_token') || '',
     expired_time: Number(localStorage.getItem('spaceradio_expired_time')) || null,
     refresh_token: localStorage.getItem('spaceradio_refresh_token') || null,
 

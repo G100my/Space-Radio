@@ -23,7 +23,7 @@ const currentActiveDeviceId = ref<string | null>(null)
 const currentActiveDeviceName = ref<string | null>(null)
 const currentVolume = computed(() => useVolumeStore().volume)
 
-const initSpotifySetting = {
+const initSpotifySetting: Spotify.PlayerInit = {
   name: 'Space Radio player',
   volume: currentVolume.value / 100,
   getOAuthToken: callback => {

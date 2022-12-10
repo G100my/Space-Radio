@@ -6,6 +6,8 @@ import { defineStore } from 'pinia'
 import { usePersonalStore } from './PersonalStore'
 import { useLatestOrderStore } from './PlayingStateStore'
 
+type storeNames = 'urgent' | 'normal' | 'pending'
+
 let urgent_queue_ref: firebase.database.Reference
 let normal_queue_ref: firebase.database.Reference
 let pending_queue_ref: firebase.database.Reference
@@ -18,7 +20,7 @@ function setQueueRef(roomKey: string) {
 
 function bindListener(
   target: firebase.database.Reference,
-  storeTarget: string,
+  storeTarget: storeNames,
   store: ReturnType<typeof useQueueStore>
 ) {
   target.on('child_removed', childSnapshot => {
@@ -99,7 +101,7 @@ export const useQueueStore = defineStore('QueueStore', {
       this.previousDeleted = null
       this.previousDeletedKey = null
     },
-    _deleteOrder(storeTarget: string, childSnapshot: firebase.database.DataSnapshot) {
+    _deleteOrder(storeTarget: storeNames, childSnapshot: firebase.database.DataSnapshot) {
       const key = childSnapshot.key
       if (!key) throw new Error('key is not exist, _deleteOrder')
       this.previousDeleted = this.trackData[key]
@@ -109,11 +111,12 @@ export const useQueueStore = defineStore('QueueStore', {
     _addTrack(key: string, addedTrack: SpotifyApi.SingleTrackResponse) {
       this.trackData[key] = addedTrack
     },
-    _editOrder(storeTarget: string, childSnapshot: firebase.database.DataSnapshot) {
+    _editOrder(storeTarget: storeNames, childSnapshot: firebase.database.DataSnapshot) {
+      if (childSnapshot.key === null) throw new Error('childSnapshot.key is null.')
       this[`${storeTarget}_queue`][childSnapshot.key] = new Order(childSnapshot.val())
     },
 
-    _addOrder(storeTarget: string, childSnapshot: firebase.database.DataSnapshot) {
+    _addOrder(storeTarget: storeNames, childSnapshot: firebase.database.DataSnapshot) {
       const order = new Order(childSnapshot.val())
       const trackId = order.track_id
       const key = childSnapshot.key
