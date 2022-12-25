@@ -78,11 +78,13 @@ export default {
         />
       </h2>
     </h1>
-    <div class="relative flex flex-col items-end justify-between laptop:flex-row laptop:items-center">
-      <Marquee class="laptop::w-auto mt-5 w-full flex-auto laptop:mt-0" />
+    <div class="relative flex flex-col flex-wrap items-end justify-between gap-2 laptop:flex-row laptop:items-center">
+      <div class="laptop::w-auto mt-5 flex-auto laptop:mt-0">
+        <Marquee />
+      </div>
       <!-- absolute base on <header> -->
-      <nav class="static top-8 right-8 laptop:static">
-        <ul class="flex justify-end">
+      <nav class="w-fit">
+        <ul class="flex justify-end gap-2">
           <li>
             <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="activeSideDrawerHandler('Search')">
               <IconSearch />
