@@ -26,5 +26,10 @@
     "your_totally_top_tracks": "Your totaly Top Tracks",
     "your_top_tracks_in_last_6_months": "Your Top Tracks in last 6 months",
     "your_top_tracks_in_last_month": "Your Top Tracks in last month"
+  },
+  "recommendation_by_track": "Track",
+  "recommendation_by_artist": "Artist",
+  "recommendation": {
+    "search_seed": "Recommendation seed:"
   }
 }

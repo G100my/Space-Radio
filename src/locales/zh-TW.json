@@ -26,5 +26,10 @@
     "your_top_tracks_in_last_6_months": "你的最近半年排名前50",
     "your_top_tracks_in_last_month": "你的上個月排名",
     "your_totally_top_tracks": "你的總排名前50"
+  },
+  "recommendation_by_artist": "演出者",
+  "recommendation_by_track": "曲目",
+  "recommendation": {
+    "search_seed": "推薦依據："
   }
 }
