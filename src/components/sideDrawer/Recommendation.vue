@@ -116,21 +116,21 @@ export default {
 <template>
   <div class="flex h-full flex-col">
     <header>
-      <h2 class="text-subtitle text-natural-gray1 laptop:text-header">{{ $t('add_from_recommendation') }}</h2>
+      <h2 class="flex items-center justify-between text-subtitle text-natural-gray1 laptop:text-header">
+        <span>{{ $t('add_from_recommendation') }}</span>
+        <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
+      </h2>
     </header>
 
     <div class="mt-4 flex-1 flex-col overflow-hidden">
       <div class="flex h-full flex-col gap-4 overflow-y-hidden text-natural-white">
-        <h3 class="mb-4 flex justify-between font-bold">
-          <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
-        </h3>
-        <fieldset class="flex w-full items-center space-x-2">
+        <fieldset class="flex w-full flex-wrap items-center gap-2">
           <input v-model="keyword" class="base-input flex-1" type="text" @keydown.enter="handleSearch" />
           <button type="button" class="btn-tertiary" @click="handleSearch"><IconSearch /></button>
-        </fieldset>
-        <fieldset class="flex justify-end gap-4">
-          <BaseRadio name="searchType" value="artist" :label="$t('artists')" v-model="searchType" />
-          <BaseRadio name="searchType" value="track" :label="$t('tracks')" v-model="searchType" />
+          <div class="flex gap-4">
+            <BaseRadio name="searchType" value="artist" :label="$t('artists')" v-model="searchType" />
+            <BaseRadio name="searchType" value="track" :label="$t('tracks')" v-model="searchType" />
+          </div>
         </fieldset>
 
         <fieldset class="min-h-fit h-40 border border-natural-gray1 p-2">
@@ -149,8 +149,11 @@ export default {
             </button>
           </p>
         </fieldset>
+        <div>
+          <button type="button" class="btn-primary mx-auto" @click="fetchGenreSeeds">Get Recommendations</button>
+        </div>
 
-        <ul class="h-full overflow-auto">
+        <ul class="laptop:columns-2 h-full overflow-auto">
           <template v-if="searchType === 'artist'">
             <li v-for="artist in results.artists" :key="artist.id" class="flex items-center space-x-3 py-1 px-4">
               <img class="_cover" :src="spotifyCoverPicker(artist.images)" alt="" />
@@ -197,9 +200,6 @@ export default {
             </li>
           </template>
         </ul>
-        <div class="pt-8 pb-10">
-          <button type="button" class="btn-primary mx-auto" @click="fetchGenreSeeds">Get Recommendations</button>
-        </div>
       </div>
     </div>
   </div>
