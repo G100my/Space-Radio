@@ -1,55 +1,40 @@
-<script lang="ts">
+<script lang="ts" setup>
 import IconClose from '@/assets/icons/icon/close.svg?component'
 import { TransitionRoot, TransitionChild } from '@headlessui/vue'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, useSlots } from 'vue'
+import type { ComponentName } from '../header/RoomHeader.vue'
 
-export default {
-  components: {
-    IconClose,
-    TransitionRoot,
-    TransitionChild,
-  },
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
-    componentName: {
-      type: String,
-      required: true,
-    },
-  },
-  emits: ['update:modelValue'],
-  setup(props, { emit, slots }) {
-    let roomElement: HTMLDivElement
-    const isDifferantBgColor = ref(false)
+const props = defineProps<{
+  modelValue: boolean
+  componentName: ComponentName
+}>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: boolean): void
+}>()
+const slots = useSlots()
 
-    function closeHandler() {
-      emit('update:modelValue', false)
-    }
+let roomElement: HTMLDivElement
+const isDifferantBgColor = ref(false)
 
-    onMounted(() => {
-      roomElement = document.getElementById('room') as HTMLDivElement
-      if (!slots.default) throw new Error('Must place default solt.')
-      isDifferantBgColor.value = ['AddFromStreamingService', 'PlaylistContent'].includes(props.componentName)
-    })
-
-    watch(
-      () => props.modelValue,
-      newValue => {
-        if (newValue) roomElement.classList.add('blur')
-        else {
-          roomElement.classList.remove('blur')
-        }
-      }
-    )
-
-    return {
-      closeHandler,
-      isDifferantBgColor,
-    }
-  },
+function closeHandler() {
+  emit('update:modelValue', false)
 }
+
+onMounted(() => {
+  roomElement = document.getElementById('room') as HTMLDivElement
+  if (!slots.default) throw new Error('Must place default solt.')
+  isDifferantBgColor.value = ['AddFromStreamingService', 'PlaylistContent'].includes(props.componentName)
+})
+
+watch(
+  () => props.modelValue,
+  newValue => {
+    if (newValue) roomElement.classList.add('blur')
+    else {
+      roomElement.classList.remove('blur')
+    }
+  }
+)
 </script>
 <template>
   <teleport to="body">
@@ -76,7 +61,11 @@ export default {
         leave-to="translate-x-full"
       >
         <div
-          :class="{ 'bg-[#303f69] laptop:bg-tertiary-1': isDifferantBgColor, 'bg-tertiary-2': !isDifferantBgColor }"
+          :class="{
+            'bg-[#303f69] laptop:bg-tertiary-1': isDifferantBgColor,
+            'bg-tertiary-2': !isDifferantBgColor,
+            'laptop:!w-2/3': componentName === 'Recommendation',
+          }"
           class="relative ml-auto h-screen w-screen max-w-xl bg-opacity-40 px-9 pt-20 pb-8 laptop:w-1/2 laptop:max-w-none laptop:px-20"
         >
           <button

@@ -16,6 +16,7 @@ import Collection from '@/components/player/Collection.vue'
 import Vote from '@/components/player/Vote.vue'
 import UserLog from '@/components/player/UserLog.vue'
 import AddFromStreamingService from '@/components/sideDrawer/AddFromStreamingService.vue'
+import Recommendation from '@/components/sideDrawer/Recommendation.vue'
 import PlaylistContent from '@/components/sideDrawer/PlaylistContent.vue'
 import Search from '@/components/sideDrawer/Search.vue'
 import Personal from '@/components/sideDrawer/Personal.vue'
@@ -38,6 +39,7 @@ export default {
     NoteDialog,
     UserLog,
     AddFromStreamingService,
+    Recommendation,
     PlaylistContent,
     Search,
     Personal,
