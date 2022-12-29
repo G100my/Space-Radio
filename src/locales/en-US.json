@@ -20,16 +20,13 @@
   "skip_song_threshold": "Skip Song threshold",
   "slogan": "Share you like, enjoy your life.",
   "your_library": "Your library",
-  "list_name": {
-    "liked_songs_from_spotify": "Liked Songs from Spotify",
-    "recently_played": "Recently played",
-    "your_totally_top_tracks": "Your totaly Top Tracks",
-    "your_top_tracks_in_last_6_months": "Your Top Tracks in last 6 months",
-    "your_top_tracks_in_last_month": "Your Top Tracks in last month"
-  },
-  "recommendation_by_track": "Track",
-  "recommendation_by_artist": "Artist",
-  "recommendation": {
-    "search_seed": "Recommendation seed:"
-  }
+  "list_name.liked_songs_from_spotify": "Liked Songs from Spotify",
+  "list_name.recently_played": "Recently played",
+  "list_name.your_totally_top_tracks": "Your totaly Top Tracks",
+  "list_name.your_top_tracks_in_last_6_months": "Your Top Tracks in last 6 months",
+  "list_name.your_top_tracks_in_last_month": "Your Top Tracks in last month",
+  "recommendation.by_track": "Track",
+  "recommendation.by_artist": "Artist",
+  "recommendation.search_seed": "Recommendation seed (limit: 5)",
+  "recommendation.genre": "Genre"
 }
