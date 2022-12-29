@@ -150,7 +150,7 @@ function getRecommendation() {
           </BaseDetails>
         </fieldset>
 
-        <fieldset class="h-fit min-h-[65px] border border-natural-gray1 p-2">
+        <fieldset class="relative h-fit min-h-[65px] border border-natural-gray1 p-2">
           <legend class="ml-1">{{ $t('recommendation.search_seed') }}</legend>
           <p>
             <button
@@ -165,6 +165,9 @@ function getRecommendation() {
               </span>
             </button>
           </p>
+          <button v-show="seeds.length" class="btn absolute top-0 right-0 bottom-0 my-auto" @click="seeds.length = 0">
+            <i class="ri-delete-bin-line text-2xl" />
+          </button>
         </fieldset>
         <div>
           <button type="button" class="btn-primary mx-auto" @click="getRecommendation">Get Recommendations</button>
