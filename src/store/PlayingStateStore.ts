@@ -116,7 +116,7 @@ const initProgress = {
 const useProgressStore = defineStore('ProgressStore', {
   state: () => ({ playing_progress: { ...initProgress } }),
   actions: {
-    updateProgress(value: number) {
+    updateProgress(value: typeof initProgress) {
       playing_state_ref.child('playing_progress').set(value)
     },
     updatePauseProgress() {

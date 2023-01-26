@@ -50,11 +50,11 @@ function setNextQueueTimeoutHandler({ duration, position, paused }: Spotify.Play
 
 let lastTimestamp = 0
 function updateProgressTimeHandler(playerState: Spotify.PlaybackState) {
-  const { paused, position, timestamp } = playerState
+  const { paused, position, timestamp, duration } = playerState
   if (timestamp - lastTimestamp < 1500) {
     lastTimestamp = timestamp
   } else if (position !== 0 && !paused) {
-    useProgressStore().updateProgress(position)
+    useProgressStore().updateProgress({ paused, position, duration })
   } else if (paused) {
     useProgressStore().updatePauseProgress()
   }
