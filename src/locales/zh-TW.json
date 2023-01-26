@@ -28,5 +28,7 @@
   "recommendation.by_artist": "演出者",
   "recommendation.by_track": "曲目",
   "recommendation.search_seed": "推薦依據 (數量上限:5)",
-  "recommendation.genre": "曲風"
+  "recommendation.genre": "曲風",
+  "get_recommendations": "取得推薦",
+  "add_all": "全部加入"
 }

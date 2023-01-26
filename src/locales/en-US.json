@@ -28,5 +28,7 @@
   "recommendation.by_track": "Track",
   "recommendation.by_artist": "Artist",
   "recommendation.search_seed": "Recommendation seed (limit: 5)",
-  "recommendation.genre": "Genre"
+  "recommendation.genre": "Genre",
+  "get_recommendations": "Get Recommendations",
+  "add_all": "Add All"
 }
