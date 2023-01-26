@@ -4,8 +4,10 @@ defineProps<{
 }>()
 </script>
 <template>
-  <details class="relative h-8 overflow-auto transition-[height] open:h-72">
-    <summary class="sticky top-0 bg-tertiary-2 p-1">{{ summaryText }}</summary>
-    <slot />
+  <details class="relative flex h-8 flex-col transition-[height] open:h-72">
+    <summary class="cursor-pointer p-1">{{ summaryText }}</summary>
+    <div class="h-64 overflow-auto">
+      <slot />
+    </div>
   </details>
 </template>
