@@ -1,5 +1,5 @@
 import { useProgressStore } from '@/store'
-import { ref, watch, type WatchStopHandle } from 'vue'
+import { ref, watch, onUnmounted, type WatchStopHandle } from 'vue'
 
 const INTERVAL = 1000
 
@@ -36,5 +36,8 @@ export function useProgressTimer() {
       }
     )
   }
+  onUnmounted(() => {
+    unwatch()
+  })
   return { currentDuration, currentPosition, unwatch }
 }
