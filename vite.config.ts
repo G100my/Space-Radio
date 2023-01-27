@@ -11,9 +11,9 @@ export default defineConfig(({ command }) => ({
     include: ['firebase/app', 'firebase/database', 'firebase/analytics'],
     exclude: ['firebase'],
   },
-  base: command === 'build' ? '/Space-Radio/' : './',
+  base: './',
   build: {
-    outDir: './docs/',
+    outDir: './dist/',
   },
   resolve: {
     alias: {
