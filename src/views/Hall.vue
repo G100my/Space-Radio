@@ -29,6 +29,7 @@ export default {
     onBeforeUnmount(() => {
       firebase.database().ref('room_list').off()
       // 借助使用者刪除太久沒有使用的 room
+      if (!roomListObject) return
       const deletedRooms = Object.entries(roomListObject).reduce<{ [roomKey: string]: any }>(
         (accumulator, [roomKey, value]) => {
           if (Date.now() - value.lastest_used > 30 * 24 * 60 * 60 * 1000) {
