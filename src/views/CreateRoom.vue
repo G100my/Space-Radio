@@ -97,19 +97,13 @@ export default {
 
     //
 
-    let hostPlaylists = reactive<{ id: string; name: string }[]>([])
+    let hostPlaylists = ref<{ id: string; name: string }[]>([])
     const basePlaylist = ref(null)
-    spotifyAPI.getUserPlaylists(undefined, { limit: 50 }, (error, sucess) => {
-      if (error) {
-        console.warn('something wrong when try to get host playlist.')
-        return
-      }
-      sucess.items.forEach(item => {
-        hostPlaylists.push({
-          id: item.id,
-          name: item.name,
-        })
-      })
+    spotifyAPI.getUserPlaylists(undefined, { limit: 50 }).then(res => {
+      hostPlaylists.value = res.items.map(i => ({
+        id: i.id,
+        name: i.name,
+      }))
     })
 
     //
