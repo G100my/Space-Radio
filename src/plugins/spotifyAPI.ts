@@ -8,7 +8,7 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
       return target[property]
     }
     const personalStore = usePersonalStore()
-    if (!personalStore.isTokenValid) {
+    if (!personalStore.isTokenValid()) {
       return (...theArguments: any[]) =>
         refreshAccessToken()
           .then(() => {

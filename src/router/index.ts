@@ -39,7 +39,7 @@ const routes = [
     beforeEnter: () => {
       const personalStore = usePersonalStore()
       // avoid user refresh page
-      if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid) {
+      if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid()) {
         spotifyAPI.setAccessToken(usePersonalStore().token)
       }
     },
@@ -87,7 +87,7 @@ router.beforeEach(async to => {
     return { name: 'Hall' }
   }
   const personalStore = usePersonalStore()
-  if (to.meta.requiresAuth && !personalStore.isTokenValid) {
+  if (to.meta.requiresAuth && !personalStore.isTokenValid()) {
     return { name: 'Hall' }
   }
 })

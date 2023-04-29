@@ -51,7 +51,7 @@ export default {
     const volumeStore = useVolumeStore()
 
     // avoid user refresh page
-    if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid) {
+    if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid()) {
       spotifyAPI.setAccessToken(usePersonalStore().token)
     }
     const roomKey = localStorage.getItem('spaceradio_room_key')

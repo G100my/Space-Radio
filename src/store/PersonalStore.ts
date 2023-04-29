@@ -16,7 +16,7 @@ export const usePersonalStore = defineStore('PersonalStore', {
     customerPlayerMode: false,
   }),
   getters: {
-    isTokenValid: state => {
+    isTokenValid: state => () => {
       if (state.expired_time === null) return false
       const now = Date.now()
       return state.expired_time > now

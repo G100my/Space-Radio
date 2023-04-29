@@ -27,7 +27,7 @@ const getSpotifyInitSetting = (): Spotify.PlayerInit => ({
   volume: useVolumeStore().volume / 100,
   getOAuthToken: callback => {
     const { token, isTokenValid } = usePersonalStore()
-    if (isTokenValid) {
+    if (isTokenValid()) {
       callback(token)
     } else {
       refreshAccessToken().then(() => {
