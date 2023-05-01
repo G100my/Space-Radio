@@ -31,3 +31,5 @@ coverage
 .env.*
 _*.*
 .firebase
+
+cypress.env.json
