@@ -18,6 +18,7 @@ export default {
     const router = useRouter()
     const searchKeyWordInput = ref('')
     const isErrorMessageShow = ref(false)
+    const isRoomListReady = ref(false)
 
     let roomListObject: { [roomkey: string]: any } = {}
 
@@ -25,6 +26,7 @@ export default {
 
     roomList.on('value', snapshot => {
       roomListObject = snapshot.val()
+      isRoomListReady.value = true
     })
     onBeforeUnmount(() => {
       firebase.database().ref('room_list').off()
@@ -80,6 +82,7 @@ export default {
       PKCE,
       enterCreateHandler,
       t,
+      isRoomListReady,
     }
   },
 }
@@ -94,7 +97,8 @@ export default {
           v-model="searchKeyWordInput"
           class="base-input mt-1.5 w-full"
           type="text"
-          :placeholder="t('please_enter_room_name')"
+          :placeholder="isRoomListReady ? t('please_enter_room_name') : t('wait')"
+          :disabled="!isRoomListReady"
           @focus="isErrorMessageShow = false"
           @keydown.prevent.enter="searchRoom"
         />
