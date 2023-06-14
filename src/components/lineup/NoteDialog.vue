@@ -1,32 +1,14 @@
-<script lang="ts">
+<script lang="ts" setup>
 import IconClose from '@/assets/icons/icon/close.svg?component'
 import { useNoteStore } from '@/store'
 import { Dialog as HDialog, DialogOverlay, DialogTitle } from '@headlessui/vue'
 import { computed } from 'vue'
 import BaseSwitch from '../base/BaseSwitch.vue'
 
-export default {
-  components: {
-    HDialog,
-    DialogOverlay,
-    DialogTitle,
-    IconClose,
-    BaseSwitch,
-  },
-  setup() {
-    const noteStore = useNoteStore()
-    const cancelHandler = () => (noteStore.isDialogOpen = false)
-    const ttsToggle = computed(() => noteStore.editingNote.tts)
-    const ttsToggleHandler = () => noteStore.updateEditingNote({ tts: !ttsToggle.value })
-
-    return {
-      cancelHandler,
-      ttsToggle,
-      ttsToggleHandler,
-      noteStore,
-    }
-  },
-}
+const noteStore = useNoteStore()
+const cancelHandler = () => (noteStore.isDialogOpen = false)
+const ttsToggle = computed(() => noteStore.editingNote.tts)
+const ttsToggleHandler = () => noteStore.updateEditingNote({ tts: !ttsToggle.value })
 </script>
 <template>
   <HDialog :open="noteStore.isDialogOpen" class="fixed inset-0 z-40 text-natural-gray4" @close="cancelHandler">
@@ -77,7 +59,7 @@ export default {
         </div>
       </div>
       <div class="flex justify-end gap-x-4 py-5 px-8">
-        <button class="btn-primary flex-1" @click="noteStore.submitHandler">Deactivate</button>
+        <button class="btn-primary flex-1" @click="noteStore.submitHandler(noteStore.editingNote)">Deactivate</button>
         <button class="btn-secondary flex-1" @click="cancelHandler">Cancel</button>
       </div>
     </div>
