@@ -35,5 +35,9 @@
   "will_cut": "Will skip current music after {second}",
   "second": "{count} second | {count} seconds",
   "vote_left": "{vote} vote left for skip. | {vote} votes left for skip.",
-  "vote_for_skip": "Vote for skip"
+  "vote_for_skip": "Vote for skip",
+  "create_room": "Create a room",
+  "copy_again": "Copy again!",
+  "you_can_copy_url_to_invite_your_friend": "You can invite your friends by send this URL to your friends.",
+  "create_room_success": "Create Room Success!"
 }

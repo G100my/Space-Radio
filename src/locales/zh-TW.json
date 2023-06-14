@@ -34,5 +34,9 @@
   "will_cut": "將在 {second} 之後切歌",
   "second": "{count} 秒",
   "vote_left": "再 {vote} 個投票數後切歌",
-  "vote_for_skip": "投票切歌"
+  "vote_for_skip": "投票切歌",
+  "create_room": "建立房間",
+  "copy_again": "再複製一次！",
+  "you_can_copy_url_to_invite_your_friend": "傳給你的朋朋，邀請他們進來房間～不怕走錯棚～",
+  "create_room_success": "開房間成功！"
 }
