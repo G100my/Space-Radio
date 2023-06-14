@@ -30,5 +30,6 @@
   "recommendation.search_seed": "Recommendation seed (limit: 5)",
   "recommendation.genre": "Genre",
   "get_recommendations": "Get Recommendations",
-  "add_all": "Add All"
+  "add_all": "Add All",
+  "wait": "Wait a seconds."
 }
