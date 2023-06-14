@@ -34,7 +34,7 @@ export default {
       class="w-7 flex-shrink-0 text-center font-bold text-primary"
       >{{ modelValue }}</span
     >
-    <IconVolumn class="ml-3" />
+    <IconVolumn class="ml-3 flex-shrink-0" />
 
     <button
       :disabled="!!$attrs.disabled"
