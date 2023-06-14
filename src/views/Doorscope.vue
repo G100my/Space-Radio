@@ -26,7 +26,7 @@ export default {
       .child('playing_state')
       .get()
       .then(snapshot => {
-        const playingTrack = snapshot.val()['playing_track']
+        const playingTrack = snapshot.val()?.['playing_track']
         playingStore.updatePlayerTrack(playingTrack)
       })
     room_ref
