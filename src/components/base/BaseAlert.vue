@@ -59,29 +59,29 @@ export default {
     :class="{ _alert_error: error, _alert_success: !error }"
     enter="transition-all duration-75"
     enter-from="max-h-0"
-    enter-to="max-h-full"
+    enter-to="max-h-fit"
     leave="transition-all duration-150"
-    leave-from="max-h-full"
+    leave-from="max-h-fit"
     leave-to="max-h-0"
   >
-    <label class="self-center" :class="{ _alert_icon_sm: iconSize === 'sm', _alert_icon_lg: iconSize === 'lg' }">
-      <IconError v-if="error" class="h-full w-full text-system-error1" />
-      <IconSuccess v-else class="h-full w-full text-system-success2" />
-    </label>
+    <div class="self-center" :class="{ _alert_icon_sm: iconSize === 'sm', _alert_icon_lg: iconSize === 'lg' }">
+      <IconError v-if="error" class="text-system-error1" />
+      <IconSuccess v-else class="text-system-success2" />
+    </div>
 
     <div class="flex items-center text-body text-natural-black">
       <p :class="{ 'mb-1': contentText }">{{ title }}</p>
       <button v-if="closeButton" class="ml-auto flex h-9 w-9 items-center justify-center" @click="$emit('close')">
-        <IconClose class="h-2.5 w-2.5 text-natural-gray3" />
+        <IconClose class="h-5 w-5 text-natural-gray3" />
       </button>
     </div>
 
     <p class="col-start-2 col-end-3 text-small text-tertiary-1">{{ contentText }}</p>
   </TransitionRoot>
 </template>
-<style lang="postcss">
+<style>
 ._base_alert {
-  @apply grid translate-y-1 overflow-hidden rounded-sm border px-4 py-px;
+  @apply grid min-h-fit translate-y-1 overflow-hidden rounded-sm border px-4 py-1;
   grid-template-columns: min-content 1fr;
 }
 ._alert_error {
@@ -90,10 +90,10 @@ export default {
 ._alert_success {
   @apply border-system-success2 bg-system-success3;
 }
-._alert_icon_sm {
-  @apply mr-3 h-4 w-4;
+._alert_icon_sm > svg {
+  @apply mr-3 h-5 w-5;
 }
-._alert_icon_lg {
-  @apply mr-6 h-5 w-5;
+._alert_icon_lg > svg {
+  @apply mr-6 h-6 w-6;
 }
 </style>
