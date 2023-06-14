@@ -67,7 +67,7 @@ const useVoteStore = defineStore('VoteStore', {
   state: () => ({
     dislike: 0,
     dislike_threshold: 2,
-    dislike_countdown: false,
+    dislike_countdown: false as false | number,
     isVoted: false,
   }),
   actions: {
@@ -92,6 +92,7 @@ const useVoteStore = defineStore('VoteStore', {
     clearDislikeVote() {
       playing_state_ref.child('dislike').set(0)
       playing_state_ref.child('voted_users').set(null)
+      this.isVoted = false
     },
     adjustIsVoted(snapshot: firebase.database.DataSnapshot) {
       const userId = usePersonalStore().user_id

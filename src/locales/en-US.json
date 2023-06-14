@@ -31,5 +31,9 @@
   "recommendation.genre": "Genre",
   "get_recommendations": "Get Recommendations",
   "add_all": "Add All",
-  "wait": "Wait a seconds."
+  "wait": "Wait a seconds.",
+  "will_cut": "Will skip current music after {second}",
+  "second": "{count} second | {count} seconds",
+  "vote_left": "{vote} vote left for skip. | {vote} votes left for skip.",
+  "vote_for_skip": "Vote for skip"
 }

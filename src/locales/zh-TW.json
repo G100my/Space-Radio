@@ -30,5 +30,9 @@
   "recommendation.search_seed": "推薦依據 (數量上限:5)",
   "recommendation.genre": "曲風",
   "get_recommendations": "取得推薦",
-  "add_all": "全部加入"
+  "add_all": "全部加入",
+  "will_cut": "將在 {second} 之後切歌",
+  "second": "{count} 秒",
+  "vote_left": "再 {vote} 個投票數後切歌",
+  "vote_for_skip": "投票切歌"
 }
