@@ -173,17 +173,17 @@ export default {
             <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
               <IconMore />
             </MenuButton>
-            <transition
-              enter-active-class="transition duration-150 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-out"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
+            <Transition
+              enterActiveClass="transition duration-150 ease-out"
+              enterFromClass="transform scale-95 opacity-0"
+              enterToClass="transform scale-100 opacity-100"
+              leaveActiveClass="transition duration-75 ease-out"
+              leaveFromClass="transform scale-100 opacity-100"
+              leaveToClass="transform scale-95 opacity-0"
             >
               <MenuItems
                 :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
-                class="absolute right-0 z-20 space-y-4 rounded-10 bg-tertiary-1 py-2 px-5"
+                class="absolute right-0 z-20 space-y-4 rounded-10 bg-tertiary-1 px-5 py-2"
               >
                 <template v-if="checkLevel('urgent', key)">
                   <MenuItem v-slot="{ active }">
@@ -218,7 +218,7 @@ export default {
                   </li>
                 </MenuItem>
               </MenuItems>
-            </transition>
+            </Transition>
           </HMenu>
         </template>
         <div v-else class="hidden w-[146px] xs:block" />
