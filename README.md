@@ -22,12 +22,11 @@
 進行搜尋歌曲、點播歌曲等相關 Spotify 提供的 API 服務。
 經由 Firebase 同步所有的點/插歌，
 最後由 room host 的瀏覽器處理撥放、換歌、切歌等動作。
-![space radio work flow](https://github.com/G100my/Space-Radio/blob/main/doc_Images/spaceradio-flow.jpg?raw=true)
 
 ### Feature:
 
 1. 點歌
-1. 插歌 + 語音留言廣播
+1. 插歌 + Text to speech 語音留言
 1. 搜尋歌曲
 1. 列出使用者歌單
    - 最近播放紀錄清單
@@ -41,8 +40,6 @@
 1. 將正在播放的音樂**加入最愛**、**加入指定的使用者私人播放清單**
 1. 房間操作紀錄
 1. 遠端同步，建立自己的 web player，與 Host player 同步撥放音樂 (未完善)
-1. 支援 RWD
-1. TTS 插歌留言語音廣播
 
 ## How to use
 
@@ -63,11 +60,11 @@
 
 :::info
 
-- 不是從 Space radio 加入的音樂並不會出現在 Space radio 的 list 內。
+- 不是從 Space radio 點播、插播的音樂並不會出現在 Space radio 的待播清單內。
 - 插歌點歌實際上是使用 spotify 的 "Add to queue" api，
   所以不會影響到原本已經存在裝置播放清單的序列歌曲，
   仍然可以使用 spotify 原本的 app 操作點歌、換歌單、撥放/暫停等功能，
-  但必須由 **瀏覽器** 執行撥放才能讓 Space radio 的清單有效運作。
+  但必須由 **瀏覽器** 執行撥放才能讓 Space radio 的播放清單有效運作。
 - 會刪除超過 30 天未使用的房間，屆時請重新創立房間。
 
 :::
