@@ -81,9 +81,3 @@ export default {
     </button>
   </div>
 </template>
-<i18n lang="yaml">
-en:
-  now_playing: Now playing
-zh-TW:
-  now_playing: 現正撥放
-</i18n>

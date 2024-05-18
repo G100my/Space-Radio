@@ -39,5 +39,11 @@
   "create_room": "Create a room",
   "copy_again": "Copy again!",
   "you_can_copy_url_to_invite_your_friend": "You can invite your friends by send this URL to your friends.",
-  "create_room_success": "Create Room Success!"
+  "create_room_success": "Create Room Success!",
+  "have_no_room": "Having no room? Create Room.",
+  "please_enter_room_name": "Please enter room name.",
+  "enter_room": "Enter Room",
+  "next": "Next",
+  "collect_to_spotify": "Collect to Spotify",
+  "collect": "Collect!"
 }
