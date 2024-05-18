@@ -7,7 +7,7 @@ import IconPlus from '@/assets/icons/icon-plus.svg?component'
 import FeedbackAlert from './FeedbackAlert.vue'
 import { useI18n } from 'vue-i18n'
 import BaseAlert from '../base/BaseAlert.vue'
-import { LightningBoltIcon } from '@heroicons/vue/outline'
+import { LightBulbIcon } from '@heroicons/vue/24/outline'
 import { usePersonalStore, useRoomBasicStore } from '@/store'
 
 export type ComponentName = 'Recommendation' | 'Search' | 'Personal' | 'AddFromStreamingService'
@@ -21,7 +21,7 @@ export default {
     IconPlus,
     FeedbackAlert,
     BaseAlert,
-    LightningBoltIcon,
+    LightBulbIcon,
   },
   emits: ['activeSideDrawer'],
   setup(_props, { emit }) {
@@ -102,7 +102,7 @@ export default {
           </li>
           <li>
             <button type="button" class="btn-response min-h-0" @click="activeSideDrawerHandler('Recommendation')">
-              <LightningBoltIcon class="h-full w-6" />
+              <LightBulbIcon class="h-full w-6" />
               <label class="ml-3 hidden whitespace-nowrap laptop:inline">{{ t('add_from_recommendation') }}</label>
             </button>
           </li>
