@@ -112,15 +112,3 @@ export default {
   </div>
   <HallNav class="laptop:mt-20" />
 </template>
-<i18n lang="yaml">
-en:
-  have_no_room: Having no room? Create Room.
-  please_enter_room_name: Please enter room name.
-  enter_room: Enter Room
-  next: Next
-zh-TW:
-  enter_room: 進入房間
-  have_no_room: 開房間
-  please_enter_room_name: 請輸入要進入的房間名稱
-  next: 下一步
-</i18n>

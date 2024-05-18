@@ -38,5 +38,11 @@
   "create_room": "建立房間",
   "copy_again": "再複製一次！",
   "you_can_copy_url_to_invite_your_friend": "傳給你的朋朋，邀請他們進來房間～不怕走錯棚～",
-  "create_room_success": "開房間成功！"
+  "create_room_success": "開房間成功！",
+  "enter_room": "進入房間",
+  "have_no_room": "開房間",
+  "please_enter_room_name": "請輸入要進入的房間名稱",
+  "next": "下一步",
+  "collect_to_spotify": "收藏到 Spotify",
+  "collect": "收藏！"
 }

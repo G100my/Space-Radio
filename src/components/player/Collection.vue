@@ -120,11 +120,3 @@ export default {
     </HDialog>
   </TransitionRoot>
 </template>
-<i18n lang="yaml">
-en:
-  collect_to_spotify: Collect to Spotify
-  collect: Collect!
-zh-TW:
-  collect_to_spotify: 收藏到 Spotify
-  collect: 收藏！
-</i18n>
