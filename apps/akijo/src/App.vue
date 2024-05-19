@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <header>customer</header>
+  <header></header>
 
-  <main></main>
+  <RouterView />
 </template>
