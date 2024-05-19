@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss'
-import preset from '../tailwind.preset'
+import preset from 'shared/tailwind.preset'
 
 export default {
   content: ['./src/**/*.{vue,ts}', './src/style/*.css'],
