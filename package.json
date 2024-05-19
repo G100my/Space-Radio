@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": "true",
   "workspaces": [
-    "space-radio"
+    "apps/space-radio"
   ],
   "dependencies": {
     "@types/spotify-web-playback-sdk": "^0.1.19",
