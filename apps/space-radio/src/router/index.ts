@@ -4,13 +4,14 @@ import Room from '@/views/Room.vue'
 import Doorscope from '@/views/Doorscope.vue'
 import HallShell from '@/components/hall/HallShell.vue'
 import CreateRoom from '@/views/CreateRoom.vue'
-import { fetchAccessToken } from '@/utility/PKCE'
+import { fetchAccessToken } from 'shared'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 
 import { setPlayingStateRef } from '@/store/PlayingStateStore'
 import { setUserLogRef } from '@/store/UserLogStore'
 import { setQueueRef } from '@/store/QueueStore'
 import { usePersonalStore } from '@/store/PersonalStore'
+import { generateAuthParams } from '@/utility'
 
 const routes = [
   {
@@ -78,7 +79,7 @@ router.beforeEach(async to => {
     // 造成 vue router webHashHistory mode 無法如預期運作，
     // to, from 都會是 '/'，因此手動清除。
     window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
-    await fetchAccessToken(authorizationCode, '#' + hashPath)
+    await fetchAccessToken(authorizationCode, generateAuthParams('#' + hashPath))
     const userData = await spotifyAPI.getMe()
     usePersonalStore().updateUserData(userData)
   }

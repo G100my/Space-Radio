@@ -1,5 +1,5 @@
 import { usePersonalStore } from '@/store/PersonalStore'
-import { refreshAccessToken } from '@/utility/PKCE'
+import { refreshAccessToken } from 'shared'
 import SpotifyWebApi from 'spotify-web-api-js'
 
 const spotifyAPI = new Proxy(new SpotifyWebApi(), {
@@ -10,7 +10,7 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
     const personalStore = usePersonalStore()
     if (!personalStore.isTokenValid()) {
       return (...theArguments: any[]) =>
-        refreshAccessToken()
+        refreshAccessToken({ client_id: import.meta.env.VITE_CLIENT_ID, refresh_token: personalStore.refresh_token! })
           .then(() => {
             spotifyAPI.setAccessToken(usePersonalStore().token)
             // @ts-expect-error

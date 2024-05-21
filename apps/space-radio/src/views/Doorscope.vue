@@ -1,59 +1,43 @@
-<script lang="ts">
+<script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import firebase from '@/plugins/firebase'
-import { PKCE } from '@/utility/PKCE'
+import { PKCE } from 'shared'
+import { generateAuthParams } from '@/utility'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
-import initCover from '@/assets/vinyl-record.png'
+// import initCover from '@/assets/vinyl-record.png'
 import IconArrowLeft from '@/assets/icons/icon-arrow-left.svg?component'
 import { useI18n } from 'vue-i18n'
 import { usePlayingStore } from '@/store'
 
-export default {
-  components: {
-    IconArrowLeft,
-  },
-  setup() {
-    const { t } = useI18n()
-    const playingStore = usePlayingStore()
-    const roomKey = useRoute().params.roomKey as string
-    const roomName = ref('')
-    const album = computed(() => playingStore.playing_track.album)
-    const enterButton = ref<HTMLButtonElement>()
+const { t } = useI18n()
+const playingStore = usePlayingStore()
+const roomKey = useRoute().params.roomKey as string
+const roomName = ref('')
+// const album = computed(() => playingStore.playing_track.album)
+const enterButton = ref<HTMLButtonElement>()
+const trackName = computed(() => playingStore.playing_track.name)
 
-    const room_ref = firebase.database().ref(roomKey)
-    room_ref
-      .child('playing_state')
-      .get()
-      .then(snapshot => {
-        const playingTrack = snapshot.val()?.['playing_track']
-        playingStore.updatePlayerTrack(playingTrack)
-      })
-    room_ref
-      .child('basic/room_name')
-      .get()
-      .then(snapshot => {
-        roomName.value = snapshot.val()
-      })
+const room_ref = firebase.database().ref(roomKey)
+room_ref
+  .child('playing_state')
+  .get()
+  .then(snapshot => {
+    const playingTrack = snapshot.val()?.['playing_track']
+    playingStore.updatePlayerTrack(playingTrack)
+  })
+room_ref
+  .child('basic/room_name')
+  .get()
+  .then(snapshot => {
+    roomName.value = snapshot.val()
+  })
 
-    onMounted(() => {
-      nextTick(() => {
-        enterButton.value!.focus()
-      })
-    })
-
-    return {
-      roomName,
-      album,
-      initCover,
-      PKCE,
-      trackName: computed(() => playingStore.playing_track.name),
-      spotifyAPI,
-      enterButton,
-      t,
-    }
-  },
-}
+onMounted(() => {
+  nextTick(() => {
+    enterButton.value!.focus()
+  })
+})
 </script>
 <template>
   <div class="laptop:relative laptop:mt-[33vh]">
@@ -75,7 +59,7 @@ export default {
       ref="enterButton"
       class="btn-primary mt-9 w-full focus:ring-2"
       type="button"
-      @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE('#room')"
+      @click="spotifyAPI.getAccessToken() ? $router.push({ name: 'Room' }) : PKCE(generateAuthParams('#room'))"
     >
       {{ t('enter') }}
     </button>

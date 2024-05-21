@@ -1,6 +1,6 @@
 import { ref, computed, unref, watch, type WatchStopHandle } from 'vue'
 import { usePlayingStore, useProgressStore, useQueueStore, useRoomBasicStore } from '@/store'
-import { refreshAccessToken } from '@/utility/PKCE'
+import { refreshAccessToken } from 'shared'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { usePlayerVolumeControl } from '@/composables/usePlayerVolumeControl'
 import {
@@ -30,7 +30,10 @@ const getSpotifyInitSetting = (): Spotify.PlayerInit => ({
     if (isTokenValid()) {
       callback(token)
     } else {
-      refreshAccessToken().then(() => {
+      refreshAccessToken({
+        client_id: import.meta.env.VITE_CLIENT_ID,
+        refresh_token: usePersonalStore().refresh_token!,
+      }).then(() => {
         callback(token)
       })
     }
