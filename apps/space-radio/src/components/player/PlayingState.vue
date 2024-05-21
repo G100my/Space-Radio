@@ -1,35 +1,20 @@
-<script lang="ts">
-import { computed, defineAsyncComponent } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 import logo from '@/assets/vinyl-record.png'
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import ProgressTimer from './ProgressTimer.vue'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
 import LikeButton from '@/components/player/LikeButton.vue'
-import { usePersonalStore, usePlayingStore } from '@/store'
+import { usePersonalStore, usePlayingStore, useRoomBasicStore } from '@/store'
 
-export default {
-  components: {
-    ProgressTimer,
-    LikeButton,
-    BaseMarquee,
-    PlayToggle: defineAsyncComponent(() => import('@/components/player/PlayToggle.vue')),
-  },
-  setup() {
-    const store = usePlayingStore()
-    const personalStore = usePersonalStore()
-    return {
-      SpotifyLogo,
-      logo,
-
-      playerPlayingAlbum: computed(() => store.playerPlayingAlbum),
-      playerPlayingArtists: computed(() => store.playerPlayingArtists),
-      playerPlayingTrackName: computed(() => store.playerPlayingTrackName),
-      isPremium: computed(() => personalStore.isPremium),
-      isHostUser: computed(() => personalStore.isHostUser),
-      customerPlayerMode: computed(() => personalStore.customerPlayerMode),
-    }
-  },
-}
+const store = usePlayingStore()
+const personalStore = usePersonalStore()
+const playerPlayingAlbum = computed(() => store.playerPlayingAlbum)
+const playerPlayingArtists = computed(() => store.playerPlayingArtists)
+const playerPlayingTrackName = computed(() => store.playerPlayingTrackName)
+const isPremium = computed(() => personalStore.isPremium)
+const isHostUser = computed(() => personalStore.isHostUser)
+const customerPlayerMode = computed(() => useRoomBasicStore().customerPlayerMode)
 </script>
 <template>
   <section class="w-full bg-opacity-40">

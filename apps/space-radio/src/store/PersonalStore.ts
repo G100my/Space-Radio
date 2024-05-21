@@ -12,8 +12,6 @@ export const usePersonalStore = defineStore('PersonalStore', {
     display_name: localStorage.getItem('spaceradio_user_display_name') || '',
     image_url: localStorage.getItem('spaceradio_user_images') || '',
     product: localStorage.getItem('spaceradio_user_product') || '',
-
-    customerPlayerMode: false,
   }),
   getters: {
     isTokenValid: state => () => {
@@ -52,9 +50,6 @@ export const usePersonalStore = defineStore('PersonalStore', {
         this.image_url = images[0].url
         localStorage.setItem('spaceradio_user_images', images[0].url)
       }
-    },
-    toggleCustomerPlayer(payload: boolean) {
-      this.customerPlayerMode = payload
     },
   },
 })

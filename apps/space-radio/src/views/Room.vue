@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import firebase from '@/plugins/firebase'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
@@ -26,69 +26,39 @@ import { usePersonalStore } from '@/store/PersonalStore'
 import { useRoomBasicStore } from '@/store'
 import { userLogConnect2firebase } from '@/store/UserLogStore'
 
-export default {
-  components: {
-    SlideContainer,
-    SideDrawer,
-    RoomHeader,
-    PlayingState,
-    VolumnBar,
-    Collection,
-    Vote,
-    RoomQueue,
-    NoteDialog,
-    UserLog,
-    AddFromStreamingService,
-    Recommendation,
-    PlaylistContent,
-    Search,
-    Personal,
-    CustomerVolumeBar,
-  },
-  setup() {
-    const personalStore = usePersonalStore()
-    const roomBasicStore = useRoomBasicStore()
-    const volumeStore = useVolumeStore()
+const personalStore = usePersonalStore()
+const roomBasicStore = useRoomBasicStore()
+const volumeStore = useVolumeStore()
 
-    // avoid user refresh page
-    if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid()) {
-      spotifyAPI.setAccessToken(usePersonalStore().token)
-    }
-    const roomKey = localStorage.getItem('spaceradio_room_key')
-    firebase
-      .database()
-      .ref(`${roomKey}/basic`)
-      .get()
-      .then(snapshot => {
-        roomBasicStore.update(snapshot.val())
-      })
-
-    onMounted(() => {
-      queueConnect2firebase()
-      playingStateConnect2firebase()
-      userLogConnect2firebase()
-    })
-
-    const isSideDrawerShow = ref(false)
-    const activeComponent = ref<ComponentName>('Personal')
-
-    function activeSideDrawerHandler(componentName: ComponentName) {
-      isSideDrawerShow.value = true
-      activeComponent.value = componentName
-    }
-
-    return {
-      isSideDrawerShow,
-      activeComponent,
-      activeSideDrawerHandler,
-      personalStore: usePersonalStore(),
-      volumeStore: useVolumeStore(),
-
-      mobileMode: computed(() => (window.innerWidth < 768 ? true : false)),
-      currentVolume: computed(() => volumeStore.volume),
-    }
-  },
+// avoid user refresh page
+if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid()) {
+  spotifyAPI.setAccessToken(usePersonalStore().token)
 }
+const roomKey = localStorage.getItem('spaceradio_room_key')
+firebase
+  .database()
+  .ref(`${roomKey}/basic`)
+  .get()
+  .then(snapshot => {
+    roomBasicStore.update(snapshot.val())
+  })
+
+onMounted(() => {
+  queueConnect2firebase()
+  playingStateConnect2firebase()
+  userLogConnect2firebase()
+})
+
+const isSideDrawerShow = ref(false)
+const activeComponent = ref<ComponentName>('Personal')
+
+function activeSideDrawerHandler(componentName: ComponentName) {
+  isSideDrawerShow.value = true
+  activeComponent.value = componentName
+}
+
+// const mobileMode = computed(() => (window.innerWidth < 768 ? true : false))
+const currentVolume = computed(() => volumeStore.volume)
 </script>
 <template>
   <div id="room" class="relative flex h-full flex-col overflow-hidden bg-tertiary-1 bg-opacity-80 laptop:bg-tertiary-2">
@@ -98,7 +68,7 @@ export default {
         <div class="flex min-h-full flex-col laptop:pt-7">
           <PlayingState />
           <VolumnBar
-            v-if="!personalStore.customerPlayerMode"
+            v-if="!roomBasicStore.customerPlayerMode"
             :modelValue="currentVolume"
             disabledBar
             class="mt-7 laptop:mt-3"

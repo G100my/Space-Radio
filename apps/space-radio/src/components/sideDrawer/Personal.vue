@@ -1,26 +1,17 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useRouter } from 'vue-router'
 import BaseSwitch from '../base/BaseSwitch.vue'
 import { usePersonalStore } from '@/store/PersonalStore'
 import { useRoomBasicStore } from '@/store'
-export default {
-  components: {
-    BaseSwitch,
-  },
-  setup() {
-    const router = useRouter()
-    function localClear() {
-      localStorage.clear()
-      router.push({ name: 'Hall' })
-      location.reload()
-    }
-    return {
-      localClear,
-      personalStore: usePersonalStore(),
-      roomBasicStore: useRoomBasicStore(),
-    }
-  },
+
+const router = useRouter()
+function localClear() {
+  localStorage.clear()
+  router.push({ name: 'Hall' })
+  location.reload()
 }
+const personalStore = usePersonalStore()
+const roomBasicStore = useRoomBasicStore()
 </script>
 <template>
   <div class="mx-auto flex h-full max-w-sm flex-col gap-y-5 text-natural-gray2">
@@ -50,10 +41,10 @@ export default {
     </p>
     <div v-if="personalStore.isHostUser !== undefined && !personalStore.isHostUser">
       <BaseSwitch
-        :modelValue="!!personalStore.customerPlayerMode"
+        :modelValue="!!roomBasicStore.customerPlayerMode"
         label="Enable local player"
         class="flex items-end justify-between"
-        @update:modelValue="personalStore.customerPlayerMode = $event"
+        @update:modelValue="roomBasicStore.customerPlayerMode = $event"
       />
     </div>
     <!-- 最喜歡藝人 -->
