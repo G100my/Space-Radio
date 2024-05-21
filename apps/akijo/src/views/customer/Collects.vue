@@ -2,5 +2,5 @@
 //
 </script>
 <template>
-  <div>customer</div>
+  <div class="bg-red-400">search music</div>
 </template>

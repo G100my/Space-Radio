@@ -2,5 +2,7 @@
 //
 </script>
 <template>
-  <div>host</div>
+  <section>
+    <div></div>
+  </section>
 </template>

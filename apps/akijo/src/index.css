@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.v-enter-active,
+.v-leave-active {
+  @apply transition-transform absolute w-full;
+}
+
+.v-enter-from,
+.v-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
