@@ -1,5 +1,5 @@
 {
-  "i18n-ally.localesPaths": ["space-radio/src/locales"],
+  "i18n-ally.localesPaths": ["apps/space-radio/src/locales"],
   "i18n-ally.keystyle": "flat",
   "i18n-ally.extract.autoDetect": true,
   "i18n-ally.extract.keyMaxLength": 30
