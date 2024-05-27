@@ -1,4 +1,5 @@
-import { spotifyAPI } from '@/plugins/spotifyAPI'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type SpotifyWebApi from 'spotify-web-api-js'
 import { defineStore } from 'pinia'
 
 const storageKeys = {
@@ -36,8 +37,7 @@ export const usePersonalStore = defineStore('PersonalStore', {
       localStorage.setItem(storageKeys.token, params.access_token)
       localStorage.setItem(storageKeys.expiredTime, params.expired_time.toString())
       localStorage.setItem(storageKeys.refreshToken, params.refresh_token)
-
-      spotifyAPI.setAccessToken(params.access_token)
+      return Promise.resolve(params)
     },
     updateUserData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
       this.$patch({ id, display_name, product })

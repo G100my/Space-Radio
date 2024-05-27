@@ -1,5 +1,5 @@
 export * from './AlertStore'
-export * from './PersonalStore'
+export { usePersonalStore } from 'shared'
 export * from './RoomBasicStore'
 export * from './NoteStore'
 export * from './PersonalPlaylists'
