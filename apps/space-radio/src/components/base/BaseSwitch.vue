@@ -26,10 +26,10 @@ export default {
     <SwitchItem
       :value="String(modelValue)"
       :class="modelValue ? 'bg-primary' : 'bg-natural-gray3'"
-      class="focus:outline-none relative inline-flex h-[22px] w-[38px] flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+      class="relative inline-flex h-[22px] w-[38px] flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
       @click="$emit('update:modelValue')"
       @keypress="
-        (event:KeyboardEvent) => {
+        (event: KeyboardEvent) => {
           if (event.code === 'Enter' || event.code === 'Space') $emit('update:modelValue')
         }
       "

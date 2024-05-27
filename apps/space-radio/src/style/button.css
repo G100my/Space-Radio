@@ -1,6 +1,6 @@
 @layer components {
   .btn {
-    @apply focus:outline-none flex min-h-[38px] min-w-[38px] items-center justify-center rounded-sm text-body;
+    @apply text-body flex min-h-[38px] min-w-[38px] items-center justify-center rounded-sm focus:outline-none;
   }
   .btn:disabled {
     @apply grayscale hover:border-opacity-100;
@@ -9,28 +9,28 @@
 
 @layer components {
   .btn-primary {
-    @apply btn bg-primary bg-opacity-80 py-2 px-4 text-tertiary-1 text-opacity-80;
+    @apply btn bg-primary text-tertiary-1 bg-opacity-80 px-4 py-2 text-opacity-80;
   }
   .btn-primary:hover,
   .btn-primary:focus {
-    @apply outline-none bg-opacity-100;
+    @apply bg-opacity-100 outline-none;
   }
   /* fixme: 點擊 button 留白處無法觸發 :active，點擊 button 內文才有效 */
   .btn-primary:active {
-    @apply text-tertiary-2 text-opacity-60 ring-2 ring-tertiary-2;
+    @apply text-tertiary-2 ring-tertiary-2 text-opacity-60 ring-2;
   }
 }
 
 @layer components {
   .btn-secondary {
-    @apply btn border border-natural-gray2 bg-tertiary-2 py-2 px-4 text-natural-gray2;
+    @apply btn border-natural-gray2 bg-tertiary-2 text-natural-gray2 border px-4 py-2;
   }
   .btn-secondary:hover,
   .btn-secondary:focus {
-    @apply outline-none bg-tertiary-1 bg-opacity-60 text-natural-gray1;
+    @apply bg-tertiary-1 text-natural-gray1 bg-opacity-60 outline-none;
   }
   .btn-secondary:active {
-    @apply border-tertiary-1 bg-tertiary-1 bg-opacity-100 text-natural-gray3 ring-natural-gray3;
+    @apply border-tertiary-1 bg-tertiary-1 text-natural-gray3 ring-natural-gray3 bg-opacity-100;
   }
 }
 
@@ -39,13 +39,13 @@
     @apply btn text-natural-white;
   }
   .btn-tertiary:hover {
-    @apply border border-natural-gray2 bg-tertiary-1 bg-opacity-60;
+    @apply border-natural-gray2 bg-tertiary-1 border bg-opacity-60;
   }
 }
 
 /* used in Header */
 @layer components {
   .btn-response {
-    @apply btn px-3 text-natural-white laptop:border laptop:border-natural-gray2 laptop:bg-tertiary-1 laptop:py-2 laptop:px-4;
+    @apply btn text-natural-white laptop:border laptop:border-natural-gray2 laptop:bg-tertiary-1 laptop:py-2 laptop:px-4 px-3;
   }
 }

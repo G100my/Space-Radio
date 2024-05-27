@@ -8,6 +8,6 @@ import type { AuthParams } from 'shared'
 export function generateAuthParams(hash: string): AuthParams {
   return {
     client_id: import.meta.env.VITE_CLIENT_ID,
-    redirect_uri: import.meta.env.VITE_REDIRECT_URI + hash,
+    redirect_uri: import.meta.env.VITE_BASE_URI + hash,
   }
 }

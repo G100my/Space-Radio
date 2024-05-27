@@ -8,7 +8,7 @@ const userLogMaker = function (type: string) {
   const personalStore = usePersonalStore()
   return {
     action_type: type,
-    user_id: personalStore.user_id,
+    user_id: personalStore.id,
     user_name: personalStore.display_name,
     timestamp: Date.now(),
   }

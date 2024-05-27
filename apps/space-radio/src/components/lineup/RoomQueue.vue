@@ -29,7 +29,7 @@ export default {
   emits: ['activeNoteDialog'],
   setup(_props, context) {
     const personalStore = usePersonalStore()
-    const userId = computed(() => personalStore.user_id)
+    const userId = computed(() => personalStore.id)
 
     const queueStore = useQueueStore()
     const isMenuPositionUp = ref(false)
@@ -98,19 +98,19 @@ export default {
 }
 </script>
 <template>
-  <div class="flex h-full flex-col overflow-y-auto laptop:pb-10">
+  <div class="laptop:pb-10 flex h-full flex-col overflow-y-auto">
     <header class="flex items-center justify-between pb-6">
-      <h3 class="text-2xl font-semibold text-natural-gray2 laptop:text-header">Next</h3>
+      <h3 class="text-natural-gray2 laptop:text-header text-2xl font-semibold">Next</h3>
       <img src="@/assets/images/Spotify_Logo_CMYK_Green.png" alt="Spotify" class="w-20" />
     </header>
     <transition-group name="queue" tag="ul" class="relative flex-1 space-y-2 overflow-y-auto">
       <li
         v-for="(key, index) in Object.keys(totalQueue)"
         :key="key"
-        class="_tracks flex items-center gap-x-3 rounded-10 bg-tertiary-1 bg-opacity-60 p-3 hover:bg-opacity-100"
+        class="_tracks rounded-10 bg-tertiary-1 flex items-center gap-x-3 bg-opacity-60 p-3 hover:bg-opacity-100"
       >
         <div class="flex w-10 flex-shrink-0 items-center justify-center">
-          <span v-if="checkLevel('normal', key)" class="text-body font-bold text-natural-gray3">{{ index }}</span>
+          <span v-if="checkLevel('normal', key)" class="text-body text-natural-gray3 font-bold">{{ index }}</span>
           <IconArrowUp v-else-if="checkLevel('urgent', key)" class="arrow-up" />
           <IconPending v-else class="pending" />
         </div>
@@ -120,8 +120,8 @@ export default {
         </div>
 
         <div class="_info_1 w-full overflow-hidden">
-          <BaseMarquee class="text-xs font-bold text-natural-gray1 md:text-base" :text="trackData[key].name" />
-          <BaseMarquee class="text-xs text-primary md:text-base" :text="getOrderer(key)" />
+          <BaseMarquee class="text-natural-gray1 text-xs font-bold md:text-base" :text="trackData[key].name" />
+          <BaseMarquee class="text-primary text-xs md:text-base" :text="getOrderer(key)" />
         </div>
 
         <div class="_info_2 hidden md:block">
@@ -142,7 +142,7 @@ export default {
         </div>
 
         <template v-if="userId === totalQueue[key].orderer_id">
-          <div class="hidden w-[146px] justify-end space-x-3 xs:flex">
+          <div class="xs:flex hidden w-[146px] justify-end space-x-3">
             <template v-if="checkLevel('urgent', key)">
               <button class="btn-tertiary" type="button" @click="queueStore.urgentEdit(key)">
                 <IconEdit />
@@ -169,7 +169,7 @@ export default {
             </button>
           </div>
 
-          <HMenu v-slot="{ open }" as="div" class="relative cursor-pointer self-stretch xs:hidden">
+          <HMenu v-slot="{ open }" as="div" class="xs:hidden relative cursor-pointer self-stretch">
             <MenuButton class="btn-tertiary" type="button" @click="menuPositionHandler($event, open)">
               <IconMore />
             </MenuButton>
@@ -183,7 +183,7 @@ export default {
             >
               <MenuItems
                 :class="{ 'top-0 -translate-y-full': isMenuPositionUp }"
-                class="absolute right-0 z-20 space-y-4 rounded-10 bg-tertiary-1 px-5 py-2"
+                class="rounded-10 bg-tertiary-1 absolute right-0 z-20 space-y-4 px-5 py-2"
               >
                 <template v-if="checkLevel('urgent', key)">
                   <MenuItem v-slot="{ active }">
@@ -221,12 +221,12 @@ export default {
             </Transition>
           </HMenu>
         </template>
-        <div v-else class="hidden w-[146px] xs:block" />
+        <div v-else class="xs:block hidden w-[146px]" />
       </li>
     </transition-group>
   </div>
 </template>
-<style lang="postcss">
+<style>
 ._info_1,
 ._info_2 {
   @apply min-w-0;
@@ -239,14 +239,13 @@ export default {
 }
 
 ._menu-item {
-  @apply flex gap-x-2 whitespace-nowrap text-natural-white;
-
-  &.active {
-    @apply text-primary;
-    path {
-      @apply fill-current;
-    }
-  }
+  @apply text-natural-white flex gap-x-2 whitespace-nowrap;
+}
+._menu-item.active {
+  @apply text-primary;
+}
+._menu-item.active path {
+  @apply fill-current;
 }
 
 .queue-move {

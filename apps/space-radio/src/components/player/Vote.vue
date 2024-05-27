@@ -42,7 +42,7 @@ const isDisable = computed(() => !usePlayingStore().playerPlayingTrackId || near
 </template>
 <style>
 ._vote > p {
-  @apply font-bold text-natural-gray3;
+  @apply text-natural-gray3 font-bold;
 }
 ._vote > p > span {
   @apply text-primary;

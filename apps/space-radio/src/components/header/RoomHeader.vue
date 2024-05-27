@@ -55,16 +55,16 @@ export default {
 </script>
 <template>
   <header
-    class="header relative z-10 flex-col bg-tertiary-1 bg-opacity-60 px-8 py-5 laptop:flex-row laptop:items-center laptop:bg-transparent laptop:p-0"
+    class="header bg-tertiary-1 laptop:flex-row laptop:items-center laptop:bg-transparent laptop:p-0 relative z-10 flex-col bg-opacity-60 px-8 py-5"
   >
-    <h1 class="flex items-center justify-start laptop:flex-col laptop:items-start laptop:pt-10">
+    <h1 class="laptop:flex-col laptop:items-start laptop:pt-10 flex items-center justify-start">
       <img
         src="@/assets/images/logo-large.png"
-        class="cursor-pointer text-natural-white"
+        class="text-natural-white cursor-pointer"
         @click="$router.push({ name: 'Hall' })"
       />
       <h2
-        class="relative hidden w-full justify-between text-natural-white laptop:mt-6 laptop:mb-2 laptop:flex"
+        class="text-natural-white laptop:mt-6 laptop:mb-2 laptop:flex relative hidden w-full justify-between"
         @click="copyLinkHandler"
       >
         <span>@{{ roomBasic.room_name }}</span>
@@ -78,15 +78,15 @@ export default {
         />
       </h2>
     </h1>
-    <div class="relative flex flex-col flex-wrap items-end justify-between gap-2 laptop:flex-row laptop:items-center">
-      <div class="laptop::w-auto mt-5 flex-auto laptop:mt-0">
+    <div class="laptop:flex-row laptop:items-center relative flex flex-col flex-wrap items-end justify-between gap-2">
+      <div class="laptop::w-auto laptop:mt-0 mt-5 flex-auto">
         <Marquee />
       </div>
       <!-- absolute base on <header> -->
       <nav class="w-fit">
         <ul class="flex justify-end gap-2">
           <li>
-            <button type="button" class="px-3 laptop:py-2 laptop:px-4" @click="activeSideDrawerHandler('Search')">
+            <button type="button" class="laptop:py-2 laptop:px-4 px-3" @click="activeSideDrawerHandler('Search')">
               <IconSearch />
             </button>
           </li>
@@ -97,23 +97,23 @@ export default {
               @click="activeSideDrawerHandler('AddFromStreamingService')"
             >
               <IconPlus />
-              <label class="ml-3 hidden whitespace-nowrap laptop:inline">{{ t('add_from_spotify') }}</label>
+              <label class="laptop:inline ml-3 hidden whitespace-nowrap">{{ t('add_from_spotify') }}</label>
             </button>
           </li>
           <li>
             <button type="button" class="btn-response min-h-0" @click="activeSideDrawerHandler('Recommendation')">
               <LightBulbIcon class="h-full w-6" />
-              <label class="ml-3 hidden whitespace-nowrap laptop:inline">{{ t('add_from_recommendation') }}</label>
+              <label class="laptop:inline ml-3 hidden whitespace-nowrap">{{ t('add_from_recommendation') }}</label>
             </button>
           </li>
           <li>
             <button
-              class="flex items-center px-3 text-natural-white laptop:py-2 laptop:px-4"
+              class="text-natural-white laptop:py-2 laptop:px-4 flex items-center px-3"
               type="button"
               @click="activeSideDrawerHandler('Personal')"
             >
               <IconPerson />
-              <label class="ml-3 hidden laptop:inline">{{ personalStore.display_name }}</label>
+              <label class="laptop:inline ml-3 hidden">{{ personalStore.display_name }}</label>
             </button>
           </li>
         </ul>

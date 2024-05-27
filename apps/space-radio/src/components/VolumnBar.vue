@@ -28,10 +28,10 @@ export default {
 }
 </script>
 <template>
-  <div :class="$attrs.class" class="flex h-12 items-center rounded bg-tertiary-1 bg-opacity-60 px-2">
+  <div :class="$attrs.class" class="bg-tertiary-1 flex h-12 items-center rounded bg-opacity-60 px-2">
     <span
       :class="{ 'text-natural-gray3': $attrs.disabled }"
-      class="w-7 flex-shrink-0 text-center font-bold text-primary"
+      class="text-primary w-7 flex-shrink-0 text-center font-bold"
       >{{ modelValue }}</span
     >
     <IconVolumn class="ml-3 flex-shrink-0" />
@@ -55,8 +55,8 @@ export default {
     <!-- v-bind="$attrs" 會連 class... 也綁，所以只指定需要的 -->
     <input
       :value="modelValue"
-      :min="($attrs.min as number)"
-      :max="($attrs.max as number)"
+      :min="$attrs.min as number"
+      :max="$attrs.max as number"
       :disabled="disabledBar || !!$attrs.disabled"
       :step="step"
       type="range"

@@ -118,7 +118,7 @@ export default {
 ._side_drawer_ul {
   @apply flex-1 space-y-4 overflow-y-auto;
   li {
-    @apply flex min-h-[70px] cursor-pointer items-center justify-between rounded-10 bg-tertiary-1 py-2 pl-4 pr-10;
+    @apply rounded-10 bg-tertiary-1 flex min-h-[70px] cursor-pointer items-center justify-between py-2 pl-4 pr-10;
     & > svg {
       @apply transition;
     }

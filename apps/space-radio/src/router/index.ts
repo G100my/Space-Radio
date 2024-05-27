@@ -41,7 +41,7 @@ const routes = [
       const personalStore = usePersonalStore()
       // avoid user refresh page
       if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid()) {
-        spotifyAPI.setAccessToken(usePersonalStore().token)
+        spotifyAPI.setAccessToken(usePersonalStore().access_token)
       }
     },
   },
@@ -78,7 +78,7 @@ router.beforeEach(async to => {
     // http://somewhere/?code=something...#/
     // 造成 vue router webHashHistory mode 無法如預期運作，
     // to, from 都會是 '/'，因此手動清除。
-    window.history.replaceState(null, '', import.meta.env.VITE_REDIRECT_URI)
+    window.history.replaceState(null, '', import.meta.env.VITE_BASE_URI)
     await fetchAccessToken(authorizationCode, generateAuthParams('#' + hashPath))
     const userData = await spotifyAPI.getMe()
     usePersonalStore().updateUserData(userData)

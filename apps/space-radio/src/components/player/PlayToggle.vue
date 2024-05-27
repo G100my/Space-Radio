@@ -44,7 +44,7 @@ export default {
 <template>
   <button
     id="play-status-button"
-    class="focus:outline-none flex h-10 w-10 items-center justify-center rounded-full bg-primary focus:ring-2 focus:ring-natural-gray1 disabled:grayscale"
+    class="bg-primary focus:ring-natural-gray1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 disabled:grayscale"
     :disabled="!isThisSpotifyPlayerReady || (!$props.isHostUser && !!playerPlayingTrackUri)"
     type="button"
     @click="togglePlay"

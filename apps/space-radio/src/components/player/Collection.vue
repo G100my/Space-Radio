@@ -66,7 +66,7 @@ export default {
 </script>
 <template>
   <div v-bind="$attrs" class="flex flex-col">
-    <label class="font-bold text-natural-gray3">{{ t('collect_to_spotify') }}</label>
+    <label class="text-natural-gray3 font-bold">{{ t('collect_to_spotify') }}</label>
     <button type="button" :disabled="!playerPlayingTrackId" class="btn-primary mt-2" @click="isOpen = !isOpen">
       <IconSpotifyDark />
       <span>{{ t('collect') }}</span>
@@ -84,7 +84,7 @@ export default {
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <DialogOverlay class="absolute -z-1 h-screen w-screen bg-tertiary-1 bg-opacity-20" />
+        <DialogOverlay class="-z-1 bg-tertiary-1 absolute h-screen w-screen bg-opacity-20" />
       </TransitionChild>
       <TransitionChild
         as="template"
@@ -96,19 +96,19 @@ export default {
         leave-to="opacity-0 scale-95"
       >
         <div
-          class="absolute inset-0 top-20 bottom-20 m-auto flex max-w-xs flex-col rounded-10 bg-tertiary-1 laptop:max-w-xl"
+          class="rounded-10 bg-tertiary-1 laptop:max-w-xl absolute inset-0 bottom-20 top-20 m-auto flex max-w-xs flex-col"
         >
-          <div class="flex items-center bg-tertiary-2 px-8 py-4">
-            <DialogTitle class="flex-1 text-subtitle text-natural-gray2">{{ t('collect_to_spotify') }}</DialogTitle>
+          <div class="bg-tertiary-2 flex items-center px-8 py-4">
+            <DialogTitle class="text-subtitle text-natural-gray2 flex-1">{{ t('collect_to_spotify') }}</DialogTitle>
             <button type="button" class="btn-tertiary" @click="isOpen = false">
               <IconClose />
             </button>
           </div>
-          <DialogDescription as="ul" class="m-11 flex-1 space-y-3 overflow-y-auto laptop:mx-8 laptop:mt-8 laptop:mb-14">
+          <DialogDescription as="ul" class="laptop:mx-8 laptop:mt-8 laptop:mb-14 m-11 flex-1 space-y-3 overflow-y-auto">
             <li v-for="playlist in ownPlaylists" :key="playlist.id">
               <button
                 type="button"
-                class="btn-secondary w-full hover:bg-natural-gray2 hover:text-tertiary-2"
+                class="btn-secondary hover:bg-natural-gray2 hover:text-tertiary-2 w-full"
                 @click="collectHandler(playlist)"
               >
                 {{ playlist.name }}

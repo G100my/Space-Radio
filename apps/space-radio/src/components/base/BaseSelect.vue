@@ -14,7 +14,7 @@ const seleted = ref({ id: null, name: t('choose_one') })
 <template>
   <Listbox v-slot="{ open }" v-model="seleted" as="div" class="relative max-w-lg">
     <ListboxButton
-      class="flex w-full justify-between rounded border border-tertiary-2 bg-tertiary-1 px-4 py-3 text-natural-gray1 -shadow-4"
+      class="border-tertiary-2 bg-tertiary-1 text-natural-gray1 -shadow-4 flex w-full justify-between rounded border px-4 py-3"
     >
       <span class="overflow-hidden overflow-ellipsis whitespace-nowrap">{{ seleted.name }}</span>
       <IconDropdown />
@@ -29,7 +29,7 @@ const seleted = ref({ id: null, name: t('choose_one') })
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 flex items-center justify-center backdrop-blur-sm laptop:hidden" />
+        <div class="laptop:hidden fixed inset-0 flex items-center justify-center backdrop-blur-sm" />
       </TransitionChild>
       <TransitionChild
         as="template"
@@ -41,11 +41,11 @@ const seleted = ref({ id: null, name: t('choose_one') })
         leave-to="transform scale-95 opacity-0"
       >
         <ListboxOptions
-          class="fixed inset-y-1/4 inset-x-0 z-30 mx-auto max-w-xs -translate-y-1 space-y-0.5 overflow-y-auto rounded rounded-b border border-t-0 border-tertiary-2 bg-tertiary-1 pt-1 pb-2 text-natural-gray3 laptop:absolute laptop:inset-auto laptop:mx-auto laptop:max-h-32 laptop:w-full laptop:max-w-none"
+          class="border-tertiary-2 bg-tertiary-1 text-natural-gray3 laptop:absolute laptop:inset-auto laptop:mx-auto laptop:max-h-32 laptop:w-full laptop:max-w-none fixed inset-x-0 inset-y-1/4 z-30 mx-auto max-w-xs -translate-y-1 space-y-0.5 overflow-y-auto rounded rounded-b border border-t-0 pb-2 pt-1"
         >
           <ListboxOption v-for="option in options" v-slot="{ selected }" :key="option.id" :value="option" as="template">
             <li
-              class="w-full cursor-pointer overflow-hidden overflow-ellipsis whitespace-nowrap px-4 hover:bg-tertiary-2"
+              class="hover:bg-tertiary-2 w-full cursor-pointer overflow-hidden overflow-ellipsis whitespace-nowrap px-4"
               :class="{ 'text-primary': selected }"
             >
               {{ option.name }}

@@ -156,7 +156,7 @@ export const useQueueStore = defineStore('QueueStore', {
     },
     add(track_id: string, track_name: string) {
       const personalStore = usePersonalStore()
-      const orderer_id = personalStore.user_id
+      const orderer_id = personalStore.id
       const orderer_name = personalStore.display_name
       const order = orderMaker({ track_id, track_name, orderer_id, orderer_name })
       normal_queue_ref.child(order.id).update(order)
@@ -166,7 +166,7 @@ export const useQueueStore = defineStore('QueueStore', {
       const handler = (note: Note) => {
         const personalStore = usePersonalStore()
         const orderer_name = personalStore.display_name
-        const orderer_id = personalStore.user_id
+        const orderer_id = personalStore.id
         urgent_queue_ref.push(orderMaker({ track_id, track_name, note, orderer_name, orderer_id }))
         noteStore.isDialogOpen = false
         noteStore.recordSenderNameInLocal()
@@ -179,7 +179,7 @@ export const useQueueStore = defineStore('QueueStore', {
     addMultiple(ids: string[], names: string[]) {
       const personalStore = usePersonalStore()
       const orderer_name = personalStore.display_name
-      const orderer_id = personalStore.user_id
+      const orderer_id = personalStore.id
       const parameter = ids.reduce<State['normal_queue']>((accumulator, track_id, index) => {
         const id = `${Date.now()}-${index}`
         accumulator[id] = orderMaker({

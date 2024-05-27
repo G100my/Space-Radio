@@ -41,9 +41,7 @@
         "href": null,
         "total": 1174
       },
-      "genres": [
-        "chinese hip hop"
-      ],
+      "genres": ["chinese hip hop"],
       "href": "https://api.spotify.com/v1/artists/6Tb7rIkmSTWzv0E10QesJQ",
       "id": "6Tb7rIkmSTWzv0E10QesJQ",
       "images": [
@@ -118,9 +116,7 @@
         "href": null,
         "total": 27414
       },
-      "genres": [
-        "psychedelic trance"
-      ],
+      "genres": ["psychedelic trance"],
       "href": "https://api.spotify.com/v1/artists/4hGD47LaZWcMLj1gH3uru8",
       "id": "4hGD47LaZWcMLj1gH3uru8",
       "images": [
@@ -198,13 +194,7 @@
         "href": null,
         "total": 5513031
       },
-      "genres": [
-        "album rock",
-        "classic rock",
-        "mellow gold",
-        "rock",
-        "soft rock"
-      ],
+      "genres": ["album rock", "classic rock", "mellow gold", "rock", "soft rock"],
       "href": "https://api.spotify.com/v1/artists/0WwSkZ7LtFUFjGjMZBMt6T",
       "id": "0WwSkZ7LtFUFjGjMZBMt6T",
       "images": [
@@ -242,10 +232,7 @@
         "href": null,
         "total": 2290
       },
-      "genres": [
-        "german jazz rap",
-        "jazz boom bap"
-      ],
+      "genres": ["german jazz rap", "jazz boom bap"],
       "href": "https://api.spotify.com/v1/artists/0pkecf4XKAVfFHUtgdoSE9",
       "id": "0pkecf4XKAVfFHUtgdoSE9",
       "images": [
@@ -278,10 +265,7 @@
         "href": null,
         "total": 712749
       },
-      "genres": [
-        "downtempo",
-        "new age"
-      ],
+      "genres": ["downtempo", "new age"],
       "href": "https://api.spotify.com/v1/artists/3DmG65yHQsMms7WAvrZOdt",
       "id": "3DmG65yHQsMms7WAvrZOdt",
       "images": [
@@ -347,10 +331,7 @@
         "href": null,
         "total": 231902
       },
-      "genres": [
-        "canadian rock",
-        "pop rock"
-      ],
+      "genres": ["canadian rock", "pop rock"],
       "href": "https://api.spotify.com/v1/artists/1YEGETLT2p8k97LIo3deHL",
       "id": "1YEGETLT2p8k97LIo3deHL",
       "images": [
@@ -431,10 +412,7 @@
         "href": null,
         "total": 1577
       },
-      "genres": [
-        "polish hardcore",
-        "polish thrash metal"
-      ],
+      "genres": ["polish hardcore", "polish thrash metal"],
       "href": "https://api.spotify.com/v1/artists/1XRgtKq9tGb55kvkcVxBzC",
       "id": "1XRgtKq9tGb55kvkcVxBzC",
       "images": [
@@ -467,9 +445,7 @@
         "href": null,
         "total": 15518
       },
-      "genres": [
-        "big room"
-      ],
+      "genres": ["big room"],
       "href": "https://api.spotify.com/v1/artists/0Dzj2bn9ivDSjvJVSKL4q7",
       "id": "0Dzj2bn9ivDSjvJVSKL4q7",
       "images": [
@@ -502,11 +478,7 @@
         "href": null,
         "total": 44062
       },
-      "genres": [
-        "abstract beats",
-        "japanese experimental",
-        "japanese idm"
-      ],
+      "genres": ["abstract beats", "japanese experimental", "japanese idm"],
       "href": "https://api.spotify.com/v1/artists/1JSPpoXFLcEG2WhYlvmHPJ",
       "id": "1JSPpoXFLcEG2WhYlvmHPJ",
       "images": [
@@ -539,9 +511,7 @@
         "href": null,
         "total": 22157
       },
-      "genres": [
-        "canzone d'autore"
-      ],
+      "genres": ["canzone d'autore"],
       "href": "https://api.spotify.com/v1/artists/6LAyeCbXaoztfCbdmAcxpn",
       "id": "6LAyeCbXaoztfCbdmAcxpn",
       "images": [
@@ -574,14 +544,7 @@
         "href": null,
         "total": 6486924
       },
-      "genres": [
-        "dance pop",
-        "hip hop",
-        "pop rap",
-        "rap",
-        "southern hip hop",
-        "trap"
-      ],
+      "genres": ["dance pop", "hip hop", "pop rap", "rap", "southern hip hop", "trap"],
       "href": "https://api.spotify.com/v1/artists/5LHRHt1k9lMyONurDHEdrp",
       "id": "5LHRHt1k9lMyONurDHEdrp",
       "images": [

@@ -11,10 +11,10 @@ const ttsToggle = computed(() => noteStore.editingNote.tts)
 const ttsToggleHandler = () => noteStore.updateEditingNote({ tts: !ttsToggle.value })
 </script>
 <template>
-  <HDialog :open="noteStore.isDialogOpen" class="fixed inset-0 z-40 text-natural-gray4" @close="cancelHandler">
-    <DialogOverlay class="absolute -z-1 h-screen w-screen bg-tertiary-1 bg-opacity-60" />
+  <HDialog :open="noteStore.isDialogOpen" class="text-natural-gray4 fixed inset-0 z-40" @close="cancelHandler">
+    <DialogOverlay class="-z-1 bg-tertiary-1 absolute h-screen w-screen bg-opacity-60" />
 
-    <div class="absolute inset-0 m-auto h-fit max-w-xs rounded-10 bg-tertiary-2 md:max-w-xl lg:max-w-2xl">
+    <div class="rounded-10 bg-tertiary-2 absolute inset-0 m-auto h-fit max-w-xs md:max-w-xl lg:max-w-2xl">
       <div class="flex items-center justify-between gap-x-2 py-4 pl-8 pr-4">
         <DialogTitle class="text-subtitle">Any words for your friends?</DialogTitle>
         <button class="btn-tertiary flex-shrink-0" type="button" @click="cancelHandler">
@@ -22,7 +22,7 @@ const ttsToggleHandler = () => noteStore.updateEditingNote({ tts: !ttsToggle.val
         </button>
       </div>
       <div
-        class="flex w-full flex-wrap items-baseline gap-x-2 gap-y-2 bg-tertiary-1 px-4 pt-6 pb-7 md:gap-x-3 md:gap-y-3"
+        class="bg-tertiary-1 flex w-full flex-wrap items-baseline gap-x-2 gap-y-2 px-4 pb-7 pt-6 md:gap-x-3 md:gap-y-3"
       >
         <input
           :value="noteStore.editingNote.sender"
@@ -58,7 +58,7 @@ const ttsToggleHandler = () => noteStore.updateEditingNote({ tts: !ttsToggle.val
           />
         </div>
       </div>
-      <div class="flex justify-end gap-x-4 py-5 px-8">
+      <div class="flex justify-end gap-x-4 px-8 py-5">
         <button class="btn-primary flex-1" @click="noteStore.submitHandler(noteStore.editingNote)">Deactivate</button>
         <button class="btn-secondary flex-1" @click="cancelHandler">Cancel</button>
       </div>

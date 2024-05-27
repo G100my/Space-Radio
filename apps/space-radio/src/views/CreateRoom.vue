@@ -16,7 +16,7 @@ import { Dialog as HDialog, DialogDescription, DialogOverlay, DialogTitle } from
 import { usePersonalStore } from '@/store'
 
 const roomKey = roomKeyMaker()
-const userId = computed(() => usePersonalStore().user_id)
+const userId = computed(() => usePersonalStore().id)
 const roomName = ref('')
 const isVaild = ref(true)
 const router = useRouter()
@@ -140,19 +140,19 @@ function okHandler() {
 </script>
 <template>
   <div class="my-auto py-4">
-    <h2 class="relative flex justify-between text-subtitle">
+    <h2 class="text-subtitle relative flex justify-between">
       <span>{{ $t('create_room') }}</span>
       <button
         class="btn btn-tertiary laptop:absolute laptop:-left-5 laptop:-top-14"
         type="button"
         @click="$router.push({ name: 'Hall' })"
       >
-        <IconArrowLeft class="hidden laptop:block" />
+        <IconArrowLeft class="laptop:block hidden" />
         <IconClose class="laptop:hidden" />
       </button>
     </h2>
 
-    <form class="_create_room_form space-y-3 overflow-y-auto laptop:space-y-3 laptop:overflow-y-visible">
+    <form class="_create_room_form laptop:space-y-3 laptop:overflow-y-visible space-y-3 overflow-y-auto">
       <div>
         <label for="room-name">{{ $t('room_name') }}</label>
         <div>
@@ -194,8 +194,8 @@ function okHandler() {
 
       <div>
         <label>{{ $t('skip_song_threshold') }}</label>
-        <p class="flex h-12 items-center rounded bg-tertiary-1 bg-opacity-60 px-2">
-          <span class="mr-auto w-7 flex-shrink-0 text-center font-bold text-primary">{{ dislikeThreshold }}</span>
+        <p class="bg-tertiary-1 flex h-12 items-center rounded bg-opacity-60 px-2">
+          <span class="text-primary mr-auto w-7 flex-shrink-0 text-center font-bold">{{ dislikeThreshold }}</span>
           <button class="btn btn-tertiary" type="button" @click="minusDislikeThreshold">
             <IconMinus />
           </button>
@@ -210,17 +210,17 @@ function okHandler() {
         <BaseSelect v-model="basePlaylist" :options="hostPlaylists" class="mt-2" />
       </div>
 
-      <button class="btn btn-primary mt-6 w-full laptop:mt-8" type="button" @click="createHandler">
+      <button class="btn btn-primary laptop:mt-8 mt-6 w-full" type="button" @click="createHandler">
         {{ $t('create') }}
       </button>
     </form>
   </div>
-  <HDialog class="fixed inset-0 z-40 text-natural-gray4" :open="isOpen">
-    <DialogOverlay as="p" class="fixed inset-0 -z-1 bg-tertiary-1 bg-opacity-60" />
-    <div class="absolute inset-0 m-auto h-fit max-w-md rounded-md border-2 border-natural-gray2 bg-tertiary-1 p-4">
+  <HDialog class="text-natural-gray4 fixed inset-0 z-40" :open="isOpen">
+    <DialogOverlay as="p" class="-z-1 bg-tertiary-1 fixed inset-0 bg-opacity-60" />
+    <div class="border-natural-gray2 bg-tertiary-1 absolute inset-0 m-auto h-fit max-w-md rounded-md border-2 p-4">
       <DialogTitle as="h2" class="text-center text-2xl">{{ $t('create_room_success') }}</DialogTitle>
 
-      <hr class="mt-2 mb-6" />
+      <hr class="mb-6 mt-2" />
 
       <DialogDescription class="text-center">{{ $t('you_can_copy_url_to_invite_your_friend') }}</DialogDescription>
       <div class="relative mt-4 flex w-full items-center justify-between">
@@ -230,7 +230,7 @@ function okHandler() {
         </button>
       </div>
 
-      <hr class="mt-2 mb-6" />
+      <hr class="mb-6 mt-2" />
       <div class="flex justify-end">
         <button class="btn-secondary" @click="okHandler">OK</button>
       </div>
@@ -240,6 +240,6 @@ function okHandler() {
 <style>
 ._create_room_form > div > label:first-child::after {
   content: '*';
-  @apply mb-1 text-primary;
+  @apply text-primary mb-1;
 }
 </style>

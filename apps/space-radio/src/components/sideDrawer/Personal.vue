@@ -14,15 +14,15 @@ const personalStore = usePersonalStore()
 const roomBasicStore = useRoomBasicStore()
 </script>
 <template>
-  <div class="mx-auto flex h-full max-w-sm flex-col gap-y-5 text-natural-gray2">
+  <div class="text-natural-gray2 mx-auto flex h-full max-w-sm flex-col gap-y-5">
     <div class="flex-col gap-5">
       <div class="flex flex-shrink-0 flex-grow items-center justify-center">
-        <img class="h-32 w-32 rounded-full ring-2 ring-natural-black" :src="personalStore.image_url" alt="" />
+        <img class="ring-natural-black h-32 w-32 rounded-full ring-2" :src="personalStore.image_url" alt="" />
       </div>
       <ul class="_user-info-list my-4 flex flex-grow-[3] flex-col justify-between gap-4">
         <li>
           <span>User id:</span>
-          <span>{{ personalStore.user_id }}</span>
+          <span>{{ personalStore.id }}</span>
         </li>
         <li>
           <span>User name:</span>
@@ -36,10 +36,10 @@ const roomBasicStore = useRoomBasicStore()
     </div>
     <p class="rounded-md bg-black bg-opacity-30 py-3 text-center text-lg">
       You are
-      <span class="text-primary">{{ personalStore.isHostUser ? `Host` : `Customer` }}</span>
+      <span class="text-primary">{{ roomBasicStore.isHostUser ? `Host` : `Customer` }}</span>
       in <span class="text-primary">{{ roomBasicStore.room_name }}</span> room.
     </p>
-    <div v-if="personalStore.isHostUser !== undefined && !personalStore.isHostUser">
+    <div v-if="roomBasicStore.isHostUser !== undefined && !roomBasicStore.isHostUser">
       <BaseSwitch
         :modelValue="!!roomBasicStore.customerPlayerMode"
         label="Enable local player"
@@ -51,7 +51,7 @@ const roomBasicStore = useRoomBasicStore()
     <!-- 最常撥放 -->
     <!-- 匯出 -->
     <!-- 刪除房間 -->
-    <div class="mt-auto mb-7">
+    <div class="mb-7 mt-auto">
       <button class="btn-primary w-full font-semibold" type="button" @click="localClear">
         Delete catch on this device & reload window
       </button>

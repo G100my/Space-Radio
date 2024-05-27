@@ -1,7 +1,7 @@
 @layer base {
   input[type='range'] {
     -webkit-appearance: none;
-    @apply w-full rounded-full bg-natural-white disabled:bg-natural-white;
+    @apply bg-natural-white disabled:bg-natural-white w-full rounded-full;
   }
   input[type='range']::-webkit-slider-container {
     @apply overflow-hidden;
@@ -36,10 +36,10 @@
 
 @layer components {
   .base-input {
-    @apply rounded border border-tertiary-2 border-opacity-60 bg-tertiary-1 px-4 py-3 text-body text-natural-gray1 -shadow-4;
+    @apply border-tertiary-2 bg-tertiary-1 text-body text-natural-gray1 -shadow-4 rounded border border-opacity-60 px-4 py-3;
   }
   .base-input:focus {
-    @apply outline-none border-primary border-opacity-80;
+    @apply border-primary border-opacity-80 outline-none;
   }
   .base-input::placeholder {
     @apply text-natural-gray3;

@@ -134,9 +134,9 @@ function addAll() {
 }
 </script>
 <template>
-  <div class="flex h-full flex-col text-natural-white">
+  <div class="text-natural-white flex h-full flex-col">
     <header>
-      <h2 class="flex items-center justify-between text-subtitle text-natural-gray1 laptop:text-header">
+      <h2 class="text-subtitle text-natural-gray1 laptop:text-header flex items-center justify-between">
         <span>{{ $t('add_from_recommendation') }}</span>
         <img class="w-20" :src="SpotifyLogo" alt="Spotify logo" />
       </h2>
@@ -153,7 +153,7 @@ function addAll() {
 
       <fieldset class="my-1 overflow-hidden rounded">
         <BaseDetails :summaryText="$t('recommendation.genre')">
-          <ul class="columns-2 pb-3 laptop:columns-3">
+          <ul class="laptop:columns-3 columns-2 pb-3">
             <li v-for="genre in genres" :key="genre">
               <button
                 :class="{ 'bg-neutral-100/30': findSeedIndex(genre, 'seed_genres') !== -1 }"
@@ -167,7 +167,7 @@ function addAll() {
         </BaseDetails>
       </fieldset>
 
-      <fieldset class="relative h-fit min-h-[65px] border border-natural-gray1 p-2">
+      <fieldset class="border-natural-gray1 relative h-fit min-h-[65px] border p-2">
         <legend class="ml-1">{{ $t('recommendation.search_seed') }}</legend>
         <p>
           <button
@@ -177,12 +177,12 @@ function addAll() {
             @click="seeds.splice(index, 1)"
           >
             <span>{{ typeof seed === 'string' ? seed : seed.name }}</span>
-            <span class="absolute inset-0 bg-natural-black/80 opacity-0 transition-opacity group-hover:opacity-100">
+            <span class="bg-natural-black/80 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100">
               <i class="ri-delete-bin-line"></i>
             </span>
           </button>
         </p>
-        <button v-show="seeds.length" class="btn absolute top-0 right-0 bottom-0 my-auto" @click="seeds.length = 0">
+        <button v-show="seeds.length" class="btn absolute bottom-0 right-0 top-0 my-auto" @click="seeds.length = 0">
           <i class="ri-delete-bin-line text-2xl" />
         </button>
       </fieldset>
@@ -198,9 +198,9 @@ function addAll() {
     </div>
 
     <div class="flex-1 flex-col overflow-hidden">
-      <ul v-if="!showRecommendation" class="h-full overflow-auto laptop:columns-2">
+      <ul v-if="!showRecommendation" class="laptop:columns-2 h-full overflow-auto">
         <template v-if="searchType === 'artist'">
-          <li v-for="artist in results.artists" :key="artist.id" class="flex items-center space-x-3 py-1 px-4">
+          <li v-for="artist in results.artists" :key="artist.id" class="flex items-center space-x-3 px-4 py-1">
             <img class="_cover" :src="spotifyCoverPicker(artist.images)" alt="" />
             <div class="w-0 flex-1">
               <div>
@@ -224,7 +224,7 @@ function addAll() {
           </li>
         </template>
         <template v-else-if="searchType === 'track'">
-          <li v-for="track in results.tracks" :key="track.id" class="flex items-center space-x-3 py-1 px-4">
+          <li v-for="track in results.tracks" :key="track.id" class="flex items-center space-x-3 px-4 py-1">
             <img class="_cover" :src="spotifyCoverPicker(track.album.images)" alt="" />
             <div class="w-0 flex-1">
               <BaseMarquee>{{ track.name }}</BaseMarquee>

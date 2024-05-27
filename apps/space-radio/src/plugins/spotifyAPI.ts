@@ -12,7 +12,7 @@ const spotifyAPI = new Proxy(new SpotifyWebApi(), {
       return (...theArguments: any[]) =>
         refreshAccessToken({ client_id: import.meta.env.VITE_CLIENT_ID, refresh_token: personalStore.refresh_token! })
           .then(() => {
-            spotifyAPI.setAccessToken(usePersonalStore().token)
+            spotifyAPI.setAccessToken(usePersonalStore().access_token)
             // @ts-expect-error
             return target[property](...theArguments)
           })

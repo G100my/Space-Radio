@@ -27,11 +27,11 @@ defineEmits<{
 </template>
 <style>
 .radio_button_dot {
-  @apply flex h-3 w-3 items-center justify-center rounded-full ring-2 ring-natural-gray3 peer-checked:ring-primary;
+  @apply ring-natural-gray3 peer-checked:ring-primary flex h-3 w-3 items-center justify-center rounded-full ring-2;
 }
 .radio_button_dot::before {
   content: '';
-  @apply h-2 w-2 scale-0 rounded-full bg-primary transition-transform;
+  @apply bg-primary h-2 w-2 scale-0 rounded-full transition-transform;
 }
 input:checked + .radio_button_dot::before {
   @apply scale-100;

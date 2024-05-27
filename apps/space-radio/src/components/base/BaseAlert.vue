@@ -69,14 +69,14 @@ export default {
       <IconSuccess v-else class="text-system-success2" />
     </div>
 
-    <div class="flex items-center text-body text-natural-black">
+    <div class="text-body text-natural-black flex items-center">
       <p :class="{ 'mb-1': contentText }">{{ title }}</p>
       <button v-if="closeButton" class="ml-auto flex h-9 w-9 items-center justify-center" @click="$emit('close')">
-        <IconClose class="h-5 w-5 text-natural-gray3" />
+        <IconClose class="text-natural-gray3 h-5 w-5" />
       </button>
     </div>
 
-    <p class="col-start-2 col-end-3 text-small text-tertiary-1">{{ contentText }}</p>
+    <p class="text-small text-tertiary-1 col-start-2 col-end-3">{{ contentText }}</p>
   </TransitionRoot>
 </template>
 <style>

@@ -26,7 +26,7 @@ const getSpotifyInitSetting = (): Spotify.PlayerInit => ({
   name: 'Space Radio player',
   volume: useVolumeStore().volume / 100,
   getOAuthToken: callback => {
-    const { token, isTokenValid } = usePersonalStore()
+    const { access_token: token, isTokenValid } = usePersonalStore()
     if (isTokenValid()) {
       callback(token)
     } else {

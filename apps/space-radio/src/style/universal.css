@@ -10,7 +10,7 @@
 
     @apply xl:flex xl:items-stretch;
     > *:first-child {
-      @apply xl:w-96 xl:flex-none xl:bg-tertiary-1 xl:pl-[60px] xl:pr-[58px];
+      @apply xl:bg-tertiary-1 xl:w-96 xl:flex-none xl:pl-[60px] xl:pr-[58px];
     }
     > *:not(:first-child) {
       @apply xl:flex-1 xl:px-[60px];
@@ -20,7 +20,7 @@
 
 @layer components {
   ._container {
-    @apply mx-auto w-full max-w-3xl laptop:max-w-none;
+    @apply laptop:max-w-none mx-auto w-full max-w-3xl;
   }
 }
 

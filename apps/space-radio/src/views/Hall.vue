@@ -74,7 +74,7 @@ function enterCreateHandler() {
   <div class="laptop:mt-[33vh]">
     <h2 class="text-subtitle">{{ t('enter_room') }}</h2>
     <label class="mt-6 block">
-      <p class="font-bold text-natural-gray1">{{ t('room_name') }}<span class="text-primary">*</span></p>
+      <p class="text-natural-gray1 font-bold">{{ t('room_name') }}<span class="text-primary">*</span></p>
       <div>
         <input
           v-model="searchKeyWordInput"
@@ -88,8 +88,8 @@ function enterCreateHandler() {
         <BaseAlert error :show="isErrorMessageShow" :title="`This room name not found.`" />
       </div>
     </label>
-    <button class="btn-primary mt-5 w-full laptop:mt-11" type="button" @click="searchRoom">{{ t('next') }}</button>
-    <button class="btn-secondary mt-3 w-full laptop:mt-4" type="button" @click="enterCreateHandler">
+    <button class="btn-primary laptop:mt-11 mt-5 w-full" type="button" @click="searchRoom">{{ t('next') }}</button>
+    <button class="btn-secondary laptop:mt-4 mt-3 w-full" type="button" @click="enterCreateHandler">
       {{ t('have_no_room') }}
     </button>
   </div>

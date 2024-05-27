@@ -77,13 +77,13 @@ export default {
     </header>
 
     <div v-show="!keywords" class="flex flex-auto flex-col">
-      <p class="my-5 text-subtitle text-natural-gray2">Recent searches</p>
+      <p class="text-subtitle text-natural-gray2 my-5">Recent searches</p>
 
       <ul class="mt-7 h-0 flex-auto overflow-y-auto px-10">
         <li
           v-for="recent in recentSearchStrings"
           :key="recent"
-          class="cursor-pointer py-3 text-natural-gray2 transition-colors hover:text-primary"
+          class="text-natural-gray2 hover:text-primary cursor-pointer py-3 transition-colors"
           @click=";(keywords = recent) && searchInput!.focus()"
         >
           {{ recent }}
@@ -93,10 +93,10 @@ export default {
 
     <div v-show="keywords" class="flex flex-auto flex-col">
       <div class="mt-5 flex items-baseline gap-x-1">
-        <p class="mr-auto font-bold text-natural-gray2">
+        <p class="text-natural-gray2 mr-auto font-bold">
           <span class="mx-2">{{ list.length }} / {{ searchedAmount }}</span>
           <span>results</span>
-          <IconSpinnerLoader v-show="isLoading" class="mx-2 inline-block animate-spin text-natural-gray2" />
+          <IconSpinnerLoader v-show="isLoading" class="text-natural-gray2 mx-2 inline-block animate-spin" />
         </p>
       </div>
 
@@ -106,7 +106,7 @@ export default {
 </template>
 <style lang="postcss">
 ._search_input {
-  @apply h-full flex-1 bg-transparent px-2 text-natural-gray1;
+  @apply text-natural-gray1 h-full flex-1 bg-transparent px-2;
   &::placeholder {
     @apply text-natural-gray3;
   }

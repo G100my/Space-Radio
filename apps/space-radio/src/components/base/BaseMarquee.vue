@@ -54,7 +54,7 @@ export default {
 }
 
 ._marquee_content {
-  @apply overflow-hidden overflow-ellipsis whitespace-nowrap text-0;
+  @apply text-0 overflow-hidden overflow-ellipsis whitespace-nowrap;
 
   &:hover ._sentence {
     max-width: none;

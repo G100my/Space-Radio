@@ -48,7 +48,7 @@ watch(
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div id="mask" class="absolute h-screen w-screen bg-tertiary-1 bg-opacity-60" @click="closeHandler" />
+        <div id="mask" class="bg-tertiary-1 absolute h-screen w-screen bg-opacity-60" @click="closeHandler" />
       </TransitionChild>
 
       <TransitionChild
@@ -62,15 +62,15 @@ watch(
       >
         <div
           :class="{
-            'bg-[#303f69] laptop:bg-tertiary-1': isDifferantBgColor,
+            'laptop:bg-tertiary-1 bg-[#303f69]': isDifferantBgColor,
             'bg-tertiary-2': !isDifferantBgColor,
             'laptop:!w-2/3': componentName === 'Recommendation',
           }"
-          class="relative ml-auto h-screen w-screen max-w-xl bg-opacity-40 px-9 pt-20 pb-8 laptop:w-1/2 laptop:max-w-none laptop:px-20"
+          class="laptop:w-1/2 laptop:max-w-none laptop:px-20 relative ml-auto h-screen w-screen max-w-xl bg-opacity-40 px-9 pb-8 pt-20"
         >
           <button
             type="button"
-            class="btn-tertiary absolute right-9 translate-x-2 -translate-y-12"
+            class="btn-tertiary absolute right-9 -translate-y-12 translate-x-2"
             @click="closeHandler"
           >
             <IconClose />

@@ -27,6 +27,6 @@ export default {
 <template>
   <div id="marquee" class="flex flex-nowrap items-center overflow-hidden">
     <IconSpeaker />
-    <BaseMarquee :text="messageOutput" class="ml-3 flex-1 text-natural-gray1" />
+    <BaseMarquee :text="messageOutput" class="text-natural-gray1 ml-3 flex-1" />
   </div>
 </template>

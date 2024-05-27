@@ -72,7 +72,7 @@ const useVoteStore = defineStore('VoteStore', {
   }),
   actions: {
     reduceDislike() {
-      const userId = usePersonalStore().user_id
+      const userId = usePersonalStore().id
       const reduceResult = this.dislike - 1
       if (reduceResult >= 0) {
         playing_state_ref.update({ dislike: reduceResult })
@@ -80,7 +80,7 @@ const useVoteStore = defineStore('VoteStore', {
       }
     },
     increaseDislike() {
-      const userId = usePersonalStore().user_id
+      const userId = usePersonalStore().id
       const reduceResult = this.dislike + 1
       if (reduceResult <= this.dislike_threshold) {
         playing_state_ref.update({ dislike: reduceResult })
@@ -95,7 +95,7 @@ const useVoteStore = defineStore('VoteStore', {
       this.isVoted = false
     },
     adjustIsVoted(snapshot: firebase.database.DataSnapshot) {
-      const userId = usePersonalStore().user_id
+      const userId = usePersonalStore().id
       if (userId) this.isVoted = snapshot.hasChild(userId)
     },
     updateDislikeThreshold(value: number) {

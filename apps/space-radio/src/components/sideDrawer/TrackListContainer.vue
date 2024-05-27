@@ -19,7 +19,7 @@ const store = useQueueStore()
 </script>
 <template>
   <ul class="space-y-4 overflow-y-auto">
-    <li v-for="track in list" :key="track.id" class="flex gap-x-2 rounded-10 bg-tertiary-1 bg-opacity-60 py-3 px-4">
+    <li v-for="track in list" :key="track.id" class="rounded-10 bg-tertiary-1 flex gap-x-2 bg-opacity-60 px-4 py-3">
       <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center md:h-16 md:w-16">
         <img v-show="!selectMode" class="_cover" :src="track.coverUrl" :alt="track.albumName" />
         <input

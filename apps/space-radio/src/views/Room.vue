@@ -32,7 +32,7 @@ const volumeStore = useVolumeStore()
 
 // avoid user refresh page
 if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid()) {
-  spotifyAPI.setAccessToken(usePersonalStore().token)
+  spotifyAPI.setAccessToken(usePersonalStore().access_token)
 }
 const roomKey = localStorage.getItem('spaceradio_room_key')
 firebase
@@ -61,28 +61,28 @@ function activeSideDrawerHandler(componentName: ComponentName) {
 const currentVolume = computed(() => volumeStore.volume)
 </script>
 <template>
-  <div id="room" class="relative flex h-full flex-col overflow-hidden bg-tertiary-1 bg-opacity-80 laptop:bg-tertiary-2">
+  <div id="room" class="bg-tertiary-1 laptop:bg-tertiary-2 relative flex h-full flex-col overflow-hidden bg-opacity-80">
     <RoomHeader class="_show_all_flex _container" @activeSideDrawer="activeSideDrawerHandler" />
     <SlideContainer class="_container flex-1">
       <template #left-side>
-        <div class="flex min-h-full flex-col laptop:pt-7">
+        <div class="laptop:pt-7 flex min-h-full flex-col">
           <PlayingState />
           <VolumnBar
             v-if="!roomBasicStore.customerPlayerMode"
             :modelValue="currentVolume"
             disabledBar
-            class="mt-7 laptop:mt-3"
+            class="laptop:mt-3 mt-7"
             @minus="volumeStore.turnDown"
             @plus="volumeStore.turnUp"
           />
-          <CustomerVolumeBar v-else class="mt-7 laptop:mt-3" />
+          <CustomerVolumeBar v-else class="laptop:mt-3 mt-7" />
           <Collection class="mt-4" />
           <Vote class="my-4" />
-          <UserLog class="hidden max-h-72 flex-1 laptop:flex" />
+          <UserLog class="laptop:flex hidden max-h-72 flex-1" />
         </div>
       </template>
       <template #right-side>
-        <RoomQueue class="flex-1 laptop:pt-7" />
+        <RoomQueue class="laptop:pt-7 flex-1" />
       </template>
     </SlideContainer>
 

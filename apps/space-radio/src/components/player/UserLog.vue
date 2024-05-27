@@ -41,8 +41,8 @@ export default {
 </script>
 <template>
   <div id="user-log" class="flex-col gap-y-4">
-    <h3 class="font-bold text-natural-gray3">Records</h3>
-    <ul class="flex-1 space-y-5 overflow-y-auto text-natural-gray2">
+    <h3 class="text-natural-gray3 font-bold">Records</h3>
+    <ul class="text-natural-gray2 flex-1 space-y-5 overflow-y-auto">
       <li v-for="log in logs" :key="log.timestamp">
         <div class="flex">
           <span class="flex-0 mr-5">
@@ -64,7 +64,7 @@ export default {
                   log.action_type
                 )
               "
-              :text="(log.payload as string)"
+              :text="log.payload as string"
             />
             <template v-else-if="log.action_type === 'addMultiple'">
               <BaseMarquee v-for="(name, index) in log.payload" :key="index" class="flex w-full flex-col">
