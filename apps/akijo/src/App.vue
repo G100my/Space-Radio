@@ -2,12 +2,12 @@
 //
 </script>
 <template>
-  <div class="container mx-auto py-4 flex flex-col h-full">
+  <div class="mx-auto flex h-full max-w-xl flex-col py-4">
     <RouterView />
   </div>
 </template>
 <style>
 #app {
-  @apply bg-slate-900 h-dvh text-white;
+  @apply h-dvh bg-slate-900 text-white;
 }
 </style>

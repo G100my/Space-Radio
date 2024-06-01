@@ -7,7 +7,7 @@ const imgSrc = computed(() => img ?? placeholderImg)
 </script>
 <template>
   <section class="">
-    <aside class="h-60 w-60 relative mx-auto">
+    <aside class="relative mx-auto h-60 w-60">
       <img :src="imgSrc" class="h-full w-full" :class="{ 'animate-[spin_6s_linear_infinite]': !img }" />
     </aside>
     <div>

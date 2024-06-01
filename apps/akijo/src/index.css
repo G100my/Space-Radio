@@ -4,7 +4,7 @@
 
 .v-enter-active,
 .v-leave-active {
-  @apply transition-transform absolute w-full;
+  @apply absolute w-full transition-transform;
 }
 
 .v-enter-from,

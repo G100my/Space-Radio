@@ -18,7 +18,7 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_STORAGE_BUCKET: string
 
   readonly VITE_CLIENT_ID: string
-  readonly VITE_REDIRECT_URI: string
+  readonly VITE_BASE_URI: string
 }
 
 interface ImportMeta {
