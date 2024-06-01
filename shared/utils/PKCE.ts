@@ -33,7 +33,7 @@ async function generateCodeChallengeFromVerifier(codeVerifier: string) {
 
 // ===
 // const client_id = import.meta.env.VITE_CLIENT_ID
-// const redirect_uri = import.meta.env.VITE_REDIRECT_URI
+// const redirect_uri = import.meta.env.VITE_BASE_URI
 const scope = `user-library-modify user-library-read playlist-modify-public playlist-modify-private user-read-recently-played user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming user-read-email user-read-private`
 
 export interface AuthParams {
@@ -45,7 +45,7 @@ async function PKCE(params: AuthParams) {
   localStorage.setItem('spaceradio_code_verifier', code_verifier)
 
   const code_challenge = await generateCodeChallengeFromVerifier(code_verifier)
-  let url = 'https://accounts.spotify.com/authorize'
+  let url = 'https://accounts.spotify.com/zh-TW/authorize'
   url += '?response_type=code'
   url += '&client_id=' + encodeURIComponent(params.client_id)
   url += '&redirect_uri=' + encodeURIComponent(params.redirect_uri)
@@ -56,11 +56,12 @@ async function PKCE(params: AuthParams) {
   window.location = url as Location & string
 }
 
-interface FetchTokenResponse {
+export interface FetchTokenResponse {
   access_token: string
   token_type: 'Bearer'
   expires_in: 3600
   refresh_token: string
+  timestamp: number
   scope: string // 'playlist-modify-private user-read-email user-read-private streaming user-modify-playback-state user-library-read user-library-modify playlist-modify-public user-read-playback-state user-read-currently-playing user-read-recently-played user-read-playback-position user-top-read'
 }
 
@@ -81,7 +82,7 @@ async function fetchAccessToken(authorizationCode: string, params: AuthParams) {
   })
 
   if (response.ok) return (await response.json()) as Promise<FetchTokenResponse>
-  else console.error('something wrong in fetchAccessToken', response)
+  else return Promise.reject(response)
 }
 
 async function refreshAccessToken(params: { refresh_token: string } & Pick<AuthParams, 'client_id'>) {

@@ -6,6 +6,7 @@ const storageKeys = {
   token: 'spaceradio_token',
   expiredTime: 'spaceradio_expired_time',
   refreshToken: 'spaceradio_refresh_token',
+  timestamp: 'spaceradio_timestamp',
   userID: 'spaceradio_user_id',
   name: 'spaceradio_user_display_name',
   image: 'spaceradio_user_images',
@@ -15,8 +16,9 @@ const storageKeys = {
 export const usePersonalStore = defineStore('PersonalStore', {
   state: () => ({
     access_token: localStorage.getItem(storageKeys.token) || '',
-    expired_time: Number(localStorage.getItem(storageKeys.expiredTime)) || null,
+    expires_in: Number(localStorage.getItem(storageKeys.expiredTime)) || null,
     refresh_token: localStorage.getItem(storageKeys.refreshToken) || null,
+    timestamp: Number(localStorage.getItem(storageKeys.timestamp)) || NaN,
 
     id: localStorage.getItem(storageKeys.userID) || '',
     display_name: localStorage.getItem(storageKeys.name) || '',
@@ -25,25 +27,27 @@ export const usePersonalStore = defineStore('PersonalStore', {
   }),
   getters: {
     isTokenValid: state => () => {
-      if (!state.expired_time) return false
+      if (!state.expires_in) return false
       const now = Date.now()
-      return state.expired_time > now
+      return state.expires_in * 1000 + state.timestamp > now
     },
     isPremium: state => state.product === 'premium',
   },
   actions: {
-    updateToken(params: { access_token: string; expired_time: number; refresh_token: string }) {
+    updateToken(params: { access_token: string; expires_in: number; refresh_token: string }) {
       this.$patch(params)
-      localStorage.setItem(storageKeys.token, params.access_token)
-      localStorage.setItem(storageKeys.expiredTime, params.expired_time.toString())
-      localStorage.setItem(storageKeys.refreshToken, params.refresh_token)
+      this.timestamp = Date.now()
+      localStorage.setItem(storageKeys.token, this.access_token)
+      localStorage.setItem(storageKeys.timestamp, this.timestamp.toString())
+      localStorage.setItem(storageKeys.expiredTime, this.expires_in!.toString())
+      localStorage.setItem(storageKeys.refreshToken, this.refresh_token!)
       return Promise.resolve(params)
     },
     updateUserData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
       this.$patch({ id, display_name, product })
-      localStorage.setItem(storageKeys.userID, id)
+      localStorage.setItem(storageKeys.userID, this.id)
       localStorage.setItem(storageKeys.name, this.display_name)
-      localStorage.setItem(storageKeys.plan, product)
+      localStorage.setItem(storageKeys.plan, this.product)
 
       if (images && images.length > 0) {
         this.image_url = images[0].url
