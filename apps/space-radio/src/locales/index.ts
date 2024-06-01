@@ -4,10 +4,10 @@ import zh from './zh-TW.json'
 
 export default createI18n({
   locale: 'en',
-  fallbackLocale: 'zh',
+  fallbackLocale: 'zh-TW',
   legacy: false,
   messages: {
-    en,
-    zh,
+    'en-US': en,
+    'zh-TW': zh,
   },
 })
