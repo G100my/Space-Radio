@@ -22,7 +22,7 @@ import Search from '@/components/sideDrawer/Search.vue'
 import Personal from '@/components/sideDrawer/Personal.vue'
 import NoteDialog from '@/components/lineup/NoteDialog.vue'
 import RoomQueue from '@/components/lineup/RoomQueue.vue'
-import { usePersonalStore } from '@/store/PersonalStore'
+import { usePersonalStore } from '@/store'
 import { useRoomBasicStore } from '@/store'
 import { userLogConnect2firebase } from '@/store/UserLogStore'
 

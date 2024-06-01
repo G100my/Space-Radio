@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import BaseSwitch from '../base/BaseSwitch.vue'
-import { usePersonalStore } from '@/store/PersonalStore'
+import { usePersonalStore } from '@/store'
 import { useRoomBasicStore } from '@/store'
 
 const router = useRouter()

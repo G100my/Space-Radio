@@ -9,7 +9,7 @@ import IconMore from '@/assets/icons/icon-more.svg?component'
 import BaseMarquee from '../base/BaseMarquee.vue'
 import { Menu as HMenu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { computed, ref } from 'vue'
-import { usePersonalStore } from '@/store/PersonalStore'
+import { usePersonalStore } from '@/store'
 import { useNoteStore, useQueueStore } from '@/store'
 
 export default {

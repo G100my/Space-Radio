@@ -2,7 +2,7 @@ import { spotifyAPI } from '@/plugins/spotifyAPI'
 import firebase from '../plugins/firebase'
 import { useNoteStore, type Note } from './NoteStore'
 import { defineStore } from 'pinia'
-import { usePersonalStore } from './PersonalStore'
+import { usePersonalStore } from '@/store'
 import { useLatestOrderStore } from './PlayingStateStore'
 
 type storeNames = 'urgent' | 'normal' | 'pending'

@@ -1,7 +1,7 @@
 import firebase from '@/plugins/firebase'
 import { defineStore } from 'pinia'
-import { usePersonalStore } from './PersonalStore'
-import { usePlayingStore, useVolumeStore, useVoteStore } from './PlayingStateStore'
+import { usePersonalStore } from '@/store'
+import { useVolumeStore, useVoteStore } from './PlayingStateStore'
 import { useQueueStore } from './QueueStore'
 
 const userLogMaker = function (type: string) {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { usePersonalStore } from './PersonalStore'
+import { usePersonalStore } from '@/store'
 
 export type Note = {
   sender: string

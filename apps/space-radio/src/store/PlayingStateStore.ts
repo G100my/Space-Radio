@@ -1,6 +1,6 @@
 import firebase from '@/plugins/firebase'
 import i18n from '@/locales'
-import { usePersonalStore } from './PersonalStore'
+import { usePersonalStore } from '@/store'
 import { defineStore } from 'pinia'
 import type { Order } from '@/store'
 import type { Note } from './NoteStore'

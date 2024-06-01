@@ -10,7 +10,7 @@ import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { setPlayingStateRef } from '@/store/PlayingStateStore'
 import { setUserLogRef } from '@/store/UserLogStore'
 import { setQueueRef } from '@/store/QueueStore'
-import { usePersonalStore } from '@/store/PersonalStore'
+import { usePersonalStore } from '@/store'
 import { generateAuthParams } from '@/utility'
 
 const routes = [
@@ -41,7 +41,7 @@ const routes = [
       const personalStore = usePersonalStore()
       // avoid user refresh page
       if (!spotifyAPI.getAccessToken() && personalStore.isTokenValid()) {
-        spotifyAPI.setAccessToken(usePersonalStore().access_token)
+        spotifyAPI.setAccessToken(personalStore.access_token)
       }
     },
   },
