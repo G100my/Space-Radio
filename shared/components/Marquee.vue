@@ -43,7 +43,7 @@ export default {
     </p>
   </div>
 </template>
-<style lang="postcss">
+<style>
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -55,22 +55,19 @@ export default {
 
 ._marquee_content {
   @apply text-0 overflow-hidden overflow-ellipsis whitespace-nowrap;
-
-  &:hover ._sentence {
-    max-width: none;
-  }
-
-  &.active {
-    @apply relative w-fit overflow-visible overflow-ellipsis;
-    animation: marquee 10s linear 1;
-
-    > ._sentence {
-      @apply w-max pr-10;
-    }
-    > ._sentence + ._sentence {
-      @apply absolute;
-    }
-  }
+}
+._marquee_content:hover ._sentence {
+  @apply max-w-none;
+}
+._marquee_content.active {
+  @apply relative w-fit overflow-visible overflow-ellipsis;
+  animation: marquee 10s linear 1;
+}
+._marquee_content.active > ._sentence {
+  @apply w-max pr-10;
+}
+._marquee_content.active > ._sentence + ._sentence {
+  @apply absolute;
 }
 ._sentence {
   @apply inline-block max-w-full space-x-1 overflow-hidden overflow-ellipsis whitespace-nowrap text-base text-opacity-50;
