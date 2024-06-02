@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import BaseSwitch from '../base/BaseSwitch.vue'
+import { BaseSwitch } from 'shared'
 import { usePersonalStore } from '@/store'
 import { useRoomBasicStore } from '@/store'
 

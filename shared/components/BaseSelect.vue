@@ -1,15 +1,13 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import IconDropdown from '@/assets/icons/icon-dropdown.svg?component'
-import { useI18n } from 'vue-i18n'
 
-defineProps<{
+const props = defineProps<{
   options: { id: number | string; name: string }[]
+  placeholder?: string
 }>()
 
-const { t } = useI18n()
-const seleted = ref({ id: null, name: t('choose_one') })
+const seleted = ref({ id: null, name: props.placeholder || 'Select' })
 </script>
 <template>
   <Listbox v-slot="{ open }" v-model="seleted" as="div" class="relative max-w-lg">
@@ -17,7 +15,15 @@ const seleted = ref({ id: null, name: t('choose_one') })
       class="border-tertiary-2 bg-tertiary-1 text-natural-gray1 -shadow-4 flex w-full justify-between rounded border px-4 py-3"
     >
       <span class="overflow-hidden overflow-ellipsis whitespace-nowrap">{{ seleted.name }}</span>
-      <IconDropdown />
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" fill="none" />
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M4.46967 7.96967C4.76256 7.67678 5.23744 7.67678 5.53033 7.96967L12 14.4393L18.4697 7.96967C18.7626 7.67678 19.2374 7.67678 19.5303 7.96967C19.8232 8.26256 19.8232 8.73744 19.5303 9.03033L12.5303 16.0303C12.2374 16.3232 11.7626 16.3232 11.4697 16.0303L4.46967 9.03033C4.17678 8.73744 4.17678 8.26256 4.46967 7.96967Z"
+          fill="#F8FAFC"
+        />
+      </svg>
     </ListboxButton>
     <TransitionRoot v-show="open">
       <TransitionChild

@@ -3,7 +3,7 @@ import IconClose from '@/assets/icons/icon/close.svg?component'
 import { useNoteStore } from '@/store'
 import { Dialog as HDialog, DialogOverlay, DialogTitle } from '@headlessui/vue'
 import { computed } from 'vue'
-import BaseSwitch from '../base/BaseSwitch.vue'
+import { BaseSwitch } from 'shared'
 
 const noteStore = useNoteStore()
 const cancelHandler = () => (noteStore.isDialogOpen = false)
