@@ -1,6 +1,6 @@
 <script lang="ts">
 import { ref } from 'vue'
-import Marquee from '@/components/header/Marquee.vue'
+import TopMarquee from '@/components/header/TopMarquee.vue'
 import IconSearch from '@/assets/icons/icon-search.svg?component'
 import IconPerson from '@/assets/icons/icon/profile.svg?component'
 import IconPlus from '@/assets/icons/icon-plus.svg?component'
@@ -16,7 +16,7 @@ export default {
   components: {
     IconSearch,
     // eslint-disable-next-line vue/no-reserved-component-names
-    Marquee,
+    TopMarquee,
     IconPerson,
     IconPlus,
     FeedbackAlert,
@@ -80,7 +80,7 @@ export default {
     </h1>
     <div class="laptop:flex-row laptop:items-center relative flex flex-col flex-wrap items-end justify-between gap-2">
       <div class="laptop::w-auto laptop:mt-0 mt-5 flex-auto">
-        <Marquee />
+        <TopMarquee />
       </div>
       <!-- absolute base on <header> -->
       <nav class="w-fit">

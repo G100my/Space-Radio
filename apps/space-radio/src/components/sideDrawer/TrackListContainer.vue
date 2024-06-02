@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import IconPlus from '@/assets/icons/icon-plus.svg?component'
 import IconArrowUp from '@/assets/icons/icon-arrow-up.svg?component'
-import BaseMarquee from '../base/BaseMarquee.vue'
+import { Marquee } from 'shared'
 import type { FormattedTrack } from '@/utility/dataFormat'
 import { useQueueStore } from '@/store'
 
@@ -31,12 +31,12 @@ const store = useQueueStore()
       </div>
       <!-- https://www.w3.org/TR/css-flexbox-1/#min-size-auto -->
       <div class="min-w-0 flex-auto">
-        <BaseMarquee class="text-natural-white">
+        <Marquee class="text-natural-white">
           <span>{{ track.name }}</span>
-        </BaseMarquee>
-        <BaseMarquee class="text-natural-white">
+        </Marquee>
+        <Marquee class="text-natural-white">
           <span v-for="artist in track.artists" :key="artist.name">{{ artist.name }}</span>
-        </BaseMarquee>
+        </Marquee>
       </div>
       <div class="flex items-center">
         <button class="btn-tertiary" type="button" @click="store.add(track.id, track.name)">

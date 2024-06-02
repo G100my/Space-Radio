@@ -3,7 +3,7 @@ import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import { reactive, ref, shallowReactive, onMounted } from 'vue'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { spotifyCoverPicker, playlistTrackFormater, type FormattedTrack } from '@/utility/dataFormat'
-import BaseMarquee from '@/components/base/BaseMarquee.vue'
+import { Marquee } from 'shared'
 import BaseRadio from '@/components/base/BaseRadio.vue'
 import IconSearch from '@/assets/icons/icon-search.svg?component'
 import BaseDetails from '@/components/base/BaseDetails.vue'
@@ -204,14 +204,14 @@ function addAll() {
             <img class="_cover" :src="spotifyCoverPicker(artist.images)" alt="" />
             <div class="w-0 flex-1">
               <div>
-                <BaseMarquee>{{ artist.name }}</BaseMarquee>
+                <Marquee>{{ artist.name }}</Marquee>
                 <p class="text-xs">Popularity: {{ artist.popularity }}%</p>
               </div>
-              <BaseMarquee>
+              <Marquee>
                 <span class="w-full space-x-2 text-xs">
                   <span v-for="genre in artist.genres" :key="genre" class="capitalize">{{ genre }},</span>
                 </span>
-              </BaseMarquee>
+              </Marquee>
             </div>
             <button
               type="button"
@@ -227,12 +227,12 @@ function addAll() {
           <li v-for="track in results.tracks" :key="track.id" class="flex items-center space-x-3 px-4 py-1">
             <img class="_cover" :src="spotifyCoverPicker(track.album.images)" alt="" />
             <div class="w-0 flex-1">
-              <BaseMarquee>{{ track.name }}</BaseMarquee>
-              <BaseMarquee>
+              <Marquee>{{ track.name }}</Marquee>
+              <Marquee>
                 <span class="w-full space-x-2 text-xs">
                   <span v-for="artist in track.artists" :key="artist.name" class="capitalize">{{ artist.name }}</span>
                 </span>
-              </BaseMarquee>
+              </Marquee>
             </div>
             <button
               type="button"

@@ -7,7 +7,7 @@ import IconPlus from '@/assets/icons/icon-plus.svg?component'
 import IconClose from '@/assets/icons/icon/close.svg?component'
 import IconSkipSong from '@/assets/icons/icon/skipsong.svg?component'
 import IconRoomSetting from '@/assets/icons/icon-roomsetting.svg?component'
-import BaseMarquee from '../base/BaseMarquee.vue'
+import { Marquee } from 'shared'
 import { useUserLogStore } from '@/store/UserLogStore'
 
 export default {
@@ -19,7 +19,7 @@ export default {
     IconClose,
     IconSkipSong,
     IconRoomSetting,
-    BaseMarquee,
+    Marquee,
   },
   setup() {
     const store = useUserLogStore()
@@ -58,7 +58,7 @@ export default {
           <span class="flex-0 mr-4 w-fit whitespace-nowrap">{{ timeTransfer(log.timestamp) }}</span>
 
           <div class="min-w-0 flex-1">
-            <BaseMarquee
+            <Marquee
               v-if="
                 ['add', 'jumpIn', 'normalRemove', 'urgentRemove', 'normal2urgent', 'urgent2normal'].includes(
                   log.action_type
@@ -67,9 +67,9 @@ export default {
               :text="log.payload as string"
             />
             <template v-else-if="log.action_type === 'addMultiple'">
-              <BaseMarquee v-for="(name, index) in log.payload" :key="index" class="flex w-full flex-col">
+              <Marquee v-for="(name, index) in log.payload" :key="index" class="flex w-full flex-col">
                 <span>{{ name }}</span>
-              </BaseMarquee>
+              </Marquee>
             </template>
             <span v-else-if="['turnUp', 'turnDown'].includes(log.action_type)">Adjust Volumn: {{ log.payload }}</span>
             <span v-else-if="log.action_type === 'updateMinimalVolume'">Minimal Volume: {{ log.payload }}</span>

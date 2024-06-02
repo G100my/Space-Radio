@@ -54,5 +54,9 @@ export const usePersonalStore = defineStore('PersonalStore', {
         localStorage.setItem(storageKeys.image, images[0].url)
       }
     },
+    clear() {
+      localStorage.clear()
+      this.$reset()
+    },
   },
 })

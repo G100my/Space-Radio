@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import type { usePersonalStore } from '../index'
-import { refreshAccessToken } from 'shared'
+import { refreshAccessToken } from '../utils/PKCE'
 import SpotifyWebApi from 'spotify-web-api-js'
 
 const generateWrappedSpotifyApi = (useStore: typeof usePersonalStore) => {

@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import logo from '@/assets/vinyl-record.png'
 import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import ProgressTimer from './ProgressTimer.vue'
-import BaseMarquee from '@/components/base/BaseMarquee.vue'
+import { Marquee } from 'shared'
 import LikeButton from '@/components/player/LikeButton.vue'
 import { usePersonalStore, usePlayingStore, useRoomBasicStore } from '@/store'
 
@@ -50,11 +50,11 @@ const customerPlayerMode = computed(() => useRoomBasicStore().customerPlayerMode
         </section>
 
         <section class="laptop:mt-auto mt-1">
-          <BaseMarquee class="text-natural-gray1">
+          <Marquee class="text-natural-gray1">
             <a v-for="(artists, index) in playerPlayingArtists" :key="index" target="_blank" :href="artists.url">
               {{ artists.name }}
             </a>
-          </BaseMarquee>
+          </Marquee>
         </section>
 
         <section

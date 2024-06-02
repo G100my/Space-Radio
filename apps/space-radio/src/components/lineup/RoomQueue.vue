@@ -6,7 +6,7 @@ import IconArrowDown from '@/assets/icons/icon-arrow-down.svg?component'
 import IconRemove from '@/assets/icons/icon-remove.svg?component'
 import IconMore from '@/assets/icons/icon-more.svg?component'
 
-import BaseMarquee from '../base/BaseMarquee.vue'
+import { Marquee } from 'shared'
 import { Menu as HMenu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { computed, ref } from 'vue'
 import { usePersonalStore } from '@/store'
@@ -20,7 +20,7 @@ export default {
     IconArrowDown,
     IconRemove,
     IconMore,
-    BaseMarquee,
+    Marquee,
     HMenu,
     MenuButton,
     MenuItems,
@@ -120,17 +120,17 @@ export default {
         </div>
 
         <div class="_info_1 w-full overflow-hidden">
-          <BaseMarquee class="text-natural-gray1 text-xs font-bold md:text-base" :text="trackData[key].name" />
-          <BaseMarquee class="text-primary text-xs md:text-base" :text="getOrderer(key)" />
+          <Marquee class="text-natural-gray1 text-xs font-bold md:text-base" :text="trackData[key].name" />
+          <Marquee class="text-primary text-xs md:text-base" :text="getOrderer(key)" />
         </div>
 
         <div class="_info_2 hidden md:block">
-          <BaseMarquee class="text-natural-gray1">
+          <Marquee class="text-natural-gray1">
             <a :href="trackData[key].external_urls.spotify" target="_blank">
               {{ trackData[key].album.name }}
             </a>
-          </BaseMarquee>
-          <BaseMarquee class="text-natural-gray1">
+          </Marquee>
+          <Marquee class="text-natural-gray1">
             <a
               v-for="artist in trackData[key].artists"
               :key="artist.name"
@@ -138,7 +138,7 @@ export default {
               target="_blank"
               >{{ artist.name }}</a
             >
-          </BaseMarquee>
+          </Marquee>
         </div>
 
         <template v-if="userId === totalQueue[key].orderer_id">
