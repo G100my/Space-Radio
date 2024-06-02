@@ -1,8 +1,5 @@
-import ImageVinylRecord from '@/assets/vinyl-record.png'
-
-export function spotifyCoverPicker(imagesUrl: SpotifyApi.AlbumObjectSimplified['images']): string {
-  return imagesUrl.length ? imagesUrl[imagesUrl.length - 1].url : ImageVinylRecord
-}
+import { spotifyCoverPicker } from 'shared'
+import ImageVinylRecord from '../assets/vinyl-record.png'
 
 export interface FormattedTrack {
   albumName: SpotifyApi.AlbumObjectSimplified['name']
@@ -24,7 +21,7 @@ export const playlistTrackFormater = (
     return {
       albumName: i.album.name,
       albumExternalUrl: i.album.external_urls.spotify,
-      coverUrl: spotifyCoverPicker(i.album.images),
+      coverUrl: spotifyCoverPicker(i.album.images) ?? ImageVinylRecord,
       ...base,
     }
   } else {
@@ -35,7 +32,7 @@ export const playlistTrackFormater = (
 export const topTrackFormater = ({ album, artists, id, name }: SpotifyApi.TrackObjectFull): FormattedTrack => ({
   albumName: album.name,
   albumExternalUrl: album.uri,
-  coverUrl: spotifyCoverPicker(album.images),
+  coverUrl: spotifyCoverPicker(album.images) ?? ImageVinylRecord,
   artists,
   id,
   name,

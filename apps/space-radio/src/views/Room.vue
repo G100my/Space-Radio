@@ -50,11 +50,25 @@ onMounted(() => {
 })
 
 const isSideDrawerShow = ref(false)
-const activeComponent = ref<ComponentName>('Personal')
+const activeComponentName = ref<ComponentName>('Personal')
+const activeComponent = computed(() => {
+  switch (activeComponentName.value) {
+    case 'AddFromStreamingService':
+      return AddFromStreamingService
+    case 'Personal':
+      return Personal
+    case 'Recommendation':
+      return Recommendation
+    case 'Search':
+      return Search
+    default:
+      return undefined
+  }
+})
 
 function activeSideDrawerHandler(componentName: ComponentName) {
   isSideDrawerShow.value = true
-  activeComponent.value = componentName
+  activeComponentName.value = componentName
 }
 
 // const mobileMode = computed(() => (window.innerWidth < 768 ? true : false))
@@ -89,7 +103,7 @@ const currentVolume = computed(() => volumeStore.volume)
     <NoteDialog id="note" />
 
     <!-- accept 'Search', 'AddFromStreamingService', 'Personal', 'PlaylistContent' those emited from Header -->
-    <SideDrawer v-model="isSideDrawerShow" :componentName="activeComponent">
+    <SideDrawer v-model="isSideDrawerShow" :componentName="activeComponentName">
       <component :is="activeComponent" @activeSideDrawer="activeSideDrawerHandler" />
     </SideDrawer>
   </div>

@@ -6,6 +6,7 @@ import ProgressTimer from './ProgressTimer.vue'
 import { Marquee } from 'shared'
 import LikeButton from '@/components/player/LikeButton.vue'
 import { usePersonalStore, usePlayingStore, useRoomBasicStore } from '@/store'
+import PlayToggle from '@/components/player/PlayToggle.vue'
 
 const store = usePlayingStore()
 const personalStore = usePersonalStore()

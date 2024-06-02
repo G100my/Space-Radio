@@ -1,5 +1,6 @@
 export { default as IconWrapper } from './components/IconWrapper.vue'
 export * from './utils/PKCE'
+export * from './utils'
 export { usePersonalStore } from './stores/usePersonalStore'
 export { generateWrappedSpotifyApi } from './plugins/generateWrappedSpotifyApi'
 export { default as Marquee } from './components/Marquee.vue'
