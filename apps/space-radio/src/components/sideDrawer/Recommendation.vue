@@ -143,7 +143,7 @@ function addAll() {
     </header>
     <div class="mt-2 flex flex-col overflow-y-hidden">
       <fieldset class="flex max-h-full w-full flex-wrap items-center gap-2">
-        <input v-model="keyword" class="base-input flex-1" type="text" @keydown.enter="handleSearch" />
+        <input v-model="keyword" class="_input flex-1" type="text" @keydown.enter="handleSearch" />
         <button type="button" class="btn-tertiary" @click="handleSearch"><IconSearch /></button>
         <div class="flex gap-4">
           <BaseRadio name="searchType" value="artist" :label="$t('recommendation.by_artist')" v-model="searchType" />

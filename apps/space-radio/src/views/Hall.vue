@@ -78,7 +78,7 @@ function enterCreateHandler() {
       <div>
         <input
           v-model="searchKeyWordInput"
-          class="base-input mt-1.5 w-full"
+          class="_input mt-1.5 w-full"
           type="text"
           :placeholder="isRoomListReady ? t('please_enter_room_name') : t('wait')"
           :disabled="!isRoomListReady"

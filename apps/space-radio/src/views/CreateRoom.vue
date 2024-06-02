@@ -158,7 +158,7 @@ function okHandler() {
         <div>
           <input
             v-model.trim="roomName"
-            class="base-input mt-1.5 w-full"
+            class="_input mt-1.5 w-full"
             maxlength="50"
             autocomplete="off"
             @keyup="checkRoomNameHandler"
@@ -224,7 +224,7 @@ function okHandler() {
 
       <DialogDescription class="text-center">{{ $t('you_can_copy_url_to_invite_your_friend') }}</DialogDescription>
       <div class="relative mt-4 flex w-full items-center justify-between">
-        <input id="inviteURLInput" type="text" class="base-input" :value="inviteURL" readonly />
+        <input id="inviteURLInput" type="text" class="_input" :value="inviteURL" readonly />
         <button class="btn-primary ml-auto p-2 leading-none" type="button" @click="copyInviteURLHandler">
           {{ $t('copy_again') }}
         </button>

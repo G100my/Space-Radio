@@ -27,7 +27,7 @@ const ttsToggleHandler = () => noteStore.updateEditingNote({ tts: !ttsToggle.val
         <input
           :value="noteStore.editingNote.sender"
           maxlength="16"
-          class="base-input w-32 max-w-full"
+          class="_input w-32 max-w-full"
           type="text"
           @change="noteStore.updateEditingNote({ sender: ($event.target as HTMLInputElement).value })"
         />
@@ -37,7 +37,7 @@ const ttsToggleHandler = () => noteStore.updateEditingNote({ tts: !ttsToggle.val
         <input
           :value="noteStore.editingNote.recipient"
           maxlength="16"
-          class="base-input w-32 max-w-full"
+          class="_input w-32 max-w-full"
           type="text"
           @change="noteStore.updateEditingNote({ recipient: ($event.target as HTMLInputElement).value })"
         />
@@ -46,7 +46,7 @@ const ttsToggleHandler = () => noteStore.updateEditingNote({ tts: !ttsToggle.val
           :value="noteStore.editingNote.message"
           rows="3"
           maxlength="72"
-          class="base-input w-full resize-none"
+          class="_input w-full resize-none"
           @change="noteStore.updateEditingNote({ message: ($event.target as HTMLInputElement).value })"
         />
         <div class="w-full">
