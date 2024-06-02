@@ -27,7 +27,6 @@ const routes: RouteRecordRaw[] = [
       const personalStore = usePersonalStore()
       if (import.meta.env.DEV) {
         console.log(to, from)
-        console.log(personalStore.isTokenValid())
         console.log(personalStore.$state)
       }
 
@@ -38,10 +37,9 @@ const routes: RouteRecordRaw[] = [
         const authorization_code = to.query.code as string | undefined
         console.log('🚀 ~ authorization_code:', authorization_code)
         if (authorization_code) {
-          fetchAccessToken(authorization_code, generateAuthParams(routeMap.C_playing)).then(res =>
-            personalStore.updateToken(res)
-          )
-          return { ...to, query: {} }
+          return fetchAccessToken(authorization_code, generateAuthParams(routeMap.C_playing))
+            .then(res => personalStore.updateToken(res))
+            .then(() => ({ name: routeMap.C_playing }))
         } else if (to.name !== routeMap.C_login) return { name: routeMap.C_login }
       }
     },
