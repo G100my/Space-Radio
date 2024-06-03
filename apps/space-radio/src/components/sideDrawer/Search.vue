@@ -6,6 +6,7 @@ import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { playlistTrackFormater, type FormattedTrack } from '@/utility/dataFormat'
 import TrackListContainer from './TrackListContainer.vue'
 import { useInfinityScroll } from 'shared'
+import { computed } from 'vue'
 
 export default {
   components: {
@@ -28,10 +29,11 @@ export default {
         searchedAmount.value = response.tracks!.total
       })
     }
+    const nextCondition = computed(() => !!next.value)
 
     const { isLoading } = useInfinityScroll({
-      id: 'infinity_search',
-      nextURL: next,
+      containerID: 'infinity_search',
+      nextCondition,
       fetchCallback: search,
     })
 
@@ -104,11 +106,11 @@ export default {
     </div>
   </div>
 </template>
-<style lang="postcss">
+<style>
 ._search_input {
   @apply text-natural-gray1 h-full flex-1 bg-transparent px-2;
-  &::placeholder {
-    @apply text-natural-gray3;
-  }
+}
+._search_input::placeholder {
+  @apply text-natural-gray3;
 }
 </style>

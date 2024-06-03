@@ -1,42 +1,41 @@
-import { isRef, nextTick, onMounted, onUnmounted, ref, type ComputedRef, type Ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, type ComputedRef } from 'vue'
 
 interface UseInfinityScrollParams {
-  id: string
+  containerID: string
   fetchCallback: (...args: any[]) => Promise<void>
-  nextURL: Ref<string> | ComputedRef<string | number>
+  nextCondition: ComputedRef<boolean>
   onUnmountedCallback?: (...args: any[]) => void
   fetchFirstCallback?: (...args: any[]) => Promise<void>
+  mutationOptions?: MutationObserverInit
 }
+
+const defaultmMutationObserverConfig = { childList: true }
+
 export function useInfinityScroll({
-  id,
+  containerID,
   fetchCallback,
-  nextURL,
+  nextCondition,
   onUnmountedCallback,
   fetchFirstCallback,
+  mutationOptions = defaultmMutationObserverConfig,
 }: UseInfinityScrollParams) {
-  if (!isRef(nextURL)) {
-    console.error(`nextURL is not ref`, nextURL)
-  }
-
-  /**
-   * @type HTMLElement
-   */
-  const infinityContainer = ref<HTMLElement>()
+  const infinityContainer = ref<HTMLElement | null>()
   let ScrollObserver: IntersectionObserver
   let target: Element | null | undefined
   const isLoading = ref(false)
 
-  const mutationObserverConfig = { childList: true }
   function observeLastElement() {
     target = infinityContainer.value?.lastElementChild
-    if (target) ScrollObserver.observe(target)
-    else {
-      console.error('target element is not a Element', target)
+    try {
+      // @ts-expect-error
+      ScrollObserver.observe(target)
+    } catch (error) {
+      console.error(error)
     }
   }
   function nextCallback() {
     isLoading.value = false
-    if (nextURL.value) nextTick(observeLastElement)
+    if (nextCondition.value) nextTick(observeLastElement)
   }
   function nexthandler() {
     if (target) ScrollObserver.unobserve(target)
@@ -45,9 +44,8 @@ export function useInfinityScroll({
   }
 
   onMounted(() => {
-    const container = document.getElementById(id)
-    if (container === null) throw new Error(`can not found element with '${id}' id.`)
-    infinityContainer.value = container
+    infinityContainer.value = document.getElementById(containerID)
+    if (infinityContainer.value === null) throw new Error(`can not found the element with '${containerID}' id.`)
 
     if (fetchFirstCallback) {
       fetchFirstCallback().then(() => {
@@ -58,7 +56,7 @@ export function useInfinityScroll({
         nextTick(observeLastElement)
         mutationObserver.disconnect()
       })
-      mutationObserver.observe(infinityContainer.value, mutationObserverConfig)
+      mutationObserver.observe(infinityContainer.value, mutationOptions)
     }
     const observerOptions = {
       root: infinityContainer.value,

@@ -43,10 +43,11 @@ export default {
     const list = computed(() => listStore.chosenList)
     const listTotal = computed(() => listStore.chosenTotal)
     const next = computed(() => listStore.chosenNext)
+    const nextCondition = computed(() => !!next.value)
 
     const { isLoading } = useInfinityScroll({
-      id: 'infinity_playlist',
-      nextURL: next,
+      containerID: 'infinity_playlist',
+      nextCondition,
       fetchCallback: listStore.fetchOffset,
       onUnmountedCallback: () => (listStore.chosenList = []),
       fetchFirstCallback: listStore.fetchFirst,
