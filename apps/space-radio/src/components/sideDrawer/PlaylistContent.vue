@@ -2,7 +2,7 @@
 import { computed, reactive, ref, toRaw } from 'vue'
 import IconSpinnerLoader from '@/assets/icons/icon-spinner-loader.svg?component'
 import TrackListContainer from './TrackListContainer.vue'
-import { useInfinityScroll } from '@/composables/useInfinityScroll'
+import { useInfinityScroll } from 'shared'
 import { usePersonalPlaylistStore, useQueueStore } from '@/store'
 
 export default {

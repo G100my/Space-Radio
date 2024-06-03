@@ -5,7 +5,7 @@ import { onUnmounted, ref } from 'vue'
 import { spotifyAPI } from '@/plugins/spotifyAPI'
 import { playlistTrackFormater, type FormattedTrack } from '@/utility/dataFormat'
 import TrackListContainer from './TrackListContainer.vue'
-import { useInfinityScroll } from '@/composables/useInfinityScroll'
+import { useInfinityScroll } from 'shared'
 
 export default {
   components: {
