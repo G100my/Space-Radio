@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Marquee, spotifyCoverPicker } from 'shared'
+import { spotifyCoverPicker, Marquee } from 'shared'
 
 defineProps<{
-  data: SpotifyApi.TrackObjectFull
+  data: SpotifyApi.AlbumObjectFull
 }>()
 </script>
 <template>
   <div class="flex gap-3">
-    <img class="_cover" :src="spotifyCoverPicker(data.album.images)" :alt="data.name" />
+    <img class="_cover" :src="spotifyCoverPicker(data.images)" :alt="data.name" />
     <div class="flex-1 overflow-hidden">
       <Marquee class="text-white">
         <span>{{ data.name }}</span>
@@ -21,7 +21,6 @@ defineProps<{
           @click.stop
           >{{ artist.name }}</a
         >
-        - <a :href="data.album.external_urls.spotify" target="_blank" @click.stop>{{ data.album.name }}</a>
       </Marquee>
     </div>
   </div>
