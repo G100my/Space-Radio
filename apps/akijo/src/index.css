@@ -1,3 +1,6 @@
+@import 'shared/style/input.css';
+@import 'shared/style/universal.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,8 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type SpotifyWebApi from 'spotify-web-api-js'
+import type {} from 'spotify-web-api-js'
 import { defineStore } from 'pinia'
 
-const storageKeys = {
+export const storageKeys = {
   token: 'spaceradio_token',
   expiredTime: 'spaceradio_expired_time',
   refreshToken: 'spaceradio_refresh_token',
