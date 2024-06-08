@@ -96,7 +96,11 @@ async function refreshAccessToken(params: { refresh_token: string } & Pick<AuthP
     body,
   }).then(response => {
     if (response.ok) return response.json() as Promise<FetchTokenResponse>
-    else console.error('something wrong in refreshAccessToken', response)
+    else {
+      console.error('something wrong in refreshAccessToken')
+      console.error(response)
+      return Promise.reject(response)
+    }
   })
 }
 

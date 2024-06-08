@@ -44,9 +44,12 @@ const routes: RouteRecordRaw[] = [
             .then(res => personalStore.updateToken(res))
             .then(() => ({ name: routeMap.C_playing }))
         } else if (refreshToken) {
-          return refreshAccessToken({ refresh_token: refreshToken, client_id: import.meta.env.VITE_CLIENT_ID }).then(
-            () => true
-          )
+          return refreshAccessToken({ refresh_token: refreshToken, client_id: import.meta.env.VITE_CLIENT_ID })
+            .then(() => true)
+            .catch(() => {
+              personalStore.clear()
+              return { name: routeMap.C_login }
+            })
         } else if (to.name !== routeMap.C_login) return { name: routeMap.C_login }
       }
     },
