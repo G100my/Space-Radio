@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { IconWrapper, BaseRadio, useInfinityScroll } from 'shared'
 import { computed, ref } from 'vue'
-import { useSearchStore } from '@/stores'
+import { usePreviewAudioStore, useSearchStore } from '@/stores'
 import TrackItem from '@/components/TrackItem.vue'
 import AlbumItem from '@/components/AlbumItem.vue'
 import ArtistItem from '@/components/ArtistItem.vue'
 
+const audioStore = usePreviewAudioStore()
 const searchStore = useSearchStore()
 const innerQuery = ref('')
 
@@ -49,7 +50,7 @@ function handleAdd() {
         ><span class="h-px flex-1 bg-slate-400" />
       </p>
       <ul id="search_result_container" class="flex-1 space-y-5 overflow-auto px-8 pb-16">
-        <li v-for="i in searchStore.currentResult?.items" :key="i.id" class="flex gap-3">
+        <li v-for="i in searchStore.currentResult?.items" :key="i.id" class="flex items-center gap-4">
           <TrackItem
             v-if="searchStore.type === 'track'"
             :data="i as SpotifyApi.TrackObjectFull"
@@ -65,7 +66,11 @@ function handleAdd() {
             :data="i as SpotifyApi.ArtistObjectFull"
             class="w-full overflow-hidden"
           />
-          <div class="space-x-2">
+          <div class="space-x-1 whitespace-nowrap">
+            <button v-if="i.type === 'track' && i.preview_url" type="button" @click="audioStore.toggle(i)">
+              <IconWrapper v-if="audioStore.currentPlaying === i.uri" name="stop-large-line" class="text-2xl" />
+              <IconWrapper v-else name="play-large-line" class="text-2xl" />
+            </button>
             <button type="button" @click="handleAdd">
               <IconWrapper name="add-line" class="text-2xl" />
             </button>
