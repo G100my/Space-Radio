@@ -14,7 +14,7 @@ const generateWrappedSpotifyApi = (useStore: typeof usePersonalStore) => {
         return (...theArguments: any[]) =>
           refreshAccessToken({ client_id: import.meta.env.VITE_CLIENT_ID, refresh_token: store.refresh_token! })
             .then(() => {
-              spotifyAPI.setAccessToken(store.access_token)
+              target.setAccessToken(store.access_token)
               //@ts-ignore
               return target[property](...theArguments)
             })
