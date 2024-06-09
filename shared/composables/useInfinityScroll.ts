@@ -1,4 +1,4 @@
-import { nextTick, onMounted, onUnmounted, ref, type ComputedRef } from 'vue'
+import { nextTick, onMounted, ref, type ComputedRef, onUnmounted } from 'vue'
 
 interface UseInfinityScrollParams {
   containerID: string
@@ -15,8 +15,6 @@ export function useInfinityScroll({
   containerID,
   fetchCallback,
   nextCondition,
-  onUnmountedCallback,
-  fetchFirstCallback,
   mutationOptions = defaultmMutationObserverConfig,
 }: UseInfinityScrollParams) {
   let infinityContainer: HTMLElement | null = null
@@ -26,9 +24,12 @@ export function useInfinityScroll({
   const isLoading = ref(false)
 
   function observeLastElement() {
+    if (target) scrollObserver.unobserve(target)
+
     target = infinityContainer!.lastElementChild
-    if (!target) throw new Error('can not found the last element in the container')
-    scrollObserver.observe(target)
+
+    if (target) scrollObserver.observe(target)
+    else console.warn('can not found the last element in the container')
   }
   function nexthandler() {
     if (import.meta.env.DEV) console.log('active next handler')
@@ -45,18 +46,11 @@ export function useInfinityScroll({
     infinityContainer = document.getElementById(containerID)
     if (infinityContainer === null) throw new Error(`can not found the element with '${containerID}' id.`)
 
-    if (fetchFirstCallback) {
-      fetchFirstCallback().then(() => {
-        nextTick(observeLastElement)
-      })
-    } else {
-      mutationObserver = new MutationObserver(() => {
-        if (import.meta.env.DEV) console.log('mutationObserver callback')
-        nextTick(observeLastElement)
-        mutationObserver.disconnect()
-      })
-      mutationObserver.observe(infinityContainer, mutationOptions)
-    }
+    mutationObserver = new MutationObserver(() => {
+      if (import.meta.env.DEV) console.log('mutationObserver callback')
+      nextTick(observeLastElement)
+    })
+    mutationObserver.observe(infinityContainer, mutationOptions)
     const observerOptions = {
       root: infinityContainer,
       rootMargin: '0px',
@@ -67,18 +61,16 @@ export function useInfinityScroll({
       if (entry.isIntersecting && !isLoading.value) nexthandler()
     }, observerOptions)
   })
+
+  function destory() {
+    scrollObserver.disconnect()
+    mutationObserver.disconnect()
+  }
   onUnmounted(() => {
-    onUnmountedCallback && onUnmountedCallback()
+    destory()
   })
+
   return {
     isLoading,
-    reObserve() {
-      if (target) scrollObserver.unobserve(target)
-      nextTick(observeLastElement)
-    },
-    destory() {
-      scrollObserver.disconnect()
-      mutationObserver.disconnect()
-    },
   }
 }
