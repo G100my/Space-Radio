@@ -36,9 +36,13 @@ const routes: RouteRecordRaw[] = [
         if (to.name === routeMap.C_login) return { name: routeMap.C_playing }
       } else {
         const authorization_code = to.query.code as string | undefined
-        console.log('🚀 ~ authorization_code:', authorization_code)
         const refreshToken = localStorage.getItem(storageKeys.refreshToken)
-        console.log('🚀 ~ refreshToken:', refreshToken)
+
+        if (import.meta.env.DEV) {
+          console.log('🚀 ~ authorization_code:', authorization_code)
+          console.log('🚀 ~ refreshToken:', refreshToken)
+        }
+
         if (authorization_code) {
           return fetchAccessToken(authorization_code, generateAuthParams(routeMap.C_playing))
             .then(res => personalStore.updateToken(res))
@@ -46,7 +50,8 @@ const routes: RouteRecordRaw[] = [
         } else if (refreshToken) {
           return refreshAccessToken({ refresh_token: refreshToken, client_id: import.meta.env.VITE_CLIENT_ID })
             .then(() => true)
-            .catch(() => {
+            .catch(e => {
+              console.error(e)
               personalStore.clear()
               return { name: routeMap.C_login }
             })

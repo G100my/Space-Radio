@@ -9,7 +9,7 @@ interface UseInfinityScrollParams {
   mutationOptions?: MutationObserverInit
 }
 
-const defaultmMutationObserverConfig = { childList: true }
+const defaultmMutationObserverConfig = { childList: true, subtree: true }
 
 export function useInfinityScroll({
   containerID,
@@ -20,18 +20,21 @@ export function useInfinityScroll({
   mutationOptions = defaultmMutationObserverConfig,
 }: UseInfinityScrollParams) {
   let infinityContainer: HTMLElement | null = null
-  let ScrollObserver: IntersectionObserver
+  let scrollObserver: IntersectionObserver
   let target: Element | null | undefined
+  let mutationObserver: MutationObserver
   const isLoading = ref(false)
 
   function observeLastElement() {
     target = infinityContainer!.lastElementChild
     if (!target) throw new Error('can not found the last element in the container')
-    ScrollObserver.observe(target)
+    scrollObserver.observe(target)
   }
   function nexthandler() {
+    if (import.meta.env.DEV) console.log('active next handler')
+
     isLoading.value = true
-    if (target) ScrollObserver.unobserve(target)
+    if (target) scrollObserver.unobserve(target)
     fetchCallback().then(() => {
       isLoading.value = false
       if (nextCondition.value) nextTick(observeLastElement)
@@ -47,7 +50,8 @@ export function useInfinityScroll({
         nextTick(observeLastElement)
       })
     } else {
-      const mutationObserver = new MutationObserver(() => {
+      mutationObserver = new MutationObserver(() => {
+        if (import.meta.env.DEV) console.log('mutationObserver callback')
         nextTick(observeLastElement)
         mutationObserver.disconnect()
       })
@@ -58,16 +62,23 @@ export function useInfinityScroll({
       rootMargin: '0px',
       threshold: 0.5,
     }
-    const callback: IntersectionObserverCallback = ([entry]) => {
-      console.log('🚀 ~ onMounted ~ entry:', entry)
+    scrollObserver = new IntersectionObserver(([entry]) => {
+      if (import.meta.env.DEV) console.log('scrollObserver callback')
       if (entry.isIntersecting && !isLoading.value) nexthandler()
-    }
-    ScrollObserver = new IntersectionObserver(callback, observerOptions)
+    }, observerOptions)
   })
   onUnmounted(() => {
     onUnmountedCallback && onUnmountedCallback()
   })
   return {
     isLoading,
+    reObserve() {
+      if (target) scrollObserver.unobserve(target)
+      nextTick(observeLastElement)
+    },
+    destory() {
+      scrollObserver.disconnect()
+      mutationObserver.disconnect()
+    },
   }
 }

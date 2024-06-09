@@ -12,7 +12,7 @@ export const storageKeys = {
   plan: 'spaceradio_user_product',
 }
 
-export const usePersonalStore = defineStore('PersonalStore', {
+export const usePersonalStore = defineStore('personal', {
   state: () => ({
     access_token: localStorage.getItem(storageKeys.token) || '',
     expires_in: Number(localStorage.getItem(storageKeys.expiredTime)) || null,
