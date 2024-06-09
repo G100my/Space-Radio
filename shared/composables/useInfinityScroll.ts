@@ -2,7 +2,7 @@ import { nextTick, onMounted, onUnmounted, ref, type ComputedRef } from 'vue'
 
 interface UseInfinityScrollParams {
   containerID: string
-  fetchCallback: (...args: any[]) => Promise<void>
+  fetchCallback: (...args: any[]) => any
   nextCondition: ComputedRef<boolean>
   onUnmountedCallback?: (...args: any[]) => void
   fetchFirstCallback?: (...args: any[]) => Promise<void>
@@ -19,33 +19,28 @@ export function useInfinityScroll({
   fetchFirstCallback,
   mutationOptions = defaultmMutationObserverConfig,
 }: UseInfinityScrollParams) {
-  const infinityContainer = ref<HTMLElement | null>()
+  let infinityContainer: HTMLElement | null = null
   let ScrollObserver: IntersectionObserver
   let target: Element | null | undefined
   const isLoading = ref(false)
 
   function observeLastElement() {
-    target = infinityContainer.value?.lastElementChild
-    try {
-      // @ts-expect-error
-      ScrollObserver.observe(target)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-  function nextCallback() {
-    isLoading.value = false
-    if (nextCondition.value) nextTick(observeLastElement)
+    target = infinityContainer!.lastElementChild
+    if (!target) throw new Error('can not found the last element in the container')
+    ScrollObserver.observe(target)
   }
   function nexthandler() {
-    if (target) ScrollObserver.unobserve(target)
     isLoading.value = true
-    fetchCallback().then(nextCallback)
+    if (target) ScrollObserver.unobserve(target)
+    fetchCallback().then(() => {
+      isLoading.value = false
+      if (nextCondition.value) nextTick(observeLastElement)
+    })
   }
 
   onMounted(() => {
-    infinityContainer.value = document.getElementById(containerID)
-    if (infinityContainer.value === null) throw new Error(`can not found the element with '${containerID}' id.`)
+    infinityContainer = document.getElementById(containerID)
+    if (infinityContainer === null) throw new Error(`can not found the element with '${containerID}' id.`)
 
     if (fetchFirstCallback) {
       fetchFirstCallback().then(() => {
@@ -56,15 +51,16 @@ export function useInfinityScroll({
         nextTick(observeLastElement)
         mutationObserver.disconnect()
       })
-      mutationObserver.observe(infinityContainer.value, mutationOptions)
+      mutationObserver.observe(infinityContainer, mutationOptions)
     }
     const observerOptions = {
-      root: infinityContainer.value,
+      root: infinityContainer,
       rootMargin: '0px',
       threshold: 0.5,
     }
     const callback: IntersectionObserverCallback = ([entry]) => {
-      if (entry.isIntersecting) nexthandler()
+      console.log('🚀 ~ onMounted ~ entry:', entry)
+      if (entry.isIntersecting && !isLoading.value) nexthandler()
     }
     ScrollObserver = new IntersectionObserver(callback, observerOptions)
   })
