@@ -34,7 +34,7 @@ async function generateCodeChallengeFromVerifier(codeVerifier: string) {
 // ===
 // const client_id = import.meta.env.VITE_CLIENT_ID
 // const redirect_uri = import.meta.env.VITE_BASE_URI
-const scope = `user-library-modify user-library-read playlist-modify-public playlist-modify-private user-read-recently-played user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming user-read-email user-read-private`
+export const SPOTIFY_SCOPE = `user-library-modify user-library-read playlist-modify-public playlist-modify-private user-read-recently-played user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state user-read-playback-position streaming user-read-email user-read-private`
 
 export interface AuthParams {
   client_id: string
@@ -49,7 +49,7 @@ async function PKCE(params: AuthParams) {
   url += '?response_type=code'
   url += '&client_id=' + encodeURIComponent(params.client_id)
   url += '&redirect_uri=' + encodeURIComponent(params.redirect_uri)
-  url += '&scope=' + encodeURIComponent(scope)
+  url += '&scope=' + encodeURIComponent(SPOTIFY_SCOPE)
   url += '&code_challenge_method=S256'
   url += '&code_challenge=' + code_challenge
 

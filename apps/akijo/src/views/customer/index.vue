@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import ImageLogo from '@/assets/logo.svg'
 import { routeMap } from '@/router'
-import { IconWrapper } from 'shared'
+import { IconWrapper, usePersonalStore } from 'shared'
+
+const personalStore = usePersonalStore()
 </script>
 <template>
   <header class="mb-8 pt-4">
-    <h1 class="mx-auto space-x-4 text-center text-3xl">
+    <h1
+      class="mx-auto space-x-4 text-center text-3xl"
+      @click="personalStore.clear(), $router.push({ name: routeMap.C_login })"
+    >
       <span class="sr-only">Akijo</span>
       <ImageLogo class="inline-block w-1/3" />
       <span>點播電台</span>
