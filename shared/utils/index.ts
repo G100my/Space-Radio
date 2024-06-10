@@ -1,5 +1,10 @@
-import type {} from 'spotify-web-api-js'
+interface ImageObj {
+  height?: number
+  url: string
+  width?: number
+}
 
-export function spotifyCoverPicker(imagesUrl: SpotifyApi.AlbumObjectSimplified['images']): string | undefined {
-  return imagesUrl.length ? imagesUrl[imagesUrl.length - 1].url : undefined
+export function spotifyCoverPicker(imagesUrl: ImageObj[] | null): string | undefined {
+  if (!imagesUrl) return undefined
+  return imagesUrl.length ? imagesUrl[0].url : undefined
 }
