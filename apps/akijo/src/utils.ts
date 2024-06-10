@@ -45,3 +45,8 @@ export function randomSticker(): string {
   return eval(`sticker${random}`)
 }
 
+// spotify:playlist:37i9dQZF1Fa1IIVtEpGUcU/tracks
+export function analyzeURI(fullUri: string) {
+  const [spotify, type, uri] = fullUri.split(':')
+  return { type, uri }
+}
