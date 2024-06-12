@@ -8,7 +8,7 @@ export type ListType =
   | 'medium_term'
   | 'long_term'
   | 'recently'
-  | 'saved'
+  | 'liked'
   | 'playlist'
   | 'album'
   | 'artist'
@@ -22,7 +22,7 @@ interface State {
   medium_term: SpotifyApi.UsersTopTracksResponse | null // approximately last 6 months
   short_term: SpotifyApi.UsersTopTracksResponse | null // approximately last 4 weeks
   recently: SpotifyApi.UsersRecentlyPlayedTracksResponse | null
-  saved: SpotifyApi.UsersSavedTracksResponse | null
+  liked: SpotifyApi.UsersSavedTracksResponse | null
 }
 
 export default defineStore('tracks', {
@@ -35,7 +35,7 @@ export default defineStore('tracks', {
     lists: null,
 
     recently: null,
-    saved: null,
+    liked: null,
 
     long_term: null,
     medium_term: null,
@@ -47,7 +47,7 @@ export default defineStore('tracks', {
         case 'album':
         case 'artist':
         case 'playlist':
-        case 'saved':
+        case 'liked':
         case 'recently':
           return state.items
 
@@ -98,13 +98,13 @@ export default defineStore('tracks', {
         case 'long_term':
         case 'medium_term':
         case 'short_term': {
-          if (this[type]!.items.length) return
-          const { items, ...rest } = await spotifyAPI.getMyTopTracks(type)
+          if (this[type]?.items.length) return
+          const { items, ...rest } = await spotifyAPI.getMyTopTracks({ type, ...options })
           result = { items, paging: rest }
           break
         }
 
-        case 'saved': {
+        case 'liked': {
           const { items, ...rest } = await spotifyAPI.getMySavedTracks(options)
           result = { items: items.map(i => i.track), paging: rest }
         }

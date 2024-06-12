@@ -6,7 +6,7 @@ export default defineStore('previewAudio', {
     currentPlaying: '',
   }),
   actions: {
-    toggle(track: SpotifyApi.TrackObjectSimplified) {
+    toggle(track: Pick<SpotifyApi.TrackObjectSimplified, 'uri' | 'preview_url'>) {
       if (this.currentPlaying === track.uri) {
         this.audio.pause()
         this.currentPlaying = ''
