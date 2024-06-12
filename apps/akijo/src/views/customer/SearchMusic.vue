@@ -38,7 +38,7 @@ function handleAdd() {
       </div>
     </div>
 
-    <div class="flex w-full items-center justify-center gap-4">
+    <div class="flex w-full items-center justify-center gap-4 text-sm">
       <BaseRadio name="searchType" v-model="searchStore.type" value="track" label="Track" />
       <BaseRadio name="searchType" v-model="searchStore.type" value="artist" label="Artist" />
       <BaseRadio name="searchType" v-model="searchStore.type" value="album" label="Album" />
