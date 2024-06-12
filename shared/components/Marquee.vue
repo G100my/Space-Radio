@@ -6,10 +6,6 @@ defineOptions({
   inheritAttrs: false,
 })
 
-defineProps<{
-  text?: string
-}>()
-
 const mainChild = ref<HTMLSpanElement>()
 const isFilled = ref(false)
 const innerHTML = ref('')
@@ -24,12 +20,12 @@ const mouseenterHandler = (event: MouseEvent) => {
 </script>
 <template>
   <div class="overflow-hidden">
-    <p class="_marquee_content" :class="{ active: isFilled }" @animationend="isFilled = false">
-      <span ref="mainChild" class="_sentence _main_child" v-bind="$attrs" @mouseenter="mouseenterHandler">
-        <slot>{{ text }}</slot>
-      </span>
+    <div class="_marquee_content" :class="{ active: isFilled }" @animationend="isFilled = false">
+      <p ref="mainChild" class="_sentence _main_child" v-bind="$attrs" @mouseenter="mouseenterHandler">
+        <slot />
+      </p>
       <span v-if="isFilled" v-bind="$attrs" class="_sentence" v-html="innerHTML" />
-    </p>
+    </div>
   </div>
 </template>
 <style>
@@ -59,6 +55,6 @@ const mouseenterHandler = (event: MouseEvent) => {
   @apply absolute;
 }
 ._sentence {
-  @apply inline-block max-w-full space-x-1 overflow-hidden overflow-ellipsis whitespace-nowrap text-base;
+  @apply inline-block max-w-full space-x-1 overflow-hidden overflow-ellipsis whitespace-nowrap text-base leading-none;
 }
 </style>
