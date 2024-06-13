@@ -1,24 +1,13 @@
-<script lang="ts">
+<script setup lang="ts">
 import { Switch as SwitchItem, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 
-export default {
-  components: {
-    SwitchItem,
-    SwitchGroup,
-    SwitchLabel,
-  },
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-  },
-  emits: ['update:modelValue'],
-}
+defineProps<{
+  modelValue: boolean
+  label: string
+}>()
+defineEmits<{
+  (e: 'update:modelValue', value: boolean): void
+}>()
 </script>
 <template>
   <SwitchGroup as="div">
@@ -27,10 +16,10 @@ export default {
       :value="String(modelValue)"
       :class="modelValue ? 'bg-primary' : 'bg-natural-gray3'"
       class="relative inline-flex h-[22px] w-[38px] flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-      @click="$emit('update:modelValue')"
+      @click="$emit('update:modelValue', !modelValue)"
       @keypress="
         (event: KeyboardEvent) => {
-          if (event.code === 'Enter' || event.code === 'Space') $emit('update:modelValue')
+          if (event.code === 'Enter' || event.code === 'Space') $emit('update:modelValue', !modelValue)
         }
       "
     >
