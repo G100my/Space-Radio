@@ -1,0 +1,25 @@
+{
+  "name": "akijo-server",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "G100 <g100mylan229@gmail.com>",
+  "homepage": "https://github.com/G100my/Space-Radio#readme",
+  "license": "ISC",
+  "main": "lib/akijo-server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/G100my/Space-Radio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/G100my/Space-Radio/issues"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^3.4.0"
+  }
+}
