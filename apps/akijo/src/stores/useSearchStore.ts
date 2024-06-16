@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { spotifyAPI } from '@/plugins/spotifyAPI'
+import { spotifyAPI } from '@/api/spotifyAPI'
 
 const localStorageKey = 'akijo-search'
 

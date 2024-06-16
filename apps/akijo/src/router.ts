@@ -1,4 +1,4 @@
-import { spotifyAPI } from '@/plugins/spotifyAPI'
+import { spotifyAPI } from '@/api/spotifyAPI'
 import { generateAuthParams } from '@/utils'
 import { fetchAccessToken, refreshAccessToken, usePersonalStore } from 'shared'
 import { storageKeys } from 'shared/stores/usePersonalStore'
