@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { TrackBaseInfo } from '@/constant'
 import { Marquee, spotifyCoverPicker } from 'shared'
 
 defineProps<{
-  data: SpotifyApi.TrackObjectFull
+  data: TrackBaseInfo
 }>()
 </script>
 <template>
