@@ -1,19 +1,109 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import * as logger from 'firebase-functions/logger'
+import { https, type Response, type Request } from 'firebase-functions'
 
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+import admin = require('firebase-admin')
+import { Site, addQueueSchema } from './constants'
+import { SpotifyApi } from '@spotify/web-api-ts-sdk'
+
+const scope = ['user-modify-playback-state', 'user-read-currently-playing']
+const spotifySDK = SpotifyApi.withClientCredentials(
+  process.env.SPOTIFY_CLIENT_ID!,
+  process.env.SPOTIFY_CLIENT_SECRET!,
+  scope
+)
+
+admin.initializeApp()
+
+// firebase realtime database
+const db = admin.database()
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+const allowedOrigins = ['https://akijo.space', 'localhost:2405']
+function checkOrigin(request: Request, response: Response) {
+  const origin = request.get('Origin')!
+  if (allowedOrigins.includes(origin)) {
+    response.set('Access-Control-Allow-Origin', origin)
+  } else {
+    logger.warn('Forbidden origin', { origin })
+    response.status(403).send('Forbidden')
+  }
+}
+
+function handleOptions(request: Request, response: Response) {
+  if (request.method === 'OPTIONS') {
+    response.set('Access-Control-Allow-Methods', 'POST')
+    response.set('Access-Control-Allow-Headers', 'Content-Type')
+    response.set('Access-Control-Max-Age', '3600')
+    response.status(204).send('')
+  }
+}
+
+function checkRequestBody(request: Request, response: Response) {
+  try {
+    return addQueueSchema.parse(request.body)
+  } catch (error) {
+    logger.error('Invalid request body', { error })
+    response.status(400).send('Bad Request')
+    return
+  }
+}
+
+export const addQueue = https.onRequest((request, response) => {
+  checkOrigin(request, response)
+  handleOptions(request, response)
+
+  const site = request.query.site
+  const place = request.query.place
+  if (!place || typeof place !== 'string') {
+    logger.error('Invalid query', { place })
+    response.status(400).send('Bad Request')
+    return
+  }
+
+  const ref = db.ref(place)
+  ref.once('value', snapshot => {
+    if (!snapshot.exists()) {
+      logger.error('Place not found', { site, place })
+      response.status(404).send('Not Found')
+    }
+  })
+
+  const queue = checkRequestBody(request, response)!
+
+  ref.child('sites').once('value', snapshot => {
+    const siteData = snapshot.val() as Site | null
+    if (!siteData) {
+      logger.error('Site not found', { site, place })
+      response.status(404).send('Not Found')
+    } else if (!siteData.need_review) {
+      spotifySDK.player
+        .addItemToPlaybackQueue(queue.uri)
+        .then(() => {
+          response.status(200).send('OK')
+        })
+        .catch(error => {
+          logger.error('Failed to add queue to current user', { error })
+          response.status(500).send('Failed to add queue to current user')
+        })
+    } else if (siteData.need_review) {
+      ref.child('queue').push(queue)
+    }
+  })
+})
+
+export const getCurrentPlaying = https.onRequest((request, response) => {
+  checkOrigin(request, response)
+  handleOptions(request, response)
+
+  spotifySDK.player
+    .getCurrentlyPlayingTrack()
+    .then(currentPlaying => {
+      response.status(200).send(currentPlaying)
+    })
+    .catch(error => {
+      logger.error('Failed to get current playing track', { error })
+      response.status(500).send('Failed to get current playing track')
+    })
+})
