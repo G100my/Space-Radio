@@ -12,7 +12,9 @@ const spotifySDK = SpotifyApi.withClientCredentials(
   scope
 )
 
-admin.initializeApp()
+admin.initializeApp({
+  databaseURL: process.env.AKIJO_SPACE_DATABASE,
+})
 
 // firebase realtime database
 const db = admin.database()
