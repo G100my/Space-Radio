@@ -1,6 +1,7 @@
 {
   "functions": [
     {
+      "region": "asia-east1",
       "source": "functions",
       "codebase": "default",
       "ignore": [
