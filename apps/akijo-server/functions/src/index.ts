@@ -1,19 +1,12 @@
 import * as logger from 'firebase-functions/logger'
 import { https, type Response, type Request } from 'firebase-functions'
 
-import admin = require('firebase-admin')
 import { Site, addQueueSchema } from './constants'
 import { SpotifyApi } from '@spotify/web-api-ts-sdk'
-
-const scope = ['user-modify-playback-state', 'user-read-currently-playing']
-const spotifySDK = SpotifyApi.withClientCredentials(
-  process.env.SPOTIFY_CLIENT_ID!,
-  process.env.SPOTIFY_CLIENT_SECRET!,
-  scope
-)
+import admin = require('firebase-admin')
 
 admin.initializeApp({
-  databaseURL: process.env.AKIJO_SPACE_DATABASE,
+  databaseURL: 'https://akijo-space.asia-southeast1.firebasedatabase.app/',
 })
 
 // firebase realtime database
@@ -52,6 +45,11 @@ function checkRequestBody(request: Request, response: Response) {
   }
 }
 
+const scope = ['user-modify-playback-state', 'user-read-currently-playing']
+function createSpotifyInstance() {
+  return SpotifyApi.withClientCredentials(process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!, scope)
+}
+
 export const addQueue = https.onRequest((request, response) => {
   checkOrigin(request, response)
   handleOptions(request, response)
@@ -80,6 +78,7 @@ export const addQueue = https.onRequest((request, response) => {
       logger.error('Site not found', { site, place })
       response.status(404).send('Not Found')
     } else if (!siteData.need_review) {
+      const spotifySDK = createSpotifyInstance()
       spotifySDK.player
         .addItemToPlaybackQueue(queue.uri)
         .then(() => {
@@ -99,12 +98,13 @@ export const getCurrentPlaying = https.onRequest((request, response) => {
   checkOrigin(request, response)
   handleOptions(request, response)
 
+  const spotifySDK = createSpotifyInstance()
   spotifySDK.player
     .getCurrentlyPlayingTrack()
     .then(currentPlaying => {
       response.status(200).send(currentPlaying)
     })
-    .catch(error => {
+    .catch((error: any) => {
       logger.error('Failed to get current playing track', { error })
       response.status(500).send('Failed to get current playing track')
     })

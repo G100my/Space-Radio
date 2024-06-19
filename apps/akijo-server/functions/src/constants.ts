@@ -13,6 +13,8 @@ export const addQueueSchema = z.object({
     images: z.array(
       z.object({
         url: z.string(),
+        height: z.number().optional(),
+        width: z.number().optional(),
       })
     ),
     name: z.string(),
