@@ -2,5 +2,11 @@
   "name": "shared",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts"
+  "main": "index.ts",
+  "devDependencies": {
+    "@types/spotify-web-playback-sdk": "^0.1.19"
+  },
+  "dependencies": {
+    "spotify-web-api-js": "^1.5.2"
+  }
 }
