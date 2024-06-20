@@ -64,17 +64,17 @@ export const addQueue = https.onRequest((request, response) => {
   handleOptions(request, response)
 
   const site = request.query.site
-  const place = request.query.place
-  if (!place || typeof place !== 'string') {
-    logger.warn('Invalid query', { place })
+  const space = request.query.space
+  if (!space || typeof space !== 'string') {
+    logger.warn('Invalid query', { space })
     response.status(400).send('Bad Request')
     return
   }
 
-  const ref = db.ref(place)
+  const ref = db.ref(space)
   ref.once('value', snapshot => {
     if (!snapshot.exists()) {
-      logger.warn('Place not found', { site, place })
+      logger.warn('space not found', { site, space })
       response.status(404).send('Not Found')
     }
   })
@@ -85,7 +85,7 @@ export const addQueue = https.onRequest((request, response) => {
     const siteData = snapshot.val() as Site | null
     logger.info('Site data', siteData)
     if (!siteData) {
-      logger.warn('Site not found', { site, place })
+      logger.warn('Site not found', { site, space })
       response.status(404).send('Not Found')
     } else if (!siteData.need_review) {
       const spotifySDK = createSpotifyInstance()
