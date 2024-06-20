@@ -39,7 +39,7 @@ function checkRequestBody(request: Request, response: Response) {
   try {
     return addQueueSchema.parse(request.body)
   } catch (error) {
-    logger.error('Invalid request body', { error })
+    logger.warn('Invalid request body', { error })
     response.status(400).send('Bad Request')
     return
   }
@@ -47,7 +47,8 @@ function checkRequestBody(request: Request, response: Response) {
 
 const scope = ['user-modify-playback-state', 'user-read-currently-playing']
 function createSpotifyInstance() {
-  return SpotifyApi.withClientCredentials(process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!, scope)
+  logger.log('Create Spotify instance', process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!, scope)
+  return SpotifyApi.withClientCredentials('cc205d361653438eab0d6b967dcf4a8f', 'e44a5314fca343b2b8b16293583ae3fd', scope)
 }
 
 export const addQueue = https.onRequest((request, response) => {
@@ -57,7 +58,7 @@ export const addQueue = https.onRequest((request, response) => {
   const site = request.query.site
   const place = request.query.place
   if (!place || typeof place !== 'string') {
-    logger.error('Invalid query', { place })
+    logger.warn('Invalid query', { place })
     response.status(400).send('Bad Request')
     return
   }
@@ -65,7 +66,7 @@ export const addQueue = https.onRequest((request, response) => {
   const ref = db.ref(place)
   ref.once('value', snapshot => {
     if (!snapshot.exists()) {
-      logger.error('Place not found', { site, place })
+      logger.warn('Place not found', { site, place })
       response.status(404).send('Not Found')
     }
   })
@@ -74,11 +75,16 @@ export const addQueue = https.onRequest((request, response) => {
 
   ref.child('sites').once('value', snapshot => {
     const siteData = snapshot.val() as Site | null
+    logger.info('Site data', siteData)
     if (!siteData) {
-      logger.error('Site not found', { site, place })
+      logger.warn('Site not found', { site, place })
       response.status(404).send('Not Found')
     } else if (!siteData.need_review) {
       const spotifySDK = createSpotifyInstance()
+      logger.log(spotifySDK.users.profile)
+
+      
+      // ! fixme
       spotifySDK.player
         .addItemToPlaybackQueue(queue.uri)
         .then(() => {
@@ -98,6 +104,7 @@ export const getCurrentPlaying = https.onRequest((request, response) => {
   checkOrigin(request, response)
   handleOptions(request, response)
 
+  // ! fixme
   const spotifySDK = createSpotifyInstance()
   spotifySDK.player
     .getCurrentlyPlayingTrack()
