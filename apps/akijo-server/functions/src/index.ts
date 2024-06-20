@@ -1,7 +1,7 @@
 import * as logger from 'firebase-functions/logger'
 import { https, type Response, type Request } from 'firebase-functions'
 
-import { Site, addQueueSchema } from './constants'
+import { SPOTIFY_SERVER_SCOPE, Site, addQueueSchema } from './constants'
 import { SpotifyApi } from '@spotify/web-api-ts-sdk'
 import admin = require('firebase-admin')
 
@@ -45,10 +45,18 @@ function checkRequestBody(request: Request, response: Response) {
   }
 }
 
-const scope = ['user-modify-playback-state', 'user-read-currently-playing']
 function createSpotifyInstance() {
-  logger.log('Create Spotify instance', process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!, scope)
-  return SpotifyApi.withClientCredentials('cc205d361653438eab0d6b967dcf4a8f', 'e44a5314fca343b2b8b16293583ae3fd', scope)
+  logger.log(
+    'Create Spotify instance',
+    process.env.SPOTIFY_CLIENT_ID!,
+    process.env.SPOTIFY_CLIENT_SECRET!,
+    SPOTIFY_SERVER_SCOPE
+  )
+  return SpotifyApi.withClientCredentials(
+    'cc205d361653438eab0d6b967dcf4a8f',
+    'e44a5314fca343b2b8b16293583ae3fd',
+    SPOTIFY_SERVER_SCOPE
+  )
 }
 
 export const addQueue = https.onRequest((request, response) => {
