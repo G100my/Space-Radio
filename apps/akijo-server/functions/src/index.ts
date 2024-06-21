@@ -1,9 +1,7 @@
-import * as logger from 'firebase-functions/logger'
-import { https, type Response, type Request } from 'firebase-functions'
-
-import { SPOTIFY_SERVER_SCOPE, Site, addQueueSchema } from './constants'
-import { SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { https, type Response, type Request, logger } from 'firebase-functions'
+import { AddQueueSchema, Site, addQueueSchema } from './constants'
 import admin = require('firebase-admin')
+import { checkQueryIsString, createSpotifyInstance, handleOptions } from './utils'
 
 admin.initializeApp({
   databaseURL: 'https://akijo-space.asia-southeast1.firebasedatabase.app/',
@@ -25,44 +23,6 @@ function checkOrigin(request: Request, response: Response) {
     response.status(403).send('Forbidden')
   }
 }
-function handleOptions(request: Request, response: Response) {
-  if (request.method === 'OPTIONS') {
-    response.set('Access-Control-Allow-Methods', 'POST')
-    response.set('Access-Control-Allow-Headers', 'Content-Type')
-    response.set('Access-Control-Max-Age', '3600')
-    response.status(204).send('')
-  }
-}
-function checkRequestBody(request: Request, response: Response) {
-  try {
-    return addQueueSchema.parse(request.body)
-  } catch (error) {
-    logger.warn('Invalid request body', { error })
-    response.status(400).send('Bad Request')
-    return
-  }
-}
-function createSpotifyInstance() {
-  logger.log(
-    'Create Spotify instance',
-    process.env.SPOTIFY_CLIENT_ID!,
-    process.env.SPOTIFY_CLIENT_SECRET!,
-    SPOTIFY_SERVER_SCOPE
-  )
-  return SpotifyApi.withClientCredentials(
-    'cc205d361653438eab0d6b967dcf4a8f',
-    'e44a5314fca343b2b8b16293583ae3fd',
-    SPOTIFY_SERVER_SCOPE
-  )
-}
-function checkQueryIsString(response: Response, query: https.Request['query'][string]): query is string {
-  if (!query || typeof query !== 'string') {
-    logger.warn('Invalid query', { query })
-    response.status(400).send('Bad Request')
-    return false
-  }
-  return true
-}
 
 export const addQueue = https.onRequest((request, response) => {
   checkOrigin(request, response)
@@ -80,7 +40,14 @@ export const addQueue = https.onRequest((request, response) => {
     }
   })
 
-  const queue = checkRequestBody(request, response)!
+  let queue: AddQueueSchema
+  try {
+    queue = addQueueSchema.parse(request.body)
+  } catch (error) {
+    logger.warn('Invalid request body', { error })
+    response.status(400).send('Bad Request')
+    return
+  }
 
   ref.child('sites').once('value', snapshot => {
     const siteData = snapshot.val() as Site | null
