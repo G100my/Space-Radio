@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { AuthParams } from 'shared'
 import sticker1 from '@/assets/sticker/1.svg'
 import sticker2 from '@/assets/sticker/2.svg'
 import sticker3 from '@/assets/sticker/3.svg'
@@ -31,13 +30,6 @@ import sticker28 from '@/assets/sticker/28.svg'
 import sticker29 from '@/assets/sticker/29.svg'
 import sticker30 from '@/assets/sticker/30.svg'
 import sticker31 from '@/assets/sticker/31.svg'
-
-export function generateAuthParams(path: string): AuthParams {
-  return {
-    client_id: import.meta.env.VITE_CLIENT_ID,
-    redirect_uri: import.meta.env.VITE_BASE_URI + path,
-  }
-}
 
 // return sticker 1-31
 export function randomSticker(): string {

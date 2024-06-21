@@ -1,7 +1,5 @@
-import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
-import { generateAuthParams } from '@/utils'
-import { fetchAccessToken, refreshAccessToken, usePersonalStore } from 'shared'
-import { storageKeys } from 'shared/stores/usePersonalStore'
+import { handleAuthFromRoute } from '@/api/spotifyWrappedAPI'
+import { usePersonalStore } from 'shared'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 export const routeMap = {
@@ -11,6 +9,7 @@ export const routeMap = {
   C_collects: 'collects',
   C_playlist: 'my-playlist',
   C_tracks: 'tracks',
+  H_login: 'host',
 }
 
 const routes: RouteRecordRaw[] = [
@@ -27,38 +26,10 @@ const routes: RouteRecordRaw[] = [
       { path: 'tracks/:type/:uri?', name: routeMap.C_tracks, component: () => import('@/views/customer/Tracks.vue') },
     ],
     beforeEnter: (to, from) => {
-      const personalStore = usePersonalStore()
-      if (import.meta.env.DEV) {
-        console.log(to, from)
-        console.log(personalStore.$state)
-      }
+      if (import.meta.env.DEV) console.log(to, from)
 
-      if (personalStore.isTokenValid()) {
-        if (!spotifyWrappedAPI.getAccessToken()) spotifyWrappedAPI.setAccessToken(personalStore.access_token)
-        if (to.name === routeMap.C_login) return { name: routeMap.C_playing }
-      } else {
-        const authorization_code = to.query.code as string | undefined
-        const refreshToken = localStorage.getItem(storageKeys.refreshToken)
-
-        if (import.meta.env.DEV) {
-          console.log('🚀 ~ authorization_code:', authorization_code)
-          console.log('🚀 ~ refreshToken:', refreshToken)
-        }
-
-        if (authorization_code) {
-          return fetchAccessToken(authorization_code, generateAuthParams(routeMap.C_playing))
-            .then(res => personalStore.updateToken(res))
-            .then(() => ({ name: routeMap.C_playing }))
-        } else if (refreshToken) {
-          return refreshAccessToken({ refresh_token: refreshToken, client_id: import.meta.env.VITE_CLIENT_ID })
-            .then(() => true)
-            .catch(e => {
-              console.error(e)
-              personalStore.clear()
-              return { name: routeMap.C_login }
-            })
-        } else if (to.name !== routeMap.C_login) return { name: routeMap.C_login }
-      }
+      const redirect = handleAuthFromRoute(to)
+      if (redirect) return redirect
     },
   },
   {
