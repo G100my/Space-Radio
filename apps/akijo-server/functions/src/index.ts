@@ -15,7 +15,7 @@ const db = admin.database()
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
-const allowedOrigins = ['https://akijo.space', 'localhost:2405']
+const allowedOrigins = ['https://akijo.space', 'http://localhost:2405']
 function checkOrigin(request: Request, response: Response) {
   const origin = request.get('Origin')!
   if (allowedOrigins.includes(origin)) {
@@ -25,7 +25,6 @@ function checkOrigin(request: Request, response: Response) {
     response.status(403).send('Forbidden')
   }
 }
-
 function handleOptions(request: Request, response: Response) {
   if (request.method === 'OPTIONS') {
     response.set('Access-Control-Allow-Methods', 'POST')
@@ -34,7 +33,6 @@ function handleOptions(request: Request, response: Response) {
     response.status(204).send('')
   }
 }
-
 function checkRequestBody(request: Request, response: Response) {
   try {
     return addQueueSchema.parse(request.body)
@@ -44,7 +42,6 @@ function checkRequestBody(request: Request, response: Response) {
     return
   }
 }
-
 function createSpotifyInstance() {
   logger.log(
     'Create Spotify instance',
@@ -58,6 +55,14 @@ function createSpotifyInstance() {
     SPOTIFY_SERVER_SCOPE
   )
 }
+function checkQueryIsString(response: Response, query: https.Request['query'][string]): query is string {
+  if (!query || typeof query !== 'string') {
+    logger.warn('Invalid query', { query })
+    response.status(400).send('Bad Request')
+    return false
+  }
+  return true
+}
 
 export const addQueue = https.onRequest((request, response) => {
   checkOrigin(request, response)
@@ -65,11 +70,7 @@ export const addQueue = https.onRequest((request, response) => {
 
   const site = request.query.site
   const space = request.query.space
-  if (!space || typeof space !== 'string') {
-    logger.warn('Invalid query', { space })
-    response.status(400).send('Bad Request')
-    return
-  }
+  if (!checkQueryIsString(response, space)) return
 
   const ref = db.ref(space)
   ref.once('value', snapshot => {
@@ -91,7 +92,6 @@ export const addQueue = https.onRequest((request, response) => {
       const spotifySDK = createSpotifyInstance()
       logger.log(spotifySDK.users.profile)
 
-      
       // ! fixme
       spotifySDK.player
         .addItemToPlaybackQueue(queue.uri)
@@ -123,4 +123,41 @@ export const getCurrentPlaying = https.onRequest((request, response) => {
       logger.error('Failed to get current playing track', { error })
       response.status(500).send('Failed to get current playing track')
     })
+})
+
+export const hostLogin = https.onRequest((request, response) => {
+  checkOrigin(request, response)
+  handleOptions(request, response)
+
+  logger.log('Host login', request.body)
+
+  const space = request.query.space
+  if (!checkQueryIsString(response, space)) return
+
+  db.ref(space).once('value', snapshot => {
+    if (!snapshot.exists()) {
+      logger.warn('space not found', { space })
+      response.status(404).send('Space Not Found')
+    } else {
+    }
+  })
+})
+
+export const getSpaceData = https.onRequest((request, response) => {
+  checkOrigin(request, response)
+  handleOptions(request, response)
+
+  logger.log('Get space data', request.query)
+
+  const space = request.query.space
+  if (!checkQueryIsString(response, space)) return
+
+  db.ref(space).once('value', snapshot => {
+    if (!snapshot.exists()) {
+      logger.warn('space not found', { space })
+      response.status(404).send('Not Found')
+    } else {
+      response.status(200).send(snapshot.val())
+    }
+  })
 })
