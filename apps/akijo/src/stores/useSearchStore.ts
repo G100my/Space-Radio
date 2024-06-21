@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { spotifyCustomerAPI } from '@/api/spotifyCustomerAPI'
+import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
 
 const localStorageKey = 'akijo-search'
 
@@ -12,7 +12,7 @@ interface State {
   albums: SpotifyApi.AlbumObjectSimplified[] | null
   artistsPaging: Omit<SpotifyApi.PagingObject<any>, 'items'> | null
   artists: SpotifyApi.ArtistObjectFull[] | null
-  type: Exclude<Parameters<typeof spotifyCustomerAPI.search>[1][number], 'playlist'>
+  type: Exclude<Parameters<typeof spotifyWrappedAPI.search>[1][number], 'playlist'>
 }
 export default defineStore('search', {
   state: (): State => ({
@@ -43,7 +43,7 @@ export default defineStore('search', {
       this.recentSearch.push(this.query)
       if (this.recentSearch.length > 30) this.recentSearch.shift()
       localStorage.setItem(localStorageKey, JSON.stringify(this.recentSearch))
-      spotifyCustomerAPI.search(this.query, [this.type], { market: 'TW' }).then(res => {
+      spotifyWrappedAPI.search(this.query, [this.type], { market: 'TW' }).then(res => {
         switch (this.type) {
           case 'album': {
             const { items, ...rest } = (res as SpotifyApi.AlbumSearchResponse).albums
@@ -69,7 +69,7 @@ export default defineStore('search', {
     async fetchNext() {
       if (!this.currentResult.paging?.next) return Promise.resolve()
       const limit = 25
-      const result = await spotifyCustomerAPI.search(this.query, [this.type], {
+      const result = await spotifyWrappedAPI.search(this.query, [this.type], {
         offset: this.currentResult.paging.offset + limit,
         limit,
       })

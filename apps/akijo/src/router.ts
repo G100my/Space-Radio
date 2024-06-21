@@ -1,4 +1,4 @@
-import { spotifyCustomerAPI } from '@/api/spotifyCustomerAPI'
+import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
 import { generateAuthParams } from '@/utils'
 import { fetchAccessToken, refreshAccessToken, usePersonalStore } from 'shared'
 import { storageKeys } from 'shared/stores/usePersonalStore'
@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
       }
 
       if (personalStore.isTokenValid()) {
-        if (!spotifyCustomerAPI.getAccessToken()) spotifyCustomerAPI.setAccessToken(personalStore.access_token)
+        if (!spotifyWrappedAPI.getAccessToken()) spotifyWrappedAPI.setAccessToken(personalStore.access_token)
         if (to.name === routeMap.C_login) return { name: routeMap.C_playing }
       } else {
         const authorization_code = to.query.code as string | undefined

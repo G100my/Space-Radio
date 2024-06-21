@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { spotifyCustomerAPI } from '@/api/spotifyCustomerAPI'
+import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
 
 const limit = 50
 
@@ -63,7 +63,7 @@ export default defineStore('tracks', {
   },
   actions: {
     async getLists() {
-      this.lists = await spotifyCustomerAPI.getUserPlaylists(undefined, { limit: 50 })
+      this.lists = await spotifyWrappedAPI.getUserPlaylists(undefined, { limit: 50 })
     },
     async fetchTracks({ type, uri, next }: { type: ListType; uri?: string; next?: true }) {
       let result: Pick<State, 'items' | 'paging'>
@@ -72,25 +72,25 @@ export default defineStore('tracks', {
 
       switch (type) {
         case 'album': {
-          const { items, ...rest } = await spotifyCustomerAPI.getAlbumTracks(uri!, options)
+          const { items, ...rest } = await spotifyWrappedAPI.getAlbumTracks(uri!, options)
           result = { items, paging: rest }
           break
         }
 
         case 'artist': {
-          const res = await spotifyCustomerAPI.getArtistTopTracks(uri!, 'TW', options)
+          const res = await spotifyWrappedAPI.getArtistTopTracks(uri!, 'TW', options)
           result = { items: res.tracks, paging: null }
           break
         }
 
         case 'playlist': {
-          const { items, ...rest } = await spotifyCustomerAPI.getPlaylistTracks(uri!, options)
+          const { items, ...rest } = await spotifyWrappedAPI.getPlaylistTracks(uri!, options)
           result = { items: items.map(i => i.track as SpotifyApi.TrackObjectFull), paging: rest }
           break
         }
 
         case 'recently': {
-          const { items } = await spotifyCustomerAPI.getMyRecentlyPlayedTracks({ limit: 50 })
+          const { items } = await spotifyWrappedAPI.getMyRecentlyPlayedTracks({ limit: 50 })
           result = { items: items.map(i => i.track), paging: null }
           break
         }
@@ -99,13 +99,13 @@ export default defineStore('tracks', {
         case 'medium_term':
         case 'short_term': {
           if (this[type]?.items.length) return
-          const { items, ...rest } = await spotifyCustomerAPI.getMyTopTracks({ type, ...options })
+          const { items, ...rest } = await spotifyWrappedAPI.getMyTopTracks({ type, ...options })
           result = { items, paging: rest }
           break
         }
 
         case 'liked': {
-          const { items, ...rest } = await spotifyCustomerAPI.getMySavedTracks(options)
+          const { items, ...rest } = await spotifyWrappedAPI.getMySavedTracks(options)
           result = { items: items.map(i => i.track), paging: rest }
         }
       }
