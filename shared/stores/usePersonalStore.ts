@@ -11,7 +11,7 @@ export const storageKeys = {
   plan: 'spaceradio_user_product',
 }
 
-interface State {
+export interface PersonalStoreState {
   auth: AccessToken | null
   timestamp: number
   id: string
@@ -21,7 +21,7 @@ interface State {
 }
 
 export const usePersonalStore = defineStore('personal', {
-  state: (): State => ({
+  state: (): PersonalStoreState => ({
     auth: null,
     timestamp: Number(localStorage.getItem(storageKeys.timestamp)) || NaN,
     id: localStorage.getItem(storageKeys.userID) || '',
@@ -43,7 +43,6 @@ export const usePersonalStore = defineStore('personal', {
       this.timestamp = Date.now()
       localStorage.setItem(storageKeys.auth, JSON.stringify(params))
       localStorage.setItem(storageKeys.timestamp, this.timestamp.toString())
-      return Promise.resolve(params)
     },
     updateUserData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
       this.$patch({ id, display_name, product })

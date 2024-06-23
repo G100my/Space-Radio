@@ -61,6 +61,8 @@ export interface FetchTokenResponse {
   token_type: 'Bearer'
   expires_in: 3600
   refresh_token: string
+  expires?: number
+
   timestamp: number
   scope: string // 'playlist-modify-private user-read-email user-read-private streaming user-modify-playback-state user-library-read user-library-modify playlist-modify-public user-read-playback-state user-read-currently-playing user-read-recently-played user-read-playback-position user-top-read'
 }
