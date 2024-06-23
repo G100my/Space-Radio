@@ -1,15 +1,15 @@
 import type { AuthParams } from 'shared'
 import { fetchAccessToken, generateWrappedSpotifyApi, refreshAccessToken, usePersonalStore } from 'shared'
 import { storageKeys } from 'shared/stores/usePersonalStore'
-import type { NavigationGuard, RouteLocationNormalized, RouteRecordName, RouteRecordRaw } from 'vue-router'
+import type { NavigationGuard, RouteLocationNormalized } from 'vue-router'
 
 export const spotifyWrappedAPI = generateWrappedSpotifyApi(usePersonalStore)
 
 export function handleAuthFromRoute(
   to: RouteLocationNormalized,
   redirect: {
-    initUrl: string // ex: routeMap.C_login
-    validUrl?: string // ex: routeMap.C_playing
+    initRouteName: string // ex: routeMap.C_login
+    validRouteName: string // ex: routeMap.C_playing
   }
 ): ReturnType<NavigationGuard> {
   const personalStore = usePersonalStore()
@@ -17,7 +17,7 @@ export function handleAuthFromRoute(
 
   if (personalStore.isTokenValid()) {
     if (!spotifyWrappedAPI.getAccessToken()) spotifyWrappedAPI.setAccessToken(personalStore.access_token)
-    if (to.name === redirect.initUrl) return { name: redirect.validUrl ?? redirect.initUrl }
+    if (to.name === redirect.initRouteName) return { name: redirect.validRouteName }
   } else {
     const authorization_code = to.query.code as string | undefined
     const refreshToken = localStorage.getItem(storageKeys.refreshToken)
@@ -28,18 +28,18 @@ export function handleAuthFromRoute(
     }
 
     if (authorization_code) {
-      return fetchAccessToken(authorization_code, generateAuthParams(redirect.validUrl ?? redirect.initUrl))
+      return fetchAccessToken(authorization_code, generateAuthParams(redirect.validRouteName))
         .then(res => personalStore.updateToken(res))
-        .then(() => ({ name: redirect.validUrl ?? redirect.initUrl }))
+        .then(() => ({ name: redirect.validRouteName, query: undefined }))
     } else if (refreshToken) {
       return refreshAccessToken({ refresh_token: refreshToken, client_id: import.meta.env.VITE_CLIENT_ID })
         .then(() => true)
         .catch(e => {
           console.error(e)
           personalStore.clear()
-          return { name: redirect.initUrl }
+          return { name: redirect.initRouteName }
         })
-    } else if (to.name !== redirect.initUrl) return { name: redirect.initUrl }
+    } else if (to.name !== redirect.initRouteName) return { name: redirect.initRouteName }
   }
 }
 

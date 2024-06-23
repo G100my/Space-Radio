@@ -1,21 +1,10 @@
 import { handleAuthFromRoute } from '@/api/spotifyWrappedAPI'
-import { usePersonalStore } from 'shared'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-
-export const routeMap = {
-  C_login: 'login',
-  C_search: 'search',
-  C_playing: 'playing',
-  C_collects: 'collects',
-  C_playlist: 'my-playlist',
-  C_tracks: 'tracks',
-  H_login: 'host',
-}
+import { routeMap } from './constant'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'customer',
     component: () => import('@/views/customer/index.vue'),
     children: [
       { path: '', name: routeMap.C_login, component: () => import('@/views/customer/LoginIn.vue') },
@@ -28,13 +17,27 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: (to, from) => {
       if (import.meta.env.DEV) console.log(to, from)
 
-      const redirect = handleAuthFromRoute(to)
+      const redirect = handleAuthFromRoute(to, { initRouteName: routeMap.C_login, validRouteName: routeMap.C_playing })
       if (redirect) return redirect
     },
   },
   {
-    path: '/host',
-    component: () => import('@/views/host/index.vue'),
+    path: '/' + routeMap.H_index,
+    children: [
+      { path: '', name: routeMap.H_index, component: () => import('@/views/host/index.vue') },
+      {
+        path: 'settings',
+        name: routeMap.H_setting,
+        component: () => import('@/views/host/Settings.vue'),
+      },
+    ],
+    beforeEnter: to => {
+      const redirect = handleAuthFromRoute(to, {
+        initRouteName: routeMap.H_index,
+        validRouteName: routeMap.H_setting,
+      })
+      if (redirect) return redirect
+    },
   },
 ]
 

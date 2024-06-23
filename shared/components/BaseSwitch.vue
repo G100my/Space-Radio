@@ -10,8 +10,8 @@ defineEmits<{
 }>()
 </script>
 <template>
-  <SwitchGroup as="div">
-    <SwitchLabel class="mr-4 text-xl">{{ label }}</SwitchLabel>
+  <SwitchGroup as="div" class="flex items-center">
+    <SwitchLabel class="mr-4">{{ label }}</SwitchLabel>
     <SwitchItem
       :value="String(modelValue)"
       :class="modelValue ? 'bg-primary' : 'bg-natural-gray3'"

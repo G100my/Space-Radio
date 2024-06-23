@@ -1,50 +1,22 @@
 <script setup lang="ts">
-import TrackItem from '@/components/TrackItem.vue'
-import { usePreviewAudioStore } from '@/stores'
-import { BaseSwitch, IconWrapper } from 'shared'
-import { reactive } from 'vue'
+import { PKCE } from 'shared'
+import { generateAuthParams } from '@/api/spotifyWrappedAPI'
+import { SPOTIFY_HOST_REDIRECT_URI } from '@/constant'
 
-const fakeData: SpotifyApi.TrackObjectFull[] = []
-
-// A1-A8, B1-B7
-const tableList = reactive({
-  A1: false,
-  A2: false,
-})
-
-const audioStore = usePreviewAudioStore()
-
-function handleSwitch(key: keyof typeof tableList) {
-  tableList[key] = !tableList[key]
+function handleLogin() {
+  PKCE(generateAuthParams(SPOTIFY_HOST_REDIRECT_URI))
 }
 </script>
 <template>
-  <main class="flex h-full max-w-lg flex-col p-5">
-    <div class="flex-1">
-      <ul class="w-full">
-        <li v-for="i in fakeData" :key="i.uri" class="flex gap-3">
-          <div class="w-0 flex-1">
-            <TrackItem :data="i" class="flex-1" @click="audioStore.toggle(i)" />
-          </div>
-          <div class="flex-0 space-x-3 text-6xl">
-            <button type="button">
-              <IconWrapper name="check-line" />
-            </button>
-            <button type="button">
-              <IconWrapper name="close-line" />
-            </button>
-          </div>
-        </li>
-      </ul>
+  <main class="h-full max-w-lg p-5">
+    <div>
+      <button
+        type="button"
+        class="text-natural-white bg-system-success1 w-full rounded-full py-3 text-center text-4xl"
+        @click="handleLogin"
+      >
+        Loggin Spotify
+      </button>
     </div>
-    <aside class="flex gap-4">
-      <BaseSwitch
-        v-for="(i, key) in tableList"
-        :key="key"
-        :label="key"
-        :modelValue="i"
-        @update:modelValue="handleSwitch(key)"
-      />
-    </aside>
   </main>
 </template>
