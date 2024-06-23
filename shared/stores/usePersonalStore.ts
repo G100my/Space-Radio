@@ -1,10 +1,9 @@
 import type {} from 'spotify-web-api-js'
+import type { AccessToken } from '@spotify/web-api-ts-sdk'
 import { defineStore } from 'pinia'
 
 export const storageKeys = {
-  token: 'spaceradio_token',
-  expiredTime: 'spaceradio_expired_time',
-  refreshToken: 'spaceradio_refresh_token',
+  auth: 'spaceradio_auth',
   timestamp: 'spaceradio_timestamp',
   userID: 'spaceradio_user_id',
   name: 'spaceradio_user_display_name',
@@ -12,13 +11,19 @@ export const storageKeys = {
   plan: 'spaceradio_user_product',
 }
 
-export const usePersonalStore = defineStore('personal', {
-  state: () => ({
-    access_token: localStorage.getItem(storageKeys.token) || '',
-    expires_in: Number(localStorage.getItem(storageKeys.expiredTime)) || null,
-    refresh_token: localStorage.getItem(storageKeys.refreshToken) || null,
-    timestamp: Number(localStorage.getItem(storageKeys.timestamp)) || NaN,
+interface State {
+  auth: AccessToken | null
+  timestamp: number
+  id: string
+  display_name: string
+  image_url: string
+  product: string
+}
 
+export const usePersonalStore = defineStore('personal', {
+  state: (): State => ({
+    auth: null,
+    timestamp: Number(localStorage.getItem(storageKeys.timestamp)) || NaN,
     id: localStorage.getItem(storageKeys.userID) || '',
     display_name: localStorage.getItem(storageKeys.name) || '',
     image_url: localStorage.getItem(storageKeys.image) || '',
@@ -26,20 +31,18 @@ export const usePersonalStore = defineStore('personal', {
   }),
   getters: {
     isTokenValid: state => () => {
-      if (!state.expires_in) return false
+      if (!state.auth?.expires_in) return false
       const now = Date.now()
-      return state.expires_in * 1000 + state.timestamp > now
+      return state.auth.expires_in * 1000 + state.timestamp > now
     },
     isPremium: state => state.product === 'premium',
   },
   actions: {
     updateToken(params: { access_token: string; expires_in: number; refresh_token: string }) {
-      this.$patch(params)
+      this.$patch({ auth: params })
       this.timestamp = Date.now()
-      localStorage.setItem(storageKeys.token, this.access_token)
+      localStorage.setItem(storageKeys.auth, JSON.stringify(params))
       localStorage.setItem(storageKeys.timestamp, this.timestamp.toString())
-      localStorage.setItem(storageKeys.expiredTime, this.expires_in!.toString())
-      localStorage.setItem(storageKeys.refreshToken, this.refresh_token!)
       return Promise.resolve(params)
     },
     updateUserData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
