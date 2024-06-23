@@ -1,4 +1,5 @@
 import type { AddQueueSchema, SpaceClientData } from 'functions/src/constants'
+import type { AccessToken } from '@spotify/web-api-ts-sdk'
 
 function addQueue(
   query: {
@@ -29,4 +30,16 @@ function getSpaceData(spotifyUserID: string) {
   }).then(async res => (await res.json()) as SpaceClientData)
 }
 
-export default { addQueue, getSpaceData }
+function updateHostAuth(spotifyUserID: string, auth: AccessToken) {
+  const url = new URL(import.meta.env.VITE_AKIJO_SERVER_URL + '/hostUpdateAuth')
+  url.searchParams.set('space', spotifyUserID)
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(auth),
+  })
+}
+
+export default { addQueue, getSpaceData, updateHostAuth }

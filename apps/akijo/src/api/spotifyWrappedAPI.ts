@@ -11,6 +11,7 @@ export function handleAuthFromRoute(
     initRouteName: string // ex: routeMap.C_login
     validRouteName: string // ex: routeMap.C_playing
     redirectUrl: string
+    authRefreshCallback?: () => void
   }
 ): ReturnType<NavigationGuard> {
   const personalStore = usePersonalStore()
@@ -37,6 +38,9 @@ export function handleAuthFromRoute(
         })
         .then(() => spotifyWrappedAPI.getMe())
         .then(res => personalStore.updateUserData(res))
+        .then(() => {
+          if (params.authRefreshCallback) params.authRefreshCallback()
+        })
         .then(() => ({ name: params.validRouteName, query: undefined }))
     } else if (authRecord) {
       personalStore.updateToken(authRecord)
@@ -56,6 +60,9 @@ export function handleAuthFromRoute(
           .then(res => personalStore.updateToken(res))
           .then(() => spotifyWrappedAPI.getMe())
           .then(res => personalStore.updateUserData(res))
+          .then(() => {
+            if (params.authRefreshCallback) params.authRefreshCallback()
+          })
           .then(() => ({ name: params.validRouteName }))
           .catch(e => {
             console.error(e)

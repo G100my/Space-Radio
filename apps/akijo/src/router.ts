@@ -1,6 +1,8 @@
 import { handleAuthFromRoute } from '@/api/spotifyWrappedAPI'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import { routeMap } from './constant'
+import { SPOTIFY_HOST_REDIRECT_URI, routeMap } from './constant'
+import cloudFunctionAPI from './api/cloudFunctionAPI'
+import { usePersonalStore } from 'shared'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -17,7 +19,11 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: (to, from) => {
       if (import.meta.env.DEV) console.log(to, from)
 
-      const redirect = handleAuthFromRoute(to, { initRouteName: routeMap.C_login, validRouteName: routeMap.C_playing })
+      const redirect = handleAuthFromRoute(to, {
+        initRouteName: routeMap.C_login,
+        validRouteName: routeMap.C_playing,
+        redirectUrl: routeMap.C_playing,
+      })
       if (redirect) return redirect
     },
   },
@@ -29,15 +35,20 @@ const routes: RouteRecordRaw[] = [
         path: 'settings',
         name: routeMap.H_setting,
         component: () => import('@/views/host/Settings.vue'),
+        beforeEnter: async to => {
+          const redirect = await handleAuthFromRoute(to, {
+            initRouteName: routeMap.H_index,
+            validRouteName: routeMap.H_setting,
+            redirectUrl: SPOTIFY_HOST_REDIRECT_URI,
+            authRefreshCallback: () => {
+              const personalStore = usePersonalStore()
+              cloudFunctionAPI.updateHostAuth(personalStore.id, personalStore.auth!)
+            },
+          })
+          if (redirect) return redirect
+        },
       },
     ],
-    beforeEnter: to => {
-      const redirect = handleAuthFromRoute(to, {
-        initRouteName: routeMap.H_index,
-        validRouteName: routeMap.H_setting,
-      })
-      if (redirect) return redirect
-    },
   },
 ]
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PKCE } from 'shared'
-import { generateAuthParams } from '@/utils'
-import { routeMap } from '@/router'
+import { generateAuthParams } from '@/api/spotifyWrappedAPI'
+import { routeMap } from '@/constant'
 </script>
 <template>
   <section class="px-10">

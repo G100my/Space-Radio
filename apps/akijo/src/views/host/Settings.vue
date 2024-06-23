@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import cloudFunctionAPI from '@/api/cloudFunctionAPI'
-import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
 import TrackItem from '@/components/TrackItem.vue'
 import { usePreviewAudioStore } from '@/stores'
 import { BaseSwitch, IconWrapper, usePersonalStore } from 'shared'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive } from 'vue'
 import type { SpaceClientData } from 'functions/src/constants'
 
 const data: SpaceClientData = reactive({
@@ -14,18 +13,21 @@ const data: SpaceClientData = reactive({
 })
 
 const audioStore = usePreviewAudioStore()
+const personalStore = usePersonalStore()
 
 function handleSwitch(key: keyof typeof data.sites) {
   data.sites[key]['need_review'] = !data.sites[key]['need_review']
 }
 
 onMounted(() => {
-  spotifyWrappedAPI
-    .getMe()
-    .then(res => cloudFunctionAPI.getSpaceData(res.id))
-    .then((res): void => {
-      Object.assign(data, res)
-    })
+  if (!personalStore.isTokenValid() || !personalStore.id) {
+    console.error('Token/UserID is invalid', personalStore.id)
+    return
+  }
+
+  cloudFunctionAPI.getSpaceData(personalStore.id).then((res): void => {
+    Object.assign(data, res)
+  })
 })
 </script>
 <template>
