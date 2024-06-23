@@ -1,7 +1,8 @@
 import { https, type Response, type Request, logger } from 'firebase-functions'
-import { AddQueueSchema, Site, addQueueSchema } from './constants'
+import { AddQueueSchema, Site, SpaceClientData, addQueueSchema } from './constants'
 import admin = require('firebase-admin')
 import { checkQueryIsString, createSpotifyInstance, handleOptions } from './utils'
+import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 admin.initializeApp({
   databaseURL: 'https://akijo-space.asia-southeast1.firebasedatabase.app/',
@@ -37,40 +38,45 @@ export const addQueue = https.onRequest((request, response) => {
     if (!snapshot.exists()) {
       logger.warn('space not found', { site, space })
       response.status(404).send('Not Found')
-    }
-  })
+    } else {
+      let queue: AddQueueSchema
+      try {
+        queue = addQueueSchema.parse(request.body)
+      } catch (error) {
+        logger.warn('Invalid request body', { error })
+        response.status(400).send('Bad Request')
+        return
+      }
 
-  let queue: AddQueueSchema
-  try {
-    queue = addQueueSchema.parse(request.body)
-  } catch (error) {
-    logger.warn('Invalid request body', { error })
-    response.status(400).send('Bad Request')
-    return
-  }
+      ref.child('sites').once('value', snapshot => {
+        const siteData = snapshot.val() as Site | null
+        logger.info('Site data', siteData)
+        if (!siteData) {
+          logger.warn('Site not found', { site, space })
+          response.status(404).send('Not Found')
+        } else if (!siteData.need_review) {
+          ref
+            .child('auth')
+            .once('value')
+            .then(snapshot => {
+              const accessToken = snapshot.val() as AccessToken
+              const spotifySDK = createSpotifyInstance(accessToken)
+              logger.log(spotifySDK.users.profile)
 
-  ref.child('sites').once('value', snapshot => {
-    const siteData = snapshot.val() as Site | null
-    logger.info('Site data', siteData)
-    if (!siteData) {
-      logger.warn('Site not found', { site, space })
-      response.status(404).send('Not Found')
-    } else if (!siteData.need_review) {
-      const spotifySDK = createSpotifyInstance()
-      logger.log(spotifySDK.users.profile)
-
-      // ! fixme
-      spotifySDK.player
-        .addItemToPlaybackQueue(queue.uri)
-        .then(() => {
-          response.status(200).send('OK')
-        })
-        .catch(error => {
-          logger.error('Failed to add queue to current user', { error })
-          response.status(500).send('Failed to add queue to current user')
-        })
-    } else if (siteData.need_review) {
-      ref.child('queue').push(queue)
+              spotifySDK.player
+                .addItemToPlaybackQueue(queue.uri)
+                .then(() => {
+                  response.status(200).send('OK')
+                })
+                .catch(error => {
+                  logger.error('Failed to add queue to current user', { error })
+                  response.status(500).send('Failed to add queue to current user')
+                })
+            })
+        } else if (siteData.need_review) {
+          ref.child('queue').push(queue)
+        }
+      })
     }
   })
 })
@@ -79,20 +85,23 @@ export const getCurrentPlaying = https.onRequest((request, response) => {
   checkOrigin(request, response)
   handleOptions(request, response)
 
-  // ! fixme
-  const spotifySDK = createSpotifyInstance()
-  spotifySDK.player
-    .getCurrentlyPlayingTrack()
-    .then(currentPlaying => {
-      response.status(200).send(currentPlaying)
-    })
-    .catch((error: any) => {
-      logger.error('Failed to get current playing track', { error })
-      response.status(500).send('Failed to get current playing track')
-    })
+  if (!checkQueryIsString(response, request.query.space)) return
+
+  db.ref(request.query.space + '/auth').once('value', snapshot => {
+    const spotifySDK = createSpotifyInstance(snapshot.val() as AccessToken)
+    spotifySDK.player
+      .getCurrentlyPlayingTrack()
+      .then(currentPlaying => {
+        response.status(200).send(currentPlaying)
+      })
+      .catch((error: any) => {
+        logger.error('Failed to get current playing track', { error })
+        response.status(500).send('Failed to get current playing track')
+      })
+  })
 })
 
-export const hostLogin = https.onRequest((request, response) => {
+export const hostUpdateAuth = https.onRequest((request, response) => {
   checkOrigin(request, response)
   handleOptions(request, response)
 
@@ -106,6 +115,7 @@ export const hostLogin = https.onRequest((request, response) => {
       logger.warn('space not found', { space })
       response.status(404).send('Space Not Found')
     } else {
+      db.ref(space + '/auth').update(request.body as AccessToken)
     }
   })
 })
@@ -119,12 +129,31 @@ export const getSpaceData = https.onRequest((request, response) => {
   const space = request.query.space
   if (!checkQueryIsString(response, space)) return
 
-  db.ref(space).once('value', snapshot => {
+  db.ref(space + '/data').once('value', snapshot => {
     if (!snapshot.exists()) {
       logger.warn('space not found', { space })
       response.status(404).send('Not Found')
     } else {
-      response.status(200).send(snapshot.val())
+      response.status(200).send(snapshot.val() as SpaceClientData)
+    }
+  })
+})
+
+export const updateSite = https.onRequest((request, response) => {
+  checkOrigin(request, response)
+  handleOptions(request, response)
+
+  const space = request.query.space
+  if (!checkQueryIsString(response, space)) return
+
+  const ref = db.ref(space)
+  ref.once('value', snapshot => {
+    if (!snapshot.exists()) {
+      logger.warn('space not found', { space })
+      response.status(404).send('Not Found')
+    } else {
+      const siteData = request.body
+      ref.child('sites').update(siteData)
     }
   })
 })

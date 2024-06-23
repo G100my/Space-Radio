@@ -34,3 +34,11 @@ export const addQueueSchema = z.object({
 export type AddQueueSchema = z.infer<typeof addQueueSchema>
 
 export const SPOTIFY_SERVER_SCOPE = ['user-modify-playback-state', 'user-read-currently-playing']
+
+export interface SpaceClientData {
+  sites: { [site_id: string]: Site }
+  settings: { all_pass: boolean }
+  queue?: {
+    [hash: string]: AddQueueSchema & { site: string }
+  }
+}
