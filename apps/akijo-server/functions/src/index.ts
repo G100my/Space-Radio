@@ -1,7 +1,7 @@
-import { https, type Response, type Request, logger } from 'firebase-functions'
-import { AddQueueSchema, Site, SpaceClientData, addQueueSchema } from './constants'
+import { https, type Response, logger } from 'firebase-functions'
+import { addQueueSchema, SpaceClientData, AddedQueue } from './constants'
 import admin = require('firebase-admin')
-import { checkQueryIsString, createSpotifyInstance, handleOptions } from './utils'
+import { checkQueryIsString, createSpotifyInstance, isAllowedOrigin, isOptions } from './utils'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 admin.initializeApp({
@@ -14,76 +14,75 @@ const db = admin.database()
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
-const allowedOrigins = ['https://akijo.space', 'http://localhost:2405']
-function checkOrigin(request: Request, response: Response) {
-  const origin = request.get('Origin')!
-  if (allowedOrigins.includes(origin)) {
-    response.set('Access-Control-Allow-Origin', origin)
-  } else {
-    logger.warn('Forbidden origin', { origin })
-    response.status(403).send('Forbidden')
-  }
+function sendQueue(accessToken: AccessToken, queue: AddedQueue, response: Response) {
+  const spotifySDK = createSpotifyInstance(accessToken)
+  logger.log(spotifySDK.users.profile)
+
+  return spotifySDK.player
+    .addItemToPlaybackQueue(queue.uri)
+    .then(() => {
+      response.status(200).send('OK')
+    })
+    .catch(error => {
+      logger.error('Failed to add queue to current user', { error })
+      response.status(500).send('Failed to add queue to current user')
+    })
 }
 
-export const addQueue = https.onRequest((request, response) => {
-  checkOrigin(request, response)
-  handleOptions(request, response)
+const addQueue = https.onRequest((request, response) => {
+  if (!isAllowedOrigin(request, response)) return
+  if (isOptions(request, response)) return
 
   const site = request.query.site
   const space = request.query.space
   if (!checkQueryIsString(response, space)) return
 
-  const ref = db.ref(space)
-  ref.once('value', snapshot => {
-    if (!snapshot.exists()) {
-      logger.warn('space not found', { site, space })
-      response.status(404).send('Not Found')
-    } else {
-      let queue: AddQueueSchema
-      try {
-        queue = addQueueSchema.parse(request.body)
-      } catch (error) {
-        logger.warn('Invalid request body', { error })
-        response.status(400).send('Bad Request')
-        return
+  const queueResult = addQueueSchema.safeParse(request.body)
+  if (!queueResult.success) {
+    logger.warn(request.body, queueResult.error)
+    response.status(400).send('Bad Request')
+    return
+  }
+  const queue = queueResult.data
+
+  const spaceRef = db.ref(space)
+  spaceRef
+    .once('value', spaceSnapshot => {
+      if (!spaceSnapshot.exists()) {
+        logger.warn('space not found', { site, space })
+        response.status(404).send('Not Found')
+        return Promise.reject()
+      } else {
+        return spaceSnapshot
       }
+    })
+    .then(spaceSnapshot => {
+      const allpass = spaceSnapshot.child('data/settings/all_pass').val()
 
-      ref.child('sites').once('value', snapshot => {
-        const siteData = snapshot.val() as Site | null
-        logger.info('Site data', siteData)
-        if (!siteData) {
+      if (allpass) {
+        const auth = spaceSnapshot.child('auth').val()
+        sendQueue(auth, queue, response)
+      } else {
+        const needReview = spaceSnapshot.child(`data/sites/${site}/need_review`)
+        if (!needReview.exists()) {
           logger.warn('Site not found', { site, space })
-          response.status(404).send('Not Found')
-        } else if (!siteData.need_review) {
-          ref
-            .child('auth')
-            .once('value')
-            .then(snapshot => {
-              const accessToken = snapshot.val() as AccessToken
-              const spotifySDK = createSpotifyInstance(accessToken)
-              logger.log(spotifySDK.users.profile)
-
-              spotifySDK.player
-                .addItemToPlaybackQueue(queue.uri)
-                .then(() => {
-                  response.status(200).send('OK')
-                })
-                .catch(error => {
-                  logger.error('Failed to add queue to current user', { error })
-                  response.status(500).send('Failed to add queue to current user')
-                })
-            })
-        } else if (siteData.need_review) {
-          ref.child('queue').push(queue)
+          response.status(404).send('Site Not Found')
         }
-      })
-    }
-  })
+
+        if (needReview.val()) {
+          spaceRef.child('data/queue').push(queue)
+          response.status(200).send('OK')
+        } else {
+          const auth = spaceSnapshot.child('auth').val()
+          sendQueue(auth, queue, response)
+        }
+      }
+    })
 })
 
-export const getCurrentPlaying = https.onRequest((request, response) => {
-  checkOrigin(request, response)
-  handleOptions(request, response)
+const getCurrentPlaying = https.onRequest((request, response) => {
+  if (!isAllowedOrigin(request, response)) return
+  if (isOptions(request, response)) return
 
   if (!checkQueryIsString(response, request.query.space)) return
 
@@ -101,9 +100,9 @@ export const getCurrentPlaying = https.onRequest((request, response) => {
   })
 })
 
-export const hostUpdateAuth = https.onRequest((request, response) => {
-  checkOrigin(request, response)
-  handleOptions(request, response)
+const hostUpdateAuth = https.onRequest((request, response) => {
+  if (!isAllowedOrigin(request, response)) return
+  if (isOptions(request, response)) return
 
   logger.log('Host login', request.body)
 
@@ -120,9 +119,9 @@ export const hostUpdateAuth = https.onRequest((request, response) => {
   })
 })
 
-export const getSpaceData = https.onRequest((request, response) => {
-  checkOrigin(request, response)
-  handleOptions(request, response)
+const getSpaceData = https.onRequest((request, response) => {
+  if (!isAllowedOrigin(request, response)) return
+  if (isOptions(request, response)) return
 
   logger.log('Get space data', request.query)
 
@@ -139,9 +138,9 @@ export const getSpaceData = https.onRequest((request, response) => {
   })
 })
 
-export const updateSite = https.onRequest((request, response) => {
-  checkOrigin(request, response)
-  handleOptions(request, response)
+const updateSite = https.onRequest((request, response) => {
+  if (!isAllowedOrigin(request, response)) return
+  if (isOptions(request, response)) return
 
   const space = request.query.space
   if (!checkQueryIsString(response, space)) return
@@ -157,3 +156,5 @@ export const updateSite = https.onRequest((request, response) => {
     }
   })
 })
+
+export { addQueue, getCurrentPlaying, hostUpdateAuth, getSpaceData, updateSite }
