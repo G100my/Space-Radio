@@ -13,6 +13,8 @@ interface State {
   artistsPaging: Omit<SpotifyApi.PagingObject<any>, 'items'> | null
   artists: SpotifyApi.ArtistObjectFull[] | null
   type: Exclude<Parameters<typeof spotifyWrappedAPI.search>[1][number], 'playlist'>
+
+  currentAlbum: SpotifyApi.AlbumObjectSimplified | null
 }
 export default defineStore('search', {
   state: (): State => ({
@@ -25,6 +27,8 @@ export default defineStore('search', {
     albums: null,
     artistsPaging: null,
     artists: null,
+
+    currentAlbum: null,
   }),
   getters: {
     currentResult: state => {
@@ -94,6 +98,9 @@ export default defineStore('search', {
         }
       }
       return this.currentResult
+    },
+    async stageAlbum(album: SpotifyApi.AlbumObjectSimplified) {
+      this.currentAlbum = album
     },
   },
 })

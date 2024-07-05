@@ -14,7 +14,8 @@
     "@tailwindcss/forms": "^0.5.7"
   },
   "dependencies": {
-    "@spotify/web-api-ts-sdk": "^1.2.0",
+    "@oruga-ui/oruga-next": "^0.8.12",
+    "@oruga-ui/theme-oruga": "^0.3.0",
     "shared": "^1.0.0"
   }
 }

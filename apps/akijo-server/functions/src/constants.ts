@@ -44,3 +44,8 @@ export interface SpaceClientData {
     [hash: string]: AddedQueue & { site: string }
   }
 }
+
+export const settingsSchema = z.object({
+  all_pass: z.boolean(),
+})
+export type SiteSettings = z.infer<typeof settingsSchema>

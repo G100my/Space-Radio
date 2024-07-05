@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
+import useSearchStore from './useSearchStore'
+import type { TrackBaseInfo } from '@/constant'
 
 const limit = 50
 
@@ -15,7 +17,7 @@ export type ListType =
 
 interface State {
   type: ListType | undefined
-  items: SpotifyApi.TrackObjectSimplified[]
+  items: TrackBaseInfo[]
   paging: Omit<SpotifyApi.PagingObject<any>, 'items'> | null
   lists: SpotifyApi.ListOfUsersPlaylistsResponse | null
   long_term: SpotifyApi.UsersTopTracksResponse | null // calculated from several years of data and including all new data as it becomes available
@@ -42,7 +44,7 @@ export default defineStore('tracks', {
     short_term: null,
   }),
   getters: {
-    computedItems(state): SpotifyApi.TrackObjectSimplified[] {
+    computedItems(state): TrackBaseInfo[] {
       switch (state.type) {
         case 'album':
         case 'artist':
@@ -72,8 +74,9 @@ export default defineStore('tracks', {
 
       switch (type) {
         case 'album': {
+          const album = useSearchStore().currentAlbum!
           const { items, ...rest } = await spotifyWrappedAPI.getAlbumTracks(uri!, options)
-          result = { items, paging: rest }
+          result = { items: items.map(i => ({ ...i, album })), paging: rest }
           break
         }
 
@@ -91,7 +94,7 @@ export default defineStore('tracks', {
 
         case 'recently': {
           const { items } = await spotifyWrappedAPI.getMyRecentlyPlayedTracks({ limit: 50 })
-          result = { items: items.map(i => i.track), paging: null }
+          result = { items: items.map(i => i.track as SpotifyApi.TrackObjectFull), paging: null }
           break
         }
 
@@ -114,6 +117,9 @@ export default defineStore('tracks', {
       } else {
         this.$patch({ ...result! })
       }
+    },
+    addTrackToPlaylist({ playlistId, trackUri }: { playlistId: string; trackUri: string }) {
+      return spotifyWrappedAPI.addTracksToPlaylist(playlistId, [trackUri])
     },
   },
 })

@@ -1,5 +1,6 @@
 export * from './utils/PKCE'
 export * from './utils'
+export * from './types'
 
 export { usePersonalStore } from './stores/usePersonalStore'
 

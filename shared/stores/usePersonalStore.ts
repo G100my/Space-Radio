@@ -33,16 +33,20 @@ export const usePersonalStore = defineStore('personal', {
     isTokenValid: state => () => {
       if (!state.auth?.expires_in) return false
       const now = Date.now()
+      console.log('🚀 ~ state.auth:', state.auth)
       return state.auth.expires_in * 1000 + state.timestamp > now
     },
     isPremium: state => state.product === 'premium',
   },
   actions: {
-    updateToken(params: { access_token: string; expires_in: number; refresh_token: string }) {
+    updateToken(params: AccessToken) {
       this.$patch({ auth: params })
       this.timestamp = Date.now()
       localStorage.setItem(storageKeys.auth, JSON.stringify(params))
       localStorage.setItem(storageKeys.timestamp, this.timestamp.toString())
+    },
+    reloadToken(params: AccessToken) {
+      this.$patch({ auth: params })
     },
     updateUserData({ id, display_name, images, product }: SpotifyApi.CurrentUsersProfileResponse) {
       this.$patch({ id, display_name, product })

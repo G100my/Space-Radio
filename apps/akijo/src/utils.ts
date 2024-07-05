@@ -42,3 +42,27 @@ export function analyzeURI(fullUri: string) {
   const [spotify, type, uri] = fullUri.split(':')
   return { type, uri }
 }
+
+function encrypt(text: string) {
+  return btoa(text).toString()
+}
+
+function decrypt(text: string) {
+  return atob(text).toString()
+}
+
+const storageKeys = {
+  site: 'site',
+  space: 'space',
+}
+export function setSpaceSite(params: { site: string; space: string }) {
+  const { site, space } = params
+  localStorage.setItem(storageKeys.site, encrypt(site))
+  localStorage.setItem(storageKeys.space, encrypt(space))
+}
+export function getSpaceSite(): { site: string; space: string } | null {
+  const siteRecord = localStorage.getItem(storageKeys.site)
+  const spaceRecord = localStorage.getItem(storageKeys.space)
+  if (!siteRecord || !spaceRecord) return null
+  return { site: decrypt(siteRecord), space: decrypt(spaceRecord) }
+}

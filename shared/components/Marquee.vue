@@ -39,7 +39,7 @@ const mouseenterHandler = (event: MouseEvent) => {
 }
 
 ._marquee_content {
-  @apply text-0 overflow-hidden overflow-ellipsis whitespace-nowrap;
+  @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
 }
 ._marquee_content:hover ._sentence {
   @apply max-w-none;
@@ -55,6 +55,6 @@ const mouseenterHandler = (event: MouseEvent) => {
   @apply absolute;
 }
 ._sentence {
-  @apply inline-block max-w-full space-x-1 overflow-hidden overflow-ellipsis whitespace-nowrap text-base leading-none;
+  @apply inline-block max-w-full space-x-1 overflow-hidden overflow-ellipsis whitespace-nowrap leading-none text-inherit;
 }
 </style>

@@ -1,6 +1,7 @@
 import { type Response, type Request, logger } from 'firebase-functions'
-import { SPOTIFY_SERVER_SCOPE } from './constants'
 import { AccessToken, SpotifyApi } from '@spotify/web-api-ts-sdk'
+import type { AuthParams } from 'shared/types'
+import type { Database } from 'firebase-admin/database'
 
 export function isOptions(request: Request, response: Response) {
   if (request.method === 'OPTIONS') {
@@ -11,14 +12,61 @@ export function isOptions(request: Request, response: Response) {
     return true
   } else return false
 }
-export function createSpotifyInstance(accessToken: AccessToken) {
-  logger.log(
-    'Create Spotify instance',
-    process.env.SPOTIFY_CLIENT_ID!,
-    process.env.SPOTIFY_CLIENT_SECRET!,
-    SPOTIFY_SERVER_SCOPE
-  )
-  return SpotifyApi.withAccessToken(process.env.SPOTIFY_CLIENT_ID!, accessToken)
+
+export interface CustomAuth extends AccessToken {
+  timestamp: number
+}
+export function isTokenExpired(auth: CustomAuth) {
+  const now = Date.now()
+  const buffer = 60 * 5 * 1000 // 5 minutes
+  const expired = auth.timestamp + auth.expires_in * 1000 - buffer
+  return now > expired
+}
+
+function refreshAccessToken(params: { refresh_token: string } & Pick<AuthParams, 'client_id'>) {
+  let body = 'client_id=' + params.client_id
+  body += '&grant_type=refresh_token'
+  body += '&refresh_token=' + params.refresh_token
+
+  return fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+    body,
+  })
+}
+export function createSpotifyInstance({
+  tokens,
+  updateTokenCallback,
+  response,
+}: {
+  tokens: CustomAuth
+  updateTokenCallback: (auth: AccessToken) => void
+  response: Response
+}) {
+  if (isTokenExpired(tokens)) {
+    return refreshAccessToken({
+      client_id: process.env.SPOTIFY_CLIENT_ID!,
+      refresh_token: tokens.refresh_token,
+    })
+      .then(refreshTokenRes => {
+        if (refreshTokenRes.ok) return refreshTokenRes.json() as Promise<AccessToken>
+        else {
+          logger.log('Failed to refresh token response status:', refreshTokenRes.status)
+          const status = refreshTokenRes.status
+          return refreshTokenRes.json().then(data => {
+            response.status(status).send(data)
+            return Promise.reject(data)
+          })
+        }
+      })
+      .then(res => {
+        logger.log('Refreshed token', tokens)
+        updateTokenCallback(res)
+        return SpotifyApi.withAccessToken(process.env.SPOTIFY_CLIENT_ID!, res)
+      })
+  } else {
+    return Promise.resolve(SpotifyApi.withAccessToken(process.env.SPOTIFY_CLIENT_ID!, tokens))
+  }
 }
 export function checkQueryIsString(response: Response, query: Request['query'][string]): query is string {
   if (!query || typeof query !== 'string') {
@@ -29,7 +77,7 @@ export function checkQueryIsString(response: Response, query: Request['query'][s
   return true
 }
 
-const allowedOrigins = ['https://akijo.space', 'http://localhost:2405']
+const allowedOrigins = ['https://akijo.space', 'http://localhost:2405', 'http://localhost:2407']
 export function isAllowedOrigin(request: Request, response: Response) {
   const origin = request.get('Origin')!
   if (allowedOrigins.includes(origin)) {
@@ -40,4 +88,9 @@ export function isAllowedOrigin(request: Request, response: Response) {
     response.status(403).send('Forbidden')
     return false
   }
+}
+
+export function updateAuthCallback(space: string, auth: AccessToken, db: Database) {
+  const timestamp = new Date().getTime()
+  db.ref(space + '/auth').update({ ...auth, timestamp })
 }

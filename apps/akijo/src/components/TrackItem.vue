@@ -1,28 +1,46 @@
 <script setup lang="ts">
 import type { TrackBaseInfo } from '@/constant'
+import type { AddedQueue } from 'functions/src/constants'
 import { Marquee, spotifyCoverPicker } from 'shared'
 
 defineProps<{
-  data: TrackBaseInfo
+  data: TrackBaseInfo | AddedQueue
 }>()
+
+defineEmits<{
+  (e: 'play'): void
+}>()
+
+function handleOpenLink(event: MouseEvent | TouchEvent) {
+  const target = event.currentTarget as HTMLSpanElement
+  window.open(target.getAttribute('data-href')!, '_blank')
+}
 </script>
 <template>
-  <div class="flex gap-3">
-    <img class="_cover" :src="spotifyCoverPicker(data.album.images)" :alt="data.name" />
-    <div class="flex-1 overflow-hidden">
+  <div class="flex items-center gap-3">
+    <img
+      class="_cover"
+      :src="spotifyCoverPicker(data.album?.images)"
+      :alt="data.name"
+      @click="data.preview_url && $emit('play')"
+    />
+    <div class="flex-1 cursor-pointer overflow-hidden">
       <Marquee class="text-white">
         <span>{{ data.name }}</span>
       </Marquee>
       <Marquee class="text-white">
-        <a
+        <span
           v-for="artist in data.artists"
           :key="artist.name"
-          :href="artist.external_urls.spotify"
-          target="_blank"
+          :data-href="artist.external_urls.spotify"
           @click.stop
-          >{{ artist.name }}</a
+          @dblclick="handleOpenLink"
+          >{{ artist.name }}</span
         >
-        - <a :href="data.album.external_urls.spotify" target="_blank" @click.stop>{{ data.album.name }}</a>
+        -
+        <span :data-href="data.album?.external_urls.spotify" target="_blank" @click.stop @dblclick="handleOpenLink">{{
+          data.album?.name
+        }}</span>
       </Marquee>
     </div>
   </div>

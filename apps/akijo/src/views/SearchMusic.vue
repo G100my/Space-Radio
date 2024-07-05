@@ -5,12 +5,17 @@ import { usePreviewAudioStore, useSearchStore } from '@/stores'
 import TrackItem from '@/components/TrackItem.vue'
 import AlbumItem from '@/components/AlbumItem.vue'
 import ArtistItem from '@/components/ArtistItem.vue'
+import { getSpaceSite } from '@/utils'
+import { clientApi } from '@/api/cloudFunctionAPI'
+import { addQueueSchema, type AddedQueue } from 'functions/src/constants'
+import { routeMap } from '@/constant'
+import { useRouter } from 'vue-router'
 
 const audioStore = usePreviewAudioStore()
 const searchStore = useSearchStore()
 const innerQuery = ref('')
 
-const { isLoading } = useInfinityScroll({
+useInfinityScroll({
   containerID: 'search_result_container',
   nextCondition: computed(() => !!searchStore.currentResult?.paging?.next),
   fetchCallback: searchStore.fetchNext,
@@ -21,9 +26,23 @@ function handleSearch() {
   searchStore.search()
 }
 
-function handleAdd() {
-  // !
-  console.log('!!')
+function handleAdd(track: AddedQueue) {
+  const spaceSite = getSpaceSite()
+  if (spaceSite) {
+    const value = addQueueSchema.parse(track)
+    clientApi.addQueue(spaceSite, value)
+  } else {
+    console.info('No spaceSite')
+  }
+}
+
+const router = useRouter()
+function handleGoToAlbumTracks(album: SpotifyApi.AlbumObjectFull) {
+  searchStore.stageAlbum(album)
+  router.push({ name: routeMap.Tracks, params: { uri: album.id, type: 'album' } })
+}
+function handleGoToArtistTracks(artist: SpotifyApi.ArtistObjectFull) {
+  router.push({ name: routeMap.Tracks, params: { uri: artist.id, type: 'artist' } })
 }
 </script>
 <template>
@@ -40,7 +59,7 @@ function handleAdd() {
 
     <div class="flex w-full items-center justify-center gap-4 text-sm">
       <BaseRadio name="searchType" v-model="searchStore.type" value="track" label="Track" />
-      <BaseRadio name="searchType" v-model="searchStore.type" value="artist" label="Artist" />
+      <BaseRadio name="searchType" v-model="searchStore.type" value="artist" label="Artist(Top 10)" />
       <BaseRadio name="searchType" v-model="searchStore.type" value="album" label="Album" />
     </div>
 
@@ -55,23 +74,26 @@ function handleAdd() {
             v-if="searchStore.type === 'track'"
             :data="i as SpotifyApi.TrackObjectFull"
             class="w-full overflow-hidden"
+            @play="audioStore.toggle(i as SpotifyApi.TrackObjectFull)"
           />
           <AlbumItem
             v-else-if="searchStore.type === 'album'"
             :data="i as SpotifyApi.AlbumObjectFull"
             class="w-full overflow-hidden"
+            @click="handleGoToAlbumTracks(i as SpotifyApi.AlbumObjectFull)"
           />
           <ArtistItem
             v-else-if="searchStore.type === 'artist'"
             :data="i as SpotifyApi.ArtistObjectFull"
             class="w-full overflow-hidden"
+            @click="handleGoToArtistTracks(i as SpotifyApi.ArtistObjectFull)"
           />
-          <div class="space-x-1 whitespace-nowrap">
-            <button v-if="i.type === 'track' && i.preview_url" type="button" @click="audioStore.toggle(i)">
+          <div v-if="i.type === 'track'" class="space-x-1 whitespace-nowrap">
+            <button v-if="i.preview_url" type="button" @click="audioStore.toggle(i)">
               <IconWrapper v-if="audioStore.currentPlaying === i.uri" name="stop-large-line" class="text-2xl" />
               <IconWrapper v-else name="play-large-line" class="text-2xl" />
             </button>
-            <button type="button" @click="handleAdd">
+            <button type="button" @click="handleAdd(i)">
               <IconWrapper name="add-line" class="text-2xl" />
             </button>
           </div>

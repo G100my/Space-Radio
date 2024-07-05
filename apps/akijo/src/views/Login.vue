@@ -1,10 +1,24 @@
 <script setup lang="ts">
 import { PKCE } from 'shared'
-import { generateAuthParams } from '@/api/spotifyWrappedAPI'
+import { generateAuthParams } from 'shared'
 import { routeMap } from '@/constant'
+import ImageLogo from '@/assets/logo.svg'
+import { usePersonalStore } from '@/stores'
+
+const personalStore = usePersonalStore()
 </script>
 <template>
   <section class="px-10">
+    <header class="mb-8 pt-10">
+      <h1
+        class="mx-auto space-x-4 text-center text-3xl"
+        @click="personalStore.clear(), $router.push({ name: routeMap.Login })"
+      >
+        <span class="sr-only">Akijo</span>
+        <ImageLogo class="inline-block w-1/3" />
+        <span>點播電台</span>
+      </h1>
+    </header>
     <div>
       <p class="text-2xl">注意事項：</p>
       <ol class="mt-6 list-decimal pl-5">
@@ -21,11 +35,10 @@ import { routeMap } from '@/constant'
       <button
         type="button"
         class="text-natural-white bg-system-success1 w-full rounded-full py-3 text-center text-4xl"
-        @click="PKCE(generateAuthParams(routeMap.C_playing))"
+        @click="PKCE(generateAuthParams(routeMap.Search))"
       >
         登入 Spotify
       </button>
     </div>
   </section>
 </template>
-@/index

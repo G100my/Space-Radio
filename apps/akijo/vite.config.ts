@@ -14,20 +14,4 @@ export default defineConfig({
   server: {
     port: 2405,
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'host-script': ['./src/host/index.vue'],
-          'customer-script': [
-            './src/views/customer/index.vue',
-            './src/views/customer/SearchMusic.vue',
-            './src/views/customer/NowPlaying.vue',
-            './src/views/customer/MyPlaylist.vue',
-            './src/views/customer/Collects.vue',
-          ],
-        },
-      },
-    },
-  },
 })

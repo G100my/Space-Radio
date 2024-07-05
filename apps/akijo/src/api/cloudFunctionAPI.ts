@@ -1,12 +1,12 @@
-import type { AddQueueSchema, SpaceClientData } from 'functions/src/constants'
-import type { AccessToken } from '@spotify/web-api-ts-sdk'
+import type { AddedQueue } from 'functions/src/constants'
+import type { PlaybackStateOnlyTrack } from 'shared'
 
 function addQueue(
   query: {
     site: string
-    place: string
+    space: string
   },
-  body: AddQueueSchema
+  body: AddedQueue
 ) {
   const url = new URL(import.meta.env.VITE_AKIJO_SERVER_URL + '/addQueue')
   url.search = new URLSearchParams(query).toString()
@@ -20,26 +20,29 @@ function addQueue(
   })
 }
 
-function getSpaceData(spotifyUserID: string) {
-  const url = new URL(import.meta.env.VITE_AKIJO_SERVER_URL + '/getSpaceData')
-  url.search = new URLSearchParams({ space: spotifyUserID }).toString()
-  console.log('🚀 ~ getSpaceData ~ url.search:', url.search)
+function getCurrentPlaying(
+  space: string
+): Promise<(PlaybackStateOnlyTrack & { spaceName: string }) | null | undefined> {
+  const url = new URL(import.meta.env.VITE_AKIJO_SERVER_URL + '/getCurrentPlaying')
+  url.search = new URLSearchParams({ space }).toString()
 
-  return fetch(url, {
-    method: 'GET',
-  }).then(async res => (await res.json()) as SpaceClientData)
-}
-
-function updateHostAuth(spotifyUserID: string, auth: AccessToken) {
-  const url = new URL(import.meta.env.VITE_AKIJO_SERVER_URL + '/hostUpdateAuth')
-  url.searchParams.set('space', spotifyUserID)
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(auth),
+  return fetch(url).then(response => {
+    console.info(response)
+    if (response.ok) {
+      if (response.status === 200) {
+        console.info(response)
+        return response.json()
+      } else if (response.status === 204) {
+        return Promise.resolve(undefined)
+      } else {
+        response.text().then(console.error)
+        return null
+      }
+    } else return Promise.reject(response)
   })
 }
 
-export default { addQueue, getSpaceData, updateHostAuth }
+export const clientApi = {
+  addQueue,
+  getCurrentPlaying,
+}

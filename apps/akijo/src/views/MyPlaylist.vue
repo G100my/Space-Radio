@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import PlaylistItem from '@/components/PlaylistItem.vue'
-import { routeMap } from '@/router'
-import { useTrackStore } from '@/stores'
+import { routeMap } from '@/constant'
+import { usePlaylistStore } from '@/stores'
 import { analyzeURI } from '@/utils'
 import CoverPlaceholder from 'shared/assets/vinyl-record.png'
 import { h, type FunctionalComponent } from 'vue'
 
-const playlistStore = useTrackStore()
+const playlistStore = usePlaylistStore()
 playlistStore.getLists()
 
 const SpecialListItem: FunctionalComponent = (props, { slots }) => {
@@ -32,17 +32,17 @@ const SpecialListItem: FunctionalComponent = (props, { slots }) => {
 <template>
   <section>
     <ul class="grid grid-cols-2 gap-4 px-5 pb-10">
-      <SpecialListItem @click="$router.push({ name: routeMap.C_tracks, params: { type: 'liked' } })">
+      <SpecialListItem @click="$router.push({ name: routeMap.Tracks, params: { type: 'liked' } })">
         <p class="whitespace-break-spaces text-center text-3xl">Liked Tracks</p>
       </SpecialListItem>
-      <SpecialListItem @click="$router.push({ name: routeMap.C_tracks, params: { type: 'recently' } })">
+      <SpecialListItem @click="$router.push({ name: routeMap.Tracks, params: { type: 'recently' } })">
         <p class="whitespace-break-spaces text-center text-3xl">Recently Played</p>
       </SpecialListItem>
-      <SpecialListItem @click="$router.push({ name: routeMap.C_tracks, params: { type: 'medium_term' } })">
+      <SpecialListItem @click="$router.push({ name: routeMap.Tracks, params: { type: 'medium_term' } })">
         <p class="whitespace-break-spaces text-center text-xl">Top Played</p>
         <p class="whitespace-break-spaces text-center text-2xl">Last 6 Months</p>
       </SpecialListItem>
-      <SpecialListItem @click="$router.push({ name: routeMap.C_tracks, params: { type: 'long_term' } })">
+      <SpecialListItem @click="$router.push({ name: routeMap.Tracks, params: { type: 'long_term' } })">
         <p class="whitespace-break-spaces text-center text-xl">Top Played</p>
         <p class="whitespace-break-spaces text-center text-3xl">All Time</p>
       </SpecialListItem>
@@ -54,7 +54,7 @@ const SpecialListItem: FunctionalComponent = (props, { slots }) => {
           :name="i.name"
           :images="i.images"
           class="h-full w-full cursor-pointer"
-          @click="$router.push({ name: routeMap.C_tracks, params: analyzeURI(i.uri) })"
+          @click="$router.push({ name: routeMap.Tracks, params: analyzeURI(i.uri) })"
         />
       </li>
     </ul>
