@@ -1,10 +1,10 @@
 export * from './utils/PKCE'
 export * from './utils'
 export * from './types'
+export * from './plugins/useGlobalComponent'
+export { generateWrappedSpotifyApi } from './plugins/generateWrappedSpotifyApi'
 
 export { usePersonalStore } from './stores/usePersonalStore'
-
-export { generateWrappedSpotifyApi } from './plugins/generateWrappedSpotifyApi'
 
 export { useInfinityScroll } from './composables/useInfinityScroll'
 
