@@ -96,10 +96,27 @@ export function useSnackbar(
 
 // ---
 
-function createVM({
-  loading,
-  snackbar,
-}: {
+const showAlert = ref(false)
+let currentAlertComponent: Component
+function DefaultSimpleAlert(props: { message: string }) {
+  return h('div', { class: 'bg-white p-4 rounded max-w-xs flex items-center w-full' }, props.message)
+}
+export function useAlert(content: string): { open: () => void; close: () => void }
+export function useAlert(content: Component): { open: () => void; close: () => void }
+export function useAlert(content: Component | string): { open: () => void; close: () => void } {
+  currentAlertComponent = typeof content === 'string' ? DefaultSimpleAlert({ message: content }) : content
+  return {
+    open: () => {
+      showAlert.value = true
+    },
+    close: () => {
+      showAlert.value = false
+    },
+  }
+}
+// ---
+
+interface ComponentType {
   loading?: true | Component
   snackbar?:
     | true
@@ -107,7 +124,9 @@ function createVM({
         component: Component<DefaultSnackbarProps>
         levelStyleMap?: { [key in LevelType]: string }
       }
-}) {
+  alert?: true
+}
+function createVM({ loading, snackbar, alert }: ComponentType) {
   if (vm) return
   const rootElement = document.createElement('div')
   rootElement.id = rootElementID
@@ -120,28 +139,11 @@ function createVM({
       return {
         showLoading,
         snackbarStack,
+        showModal: showAlert,
       }
     },
     render() {
       const components = []
-      if (loading) {
-        typeof loading === 'boolean'
-          ? (currentLoadingComponent = generateDefaultLoadingComponent)
-          : (currentLoadingComponent = loading)
-        console.log('🚀 ~ render ~ currentLoadingComponent:', currentLoadingComponent)
-        components.push(
-          h(
-            Transition,
-            {
-              enterActiveClass: 'transition-opacity duration-150',
-              leaveActiveClass: 'transition-opacity duration-150',
-              enterFromClass: 'opacity-0',
-              leaveToClass: 'opacity-0',
-            },
-            () => (this.showLoading ? h(currentLoadingComponent, { key: 'LoadingContent' }) : undefined)
-          )
-        )
-      }
       if (snackbar) {
         if (typeof snackbar === 'boolean') {
           currentSnackbar = DefaultSnackbarFuncionalComponent
@@ -167,6 +169,41 @@ function createVM({
           )
         )
       }
+      if (loading || alert) {
+        if (loading) {
+          if (typeof loading === 'boolean') {
+            currentLoadingComponent = generateDefaultLoadingComponent
+          } else {
+            currentLoadingComponent = loading
+          }
+        }
+
+        components.push(
+          h(
+            Transition,
+            {
+              enterActiveClass: 'transition-opacity duration-150',
+              leaveActiveClass: 'transition-opacity duration-150',
+              enterFromClass: 'opacity-0',
+              leaveToClass: 'opacity-0',
+            },
+            () => [
+              this.showModal
+                ? h(
+                    'div',
+                    {
+                      class: 'fixed inset-0 bg-slate-900/20 flex items-center justify-center',
+                      onClick: () => (showAlert.value = false),
+                    },
+                    h(currentAlertComponent, { key: 'ModalContent' })
+                  )
+                : undefined,
+              this.showLoading ? h(currentLoadingComponent, { key: 'LoadingContent' }) : undefined,
+            ]
+          )
+        )
+      }
+
       return components
     },
   })
@@ -182,7 +219,9 @@ export const GlobalComponentPlugin: Plugin = {
 
 if (import.meta.env.DEV) {
   // @ts-ignore
-  window.useloading = useLoading
+  window.useLoading = useLoading
   // @ts-ignore
-  window.usesnackbar = useSnackbar
+  window.useSnackbar = useSnackbar
+  // @ts-ignore
+  window.useModal = useAlert
 }
