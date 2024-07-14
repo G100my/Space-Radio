@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
 import useSearchStore from './useSearchStore'
 import type { TrackBaseInfo } from '@/constant'
+import { useSnackbar } from 'shared'
 
 const limit = 50
 
@@ -119,7 +120,14 @@ export default defineStore('tracks', {
       }
     },
     addTrackToPlaylist({ playlistId, trackUri }: { playlistId: string; trackUri: string }) {
-      return spotifyWrappedAPI.addTracksToPlaylist(playlistId, [trackUri])
+      spotifyWrappedAPI
+        .addTracksToPlaylist(playlistId, [trackUri])
+        .then(() => {
+          useSnackbar('Track added to playlist', 'success')
+        })
+        .catch(() => {
+          useSnackbar('Failed to add track to playlist', 'danger')
+        })
     },
   },
 })

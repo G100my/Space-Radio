@@ -30,6 +30,8 @@ import sticker28 from '@/assets/sticker/28.svg'
 import sticker29 from '@/assets/sticker/29.svg'
 import sticker30 from '@/assets/sticker/30.svg'
 import sticker31 from '@/assets/sticker/31.svg'
+import { clientApi } from './api/cloudFunctionAPI'
+import { useAlert, useSnackbar } from 'shared'
 
 // return sticker 1-31
 export function randomSticker(): string {
@@ -65,4 +67,25 @@ export function getSpaceSite(): { site: string; space: string } | null {
   const spaceRecord = localStorage.getItem(storageKeys.space)
   if (!siteRecord || !spaceRecord) return null
   return { site: decrypt(siteRecord), space: decrypt(spaceRecord) }
+}
+
+const lastAddTimestampKey = 'ewfew3refebr45hg'
+const limitTime = 30 * 1000
+
+export function addQueue(...p: Parameters<typeof clientApi.addQueue>) {
+  const record = localStorage.getItem(lastAddTimestampKey)
+  const timestamp = record ? parseInt(record) : NaN
+  if (isNaN(timestamp) || Date.now() - timestamp > limitTime) {
+    localStorage.setItem(lastAddTimestampKey, Date.now().toString())
+    clientApi
+      .addQueue(...p)
+      .then(() => {
+        useSnackbar('已加入播放佇列中囉～\n要排隊，請稍等一下。', 'success')
+      })
+      .catch(() => {
+        useSnackbar('加入播放佇列失敗，請稍後再試。', 'danger')
+      })
+  } else {
+    useAlert('欸...經費有限...不要這麼急著點嘛～').open()
+  }
 }

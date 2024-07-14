@@ -116,7 +116,7 @@ const getCurrentPlaying = https.onRequest((request, response) => {
         console.log('🚀 ~ db.ref ~ currentPlaying:', currentPlaying)
         if (currentPlaying) {
           db.ref(space + '/data/settings/name').once('value', snapshot => {
-            response.status(200).send({ currentPlaying, spaceName: snapshot.val() })
+            response.status(200).send({ ...currentPlaying, spaceName: snapshot.val() })
           })
         } else {
           response.status(204).send()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import placeholderImg from 'shared/assets/vinyl-record.png'
-import { IconWrapper, spotifyCoverPicker } from 'shared'
+import { IconWrapper, spotifyCoverPicker, useAlert } from 'shared'
 import { onMounted, ref } from 'vue'
 import Marquee from 'shared/components/Marquee.vue'
 import { getSpaceSite } from '@/utils'
@@ -33,6 +33,14 @@ function amILikeThisTrack() {
 }
 function refresh() {
   getNowPlayingTrack().then(() => amILikeThisTrack())
+}
+const { open } = useAlert('已經是最新的歌曲資料囉！')
+function handleClickRefresh() {
+  if (playbackStore.judgeDisableGetCurrentPlaying()) {
+    open()
+    return
+  }
+  refresh()
 }
 
 onMounted(() => {
@@ -149,7 +157,7 @@ function handleShare() {
       <button
         class="text-natural-white bg-system-success1 w-2/3 rounded-full py-3 text-center text-2xl"
         type="button"
-        @click="refresh"
+        @click="handleClickRefresh"
       >
         Refresh
       </button>

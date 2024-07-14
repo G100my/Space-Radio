@@ -10,10 +10,23 @@ export default defineStore('playback', {
     current: null,
   }),
   actions: {
+    judgeDisableGetCurrentPlaying() {
+      const disableGetCurrentPlaying = !this.current
+        ? false
+        : this.current.timestamp - this.current.progress_ms + this.current.item.duration_ms > Date.now()
+
+      return disableGetCurrentPlaying
+    },
     getCurrentPlaying(space: string) {
+      if (this.judgeDisableGetCurrentPlaying()) {
+        return Promise.reject('getCurrentPlaying is disabled.')
+      }
+
       return clientApi
         .getCurrentPlaying(space)
-        .then(res => (this.current = res))
+        .then(res => {
+          this.current = res
+        })
         .catch((error: Response) => {
           console.table(error)
           if (error.status === 400) {

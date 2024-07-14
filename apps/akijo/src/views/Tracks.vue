@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { clientApi } from '@/api/cloudFunctionAPI'
 import TrackItem from '@/components/TrackItem.vue'
 import { usePlaylistStore, usePreviewAudioStore } from '@/stores'
 import type { ListType } from '@/stores'
-import { getSpaceSite } from '@/utils'
+import { addQueue, getSpaceSite } from '@/utils'
 import type { AddedQueue } from 'functions/src/constants'
 import { IconWrapper, useInfinityScroll } from 'shared'
 import { computed } from 'vue'
@@ -19,7 +18,7 @@ const playlistStore = usePlaylistStore()
 function handleAdd(track: AddedQueue) {
   const spaceSite = getSpaceSite()
   if (spaceSite) {
-    clientApi.addQueue(spaceSite, track)
+    addQueue(spaceSite, track)
   } else {
     console.info('No spaceSite')
   }

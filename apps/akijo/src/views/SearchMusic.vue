@@ -5,8 +5,7 @@ import { usePreviewAudioStore, useSearchStore } from '@/stores'
 import TrackItem from '@/components/TrackItem.vue'
 import AlbumItem from '@/components/AlbumItem.vue'
 import ArtistItem from '@/components/ArtistItem.vue'
-import { getSpaceSite } from '@/utils'
-import { clientApi } from '@/api/cloudFunctionAPI'
+import { addQueue, getSpaceSite } from '@/utils'
 import { addQueueSchema, type AddedQueue } from 'functions/src/constants'
 import { routeMap } from '@/constant'
 import { useRouter } from 'vue-router'
@@ -30,7 +29,7 @@ function handleAdd(track: AddedQueue) {
   const spaceSite = getSpaceSite()
   if (spaceSite) {
     const value = addQueueSchema.parse(track)
-    clientApi.addQueue(spaceSite, value)
+    addQueue(spaceSite, value)
   } else {
     console.info('No spaceSite')
   }
