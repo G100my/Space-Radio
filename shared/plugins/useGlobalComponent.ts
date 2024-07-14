@@ -47,8 +47,8 @@ type LevelType = 'success' | 'danger'
 const snackbarStack = reactive<VNode[]>([])
 let currentLevelStyleMap: { [key in LevelType]: string }
 const defaultLevelStyleMap: { [key in LevelType]: string } = {
-  danger: 'bg-system-error1',
-  success: 'bg-secondary',
+  danger: 'bg-system-error1 text-white',
+  success: 'bg-secondary text-black',
 }
 
 let currentSnackbar: VNode | Component | ReturnType<typeof defineComponent>
@@ -60,10 +60,12 @@ function DefaultSnackbarFuncionalComponent(props: DefaultSnackbarProps) {
   return h(
     'div',
     {
-      class:
-        'w-full sm:w-fit mx-auto min-h-[40px] max-w-[90vw] container rounded px-2 sm:px-4 py-2.5 text-center text-white flex gap-x-4 items-center',
+      class: 'w-full mx-auto min-h-[40px] max-w-[90vw] container rounded pl-6 py-2.5 flex gap-x-4 items-center',
     },
-    [props.message, h('button', { onClick: props.onClear }, [h(CloseIcon)])]
+    [
+      h('p', { class: 'flex-1 whitespace-pre' }, props.message),
+      h('button', { class: 'w-10', onClick: props.onClear }, [h(CloseIcon, { class: 'w-8' })]),
+    ]
   )
 }
 
@@ -73,25 +75,25 @@ export function useSnackbar(
   options?: { onClick?: (...arg: any) => any; duration?: number }
 ) {
   const clear = setTimeout(() => {
-    if (typeof currentIndex === 'number') {
-      snackbarStack.splice(currentIndex, 1)
-      console.log('clear')
-    }
-  }, options?.duration ?? 5000)
+    vnode.props!.onClear()
+  }, options?.duration ?? 8000)
 
-  const currentIndex =
-    snackbarStack.push(
-      h(currentSnackbar, {
-        key: Date.now(),
-        class: currentLevelStyleMap[type],
-        message,
-        onClick: options?.onClick,
-        onClear: () => {
-          clearTimeout(clear)
-          snackbarStack.splice(currentIndex, 1)
-        },
-      })
-    ) - 1
+  const id = Date.now()
+
+  const vnode = h(currentSnackbar, {
+    id,
+    key: id,
+    class: currentLevelStyleMap[type],
+    message,
+    onClick: options?.onClick,
+    onClear: () => {
+      clearTimeout(clear)
+      const index = snackbarStack.findIndex(i => i.key === id)
+      snackbarStack.splice(index, 1)
+    },
+  })
+
+  snackbarStack.push(vnode)
 }
 
 // ---
