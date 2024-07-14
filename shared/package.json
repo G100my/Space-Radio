@@ -8,5 +8,8 @@
   },
   "dependencies": {
     "spotify-web-api-js": "^1.5.2"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.31"
   }
 }
