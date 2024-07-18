@@ -1,4 +1,4 @@
-# `akijo-server`
+# `jukebox-server`
 
 ## Firebase
 

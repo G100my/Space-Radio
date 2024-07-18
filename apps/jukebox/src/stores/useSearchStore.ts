@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
 
-const localStorageKey = 'akijo-search'
+const localStorageKey = 'jukebox-search'
 
 interface State {
   query: string

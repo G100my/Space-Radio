@@ -8,7 +8,7 @@ function addQueue(
   },
   body: AddedQueue
 ) {
-  const url = new URL(import.meta.env.VITE_AKIJO_SERVER_URL + '/addQueue')
+  const url = new URL(import.meta.env.VITE_JUKEBOX_SERVER_URL + '/addQueue')
   url.search = new URLSearchParams(query).toString()
 
   return fetch(url, {
@@ -23,7 +23,7 @@ function addQueue(
 function getCurrentPlaying(
   space: string
 ): Promise<(PlaybackStateOnlyTrack & { spaceName: string }) | null | undefined> {
-  const url = new URL(import.meta.env.VITE_AKIJO_SERVER_URL + '/getCurrentPlaying')
+  const url = new URL(import.meta.env.VITE_JUKEBOX_SERVER_URL + '/getCurrentPlaying')
   url.search = new URLSearchParams({ space }).toString()
 
   return fetch(url).then(response => {
