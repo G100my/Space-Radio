@@ -1,6 +1,28 @@
 {
-  "hosting": {
-    "public": "dist",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  "hosting": [
+    {
+      "target": "Space-radio",
+      "public": "apps/space-radio/dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "jukebox",
+      "public": "apps/jukebox/dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ],
+  "emulators": {
+    "hosting": {
+      "port": 5000,
+      "host": "localhost"
+    }
   }
 }
