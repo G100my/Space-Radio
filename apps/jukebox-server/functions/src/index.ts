@@ -1,5 +1,5 @@
 import { https, type Response, logger } from 'firebase-functions'
-import { addQueueSchema, AddedQueue, settingsSchema } from './constants'
+import { addQueueSchema, AddedQueue, settingsSchema } from 'shared/schemas'
 import admin = require('firebase-admin')
 import { checkQueryIsString, createSpotifyInstance, isAllowedOrigin, isOptions, updateAuthCallback } from './utils'
 import { AccessToken, SpotifyApi } from '@spotify/web-api-ts-sdk'

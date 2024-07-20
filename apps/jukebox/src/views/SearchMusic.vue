@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { IconWrapper, BaseRadio, useInfinityScroll } from 'shared'
+import { addQueueSchema, type AddedQueue } from 'shared/schemas'
 import { computed, ref } from 'vue'
 import { usePreviewAudioStore, useSearchStore } from '@/stores'
 import TrackItem from '@/components/TrackItem.vue'
 import AlbumItem from '@/components/AlbumItem.vue'
 import ArtistItem from '@/components/ArtistItem.vue'
 import { addQueue, getSpaceSite } from '@/utils'
-import { addQueueSchema, type AddedQueue } from 'functions/src/constants'
 import { routeMap } from '@/constant'
 import { useRouter } from 'vue-router'
 

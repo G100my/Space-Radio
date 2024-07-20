@@ -1,10 +1,5 @@
 import { z } from 'zod'
 
-export interface Site {
-  need_review: boolean
-  name: string
-}
-
 export const addQueueSchema = z.object({
   name: z.string(),
   uri: z.string(),
@@ -33,10 +28,11 @@ export const addQueueSchema = z.object({
     })
   ),
 })
+export interface Site {
+  need_review: boolean
+  name: string
+}
 export type AddedQueue = z.infer<typeof addQueueSchema>
-
-export const SPOTIFY_SERVER_SCOPE = ['user-modify-playback-state', 'user-read-currently-playing']
-
 export interface SpaceClientData {
   sites: { [site_id: string]: Site }
   settings: { all_pass: boolean }
@@ -44,6 +40,8 @@ export interface SpaceClientData {
     [hash: string]: AddedQueue & { site: string }
   }
 }
+
+export const SPOTIFY_SERVER_SCOPE = ['user-modify-playback-state', 'user-read-currently-playing']
 
 export const settingsSchema = z.object({
   all_pass: z.boolean(),

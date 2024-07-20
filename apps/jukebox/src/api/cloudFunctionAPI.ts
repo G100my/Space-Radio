@@ -1,4 +1,4 @@
-import type { AddedQueue } from 'functions/src/constants'
+import type { AddedQueue } from 'shared/schemas'
 import type { PlaybackStateOnlyTrack } from 'shared'
 
 function addQueue(
