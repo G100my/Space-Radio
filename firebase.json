@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "target": "Space-radio",
+      "target": "space-radio",
       "public": "apps/space-radio/dist",
       "ignore": [
         "firebase.json",
@@ -12,6 +12,15 @@
     {
       "target": "jukebox",
       "public": "apps/jukebox/dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "jukebox-host",
+      "public": "apps/jukebox-host/dist",
       "ignore": [
         "firebase.json",
         "**/.*",

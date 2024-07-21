@@ -6,7 +6,10 @@
     "jukebox-g100": {
       "hosting": {
         "jukebox": [
-          "jukebox-g100-ef6eb"
+          "jukebox-customer"
+        ],
+        "jukebox-host": [
+          "jukebox-host"
         ]
       }
     }
