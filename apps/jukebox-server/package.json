@@ -1,5 +1,5 @@
 {
-  "name": "functions",
+  "name": "jukebox-server",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
