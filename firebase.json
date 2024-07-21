@@ -49,7 +49,7 @@
   "functions": [
     {
       "region": "asia-east1",
-      "source": "functions",
+      "source": "apps/server",
       "codebase": "default",
       "ignore": [
         "node_modules",
@@ -59,7 +59,7 @@
         "*.local"
       ],
       "predeploy": [
-        "npm run build -w functions"
+        "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
   ]
