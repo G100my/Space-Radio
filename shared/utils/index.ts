@@ -10,9 +10,10 @@ export function spotifyCoverPicker(imagesUrl: ImageObj[] | null | undefined): st
 }
 
 export function generateAuthParams(redirectPath: string): AuthParams {
+  const url = import.meta.env.VITE_BASE_URI as string
   return {
     client_id: import.meta.env.VITE_CLIENT_ID,
-    redirect_uri: import.meta.env.VITE_BASE_URI + redirectPath,
+    redirect_uri: url.endsWith('/') ? url + redirectPath : url + '/' + redirectPath,
   }
 }
 export function handleAuthFromRoute(
