@@ -6,11 +6,11 @@
 
 ```
 # `npm run build` then ...
-firebase deply --only functions
-firebase deply --only hosting
-firebase deply --only hosting:jukebox
-firebase deply --only hosting:jukebox-host
-firebase deply --only hosting:space-radio
+firebase deploy --only functions
+firebase deploy --only hosting
+firebase deploy --only hosting:jukebox
+firebase deploy --only hosting:jukebox-host
+firebase deploy --only hosting:space-radio
 ```
 
 ---
