@@ -1,5 +1,5 @@
-import { https, type Response, logger } from 'firebase-functions'
-import { addQueueSchema, AddedQueue, settingsSchema } from 'shared/schemas'
+import { type Response, logger, region } from 'firebase-functions'
+import { addQueueSchema, AddedQueue, settingsSchema } from './schemas'
 import admin = require('firebase-admin')
 import {
   checkQueryIsString,
@@ -40,7 +40,7 @@ async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, response: Re
  * @param queue body
  * @returns status 200 if success, status 400 if bad request, status 404 if site or space not found, status 500 if failed to add queue to current user
  */
-const addQueue = https.onRequest((request, response) => {
+const addQueue = region('asia-east1').https.onRequest((request, response) => {
   if (!isClientAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
@@ -96,7 +96,7 @@ const addQueue = https.onRequest((request, response) => {
  * @param space query
  * @returns current playing track, status 500 if failed to get current playing track
  */
-const getCurrentPlaying = https.onRequest((request, response) => {
+const getCurrentPlaying = region('asia-east1').https.onRequest((request, response) => {
   if (!isClientAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
@@ -139,7 +139,7 @@ const getCurrentPlaying = https.onRequest((request, response) => {
  * @param body auth
  * @returns status 200 if success, status 404 if space not found
  */
-const updateAuth = https.onRequest((request, response) => {
+const updateAuth = region('asia-east1').https.onRequest((request, response) => {
   if (!isHostAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
@@ -185,7 +185,7 @@ const updateAuth = https.onRequest((request, response) => {
  * @param body site data
  * @returns status 404 if space not found
  */
-const updateSite = https.onRequest((request, response) => {
+const updateSite = region('asia-east1').https.onRequest((request, response) => {
   if (!isHostAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
@@ -210,7 +210,7 @@ const updateSite = https.onRequest((request, response) => {
  * @param body settings
  * @returns status 200 if success, status 400 if bad request, status 404 if space not found
  */
-const updateAllpass = https.onRequest((request, response) => {
+const updateAllpass = region('asia-east1').https.onRequest((request, response) => {
   if (!isHostAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
@@ -245,7 +245,7 @@ const updateAllpass = https.onRequest((request, response) => {
  * @param action 'approve' or 'reject'
  * @returns status 200 if success, status 400 if bad request
  */
-const resolveQueue = https.onRequest((request, response) => {
+const resolveQueue = region('asia-east1').https.onRequest((request, response) => {
   if (!isHostAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
