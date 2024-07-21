@@ -12,7 +12,7 @@
   "engines": {
     "node": "18"
   },
-  "main": "lib/index.js",
+  "main": "./src/schemas.ts",
   "dependencies": {
     "@spotify/web-api-ts-sdk": "^1.2.0",
     "firebase-admin": "^12.1.0",

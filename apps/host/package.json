@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "firebase": "^10.12.2",
+    "server": "*",
     "shared": "^1.0.0"
   },
   "devDependencies": {
