@@ -77,10 +77,12 @@ export function checkQueryIsString(response: Response, query: Request['query'][s
   return true
 }
 
-const allowedOrigins = ['https://akijo.space', 'http://localhost:2405', 'http://localhost:2407']
-export function isAllowedOrigin(request: Request, response: Response) {
+const clientAllowedOrigins = ['https://jukebox.akijo.space', 'http://localhost:2405']
+const hostAllowedOrigins = ['https://jukebox-host.akijo.space', 'http://localhost:2407']
+
+function isAllowedOrigin(request: Request, response: Response, origins: string[]) {
   const origin = request.get('Origin')!
-  if (allowedOrigins.includes(origin)) {
+  if (origins.includes(origin)) {
     response.set('Access-Control-Allow-Origin', origin)
     return true
   } else {
@@ -88,6 +90,12 @@ export function isAllowedOrigin(request: Request, response: Response) {
     response.status(403).send('Forbidden')
     return false
   }
+}
+export function isClientAllowedOrigin(request: Request, response: Response) {
+  return isAllowedOrigin(request, response, clientAllowedOrigins)
+}
+export function isHostAllowedOrigin(request: Request, response: Response) {
+  return isAllowedOrigin(request, response, hostAllowedOrigins)
 }
 
 export function updateAuthCallback(space: string, auth: AccessToken, db: Database) {

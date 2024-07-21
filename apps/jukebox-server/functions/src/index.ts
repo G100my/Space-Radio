@@ -1,7 +1,14 @@
 import { https, type Response, logger } from 'firebase-functions'
 import { addQueueSchema, AddedQueue, settingsSchema } from 'shared/schemas'
 import admin = require('firebase-admin')
-import { checkQueryIsString, createSpotifyInstance, isAllowedOrigin, isOptions, updateAuthCallback } from './utils'
+import {
+  checkQueryIsString,
+  createSpotifyInstance,
+  isClientAllowedOrigin,
+  isHostAllowedOrigin,
+  isOptions,
+  updateAuthCallback,
+} from './utils'
 import { AccessToken, SpotifyApi } from '@spotify/web-api-ts-sdk'
 
 admin.initializeApp({
@@ -34,7 +41,7 @@ async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, response: Re
  * @returns status 200 if success, status 400 if bad request, status 404 if site or space not found, status 500 if failed to add queue to current user
  */
 const addQueue = https.onRequest((request, response) => {
-  if (!isAllowedOrigin(request, response)) return
+  if (!isClientAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
   const site = request.query.site
@@ -90,7 +97,7 @@ const addQueue = https.onRequest((request, response) => {
  * @returns current playing track, status 500 if failed to get current playing track
  */
 const getCurrentPlaying = https.onRequest((request, response) => {
-  if (!isAllowedOrigin(request, response)) return
+  if (!isClientAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
   if (!checkQueryIsString(response, request.query.space)) return
@@ -133,7 +140,7 @@ const getCurrentPlaying = https.onRequest((request, response) => {
  * @returns status 200 if success, status 404 if space not found
  */
 const updateAuth = https.onRequest((request, response) => {
-  if (!isAllowedOrigin(request, response)) return
+  if (!isHostAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
   logger.log('Host login', request.body)
@@ -179,7 +186,7 @@ const updateAuth = https.onRequest((request, response) => {
  * @returns status 404 if space not found
  */
 const updateSite = https.onRequest((request, response) => {
-  if (!isAllowedOrigin(request, response)) return
+  if (!isHostAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
   const space = request.query.space
@@ -204,7 +211,7 @@ const updateSite = https.onRequest((request, response) => {
  * @returns status 200 if success, status 400 if bad request, status 404 if space not found
  */
 const updateAllpass = https.onRequest((request, response) => {
-  if (!isAllowedOrigin(request, response)) return
+  if (!isHostAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
   const space = request.query.space
@@ -239,7 +246,7 @@ const updateAllpass = https.onRequest((request, response) => {
  * @returns status 200 if success, status 400 if bad request
  */
 const resolveQueue = https.onRequest((request, response) => {
-  if (!isAllowedOrigin(request, response)) return
+  if (!isHostAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
   const space = request.query.space
