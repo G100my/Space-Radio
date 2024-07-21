@@ -12,6 +12,8 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: to => {
       if ((!to.query.site || !to.query.space) && !import.meta.env.DEV) {
         return { name: routeMap.NotFound }
+      } else {
+        setSpaceSite(to.query as { site: string; space: string })
       }
     },
   },
@@ -31,7 +33,7 @@ const routes: RouteRecordRaw[] = [
       const { site, space } = to.query
       if (typeof site === 'string' && typeof space === 'string') {
         console.warn('Recorded site and space:', to.query.site, to.query.space)
-        setSpaceSite({ site, space })
+        if (site && space) setSpaceSite({ site, space })
         return { ...to, query: undefined }
       }
 
