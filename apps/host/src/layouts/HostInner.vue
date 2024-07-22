@@ -35,7 +35,7 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <main class="relative w-screen flex-1 overflow-hidden p-5">
+  <main class="relative w-full flex-1 overflow-hidden p-5">
     <RouterView v-slot="{ Component }">
       <Transition>
         <component :is="Component" />
