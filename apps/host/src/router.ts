@@ -22,9 +22,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/QueueList.vue'),
       },
       {
-        path: routeMap.Logout,
-        name: routeMap.Logout,
-        component: () => import('@/views/Logout.vue'),
+        path: routeMap.Auth,
+        name: routeMap.Auth,
+        component: () => import('@/views/Auth.vue'),
       },
     ],
     beforeEnter: async to => {
