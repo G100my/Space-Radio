@@ -2,6 +2,7 @@ import { type Response, type Request, logger } from 'firebase-functions'
 import { AccessToken, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import type { AuthParams } from 'shared/types'
 import type { Database } from 'firebase-admin/database'
+import { AddedQueue } from './schemas'
 
 export function isOptions(request: Request, response: Response) {
   if (request.method === 'OPTIONS') {
@@ -101,4 +102,20 @@ export function isHostAllowedOrigin(request: Request, response: Response) {
 export function updateAuthCallback(space: string, auth: AccessToken, db: Database) {
   const timestamp = new Date().getTime()
   db.ref(space + '/auth').update({ ...auth, timestamp })
+}
+
+export async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, response: Response) {
+  return spotifySDK.player
+    .addItemToPlaybackQueue(queue.uri)
+    .catch((error: Error) => {
+      if (error.name === 'SyntaxError') return Promise.resolve()
+      else return Promise.reject(error)
+    })
+    .then(() => {
+      response.status(200).send('OK')
+    })
+    .catch((error: Error) => {
+      response.status(500).send('Failed to add queue to current host')
+      console.log('Failed to add queue to current host', { error })
+    })
 }

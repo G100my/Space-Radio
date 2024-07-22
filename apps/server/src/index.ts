@@ -1,15 +1,17 @@
-import { type Response, logger, region } from 'firebase-functions'
+import { logger, region } from 'firebase-functions'
 import { addQueueSchema, AddedQueue, settingsSchema } from './schemas'
 import admin = require('firebase-admin')
 import {
+  CustomAuth,
   checkQueryIsString,
   createSpotifyInstance,
   isClientAllowedOrigin,
   isHostAllowedOrigin,
   isOptions,
+  sendQueue,
   updateAuthCallback,
 } from './utils'
-import { AccessToken, SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { type AccessToken } from '@spotify/web-api-ts-sdk'
 
 admin.initializeApp({
   databaseURL: 'https://akijo-space.asia-southeast1.firebasedatabase.app/',
@@ -20,18 +22,6 @@ const db = admin.database()
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
-
-async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, response: Response) {
-  return spotifySDK.player
-    .addItemToPlaybackQueue(queue.uri)
-    .then(() => {
-      response.status(200).send('OK')
-    })
-    .catch(error => {
-      logger.error('Failed to add queue to current host', { error })
-      response.status(500).send('Failed to add queue to current host')
-    })
-}
 
 /**
  * Add queue to current host
@@ -71,8 +61,12 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
       const allpass = spaceSnapshot.child('data/settings/all_pass').val()
 
       if (allpass) {
-        const auth = spaceSnapshot.child('auth').val()
-        sendQueue(auth, queue, response)
+        const auth = spaceSnapshot.child('auth').val() as CustomAuth
+        createSpotifyInstance({
+          tokens: auth,
+          updateTokenCallback: newAuth => updateAuthCallback(space, newAuth, db),
+          response,
+        }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
       } else {
         const needReview = spaceSnapshot.child(`data/sites/${site}/need_review`)
         if (!needReview.exists()) {
@@ -84,8 +78,12 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
           spaceRef.child('data/queue').push({ ...queue, site })
           response.status(200).send('OK')
         } else {
-          const auth = spaceSnapshot.child('auth').val()
-          sendQueue(auth, queue, response)
+          const auth = spaceSnapshot.child('auth').val() as CustomAuth
+          createSpotifyInstance({
+            tokens: auth,
+            updateTokenCallback: newAuth => updateAuthCallback(space, newAuth, db),
+            response,
+          }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
         }
       }
     })
@@ -262,14 +260,14 @@ const resolveQueue = region('asia-east1').https.onRequest((request, response) =>
   if (action === 'approve') {
     ref.once('value', snapshot => {
       const queue = snapshot.val() as AddedQueue
-      ref.remove()
       db.ref(`${space}/auth`).once('value', authSnapshot => {
         createSpotifyInstance({
-          tokens: authSnapshot.val(),
+          tokens: authSnapshot.val() as CustomAuth,
           updateTokenCallback: newAuth => updateAuthCallback(space, newAuth, db),
           response,
         })
           .then(spotifySDK => sendQueue(spotifySDK, queue, response))
+          .then(() => ref.remove())
           .catch(error => logger.error('Failed to send queue', { error }))
       })
     })
