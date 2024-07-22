@@ -32,5 +32,6 @@
       "import": "./src/schemas.ts",
       "types": "./src/schemas.ts"
     }
-  }
+  },
+  "version": "3.0.0"
 }
