@@ -59,12 +59,12 @@ const storageKeys = {
 }
 export function setSpaceSite(params: { site: string; space: string }) {
   const { site, space } = params
-  localStorage.setItem(storageKeys.site, encrypt(site))
-  localStorage.setItem(storageKeys.space, encrypt(space))
+  sessionStorage.setItem(storageKeys.site, encrypt(site))
+  sessionStorage.setItem(storageKeys.space, encrypt(space))
 }
 export function getSpaceSite(): { site: string; space: string } | null {
-  const siteRecord = localStorage.getItem(storageKeys.site)
-  const spaceRecord = localStorage.getItem(storageKeys.space)
+  const siteRecord = sessionStorage.getItem(storageKeys.site)
+  const spaceRecord = sessionStorage.getItem(storageKeys.space)
   if (!siteRecord || !spaceRecord) return null
   return { site: decrypt(siteRecord), space: decrypt(spaceRecord) }
 }
@@ -76,11 +76,11 @@ export function addQueue(...p: Parameters<typeof clientApi.addQueue>) {
   const record = localStorage.getItem(lastAddTimestampKey)
   const timestamp = record ? parseInt(record) : NaN
   if (isNaN(timestamp) || Date.now() - timestamp > limitTime) {
-    localStorage.setItem(lastAddTimestampKey, Date.now().toString())
     clientApi
       .addQueue(...p)
       .then(() => {
         useSnackbar('已加入播放佇列中囉～\n要排隊，請稍等一下。', 'success')
+        if (import.meta.env.PROD) localStorage.setItem(lastAddTimestampKey, Date.now().toString())
       })
       .catch(() => {
         useSnackbar('加入播放佇列失敗，請稍後再試。', 'danger')
