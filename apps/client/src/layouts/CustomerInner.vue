@@ -14,7 +14,7 @@ const personalStore = usePersonalStore()
     >
       <span class="sr-only">Akijo</span>
       <ImageLogo class="inline-block w-1/3" />
-      <span>點播電台</span>
+      <span class="align-sub text-4xl">Jukebox</span>
     </h1>
   </header>
   <main class="relative w-screen max-w-full flex-1 overflow-hidden">

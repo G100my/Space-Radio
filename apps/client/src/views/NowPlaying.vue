@@ -88,7 +88,7 @@ function handleShare() {
 </script>
 <template>
   <section class="flex h-full flex-col gap-7 pb-8">
-    <div class="relative mx-auto h-fit w-3/4">
+    <div class="relative mx-auto h-3/4 min-h-fit w-3/4">
       <aside id="test" class="h-full divide-y-2 overflow-hidden rounded-3xl border-2 shadow-lg shadow-slate-500">
         <template v-if="playbackStore.current">
           <div class="relative mx-auto w-full">

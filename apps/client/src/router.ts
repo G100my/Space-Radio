@@ -12,7 +12,9 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: to => {
       if ((!to.query.site || !to.query.space) && !import.meta.env.DEV) {
         return { name: routeMap.NotFound }
-      } else {
+      }
+
+      if (to.query.site && to.query.space) {
         setSpaceSite(to.query as { site: string; space: string })
       }
     },
