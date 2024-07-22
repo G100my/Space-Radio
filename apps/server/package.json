@@ -12,7 +12,7 @@
   "engines": {
     "node": "18"
   },
-  "main": "./src/schemas.ts",
+  "main": "lib/index.js",
   "dependencies": {
     "@spotify/web-api-ts-sdk": "^1.2.0",
     "firebase-admin": "^12.1.0",
@@ -23,5 +23,14 @@
     "firebase-functions-test": "^3.1.0",
     "typescript": "^5.4.5"
   },
-  "private": true
+  "private": true,
+  "exports": {
+    ".": {
+      "node": "./lib/index.js"
+    },
+    "./schemas": {
+      "import": "./src/schemas.ts",
+      "types": "./src/schemas.ts"
+    }
+  }
 }

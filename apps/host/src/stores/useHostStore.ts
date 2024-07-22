@@ -1,4 +1,4 @@
-import type { SpaceClientData } from 'server'
+import type { SpaceClientData } from 'server/schemas'
 import { defineStore } from 'pinia'
 
 export default defineStore('host', {

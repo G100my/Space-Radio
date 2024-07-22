@@ -1,4 +1,4 @@
-import type { AddedQueue } from 'server'
+import type { AddedQueue } from 'server/schemas'
 import type { PlaybackStateOnlyTrack } from 'shared'
 
 function addQueue(

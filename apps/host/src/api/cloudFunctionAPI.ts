@@ -1,4 +1,4 @@
-import type { SiteSettings } from 'server'
+import type { SiteSettings } from 'server/schemas'
 import type { AccessToken } from '@spotify/web-api-ts-sdk'
 
 function updateAuth(spotifyUserID: string, auth: AccessToken) {
