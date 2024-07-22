@@ -11,7 +11,8 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
-    "firebase": "^10.12.2",
+    "firebase": "^10.12.4",
+    "firebaseui": "^6.1.0",
     "server": "*",
     "shared": "^3.0.0"
   },
