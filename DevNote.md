@@ -8,8 +8,9 @@
 # `npm run build` then ...
 firebase deploy --only functions
 firebase deploy --only hosting
-firebase deploy --only hosting:jukebox
-firebase deploy --only hosting:jukebox-host
+firebase deploy --only hosting:client
+firebase deploy --only hosting:host
+firebase deploy --only hosting:client,hosting:host
 firebase deploy --only hosting:space-radio
 ```
 

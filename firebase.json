@@ -10,8 +10,8 @@
       ]
     },
     {
-      "target": "jukebox",
-      "public": "apps/jukebox/dist",
+      "target": "client",
+      "public": "apps/client/dist",
       "ignore": [
         "firebase.json",
         "**/.*",
@@ -25,8 +25,8 @@
       ]
     },
     {
-      "target": "jukebox-host",
-      "public": "apps/jukebox-host/dist",
+      "target": "host",
+      "public": "apps/host/dist",
       "ignore": [
         "firebase.json",
         "**/.*",

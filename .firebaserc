@@ -5,11 +5,11 @@
   "targets": {
     "jukebox-g100": {
       "hosting": {
-        "jukebox": [
-          "jukebox-customer"
-        ],
-        "jukebox-host": [
+        "host": [
           "jukebox-host"
+        ],
+        "client": [
+          "jukebox-customer"
         ]
       }
     }
