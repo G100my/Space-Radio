@@ -2,7 +2,7 @@
 import placeholderImg from 'shared/assets/vinyl-record.png'
 import { IconWrapper, spotifyCoverPicker, useAlert } from 'shared'
 import { onMounted, ref } from 'vue'
-import Marquee from 'shared/components/Marquee.vue'
+import { Marquee } from 'shared'
 import { getSpaceSite } from '@/utils'
 import { spotifyWrappedAPI } from '@/api/spotifyWrappedAPI'
 import { ODropdown, ODropdownItem, OTooltip } from '@oruga-ui/oruga-next'
@@ -88,8 +88,8 @@ function handleShare() {
 </script>
 <template>
   <section class="flex h-full flex-col gap-7 pb-8">
-    <div class="relative mx-auto h-3/4 min-h-fit w-3/4">
-      <aside id="test" class="h-full divide-y-2 overflow-hidden rounded-3xl border-2 shadow-lg shadow-slate-500">
+    <div class="relative mx-auto h-3/4 min-h-fit w-3/4 flex-1">
+      <aside id="test" class="flex-shrink-0 divide-y-2 overflow-hidden rounded-3xl border-2 shadow-lg shadow-slate-500">
         <template v-if="playbackStore.current">
           <div class="relative mx-auto w-full">
             <img :src="spotifyCoverPicker(item?.album.images) ?? placeholderImg" class="h-full w-full" />
@@ -153,7 +153,7 @@ function handleShare() {
       </aside>
     </div>
 
-    <div class="flex flex-1 items-center justify-center">
+    <div class="flex flex-1 items-center justify-center py-3">
       <button
         class="text-natural-white bg-system-success1 w-2/3 rounded-full py-3 text-center text-2xl"
         type="button"
