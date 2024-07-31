@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
         return { name: routeMap.NotFound }
       }
 
-      if (to.query.site && to.query.space) {
+      if (to.query.space) {
         setSpaceSite(to.query as { site: string; space: string })
       }
     },
