@@ -59,12 +59,10 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
     })
     .then(spaceSnapshot => {
       const top_switch = spaceSnapshot.child('data/settings/top_switch').val()
-
-      if (top_switch || !site) {
-        if (!top_switch) {
-          response.status(403).send('Site Not Found and not allow')
-          return
-        }
+      if (!top_switch && !site) {
+        response.status(403).send('Site Not Found and not allow')
+        return
+      } else if (top_switch) {
         const auth = spaceSnapshot.child('auth').val() as CustomAuth
         createSpotifyInstance({
           tokens: auth,
