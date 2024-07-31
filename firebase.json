@@ -1,14 +1,14 @@
 {
   "hosting": [
-    {
-      "target": "space-radio",
-      "public": "apps/space-radio/dist",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
-    },
+    // {
+    //   "target": "space-radio",
+    //   "public": "apps/space-radio/dist",
+    //   "ignore": [
+    //     "firebase.json",
+    //     "**/.*",
+    //     "**/node_modules/**"
+    //   ]
+    // },
     {
       "target": "client",
       "public": "apps/client/dist",

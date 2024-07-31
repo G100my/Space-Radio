@@ -10,3 +10,5 @@ app.use(createPinia())
 app.use(router)
 
 app.mount('#app')
+
+console.warn('APP_VERSION:', __APP_VERSION__)

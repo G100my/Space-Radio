@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss'
 export default {
   mode: 'jit',
-  content: ['**/index.css', '**/src/**/*.vue'],
+  content: ['./**/*.css', './**/*.{vue,ts}'],
   theme: {
     fontFamily: {
       inter: ['Inter', 'sans-serif'],

@@ -23,3 +23,5 @@ app.use(OrugaConfig, {
 })
 
 app.mount('#app')
+
+console.warn('APP_VERSION:', __APP_VERSION__)
