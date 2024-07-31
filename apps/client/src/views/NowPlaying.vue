@@ -24,7 +24,7 @@ function getNowPlayingTrack() {
         showLoading.value = false
       }, 1000)
     })
-  } else throw new Error("Can't get space site.")
+  } else throw new Error("Can't get space.")
 }
 const amILiked = ref(false)
 function amILikeThisTrack() {
