@@ -34,7 +34,7 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
   if (!isClientAllowedOrigin(request, response)) return
   if (isOptions(request, response)) return
 
-  const site = request.query.site
+  const site = request.query.site as string | undefined
   const space = request.query.space
   if (!checkQueryIsString(response, space)) return
 
@@ -58,9 +58,13 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
       }
     })
     .then(spaceSnapshot => {
-      const allpass = spaceSnapshot.child('data/settings/all_pass').val()
+      const top_switch = spaceSnapshot.child('data/settings/top_switch').val()
 
-      if (allpass) {
+      if (top_switch || !site) {
+        if (!top_switch) {
+          response.status(403).send('Site Not Found and not allow')
+          return
+        }
         const auth = spaceSnapshot.child('auth').val() as CustomAuth
         createSpotifyInstance({
           tokens: auth,

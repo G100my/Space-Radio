@@ -2,7 +2,7 @@
 import { routeMap } from '@/constant'
 import { Database, type Unsubscribe, getDatabase, onValue } from 'firebase/database'
 import { onMounted, onUnmounted } from 'vue'
-import firebase from '@/plugins/firebase'
+import { app } from '@/plugins/firebase'
 import { ref as databaseRef } from 'firebase/database'
 import { usePersonalStore, useHostStore } from '@/stores'
 
@@ -21,7 +21,7 @@ onMounted(() => {
     console.error('No space')
     return
   }
-  db = getDatabase(firebase)
+  db = getDatabase(app)
   unsubscribe = onValue(databaseRef(db, `${space}/data`), snapshot => {
     const val = snapshot.val()
     console.info('🚀 ~ unsubscribe=onValue ~ val:', val)

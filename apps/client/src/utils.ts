@@ -57,16 +57,17 @@ const storageKeys = {
   site: 'site',
   space: 'space',
 }
-export function setSpaceSite(params: { site: string; space: string }) {
+export function setSpaceSite(params: { site?: string; space: string }) {
   const { site, space } = params
-  sessionStorage.setItem(storageKeys.site, encrypt(site))
+  if (site) sessionStorage.setItem(storageKeys.site, encrypt(site))
   sessionStorage.setItem(storageKeys.space, encrypt(space))
 }
-export function getSpaceSite(): { site: string; space: string } | null {
+export function getSpaceSite(): { site?: string; space: string } | null {
   const siteRecord = sessionStorage.getItem(storageKeys.site)
   const spaceRecord = sessionStorage.getItem(storageKeys.space)
-  if (!siteRecord || !spaceRecord) return null
-  return { site: decrypt(siteRecord), space: decrypt(spaceRecord) }
+  if (!spaceRecord) return null
+  if (!siteRecord) return { space: decrypt(spaceRecord) }
+  else return { site: decrypt(siteRecord), space: decrypt(spaceRecord) }
 }
 
 const lastAddTimestampKey = 'ewfew3refebr45hg'

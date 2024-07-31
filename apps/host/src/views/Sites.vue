@@ -12,7 +12,7 @@ function handleSwitch(key: keyof typeof hostStore.sites) {
 }
 
 function handleAllpassSwitch() {
-  hostApi.updateAllpass(personalStore.id, { all_pass: !hostStore.settings.all_pass })
+  hostApi.updateAllpass(personalStore.id, { top_switch: !hostStore.settings.top_switch })
 }
 </script>
 <template>
@@ -23,7 +23,7 @@ function handleAllpassSwitch() {
           :key="key"
           :label="i.name"
           :modelValue="i.need_review"
-          :disabled="hostStore.settings.all_pass"
+          :disabled="hostStore.settings.top_switch"
           @update:modelValue="handleSwitch(key)"
         />
       </div>
@@ -31,7 +31,7 @@ function handleAllpassSwitch() {
 
     <aside class="mt-auto flex items-center text-4xl">
       <BaseSwitch
-        :modelValue="hostStore.settings.all_pass"
+        :modelValue="hostStore.settings.top_switch"
         label="All Pass"
         class="w-14"
         @update:modelValue="handleAllpassSwitch"

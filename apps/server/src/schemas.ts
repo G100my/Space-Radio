@@ -35,7 +35,7 @@ export interface Site {
 export type AddedQueue = z.infer<typeof addQueueSchema>
 export interface SpaceClientData {
   sites: { [site_id: string]: Site }
-  settings: { all_pass: boolean }
+  settings: { top_switch: boolean }
   queue?: {
     [hash: string]: AddedQueue & { site: string }
   }
@@ -44,6 +44,6 @@ export interface SpaceClientData {
 export const SPOTIFY_SERVER_SCOPE = ['user-modify-playback-state', 'user-read-currently-playing']
 
 export const settingsSchema = z.object({
-  all_pass: z.boolean(),
+  top_switch: z.boolean(),
 })
 export type SiteSettings = z.infer<typeof settingsSchema>

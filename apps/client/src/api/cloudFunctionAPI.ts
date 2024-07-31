@@ -3,7 +3,7 @@ import type { PlaybackStateOnlyTrack } from 'shared'
 
 function addQueue(
   query: {
-    site: string
+    site?: string
     space: string
   },
   body: AddedQueue

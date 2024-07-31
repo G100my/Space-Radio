@@ -30,10 +30,10 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: (to, from) => {
       if (import.meta.env.DEV) console.log(to, from)
 
-      const { site, space } = to.query
-      if (typeof site === 'string' && typeof space === 'string') {
+      const { space } = to.query
+      if (typeof space === 'string') {
         console.warn('Recorded site and space:', to.query.site, to.query.space)
-        if (site && space) setSpaceSite({ site, space })
+        if (space) setSpaceSite({ space })
         return { ...to, query: undefined }
       }
 

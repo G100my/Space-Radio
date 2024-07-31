@@ -14,7 +14,7 @@
         }
       },
       "settings": {
-        "all_pass": boolean,
+        "top_switch": boolean,
       },
       "queue": {
         [hash]: TrackBaseInfo & { site_id: string }

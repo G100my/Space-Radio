@@ -2,6 +2,8 @@
 import { routeMap } from '@/constant'
 import { usePersonalStore } from '@/stores'
 import { useRouter } from 'vue-router'
+import { PKCE } from 'shared'
+import { generateAuthParams } from 'shared'
 
 const personalStore = usePersonalStore()
 const router = useRouter()
@@ -10,22 +12,22 @@ function handleLogout() {
   personalStore.clear()
   router.push({ name: routeMap.Index })
 }
+function handleLogin() {
+  PKCE(generateAuthParams(routeMap.Auth))
+}
 </script>
 
 <template>
   <section>
     <div class="p-5">
-      <p>
-        這並不會清除掉伺服器的紀錄，只是把瀏覽器裡面的登入資訊清除，再次登入後會重新複寫賦予給伺服器上的 spotify 權限。
-      </p>
-      <p>用在如果客人沒辦法點歌時的重新登入用的</p>
+      <p>重新登入 spotify，並且重新授權給伺服器，用在如果客人沒辦法點歌時用的</p>
     </div>
     <button
       type="button"
-      @click="handleLogout"
-      class="text-natural-white bg-system-error1 w-full rounded-full py-3 text-center text-4xl"
+      @click="handleLogin"
+      class="text-natural-white bg-secondary w-full rounded-full py-3 text-center text-4xl"
     >
-      Loggout
+      Refresh Token
     </button>
   </section>
 </template>

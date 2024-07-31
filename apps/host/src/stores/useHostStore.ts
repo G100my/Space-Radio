@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export default defineStore('host', {
   state: (): SpaceClientData => ({
     sites: {},
-    settings: { all_pass: false },
+    settings: { top_switch: false },
     queue: {},
   }),
   getters: {
