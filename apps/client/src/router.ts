@@ -10,12 +10,10 @@ const routes: RouteRecordRaw[] = [
     name: routeMap.Login,
     component: () => import('@/views/Login.vue'),
     beforeEnter: to => {
-      if (!to.query.space && !import.meta.env.DEV) {
-        return { name: routeMap.NotFound }
-      }
-
       if (to.query.space) {
         setSpaceSite(to.query as { site: string; space: string })
+      } else {
+        return { name: routeMap.NotFound }
       }
     },
   },
@@ -32,7 +30,7 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: (to, from) => {
       if (import.meta.env.DEV) console.log(to, from)
 
-      const { site, space } = to.query
+      const { space } = to.query
       if (typeof space === 'string') {
         console.warn('Recorded site and space:', to.query.site, to.query.space)
         if (space) setSpaceSite({ space })
