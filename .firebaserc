@@ -1,5 +1,19 @@
 {
   "projects": {
     "default": "jukebox-g100"
-  }
+  },
+  "targets": {
+    "jukebox-g100": {
+      "hosting": {
+        "host": [
+          "jukebox-host"
+        ],
+        "client": [
+          "jukebox-customer"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

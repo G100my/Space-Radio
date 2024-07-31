@@ -1,0 +1,25 @@
+@layer base {
+  *::-webkit-scrollbar {
+    display: none;
+  }
+  *:focus {
+    outline: none;
+  }
+  body {
+    /* 為了讓 #room blur 時不會有明顯的白邊 */
+    background-color: black;
+  }
+}
+
+@layer base {
+  input[type='checkbox'] {
+    @apply border-natural-white h-5 w-5 appearance-none rounded-sm border;
+  }
+  input[type='checkbox']:checked {
+    background-repeat: no-repeat;
+    background-clip: padding-box;
+    background-position: center;
+    background-image: url(@/assets/icons/icon-checkbox.png);
+    @apply bg-primary border-0;
+  }
+}

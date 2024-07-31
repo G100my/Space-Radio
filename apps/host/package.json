@@ -1,0 +1,20 @@
+{
+  "name": "host",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force"
+  },
+  "dependencies": {
+    "server": "*",
+    "shared": "^3.0.0"
+  },
+  "devDependencies": {
+    "@spotify/web-api-ts-sdk": "^1.2.0"
+  }
+}

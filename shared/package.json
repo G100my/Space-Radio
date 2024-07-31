@@ -1,0 +1,15 @@
+{
+  "name": "shared",
+  "version": "3.0.0",
+  "description": "",
+  "main": "index.ts",
+  "devDependencies": {
+    "@types/spotify-web-playback-sdk": "^0.1.19"
+  },
+  "dependencies": {
+    "spotify-web-api-js": "^1.5.2"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.31"
+  }
+}

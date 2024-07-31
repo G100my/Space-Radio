@@ -1,0 +1,41 @@
+@import 'shared/style/input.css';
+@import 'shared/style/universal.css';
+@import 'shared/style/button.css';
+
+@import '@oruga-ui/theme-oruga/dist/oruga.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#app {
+  @apply bg-tertiary-1 h-dvh w-screen overflow-hidden text-white;
+}
+main > section {
+  @apply h-full w-full overflow-auto;
+}
+
+/* default page transition  */
+.v-enter-active,
+.v-leave-active {
+  @apply absolute w-full transition-all;
+}
+
+.v-enter-from,
+.v-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* oruga */
+
+.o-drop__item--clickable:not(.o-drop__item--active):hover {
+  background-color: unset;
+  @apply text-primary;
+}
+.o-drop__item--active {
+  background-color: unset;
+}
+.o-tip__content {
+  @apply bg-tertiary-2;
+}

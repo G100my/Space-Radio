@@ -6,6 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+firebase-debug.log*
+firebase-debug.*.log*
 
 node_modules
 .DS_Store
@@ -28,8 +30,11 @@ coverage
 *.sw?
 
 #
+.env
 .env.*
 _*.*
+
+# Firebase cache
 .firebase
 
 cypress.env.json

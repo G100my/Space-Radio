@@ -1,0 +1,9 @@
+@import 'shared/style/base.css';
+@import 'shared/style/button.css';
+@import 'shared/style/font.css';
+@import 'shared/style/input.css';
+@import 'shared/style/universal.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
