@@ -13,7 +13,7 @@ function handleLogout() {
   router.push({ name: routeMap.Index })
 }
 function handleLogin() {
-  PKCE(generateAuthParams(routeMap.Auth))
+  PKCE(generateAuthParams(routeMap.Queue))
 }
 </script>
 
