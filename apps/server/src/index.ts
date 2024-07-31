@@ -67,11 +67,20 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
           response,
         }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
       } else {
-        const needReview = spaceSnapshot.child(`data/sites/${site}/need_review`)
-        if (needReview.val() || !site) {
-          spaceRef.child('data/queue').push({ ...queue, site })
+        const push2Queue = () => {
+          const queueRef = spaceRef.child('data/queue')
+          queueRef.push({ ...queue, site: null })
           response.status(200).send('OK')
-        } else {
+        }
+
+        if (!site) {
+          push2Queue()
+          return
+        }
+
+        const needReview = spaceSnapshot.child(`data/sites/${site}/need_review`)
+        if (needReview.val()) push2Queue()
+        else {
           const auth = spaceSnapshot.child('auth').val() as CustomAuth
           createSpotifyInstance({
             tokens: auth,

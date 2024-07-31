@@ -79,6 +79,10 @@ export function addQueue(...p: Parameters<typeof clientApi.addQueue>) {
   if (isNaN(timestamp) || Date.now() - timestamp > limitTime) {
     clientApi
       .addQueue(...p)
+      .then(res => {
+        if (res.ok) return res.json()
+        else return Promise.reject(res)
+      })
       .then(() => {
         useSnackbar('已加入播放佇列中囉～\n要排隊，請稍等一下。', 'success')
         if (import.meta.env.PROD) localStorage.setItem(lastAddTimestampKey, Date.now().toString())

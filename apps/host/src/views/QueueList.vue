@@ -22,7 +22,7 @@ function handleResolve(params: { key: string; action: 'approve' | 'reject' }) {
     <ul v-if="hostStore.queueAmount" class="w-full space-y-3">
       <li v-for="(i, key) in hostStore.queue" :key="key" class="flex items-center gap-3">
         <div class="flex w-0 flex-1 items-center gap-2">
-          <p class="text-2xl">{{ i.site ?? '??' }}</p>
+          <p class="text-2xl">{{ i.site ?? '--' }}</p>
           <TrackItem :data="i" class="flex-1 overflow-hidden" @play="audioStore.toggle(i)" />
         </div>
         <button
