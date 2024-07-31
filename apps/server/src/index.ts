@@ -59,10 +59,7 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
     })
     .then(spaceSnapshot => {
       const top_switch = spaceSnapshot.child('data/settings/top_switch').val()
-      if (!top_switch && !site) {
-        response.status(403).send('Site Not Found and not allow')
-        return
-      } else if (top_switch) {
+      if (top_switch) {
         const auth = spaceSnapshot.child('auth').val() as CustomAuth
         createSpotifyInstance({
           tokens: auth,
@@ -71,12 +68,7 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
         }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
       } else {
         const needReview = spaceSnapshot.child(`data/sites/${site}/need_review`)
-        if (!needReview.exists()) {
-          logger.warn('Site not found', { site, space })
-          response.status(404).send('Site Not Found')
-        }
-
-        if (needReview.val()) {
+        if (needReview.val() || !site) {
           spaceRef.child('data/queue').push({ ...queue, site })
           response.status(200).send('OK')
         } else {
