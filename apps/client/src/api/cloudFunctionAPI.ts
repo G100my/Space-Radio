@@ -33,7 +33,7 @@ function getCurrentPlaying(
         console.info(response)
         return response.json()
       } else if (response.status === 204) {
-        return Promise.resolve(undefined)
+        return Promise.resolve(null)
       } else {
         response.text().then(console.error)
         return null

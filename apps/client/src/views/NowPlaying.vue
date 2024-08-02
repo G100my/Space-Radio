@@ -141,13 +141,13 @@ function handleShare() {
           </div>
         </template>
         <template v-else-if="playbackStore.current === null">
-          <div class="flex h-full w-full items-center justify-center">
+          <div class="flex h-[494px] w-full items-center justify-center">
             <p>目前似乎沒有正在播放的音樂...</p>
           </div>
         </template>
         <template v-else-if="playbackStore.current === undefined">
-          <div class="flex h-full w-full items-center justify-center">
-            <p>欸...請 Host 重新登入一下...</p>
+          <div class="flex h-[494px] w-full items-center justify-center">
+            <p>欸...請工作人員重新登入一下...</p>
           </div>
         </template>
       </aside>
