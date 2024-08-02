@@ -13,17 +13,10 @@ const playlistStore = usePlaylistStore()
 const playbackStore = usePlaybackStore()
 const item = computed(() => playbackStore.current?.item)
 
-const showLoading = ref(false)
-
 function getNowPlayingTrack() {
   const space = getSpaceSite()?.space
   if (space) {
-    showLoading.value = true
-    return playbackStore.getCurrentPlaying(space).finally(() => {
-      setTimeout(() => {
-        showLoading.value = false
-      }, 1000)
-    })
+    return playbackStore.getCurrentPlaying(space)
   } else throw new Error("Can't get space.")
 }
 const amILiked = ref(false)
@@ -32,11 +25,15 @@ function amILikeThisTrack() {
   spotifyWrappedAPI.containsMySavedTracks([item.value.id]).then(res => res[0] && (amILiked.value = true))
 }
 function refresh() {
+  if (!playbackStore.allowRefresh) {
+    console.warn('Refresh is not allowed.')
+    return
+  }
   getNowPlayingTrack().then(() => amILikeThisTrack())
 }
 const { open } = useAlert('已經是最新的歌曲資料囉！')
 function handleClickRefresh() {
-  if (playbackStore.judgeDisableGetCurrentPlaying()) {
+  if (!playbackStore.allowRefresh) {
     open()
     return
   }
@@ -91,7 +88,7 @@ function handleShare() {
     <div class="relative mx-auto min-h-fit w-3/4 flex-1">
       <aside class="flex-shrink-0 divide-y-2 overflow-hidden rounded-3xl border-2 shadow-lg shadow-slate-500">
         <template v-if="playbackStore.current">
-          <div class="relative mx-auto w-full">
+          <div class="relative mx-auto aspect-square w-full">
             <img :src="spotifyCoverPicker(item?.album.images) ?? placeholderImg" class="h-full w-full" />
           </div>
 
@@ -153,8 +150,9 @@ function handleShare() {
       </aside>
     </div>
 
-    <div class="flex flex-1 items-center justify-center py-3">
+    <div class="flex h-[92px] flex-1 items-center justify-center py-3">
       <button
+        v-show="playbackStore.allowRefresh"
         class="text-natural-white bg-system-success1 w-2/3 rounded-full py-3 text-center text-2xl"
         type="button"
         @click="handleClickRefresh"
