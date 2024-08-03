@@ -34,3 +34,8 @@ import SpotifyLogo from 'shared/assets/Spotify_Logo_CMYK_Green.png'
     </nav>
   </footer>
 </template>
+<style>
+main > section {
+  @apply overflow-auto pt-20;
+}
+</style>

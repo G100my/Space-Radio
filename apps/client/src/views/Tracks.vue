@@ -39,7 +39,7 @@ useInfinityScroll({
 </script>
 <template>
   <section class="h-full">
-    <ul id="tracks_container" class="h-full flex-1 space-y-5 overflow-auto px-8 pb-16">
+    <ul id="tracks_container" class="flex-1 space-y-5 px-8 pb-16">
       <li v-for="(i, key) in playlistStore.items" :key="i.uri + key" class="flex items-center gap-4">
         <TrackItem :data="i" class="w-full overflow-hidden" />
         <div class="space-x-1 whitespace-nowrap">
