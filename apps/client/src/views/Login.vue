@@ -2,7 +2,6 @@
 import { PKCE } from 'shared'
 import { generateAuthParams } from 'shared'
 import { routeMap } from '@/constant'
-import ImageLogo from '@/assets/logo.svg'
 import { usePersonalStore } from '@/stores'
 
 const personalStore = usePersonalStore()

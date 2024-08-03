@@ -1,22 +1,9 @@
 <script setup lang="ts">
-import ImageLogo from '@/assets/logo.svg'
 import { routeMap } from '@/constant'
-import { IconWrapper, usePersonalStore } from 'shared'
+import { IconWrapper } from 'shared'
 import SpotifyLogo from 'shared/assets/Spotify_Logo_CMYK_Green.png'
-
-const personalStore = usePersonalStore()
 </script>
 <template>
-  <header class="mb-8 pt-4">
-    <h1
-      class="mx-auto space-x-4 text-center text-3xl"
-      @click="personalStore.clear(), $router.push({ name: routeMap.Login })"
-    >
-      <span class="sr-only">Akijo</span>
-      <ImageLogo class="inline-block w-1/3" />
-      <span class="align-sub text-4xl">Jukebox</span>
-    </h1>
-  </header>
   <main class="relative w-screen max-w-full flex-1 overflow-hidden">
     <RouterView v-slot="{ Component }">
       <Transition>
