@@ -4,16 +4,6 @@ import type { AuthParams } from 'shared/types'
 import type { Database } from 'firebase-admin/database'
 import { AddedQueue } from './schemas'
 
-export function isOptions(request: Request, response: Response) {
-  if (request.method === 'OPTIONS') {
-    response.set('Access-Control-Allow-Methods', 'POST')
-    response.set('Access-Control-Allow-Headers', 'Content-Type')
-    response.set('Access-Control-Max-Age', '3600')
-    response.status(204).send('')
-    return true
-  } else return false
-}
-
 export interface CustomAuth extends AccessToken {
   timestamp: number
 }
@@ -76,27 +66,6 @@ export function checkQueryIsString(response: Response, query: Request['query'][s
     return false
   }
   return true
-}
-
-const clientAllowedOrigins = ['https://jukebox.akijo.space', 'http://localhost:2405']
-const hostAllowedOrigins = ['https://jukebox-host.akijo.space', 'http://localhost:2407']
-
-function isAllowedOrigin(request: Request, response: Response, origins: string[]) {
-  const origin = request.get('Origin')!
-  if (origins.includes(origin)) {
-    response.set('Access-Control-Allow-Origin', origin)
-    return true
-  } else {
-    logger.warn('Forbidden origin', { origin })
-    response.status(403).send('Forbidden')
-    return false
-  }
-}
-export function isClientAllowedOrigin(request: Request, response: Response) {
-  return isAllowedOrigin(request, response, clientAllowedOrigins)
-}
-export function isHostAllowedOrigin(request: Request, response: Response) {
-  return isAllowedOrigin(request, response, hostAllowedOrigins)
 }
 
 export function updateAuthCallback(space: string, auth: AccessToken, db: Database) {
