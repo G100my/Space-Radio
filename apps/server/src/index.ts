@@ -1,7 +1,14 @@
 import { logger, region } from 'firebase-functions'
 import { addQueueSchema, AddedQueue, settingsSchema } from './schemas'
 import admin = require('firebase-admin')
-import { CustomAuth, checkQueryIsString, createSpotifyInstance, sendQueue, updateAuthCallback } from './utils'
+import {
+  CustomAuth,
+  checkAuth,
+  checkQueryIsString,
+  createSpotifyInstance,
+  sendQueue,
+  updateAuthCallback,
+} from './utils'
 import { type AccessToken } from '@spotify/web-api-ts-sdk'
 import cors = require('cors')
 
@@ -127,6 +134,8 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
   })
 })
 
+// =============================================================================
+
 /**
  * Update host auth
  * @param space query
@@ -134,17 +143,19 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
  * @returns status 200 if success, status 404 if space not found
  */
 const updateAuth = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: hostAllowedOrigins, methods: 'POST' })(request, response, () => {
+  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(request, response, () => {
     logger.log('Host login', request.body)
 
     const space = request.query.space
     if (!checkQueryIsString(response, space)) return
 
-    db.ref(space).once('value', snapshot => {
+    db.ref(space).once('value', async snapshot => {
       if (!snapshot.exists()) {
         logger.warn('space not found', { space })
         response.status(404).send('Space Not Found')
       } else {
+        const user = await checkAuth(request, response, admin.auth(), snapshot.val().email)
+        if (!user) return
         const timestamp = new Date().getTime()
         db.ref(space + '/auth').update({ ...(request.body as AccessToken), timestamp })
         response.status(200).send('OK')
@@ -153,25 +164,6 @@ const updateAuth = region('asia-east1').https.onRequest((request, response) => {
   })
 })
 
-// const getSpaceData = https.onRequest((request, response) => {
-//   if (!isAllowedOrigin(request, response)) return
-//   if (isOptions(request, response)) return
-
-//   logger.log('Get space data', request.query)
-
-//   const space = request.query.space
-//   if (!checkQueryIsString(response, space)) return
-
-//   db.ref(space + '/data').once('value', snapshot => {
-//     if (!snapshot.exists()) {
-//       logger.warn('space not found', { space })
-//       response.status(404).send('Not Found')
-//     } else {
-//       response.status(200).send(snapshot.val() as SpaceClientData)
-//     }
-//   })
-// })
-
 /**
  * Update site
  * @param space query
@@ -179,16 +171,18 @@ const updateAuth = region('asia-east1').https.onRequest((request, response) => {
  * @returns status 404 if space not found
  */
 const updateSite = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: hostAllowedOrigins, methods: 'POST' })(request, response, () => {
+  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(request, response, () => {
     const space = request.query.space
     if (!checkQueryIsString(response, space)) return
 
     const ref = db.ref(space)
-    ref.once('value', snapshot => {
+    ref.once('value', async snapshot => {
       if (!snapshot.exists()) {
         logger.warn('space not found', { space })
         response.status(404).send('Not Found')
       } else {
+        const user = await checkAuth(request, response, admin.auth(), snapshot.val().email)
+        if (!user) return
         const siteData = request.body
         ref.child('data/sites').update(siteData)
       }
@@ -203,7 +197,7 @@ const updateSite = region('asia-east1').https.onRequest((request, response) => {
  * @returns status 200 if success, status 400 if bad request, status 404 if space not found
  */
 const updateAllpass = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: hostAllowedOrigins, methods: 'POST' })(request, response, () => {
+  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(request, response, () => {
     const space = request.query.space
     if (!checkQueryIsString(response, space)) return
 
@@ -216,11 +210,13 @@ const updateAllpass = region('asia-east1').https.onRequest((request, response) =
       return
     } else {
       const ref = db.ref(space)
-      ref.once('value', snapshot => {
+      ref.once('value', async snapshot => {
         if (!snapshot.exists()) {
           logger.warn('space not found', { space })
           response.status(404).send('Not Found')
         } else {
+          const user = await checkAuth(request, response, admin.auth(), snapshot.val().email)
+          if (!user) return
           ref.child('data/settings').update(settings)
           response.status(200).send('OK')
         }
@@ -237,7 +233,7 @@ const updateAllpass = region('asia-east1').https.onRequest((request, response) =
  * @returns status 200 if success, status 400 if bad request
  */
 const resolveQueue = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: hostAllowedOrigins, methods: 'POST' })(request, response, () => {
+  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(request, response, () => {
     const space = request.query.space
     if (!checkQueryIsString(response, space)) return
 

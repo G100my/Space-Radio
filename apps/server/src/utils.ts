@@ -3,6 +3,7 @@ import { AccessToken, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import type { AuthParams } from 'shared/types'
 import type { Database } from 'firebase-admin/database'
 import { AddedQueue } from './schemas'
+import type { Auth } from 'firebase-admin/auth'
 
 export interface CustomAuth extends AccessToken {
   timestamp: number
@@ -87,4 +88,38 @@ export async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, respo
       response.status(500).send('Failed to add queue to current host')
       console.log('Failed to add queue to current host', { error })
     })
+}
+
+export async function checkAuth(request: Request, response: Response, auth: Auth, email: string) {
+  const token = request.headers.authorization?.split('Bearer ')[1]
+  if (!token) {
+    logger.warn('No Authorization header')
+    response.status(401).send('Unauthorized')
+    return null
+  } else {
+    return auth
+      .verifyIdToken(token)
+      .then(DecodedIdToken => {
+        if (DecodedIdToken.email === email) {
+          return DecodedIdToken
+        } else {
+          logger.warn('Invalid token email', { email: DecodedIdToken.email })
+          response.status(401).send('Unauthorized')
+          return null
+        }
+      })
+      .catch(error => {
+        if (
+          error.code === 'auth/argument-error' &&
+          (error.message as string).startsWith('Firebase ID token has invalid signature.')
+        ) {
+          logger.warn('Invalid token signature')
+          response.status(401).send('Unauthorized')
+        } else {
+          logger.error('Failed to verify token', { error })
+          response.status(500).send('Internal Server Error')
+        }
+        return null
+      })
+  }
 }
