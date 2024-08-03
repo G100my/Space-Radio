@@ -80,14 +80,15 @@ export function addQueue(...p: Parameters<typeof clientApi.addQueue>) {
     clientApi
       .addQueue(...p)
       .then(res => {
-        if (res.ok) return res.json()
+        if (res.ok) return res
         else return Promise.reject(res)
       })
       .then(() => {
         useSnackbar('已加入播放佇列中囉～\n要排隊，請稍等一下。', 'success')
         if (import.meta.env.PROD) localStorage.setItem(lastAddTimestampKey, Date.now().toString())
       })
-      .catch(() => {
+      .catch(error => {
+        console.error(error)
         useSnackbar('加入播放佇列失敗，請稍後再試。', 'danger')
       })
   } else {
