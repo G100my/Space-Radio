@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,7 +16,7 @@
   "dependencies": {
     "@oruga-ui/oruga-next": "^0.8.12",
     "@oruga-ui/theme-oruga": "^0.3.0",
-    "server": "^3.0.1",
-    "shared": "^3.0.1"
+    "server": "^3.0.2",
+    "shared": "^3.0.2"
   }
 }

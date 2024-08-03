@@ -1,6 +1,6 @@
 {
   "name": "host",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,8 +11,8 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
-    "server": "^3.0.1",
-    "shared": "^3.0.1"
+    "server": "^3.0.2",
+    "shared": "^3.0.2"
   },
   "devDependencies": {
     "@spotify/web-api-ts-sdk": "^1.2.0"
