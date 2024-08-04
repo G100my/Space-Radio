@@ -1,23 +1,16 @@
 <script setup lang="ts">
 import { routeMap } from '@/constant'
-import { Database, type Unsubscribe, getDatabase, onValue } from 'firebase/database'
+import { type Unsubscribe, onValue } from 'firebase/database'
 import { onMounted, onUnmounted } from 'vue'
-import { app, auth } from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 import { ref as databaseRef } from 'firebase/database'
 import { useHostStore } from '@/stores'
 
 const hostStore = useHostStore()
 
-let db: Database
 let unsubscribe: Unsubscribe
 onMounted(() => {
-  const space = auth.currentUser?.uid
-  if (!space) {
-    console.error('No space')
-    return
-  }
-  db = getDatabase(app)
-  unsubscribe = onValue(databaseRef(db, `${space}/data`), snapshot => {
+  unsubscribe = onValue(databaseRef(db, `${hostStore.space}/data`), snapshot => {
     const val = snapshot.val()
     console.info('🚀 ~ unsubscribe=onValue ~ val:', val)
     hostStore.queue = val?.queue

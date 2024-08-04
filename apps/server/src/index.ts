@@ -1,15 +1,7 @@
 import { logger, region } from 'firebase-functions'
-import { addQueueSchema, AddedQueue, settingsSchema } from './schemas'
+import { addQueueSchema, AddedQueue } from './schemas'
 import admin = require('firebase-admin')
-import {
-  CustomAuth,
-  checkAuth,
-  checkQueryIsString,
-  createSpotifyInstance,
-  sendQueue,
-  updateAuthCallback,
-} from './utils'
-import { type AccessToken } from '@spotify/web-api-ts-sdk'
+import { CustomAuth, checkQueryIsString, createSpotifyInstance, sendQueue, updateAuthCallback } from './utils'
 import cors = require('cors')
 
 const clientAllowedOrigins = ['https://jukebox.akijo.space', 'http://localhost:2405']
@@ -137,95 +129,6 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
 // =============================================================================
 
 /**
- * Update host auth
- * @param space query
- * @param body auth
- * @returns status 200 if success, status 404 if space not found
- */
-const updateAuth = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(request, response, () => {
-    logger.log('Host login', request.body)
-
-    const space = request.query.space
-    if (!checkQueryIsString(response, space)) return
-
-    db.ref(space).once('value', async snapshot => {
-      if (!snapshot.exists()) {
-        logger.warn('space not found', { space })
-        response.status(404).send('Space Not Found')
-      } else {
-        const user = await checkAuth(request, response, admin.auth(), snapshot.val().email)
-        if (!user) return
-        const timestamp = new Date().getTime()
-        db.ref(space + '/auth').update({ ...(request.body as AccessToken), timestamp })
-        response.status(200).send('OK')
-      }
-    })
-  })
-})
-
-/**
- * Update site
- * @param space query
- * @param body site data
- * @returns status 404 if space not found
- */
-const updateSite = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(request, response, () => {
-    const space = request.query.space
-    if (!checkQueryIsString(response, space)) return
-
-    const ref = db.ref(space)
-    ref.once('value', async snapshot => {
-      if (!snapshot.exists()) {
-        logger.warn('space not found', { space })
-        response.status(404).send('Not Found')
-      } else {
-        const user = await checkAuth(request, response, admin.auth(), snapshot.val().email)
-        if (!user) return
-        const siteData = request.body
-        ref.child('data/sites').update(siteData)
-      }
-    })
-  })
-})
-
-/**
- * Update allpass
- * @param space query
- * @param body settings
- * @returns status 200 if success, status 400 if bad request, status 404 if space not found
- */
-const updateAllpass = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(request, response, () => {
-    const space = request.query.space
-    if (!checkQueryIsString(response, space)) return
-
-    const settings = JSON.parse(request.body)
-
-    const result = settingsSchema.safeParse(settings)
-    if (!result.success) {
-      logger.warn('Invalid settings', { settings })
-      response.status(400).send('Bad Request')
-      return
-    } else {
-      const ref = db.ref(space)
-      ref.once('value', async snapshot => {
-        if (!snapshot.exists()) {
-          logger.warn('space not found', { space })
-          response.status(404).send('Not Found')
-        } else {
-          const user = await checkAuth(request, response, admin.auth(), snapshot.val().email)
-          if (!user) return
-          ref.child('data/settings').update(settings)
-          response.status(200).send('OK')
-        }
-      })
-    }
-  })
-})
-
-/**
  * Resolve queue
  * @param space query
  * @param key query
@@ -272,8 +175,5 @@ export {
   addQueue,
   getCurrentPlaying,
   // host
-  updateAuth,
-  updateSite,
   resolveQueue,
-  updateAllpass,
 }

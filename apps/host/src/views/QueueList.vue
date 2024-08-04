@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import TrackItem from '@/components/TrackItem.vue'
-import { IconWrapper, usePersonalStore } from 'shared'
+import { IconWrapper } from 'shared'
 import { useHostStore, usePreviewAudioStore } from '@/stores'
 import { hostApi } from '@/api/cloudFunctionAPI'
 
 const audioStore = usePreviewAudioStore()
-const personalStore = usePersonalStore()
 const hostStore = useHostStore()
 
-function handleResolve(params: { key: string; action: 'approve' | 'reject' }) {
-  const space = personalStore.id
-  if (!space) {
-    console.error('No space')
-    return
-  }
+async function handleResolve(params: { key: string; action: 'approve' | 'reject' }) {
+  const space = await hostStore._checkSpace()
   hostApi.resolveQueue({ ...params, space })
 }
 </script>

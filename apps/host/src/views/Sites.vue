@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { hostApi } from '@/api/cloudFunctionAPI'
 import { useHostStore } from '@/stores'
-import { BaseSwitch, usePersonalStore } from 'shared'
+import { BaseSwitch } from 'shared'
 
 const hostStore = useHostStore()
 
-const personalStore = usePersonalStore()
-
-function handleSwitch(key: keyof typeof hostStore.sites) {
-  hostStore.sites[key]['need_review'] = !hostStore.sites[key]['need_review']
+function handleSwitch(key: keyof typeof hostStore.sites, value: boolean) {
+  hostStore.updateSites(key, { need_review: value })
 }
 
-function handleAllpassSwitch() {
-  hostApi.updateAllpass(personalStore.id, { top_switch: !hostStore.settings.top_switch })
+function handleAllpassSwitch(value: boolean) {
+  hostStore.updateSettings({ top_switch: value })
 }
 </script>
 <template>
@@ -24,7 +21,7 @@ function handleAllpassSwitch() {
           :label="i.name"
           :modelValue="i.need_review"
           :disabled="hostStore.settings.top_switch"
-          @update:modelValue="handleSwitch(key)"
+          @update:modelValue="handleSwitch(key, $event)"
         />
       </div>
     </aside>
