@@ -272,7 +272,6 @@ export {
   addQueue,
   getCurrentPlaying,
   // host
-  // getSpaceData,
   updateAuth,
   updateSite,
   resolveQueue,

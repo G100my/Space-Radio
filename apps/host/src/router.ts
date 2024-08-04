@@ -1,12 +1,22 @@
-import { handleAuthFromRoute } from 'shared'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { routeMap } from './constant'
-import { hostApi } from './api/cloudFunctionAPI'
-import { usePersonalStore } from 'shared'
-import { spotifyWrappedAPI } from './api/spotifyWrappedAPI'
+import { auth } from '@/plugins/firebase'
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', name: routeMap.Index, component: () => import('@/views/index.vue') },
+  {
+    path: '/',
+    name: routeMap.Index,
+    component: () => import('@/views/index.vue'),
+    beforeEnter: () => {
+      return auth
+        .authStateReady()
+        .then(() => {
+          if (auth.currentUser) return { name: routeMap.Queue }
+          else return true
+        })
+        .catch(() => true)
+    },
+  },
   {
     path: '/',
     component: () => import('@/layouts/HostInner.vue'),
@@ -27,19 +37,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/Auth.vue'),
       },
     ],
-    beforeEnter: async to => {
-      const redirect = await handleAuthFromRoute(to, {
-        initRouteName: routeMap.Index,
-        validRouteName: routeMap.Queue,
-        redirectUrl: routeMap.Queue,
-        authRefreshCallback: () => {
-          const personalStore = usePersonalStore()
-          hostApi.updateAuth(personalStore.id, personalStore.auth!)
-        },
-        client_id: import.meta.env.VITE_CLIENT_ID,
-        spotifyWrappedAPI,
-      })
-      if (redirect) return redirect
+    beforeEnter: async () => {
+      return await auth
+        .authStateReady()
+        .then(() => {
+          if (!auth.currentUser) return Promise.reject()
+          else return true
+        })
+        .catch(() => ({ name: routeMap.Index }))
     },
   },
 ]

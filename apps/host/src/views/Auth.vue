@@ -1,33 +1,47 @@
 <script setup lang="ts">
 import { routeMap } from '@/constant'
-import { usePersonalStore } from '@/stores'
 import { useRouter } from 'vue-router'
 import { PKCE } from 'shared'
 import { generateAuthParams } from 'shared'
+import { auth } from '@/plugins/firebase'
 
-const personalStore = usePersonalStore()
 const router = useRouter()
 
-function handleLogout() {
-  personalStore.clear()
-  router.push({ name: routeMap.Index })
+function handleFirebaseAuthLogout() {
+  auth.signOut().then(() => {
+    router.push({ name: routeMap.Index })
+  })
 }
-function handleLogin() {
+function handleSpotifyAuth() {
   PKCE(generateAuthParams(routeMap.Queue))
 }
 </script>
 
 <template>
-  <section>
-    <div class="p-5">
-      <p>重新登入 spotify，並且重新授權給伺服器，用在如果客人沒辦法點歌時用的</p>
+  <section class="flex flex-col justify-center gap-20">
+    <div>
+      <div>
+        <p class="text-center">重新登入 spotify，並且授權給伺服器，用在遠端伺服器上的權限過期失效時。</p>
+      </div>
+      <button
+        type="button"
+        @click="handleSpotifyAuth"
+        class="text-natural-white bg-primary mt-4 w-full rounded-full py-2 text-center text-2xl"
+      >
+        Refresh Token
+      </button>
     </div>
-    <button
-      type="button"
-      @click="handleLogin"
-      class="text-natural-white bg-secondary w-full rounded-full py-3 text-center text-4xl"
-    >
-      Refresh Token
-    </button>
+    <div>
+      <div>
+        <p class="text-center">登出 Firebase Auth，並且回到登入頁。</p>
+      </div>
+      <button
+        type="button"
+        @click="handleFirebaseAuthLogout"
+        class="text-natural-white bg-primary mt-4 w-full rounded-full py-2 text-center text-2xl"
+      >
+        Logout
+      </button>
+    </div>
   </section>
 </template>

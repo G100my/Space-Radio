@@ -2,21 +2,16 @@
 import { routeMap } from '@/constant'
 import { Database, type Unsubscribe, getDatabase, onValue } from 'firebase/database'
 import { onMounted, onUnmounted } from 'vue'
-import { app } from '@/plugins/firebase'
+import { app, auth } from '@/plugins/firebase'
 import { ref as databaseRef } from 'firebase/database'
-import { usePersonalStore, useHostStore } from '@/stores'
+import { useHostStore } from '@/stores'
 
-const personalStore = usePersonalStore()
 const hostStore = useHostStore()
 
 let db: Database
 let unsubscribe: Unsubscribe
 onMounted(() => {
-  if (!personalStore.isTokenValid() || !personalStore.id) {
-    console.error('Token/UserID is invalid', personalStore.id)
-    return
-  }
-  const space = personalStore.id
+  const space = auth.currentUser?.uid
   if (!space) {
     console.error('No space')
     return

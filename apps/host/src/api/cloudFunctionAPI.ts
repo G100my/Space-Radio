@@ -32,7 +32,6 @@ async function updateAllpass(space: string, settings: SiteSettings) {
 }
 
 export const hostApi = {
-  // getSpaceData,
   updateAuth,
   resolveQueue,
   updateAllpass,

@@ -1,17 +1,31 @@
 <script setup lang="ts">
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { ref } from 'vue'
+import { auth } from '@/plugins/firebase'
+import { useRouter } from 'vue-router'
 import { routeMap } from '@/constant'
-import { PKCE } from 'shared'
-import { generateAuthParams } from 'shared'
+import { useAlert } from 'shared'
+
+const email = ref('')
+const password = ref('')
+const router = useRouter()
 
 function handleLogin() {
-  PKCE(generateAuthParams(routeMap.Queue))
+  signInWithEmailAndPassword(auth, email.value, password.value)
+    .then(userCredential => {
+      if (import.meta.env.DEV) console.log('🚀 ~ handleLogin ~ userCredential:', userCredential)
+      router.push({ name: routeMap.Queue })
+    })
+    .catch(error => {
+      useAlert(error.message).open()
+    })
 }
 </script>
 <template>
   <main class="h-full max-w-lg p-5">
     <div>
       <h1 class="text-primary text-center text-5xl">Akijo Radio</h1>
-      <section class="my-6 space-y-3 px-4">
+      <section class="mx-4 my-6 space-y-3">
         <h2>注意事項</h2>
         <ol class="list-decimal space-y-3 pl-5">
           <li>
@@ -26,14 +40,28 @@ function handleLogin() {
         </ol>
       </section>
     </div>
-    <div>
-      <button
-        type="button"
-        class="text-natural-white bg-system-success1 w-full rounded-full py-3 text-center text-4xl"
-        @click="handleLogin"
-      >
-        Loggin Spotify
-      </button>
-    </div>
+
+    <form @submit.prevent="handleLogin">
+      <div class="mx-4 my-8">
+        <label for="email" class="text-primary block text-lg">Email</label>
+        <input type="email" id="email" v-model="email" class="bg-tertiary-2 w-full rounded px-3 py-2 text-lg" />
+
+        <label for="password" class="text-primary mt-4 block text-lg">Password</label>
+        <input
+          type="password"
+          id="password"
+          v-model="password"
+          class="bg-tertiary-2 w-full rounded px-3 py-2 text-lg"
+        />
+      </div>
+      <div class="mx-4">
+        <button
+          type="submit"
+          class="text-natural-white bg-system-success1 w-full rounded-full py-3 text-center text-4xl"
+        >
+          Login
+        </button>
+      </div>
+    </form>
   </main>
 </template>
