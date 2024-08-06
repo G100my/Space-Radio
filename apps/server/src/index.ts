@@ -130,7 +130,10 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
             response.status(204).send()
           }
         })
-        .catch(error => logger.error('Failed to get current playing track', { error }))
+        .catch(error => {
+          logger.error('Failed to get current playing track', { error })
+          response.status(500).send('error')
+        })
     })
   })
 })
