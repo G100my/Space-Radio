@@ -3,7 +3,7 @@ import { Switch as SwitchItem, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 
 defineProps<{
   modelValue: boolean
-  label: string
+  label?: string
 }>()
 defineEmits<{
   (e: 'update:modelValue', value: boolean): void
@@ -14,7 +14,7 @@ defineOptions({
 </script>
 <template>
   <SwitchGroup as="template">
-    <SwitchLabel class="mr-4">{{ label }}</SwitchLabel>
+    <SwitchLabel v-if="label" class="mr-4">{{ label }}</SwitchLabel>
     <SwitchItem
       :value="String(modelValue)"
       :class="[modelValue ? 'bg-primary' : 'bg-natural-gray3']"

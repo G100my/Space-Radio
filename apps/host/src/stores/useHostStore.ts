@@ -1,7 +1,7 @@
 import type { SiteSettings, SpaceClientData } from 'server/schemas'
 import { defineStore } from 'pinia'
 import { auth, db } from '@/plugins/firebase'
-import { ref, set, update } from 'firebase/database'
+import { push, ref, remove, set, update } from 'firebase/database'
 import type { AccessToken } from '@spotify/web-api-ts-sdk'
 
 export default defineStore('host', {
@@ -37,9 +37,18 @@ export default defineStore('host', {
       await this._checkSpace()
       update(ref(db, `/${this.space}/data/settings`), settings)
     },
-    async updateSites(key: string | number, siteData: { name?: string; need_review: boolean }) {
+    async updateSites(key: string | number, siteData: { name?: string; need_review?: boolean }) {
       await this._checkSpace()
       update(ref(db, `/${this.space}/data/sites/${key}`), siteData)
+    },
+    async addSite(key: string) {
+      await this._checkSpace()
+      push(ref(db, `/${this.space}/data/sites`), { name: key, need_review: true })
+    },
+    async deleteSite(key: string) {
+      if (!key) return
+      await this._checkSpace()
+      remove(ref(db, `/${this.space}/data/sites/${key}`))
     },
   },
 })
