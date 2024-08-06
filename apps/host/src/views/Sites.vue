@@ -6,12 +6,10 @@ import { ref } from 'vue'
 const hostStore = useHostStore()
 
 function handleCopyUrl(siteKey?: string | number) {
-  const url = `${clientUrl}?space=${hostStore.hostUid}${siteKey ? '&site=' + siteKey : ''}`
+  const url = `${hostStore.clientUrl}${siteKey ? '&site=' + siteKey : ''}`
   navigator.clipboard.writeText(url)
   console.log('copied url:', url)
 }
-const clientUrl = import.meta.env.VITE_CLIENT_URL
-
 const newSiteName = ref('')
 
 async function handleAddSite() {
@@ -40,9 +38,7 @@ async function handleDelete() {
       <div>
         <p>無使用者設定連結：</p>
         <p class="text-xs">
-          <a :href="`${clientUrl}?space=${hostStore.hostUid}`" target="_blank">{{
-            `${clientUrl}?space=${hostStore.hostUid}`
-          }}</a>
+          <a :href="`${hostStore.clientUrl}`" target="_blank">{{ `${hostStore.clientUrl}` }}</a>
         </p>
       </div>
       <button type="button" @click="handleCopyUrl()" class="inline-block h-10 w-10">
@@ -70,9 +66,8 @@ async function handleDelete() {
             />
           </div>
           <div class="mt-1 flex text-neutral-400 transition-colors duration-150 active:text-white">
-            <a :href="`${clientUrl}?space=${hostStore.hostUid}&site=${key}`" target="_blank" class="text-start text-xs">
-              URL: {{ `${clientUrl}?space=${hostStore.hostUid}&`
-              }}<span class="text-natural-gray1">site={{ key }}</span>
+            <a :href="`${hostStore.clientUrl}&site=${key}`" target="_blank" class="text-start text-xs">
+              URL: {{ `${hostStore.clientUrl}&site=` }}<span class="text-natural-gray1">{{ key }}</span>
             </a>
             <div class="whitespace-nowrap">
               <button class="inline-block h-10 w-10" @click="openDeleteGuard(key)">

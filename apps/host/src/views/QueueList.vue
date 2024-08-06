@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TrackItem from '@/components/TrackItem.vue'
-import { IconWrapper } from 'shared'
+import { IconWrapper, useSnackbar } from 'shared'
 import { useHostStore, usePreviewAudioStore } from '@/stores'
 import { hostApi } from '@/api/cloudFunctionAPI'
 
@@ -8,8 +8,8 @@ const audioStore = usePreviewAudioStore()
 const hostStore = useHostStore()
 
 async function handleResolve(params: { key: string; action: 'approve' | 'reject' }) {
-  const space = await hostStore._checkSpace()
-  hostApi.resolveQueue({ ...params, space })
+  const space = await hostStore.checkUid()
+  hostApi.resolveQueue({ ...params, space }).catch(() => useSnackbar('Spotify Token 失效，請重新登入', 'danger'))
 }
 </script>
 <template>

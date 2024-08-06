@@ -41,11 +41,12 @@ const routes: RouteRecordRaw[] = [
     ],
     beforeEnter: async to => {
       const authorization_code = to.query.code as string | undefined
+      const hostStore = useHostStore()
       if (authorization_code) {
         if (import.meta.env.DEV) {
           console.log('🚀 ~ authorization_code:', authorization_code)
         }
-        const hostStore = useHostStore()
+
         fetchAccessToken(authorization_code, generateAuthParams(routeMap.Queue)).then(res => {
           hostStore.updateAuth(res)
         })
@@ -55,7 +56,10 @@ const routes: RouteRecordRaw[] = [
         .authStateReady()
         .then(() => {
           if (!auth.currentUser) return Promise.reject()
-          else return true
+          else {
+            hostStore.checkUid()
+            return true
+          }
         })
         .catch(() => ({ name: routeMap.Index }))
     },

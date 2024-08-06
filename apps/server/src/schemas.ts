@@ -45,7 +45,7 @@ export const SPOTIFY_SERVER_SCOPE = ['user-modify-playback-state', 'user-read-cu
 
 export const settingsSchema = z.object({
   top_switch: z.boolean(),
-  display_name: z.string(),
+  space_name: z.string(),
   welcome_message: z.string(),
 })
 export type SiteSettings = z.infer<typeof settingsSchema>
