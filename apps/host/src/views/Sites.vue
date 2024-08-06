@@ -38,7 +38,7 @@ async function handleDelete() {
   <div class="flex h-full flex-col">
     <div class="flex items-center border-b pb-2 text-gray-400 transition-colors active:text-white">
       <div>
-        <p>無座位設定連結：</p>
+        <p>無使用者設定連結：</p>
         <p class="text-xs">
           <a :href="`${clientUrl}?space=${hostStore.space}`" target="_blank">{{
             `${clientUrl}?space=${hostStore.space}`
@@ -54,7 +54,7 @@ async function handleDelete() {
         <li class="py-4 text-base" v-for="(i, key) in hostStore.sites" :key="key">
           <div class="flex items-center justify-between">
             <div>
-              <span>座位名稱：</span>
+              <span>使用者名稱：</span>
               <input
                 :value="i.name"
                 type="text"

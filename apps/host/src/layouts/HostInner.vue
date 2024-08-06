@@ -35,7 +35,7 @@ onUnmounted(() => {
       <span class="block whitespace-nowrap text-xl">Queue</span>
     </RouterLink>
     <RouterLink class="w-full" :to="{ name: routeMap.Sites }">
-      <span class="block whitespace-nowrap text-xl">座位設定</span>
+      <span class="block whitespace-nowrap text-xl">使用者設定</span>
     </RouterLink>
     <RouterLink class="w-full" :to="{ name: routeMap.Auth }">
       <span class="block whitespace-nowrap text-xl">Auth</span>
