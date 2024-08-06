@@ -6,7 +6,7 @@ import { ref } from 'vue'
 const hostStore = useHostStore()
 
 function handleCopyUrl(siteKey?: string | number) {
-  const url = `${clientUrl}?space=${hostStore.space}${siteKey ? '&site=' + siteKey : ''}`
+  const url = `${clientUrl}?space=${hostStore.hostUid}${siteKey ? '&site=' + siteKey : ''}`
   navigator.clipboard.writeText(url)
   console.log('copied url:', url)
 }
@@ -40,8 +40,8 @@ async function handleDelete() {
       <div>
         <p>無使用者設定連結：</p>
         <p class="text-xs">
-          <a :href="`${clientUrl}?space=${hostStore.space}`" target="_blank">{{
-            `${clientUrl}?space=${hostStore.space}`
+          <a :href="`${clientUrl}?space=${hostStore.hostUid}`" target="_blank">{{
+            `${clientUrl}?space=${hostStore.hostUid}`
           }}</a>
         </p>
       </div>
@@ -70,8 +70,9 @@ async function handleDelete() {
             />
           </div>
           <div class="mt-1 flex text-neutral-400 transition-colors duration-150 active:text-white">
-            <a :href="`${clientUrl}?space=${hostStore.space}&site=${key}`" target="_blank" class="text-start text-xs">
-              URL: {{ `${clientUrl}?space=${hostStore.space}&` }}<span class="text-natural-gray1">site={{ key }}</span>
+            <a :href="`${clientUrl}?space=${hostStore.hostUid}&site=${key}`" target="_blank" class="text-start text-xs">
+              URL: {{ `${clientUrl}?space=${hostStore.hostUid}&`
+              }}<span class="text-natural-gray1">site={{ key }}</span>
             </a>
             <div class="whitespace-nowrap">
               <button class="inline-block h-10 w-10" @click="openDeleteGuard(key)">

@@ -69,9 +69,9 @@ export function checkQueryIsString(response: Response, query: Request['query'][s
   return true
 }
 
-export function updateAuthCallback(space: string, auth: AccessToken, db: Database) {
+export function updateAuthCallback(hostUid: string, auth: AccessToken, db: Database) {
   const timestamp = new Date().getTime()
-  db.ref(space + '/auth').update({ ...auth, timestamp })
+  db.ref(hostUid + '/auth').update({ ...auth, timestamp })
 }
 
 export async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, response: Response) {

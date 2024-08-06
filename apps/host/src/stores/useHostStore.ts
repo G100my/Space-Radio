@@ -5,14 +5,14 @@ import { push, ref, remove, set, update } from 'firebase/database'
 import type { AccessToken } from '@spotify/web-api-ts-sdk'
 
 export default defineStore('host', {
-  state: (): SpaceClientData & { space: string | undefined } => {
+  state: (): SpaceClientData & { hostUid: string | undefined } => {
     const space = auth.currentUser?.uid
     return {
       sites: {},
       settings: { top_switch: false, welcome_message: '', display_name: '' },
       queue: {},
 
-      space,
+      hostUid: space,
     }
   },
   getters: {
@@ -20,35 +20,35 @@ export default defineStore('host', {
   },
   actions: {
     async _checkSpace() {
-      if (!this.space) {
+      if (!this.hostUid) {
         await auth.authStateReady()
         const space = auth.currentUser!.uid
         if (!space) throw new Error('No space name!')
 
-        this.space = space
+        this.hostUid = space
       }
-      return this.space
+      return this.hostUid
     },
     async updateAuth(spotifyAuth: AccessToken) {
       await this._checkSpace()
-      set(ref(db, `/${this.space}/auth`), spotifyAuth)
+      set(ref(db, `/${this.hostUid}/auth`), spotifyAuth)
     },
     async updateSettings(settings: Partial<SiteSettings>) {
       await this._checkSpace()
-      update(ref(db, `/${this.space}/settings`), settings)
+      update(ref(db, `/${this.hostUid}/settings`), settings)
     },
     async updateSites(key: string | number, siteData: { name?: string; need_review?: boolean }) {
       await this._checkSpace()
-      update(ref(db, `/${this.space}/sites/${key}`), siteData)
+      update(ref(db, `/${this.hostUid}/sites/${key}`), siteData)
     },
     async addSite(key: string) {
       await this._checkSpace()
-      push(ref(db, `/${this.space}/sites`), { name: key, need_review: true })
+      push(ref(db, `/${this.hostUid}/sites`), { name: key, need_review: true })
     },
     async deleteSite(key: string) {
       if (!key) return
       await this._checkSpace()
-      remove(ref(db, `/${this.space}/sites/${key}`))
+      remove(ref(db, `/${this.hostUid}/sites/${key}`))
     },
   },
 })

@@ -11,13 +11,13 @@ const hostStore = useHostStore()
 let unsubscribes: Unsubscribe[] = []
 onMounted(() => {
   unsubscribes.push(
-    onValue(databaseRef(db, `${hostStore.space}/queue`), snapshot => {
+    onValue(databaseRef(db, `${hostStore.hostUid}/queue`), snapshot => {
       hostStore.queue = snapshot.val()
     }),
-    onValue(databaseRef(db, `${hostStore.space}/settings`), snapshot => {
+    onValue(databaseRef(db, `${hostStore.hostUid}/settings`), snapshot => {
       hostStore.settings = snapshot.val()
     }),
-    onValue(databaseRef(db, `${hostStore.space}/sites`), snapshot => {
+    onValue(databaseRef(db, `${hostStore.hostUid}/sites`), snapshot => {
       hostStore.sites = snapshot.val()
     })
   )

@@ -25,7 +25,7 @@ const db = admin.database()
  * @returns status 200 if success, status 400 if bad request, status 404 if site or space not found, status 500 if failed to add queue to current user
  */
 const addQueue = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: clientAllowedOrigins, methods: 'POST' })(request, response, () => {
+  cors({ origin: clientAllowedOrigins, methods: 'POST' })(request, response, async () => {
     const site = request.query.site as string | undefined
     const space = request.query.space
     if (!checkQueryIsString(response, space)) return
@@ -38,11 +38,18 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
     }
     const queue = queueResult.data
 
-    const spaceRef = db.ref(space)
+    const hostUid = (await db.ref('map/' + space).once('value')).val()
+    if (!hostUid) {
+      logger.error(`Not found`, { hostUid, space })
+      response.status(404).send('Not Found')
+      return Promise.reject()
+    }
+
+    const spaceRef = db.ref(hostUid)
     spaceRef
       .once('value', spaceSnapshot => {
         if (!spaceSnapshot.exists()) {
-          logger.warn('space not found', { site, space })
+          logger.warn('space not found', { site, space, hostUid })
           response.status(404).send('Not Found')
           return Promise.reject()
         } else {
@@ -50,17 +57,17 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
         }
       })
       .then(spaceSnapshot => {
-        const top_switch = spaceSnapshot.child('data/settings/top_switch').val()
+        const top_switch = spaceSnapshot.child('settings/top_switch').val()
         if (top_switch) {
           const auth = spaceSnapshot.child('auth').val() as CustomAuth
           createSpotifyInstance({
             tokens: auth,
-            updateTokenCallback: newAuth => updateAuthCallback(space, newAuth, db),
+            updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),
             response,
           }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
         } else {
           const push2Queue = () => {
-            const queueRef = spaceRef.child('data/queue')
+            const queueRef = spaceRef.child('queue')
             queueRef.push({ ...queue, site: null })
             response.status(200).send('OK')
           }
@@ -70,13 +77,13 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
             return
           }
 
-          const needReview = spaceSnapshot.child(`data/sites/${site}/need_review`)
+          const needReview = spaceSnapshot.child(`sites/${site}/need_review`)
           if (needReview.val()) push2Queue()
           else {
             const auth = spaceSnapshot.child('auth').val() as CustomAuth
             createSpotifyInstance({
               tokens: auth,
-              updateTokenCallback: newAuth => updateAuthCallback(space, newAuth, db),
+              updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),
               response,
             }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
           }
@@ -91,14 +98,22 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
  */
 
 const getCurrentPlaying = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: clientAllowedOrigins, methods: 'GET' })(request, response, () => {
+  cors({ origin: clientAllowedOrigins, methods: 'GET' })(request, response, async () => {
     if (!checkQueryIsString(response, request.query.space)) return
 
     const space = request.query.space
+    console.log('🚀 ~ cors ~ space:', space)
+    const hostUid = (await db.ref('map/' + space).once('value')).val()
+    console.log('🚀 ~ cors ~ hostUid:', hostUid)
+    if (!hostUid) {
+      logger.error(`Not found`, { hostUid, space })
+      response.status(404).send('Not Found')
+      return
+    }
 
-    db.ref(space + '/auth').once('value', snapshot => {
+    db.ref(hostUid + '/auth').once('value', snapshot => {
       if (!snapshot.exists()) {
-        logger.warn('space not found', { space })
+        logger.warn('auth record not found', { space })
         response.status(404).send('Not Found')
         return
       }
@@ -107,14 +122,14 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
 
       createSpotifyInstance({
         tokens: auth,
-        updateTokenCallback: newAuth => updateAuthCallback(space, newAuth, db),
+        updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),
         response,
       })
         .then(spotifySDK => spotifySDK.player.getCurrentlyPlayingTrack())
         .then(currentPlaying => {
           console.log('🚀 ~ db.ref ~ currentPlaying:', currentPlaying)
           if (currentPlaying) {
-            db.ref(space + '/data/settings/name').once('value', snapshot => {
+            db.ref(space + '/settings/name').once('value', snapshot => {
               response.status(200).send({ ...currentPlaying, spaceName: snapshot.val() })
             })
           } else {
@@ -136,38 +151,48 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
  * @returns status 200 if success, status 400 if bad request
  */
 const resolveQueue = region('asia-east1').https.onRequest((request, response) => {
-  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(request, response, () => {
-    const space = request.query.space
-    if (!checkQueryIsString(response, space)) return
+  cors({ origin: hostAllowedOrigins, allowedHeaders: ['Authorization'], methods: 'POST' })(
+    request,
+    response,
+    async () => {
+      const space = request.query.space
+      if (!checkQueryIsString(response, space)) return
+      const hostUid = (await db.ref('map/' + space).once('value')).val()
+      if (!hostUid) {
+        logger.error(`Not found`, { hostUid, space })
+        response.status(404).send('Not Found')
+        return
+      }
 
-    const queueKey = request.query.key
-    if (!checkQueryIsString(response, queueKey)) return
+      const queueKey = request.query.key
+      if (!checkQueryIsString(response, queueKey)) return
 
-    const action = request.query.action as 'approve' | 'reject'
-    if (!checkQueryIsString(response, action)) return
+      const action = request.query.action as 'approve' | 'reject'
+      if (!checkQueryIsString(response, action)) return
 
-    const ref = db.ref(`${space}/queue/${queueKey}`)
-    if (action === 'approve') {
-      ref.once('value', snapshot => {
-        const queue = snapshot.val() as AddedQueue
-        db.ref(`${space}/auth`).once('value', authSnapshot => {
-          createSpotifyInstance({
-            tokens: authSnapshot.val() as CustomAuth,
-            updateTokenCallback: newAuth => updateAuthCallback(space, newAuth, db),
-            response,
+      const ref = db.ref(`${space}/queue/${queueKey}`)
+      if (action === 'approve') {
+        ref.once('value', snapshot => {
+          const queue = snapshot.val() as AddedQueue
+          db.ref(`${space}/auth`).once('value', authSnapshot => {
+            createSpotifyInstance({
+              tokens: authSnapshot.val() as CustomAuth,
+              updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),
+              response,
+            })
+              .then(spotifySDK => sendQueue(spotifySDK, queue, response))
+              .then(() => ref.remove())
+              .catch(error => logger.error('Failed to send queue', { error }))
           })
-            .then(spotifySDK => sendQueue(spotifySDK, queue, response))
-            .then(() => ref.remove())
-            .catch(error => logger.error('Failed to send queue', { error }))
         })
-      })
-    } else if (action === 'reject') {
-      ref.remove()
-      response.status(200).send('OK')
-    } else {
-      response.status(400).send('Bad Request')
+      } else if (action === 'reject') {
+        ref.remove()
+        response.status(200).send('OK')
+      } else {
+        response.status(400).send('Bad Request')
+      }
     }
-  })
+  )
 })
 
 export {
