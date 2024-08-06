@@ -43,12 +43,13 @@ const generateDefaultLoadingComponent: RenderFunction = () =>
 
 //---
 
-type LevelType = 'success' | 'danger'
+type LevelType = 'success' | 'danger' | 'info'
 const snackbarStack = reactive<VNode[]>([])
 let currentLevelStyleMap: { [key in LevelType]: string }
 const defaultLevelStyleMap: { [key in LevelType]: string } = {
   danger: 'bg-system-error1 text-white',
   success: 'bg-secondary text-black',
+  info: 'bg-natural-gray4 text-black',
 }
 
 let currentSnackbar: VNode | Component | ReturnType<typeof defineComponent>
@@ -109,6 +110,8 @@ export function useAlert(content: Component | string): { open: () => void; close
   currentAlertComponent = typeof content === 'string' ? DefaultSimpleAlert({ message: content }) : content
   return {
     open: () => {
+      console.log('!!')
+
       showAlert.value = true
     },
     close: () => {
