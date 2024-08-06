@@ -4,12 +4,15 @@ import { useRouter } from 'vue-router'
 import { PKCE } from 'shared'
 import { generateAuthParams } from 'shared'
 import { auth } from '@/plugins/firebase'
+import { useHostStore } from '@/stores'
 
 const router = useRouter()
+const hostStore = useHostStore()
 
 function handleFirebaseAuthLogout() {
   auth.signOut().then(() => {
     router.push({ name: routeMap.Index })
+    hostStore.$reset()
   })
 }
 function handleSpotifyAuth() {
