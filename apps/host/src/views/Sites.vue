@@ -5,19 +5,7 @@ import { ref } from 'vue'
 
 const hostStore = useHostStore()
 
-function handleSwitch(siteKey: keyof typeof hostStore.sites, value: boolean) {
-  hostStore.updateSites(siteKey, { need_review: value })
-}
-
-function handleAllpassSwitch(value: boolean) {
-  hostStore.updateSettings({ top_switch: value })
-}
-
-function handleNameChange(siteKey: keyof typeof hostStore.sites, value: string) {
-  hostStore.updateSites(siteKey, { name: value })
-}
-
-function handleCopyUrl(siteKey?: keyof typeof hostStore.sites) {
+function handleCopyUrl(siteKey?: string | number) {
   const url = `${clientUrl}?space=${hostStore.space}${siteKey ? '&site=' + siteKey : ''}`
   navigator.clipboard.writeText(url)
   console.log('copied url:', url)
@@ -34,7 +22,7 @@ async function handleAddSite() {
 
 const showDeleteGuard = ref(false)
 const stageDeleteKey = ref('')
-function openDeleteGuard(key: keyof typeof hostStore.sites) {
+function openDeleteGuard(key: string | number) {
   stageDeleteKey.value = String(key)
   showDeleteGuard.value = true
 }
@@ -71,14 +59,14 @@ async function handleDelete() {
                 :value="i.name"
                 type="text"
                 class="bg-tertiary-2 rounded px-3 py-2 text-lg shadow-inner"
-                @change="handleNameChange(key, ($event.target as HTMLInputElement).value)"
+                @change="hostStore.updateSites(key, { name: ($event.target as HTMLInputElement).value })"
               />
             </div>
             <BaseSwitch
               :key="key"
               :modelValue="i.need_review"
-              :disabled="hostStore.settings.top_switch"
-              @update:modelValue="handleSwitch(key, $event)"
+              :disabled="hostStore.settings?.top_switch"
+              @update:modelValue="hostStore.updateSites(key, { need_review: $event })"
             />
           </div>
           <div class="mt-1 flex text-neutral-400 transition-colors duration-150 active:text-white">
@@ -101,10 +89,10 @@ async function handleDelete() {
     <aside class="-mx-5 mt-auto space-y-3 border-t px-5 pt-3">
       <div class="flex items-center text-2xl">
         <BaseSwitch
-          :modelValue="hostStore.settings.top_switch"
+          :modelValue="!!hostStore.settings?.top_switch"
           label="All Pass"
           class="w-14"
-          @update:modelValue="handleAllpassSwitch"
+          @update:modelValue="hostStore.updateSettings({ top_switch: $event })"
         />
       </div>
       <form @submit.prevent="handleAddSite" class="flex items-center">

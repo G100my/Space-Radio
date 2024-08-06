@@ -34,8 +34,8 @@ export interface Site {
 }
 export type AddedQueue = z.infer<typeof addQueueSchema>
 export interface SpaceClientData {
-  sites: { [site_id: string]: Site }
-  settings: SiteSettings
+  sites?: { [site_id: string]: Site }
+  settings?: SiteSettings
   queue?: {
     [hash: string]: AddedQueue & { site: string }
   }
