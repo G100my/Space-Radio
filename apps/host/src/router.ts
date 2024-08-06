@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { routeMap } from './constant'
 import { auth } from '@/plugins/firebase'
+import { fetchAccessToken, generateAuthParams } from 'shared'
+import { useHostStore } from './stores'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -37,7 +39,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/Settings.vue'),
       },
     ],
-    beforeEnter: async () => {
+    beforeEnter: async to => {
+      const authorization_code = to.query.code as string | undefined
+      if (authorization_code) {
+        if (import.meta.env.DEV) {
+          console.log('🚀 ~ authorization_code:', authorization_code)
+        }
+        const hostStore = useHostStore()
+        fetchAccessToken(authorization_code, generateAuthParams(routeMap.Queue)).then(res => {
+          hostStore.updateAuth(res)
+        })
+      }
+
       return await auth
         .authStateReady()
         .then(() => {
