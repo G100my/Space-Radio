@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: routeMap.Auth,
         name: routeMap.Auth,
-        component: () => import('@/views/Auth.vue'),
+        component: () => import('@/views/Settings.vue'),
       },
     ],
     beforeEnter: async () => {
