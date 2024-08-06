@@ -35,20 +35,20 @@ export default defineStore('host', {
     },
     async updateSettings(settings: Partial<SiteSettings>) {
       await this._checkSpace()
-      update(ref(db, `/${this.space}/data/settings`), settings)
+      update(ref(db, `/${this.space}/settings`), settings)
     },
     async updateSites(key: string | number, siteData: { name?: string; need_review?: boolean }) {
       await this._checkSpace()
-      update(ref(db, `/${this.space}/data/sites/${key}`), siteData)
+      update(ref(db, `/${this.space}/sites/${key}`), siteData)
     },
     async addSite(key: string) {
       await this._checkSpace()
-      push(ref(db, `/${this.space}/data/sites`), { name: key, need_review: true })
+      push(ref(db, `/${this.space}/sites`), { name: key, need_review: true })
     },
     async deleteSite(key: string) {
       if (!key) return
       await this._checkSpace()
-      remove(ref(db, `/${this.space}/data/sites/${key}`))
+      remove(ref(db, `/${this.space}/sites/${key}`))
     },
   },
 })

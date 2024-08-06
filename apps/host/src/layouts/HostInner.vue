@@ -8,18 +8,22 @@ import { useHostStore } from '@/stores'
 
 const hostStore = useHostStore()
 
-let unsubscribe: Unsubscribe
+let unsubscribes: Unsubscribe[] = []
 onMounted(() => {
-  unsubscribe = onValue(databaseRef(db, `${hostStore.space}/data`), snapshot => {
-    const val = snapshot.val()
-    console.info('🚀 ~ unsubscribe=onValue ~ val:', val)
-    hostStore.queue = val?.queue
-    hostStore.settings = val?.settings
-    hostStore.sites = val?.sites
-  })
+  unsubscribes.push(
+    onValue(databaseRef(db, `${hostStore.space}/queue`), snapshot => {
+      hostStore.queue = snapshot.val()
+    }),
+    onValue(databaseRef(db, `${hostStore.space}/settings`), snapshot => {
+      hostStore.settings = snapshot.val()
+    }),
+    onValue(databaseRef(db, `${hostStore.space}/sites`), snapshot => {
+      hostStore.sites = snapshot.val()
+    })
+  )
 })
 onUnmounted(() => {
-  if (unsubscribe) unsubscribe()
+  if (unsubscribes.length) unsubscribes.forEach(unsubscribe => unsubscribe())
 })
 </script>
 <template>

@@ -146,7 +146,7 @@ const resolveQueue = region('asia-east1').https.onRequest((request, response) =>
     const action = request.query.action as 'approve' | 'reject'
     if (!checkQueryIsString(response, action)) return
 
-    const ref = db.ref(`${space}/data/queue/${queueKey}`)
+    const ref = db.ref(`${space}/queue/${queueKey}`)
     if (action === 'approve') {
       ref.once('value', snapshot => {
         const queue = snapshot.val() as AddedQueue
