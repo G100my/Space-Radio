@@ -77,14 +77,18 @@ export function updateAuthCallback(hostUid: string, auth: AccessToken, db: Datab
 export async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, response: Response) {
   return spotifySDK.player
     .addItemToPlaybackQueue(queue.uri)
-    .catch((error: Error) => {
+    .catch((error: any) => {
       if (error.name === 'SyntaxError') return Promise.resolve()
       else return Promise.reject(error)
     })
     .then(() => {
       response.status(200).send('OK')
     })
-    .catch((error: Error) => {
+    .catch((error: any) => {
+      if ((error.message as string).includes('NO_ACTIVE_DEVICE')) {
+        response.status(409).send('No active device')
+        return
+      }
       response.status(500).send('Failed to add queue to current host')
       console.log('Failed to add queue to current host', { error })
     })

@@ -88,8 +88,8 @@ export function addQueue(...p: Parameters<typeof clientApi.addQueue>) {
         if (import.meta.env.PROD) localStorage.setItem(lastAddTimestampKey, Date.now().toString())
       })
       .catch(error => {
-        console.error(error)
-        useSnackbar('加入播放佇列失敗，請稍後再試。', 'danger')
+        if (error.status === 409) useSnackbar('無法在未播放任何歌曲的狀態下點歌', 'danger')
+        else useSnackbar('加入播放佇列失敗，請稍後再試。', 'danger')
       })
   } else {
     useAlert('欸...經費有限...不要這麼急著點嘛～').open()
