@@ -27,8 +27,8 @@ const db = admin.database()
 const addQueue = region('asia-east1').https.onRequest((request, response) => {
   cors({ origin: clientAllowedOrigins, methods: 'POST' })(request, response, async () => {
     const site = request.query.site as string | undefined
-    const space = request.query.space
-    if (!checkQueryIsString(response, space)) return
+    const spaceOrUid = request.query.space
+    if (!checkQueryIsString(response, spaceOrUid)) return
 
     const queueResult = addQueueSchema.safeParse(request.body)
     if (!queueResult.success) {
@@ -38,18 +38,16 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
     }
     const queue = queueResult.data
 
-    const hostUid = (await db.ref('map/' + space).once('value')).val()
+    let hostUid = (await db.ref('map/' + spaceOrUid).once('value')).val()
     if (!hostUid) {
-      logger.error(`Not found`, { hostUid, space })
-      response.status(404).send('Not Found')
-      return Promise.reject()
+      hostUid = spaceOrUid
     }
 
     const spaceRef = db.ref(hostUid)
     spaceRef
       .once('value', spaceSnapshot => {
         if (!spaceSnapshot.exists()) {
-          logger.warn('space not found', { site, space, hostUid })
+          logger.warn('space not found', { site, space: spaceOrUid, hostUid })
           response.status(404).send('Not Found')
           return Promise.reject()
         } else {
@@ -101,19 +99,15 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
   cors({ origin: clientAllowedOrigins, methods: 'GET' })(request, response, async () => {
     if (!checkQueryIsString(response, request.query.space)) return
 
-    const space = request.query.space
-    console.log('🚀 ~ cors ~ space:', space)
-    const hostUid = (await db.ref('map/' + space).once('value')).val()
-    console.log('🚀 ~ cors ~ hostUid:', hostUid)
+    const spaceOrUid = request.query.space
+    let hostUid = (await db.ref('map/' + spaceOrUid).once('value')).val()
     if (!hostUid) {
-      logger.error(`Not found`, { hostUid, space })
-      response.status(404).send('Not Found')
-      return
+      hostUid = spaceOrUid
     }
 
     db.ref(hostUid + '/auth').once('value', snapshot => {
       if (!snapshot.exists()) {
-        logger.warn('auth record not found', { space })
+        logger.warn('auth record not found', { space: spaceOrUid })
         response.status(404).send('Not Found')
         return
       }
@@ -129,7 +123,7 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
         .then(currentPlaying => {
           console.log('🚀 ~ db.ref ~ currentPlaying:', currentPlaying)
           if (currentPlaying) {
-            db.ref(space + '/settings/name').once('value', snapshot => {
+            db.ref(spaceOrUid + '/settings/name').once('value', snapshot => {
               response.status(200).send({ ...currentPlaying, spaceName: snapshot.val() })
             })
           } else {
@@ -155,13 +149,11 @@ const resolveQueue = region('asia-east1').https.onRequest((request, response) =>
     request,
     response,
     async () => {
-      const space = request.query.space
-      if (!checkQueryIsString(response, space)) return
-      const hostUid = (await db.ref('map/' + space).once('value')).val()
+      const spaceOrUid = request.query.space
+      if (!checkQueryIsString(response, spaceOrUid)) return
+      let hostUid = (await db.ref('map/' + spaceOrUid).once('value')).val()
       if (!hostUid) {
-        logger.error(`Not found`, { hostUid, space })
-        response.status(404).send('Not Found')
-        return
+        hostUid = spaceOrUid
       }
 
       const queueKey = request.query.key
@@ -170,11 +162,11 @@ const resolveQueue = region('asia-east1').https.onRequest((request, response) =>
       const action = request.query.action as 'approve' | 'reject'
       if (!checkQueryIsString(response, action)) return
 
-      const ref = db.ref(`${space}/queue/${queueKey}`)
+      const ref = db.ref(`${spaceOrUid}/queue/${queueKey}`)
       if (action === 'approve') {
         ref.once('value', snapshot => {
           const queue = snapshot.val() as AddedQueue
-          db.ref(`${space}/auth`).once('value', authSnapshot => {
+          db.ref(`${spaceOrUid}/auth`).once('value', authSnapshot => {
             createSpotifyInstance({
               tokens: authSnapshot.val() as CustomAuth,
               updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),

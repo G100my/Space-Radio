@@ -46,7 +46,7 @@ export function analyzeURI(fullUri: string) {
 }
 
 function encrypt(text: string) {
-  return btoa(text.toLowerCase()).toString()
+  return btoa(text).toString()
 }
 
 function decrypt(text: string) {
