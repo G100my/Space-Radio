@@ -34,8 +34,8 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/QueueList.vue'),
       },
       {
-        path: routeMap.Auth,
-        name: routeMap.Auth,
+        path: routeMap.Settings,
+        name: routeMap.Settings,
         component: () => import('@/views/Settings.vue'),
       },
     ],

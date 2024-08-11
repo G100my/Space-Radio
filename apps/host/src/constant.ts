@@ -10,6 +10,6 @@ export const routeMap = {
   Index: 'index',
   Sites: 'sites',
   Queue: 'queue',
-  Auth: 'auth',
+  Settings: 'settings',
   NotFound: '404',
 }
