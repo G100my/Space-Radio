@@ -1,14 +1,5 @@
 {
   "hosting": [
-    // {
-    //   "target": "space-radio",
-    //   "public": "apps/space-radio/dist",
-    //   "ignore": [
-    //     "firebase.json",
-    //     "**/.*",
-    //     "**/node_modules/**"
-    //   ]
-    // },
     {
       "target": "client",
       "public": "apps/client/dist",
@@ -44,7 +35,17 @@
     "hosting": {
       "port": 5000,
       "host": "localhost"
-    }
+    },
+    "functions": {
+      "port": 5001
+    },
+    "database": {
+      "port": 9000
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
   },
   "functions": [
     {
