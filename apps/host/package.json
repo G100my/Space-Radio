@@ -15,6 +15,7 @@
     "shared": "^3.0.5"
   },
   "devDependencies": {
-    "@spotify/web-api-ts-sdk": "^1.2.0"
+    "@spotify/web-api-ts-sdk": "^1.2.0",
+    "vite-plugin-pwa": "^0.20.1"
   }
 }
