@@ -88,11 +88,11 @@ function handleGoToArtistTracks(artist: SpotifyApi.ArtistObjectFull) {
             @click="handleGoToArtistTracks(i as SpotifyApi.ArtistObjectFull)"
           />
           <div v-if="i.type === 'track'" class="space-x-1 whitespace-nowrap">
-            <button v-if="i.preview_url" type="button" @click="audioStore.toggle(i)">
+            <button class="h-10 w-10" v-if="i.preview_url" type="button" @click="audioStore.toggle(i)">
               <IconWrapper v-if="audioStore.currentPlaying === i.uri" name="stop-large-line" class="text-2xl" />
               <IconWrapper v-else name="play-large-line" class="text-2xl" />
             </button>
-            <button type="button" @click="handleAdd(i)">
+            <button class="h-10 w-10" type="button" @click="handleAdd(i)">
               <IconWrapper name="add-line" class="text-2xl" />
             </button>
           </div>
