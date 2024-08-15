@@ -12,6 +12,7 @@ import {
   type Plugin,
   type RenderFunction,
 } from 'vue'
+// @ts-ignore
 import CloseIcon from './CloseIcon.vue'
 
 const rootElementID = 'global_component_root'
@@ -39,7 +40,11 @@ export function useLoading() {
 }
 let currentLoadingComponent: Component
 const generateDefaultLoadingComponent: RenderFunction = () =>
-  h('div', { class: 'fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center' }, 'Loading...')
+  h(
+    'div',
+    { class: 'fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center text-white' },
+    'Wait a second...'
+  )
 
 //---
 

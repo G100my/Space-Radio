@@ -13,6 +13,7 @@ app.use(router)
 app.use(GlobalComponentPlugin, {
   snackbar: true,
   alert: true,
+  loading: true,
 })
 app.use(OrugaConfig, {
   dropdown: {

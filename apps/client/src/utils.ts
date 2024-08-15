@@ -31,7 +31,7 @@ import sticker29 from '@/assets/sticker/29.svg'
 import sticker30 from '@/assets/sticker/30.svg'
 import sticker31 from '@/assets/sticker/31.svg'
 import { clientApi } from './api/cloudFunctionAPI'
-import { useAlert, useSnackbar } from 'shared'
+import { useAlert, useLoading, useSnackbar } from 'shared'
 
 // return sticker 1-31
 export function randomSticker(): string {
@@ -77,6 +77,7 @@ export function addQueue(...p: Parameters<typeof clientApi.addQueue>) {
   const record = localStorage.getItem(lastAddTimestampKey)
   const timestamp = record ? parseInt(record) : NaN
   if (isNaN(timestamp) || Date.now() - timestamp > limitTime) {
+    useLoading().on()
     clientApi
       .addQueue(...p)
       .then(res => {
@@ -90,6 +91,9 @@ export function addQueue(...p: Parameters<typeof clientApi.addQueue>) {
       .catch(error => {
         if (error.status === 409) useSnackbar('無法在未播放任何歌曲的狀態下點歌', 'danger')
         else useSnackbar('加入播放佇列失敗，請稍後再試。', 'danger')
+      })
+      .finally(() => {
+        useLoading().off()
       })
   } else {
     useAlert('欸...經費有限...不要這麼急著點嘛～').open()
