@@ -6,3 +6,11 @@
     </Suspense>
   </div>
 </template>
+<style>
+body {
+  @apply h-screen max-h-dvh;
+}
+#app {
+  @apply h-full;
+}
+</style>

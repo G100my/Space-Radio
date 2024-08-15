@@ -27,6 +27,7 @@ const personalStore = usePersonalStore()
         <li>“在Akijo聽到的”會顯示在"收入的歌單"</li>
         <li>此 App 不會留下任何個資，請安心使用</li>
         <li>此 App 為 Akijo 委託朋友開發，<br />有任何使用上問題可以 IG 上私訊 Akijo</li>
+        <li>強烈推薦使用 Google Chrome 瀏覽器。</li>
       </ol>
     </div>
     <div class="my-10">
