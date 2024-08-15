@@ -1,6 +1,6 @@
 {
   "name": "host",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "server": "^3.0.4",
-    "shared": "^3.0.4"
+    "shared": "^3.0.5"
   },
   "devDependencies": {
     "@spotify/web-api-ts-sdk": "^1.2.0"
