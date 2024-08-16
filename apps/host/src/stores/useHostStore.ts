@@ -51,5 +51,9 @@ export default defineStore('host', {
       await this.checkUid()
       remove(ref(db, `/${this.hostUid}/sites/${key}`))
     },
+    async updateMessagingToken(token: string) {
+      await this.checkUid()
+      set(ref(db, `/${this.hostUid}/messaging_token`), token)
+    },
   },
 })
