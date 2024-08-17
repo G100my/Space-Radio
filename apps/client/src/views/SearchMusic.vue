@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconWrapper, BaseRadio, useInfinityScroll } from 'shared'
+import { IconWrapper, BaseRadio, useInfinityScroll, useSnackbar } from 'shared'
 import { addQueueSchema, type AddedQueue } from 'server/schemas'
 import { computed, ref } from 'vue'
 import { usePreviewAudioStore, useSearchStore } from '@/stores'
@@ -27,11 +27,15 @@ function handleSearch() {
 
 function handleAdd(track: AddedQueue) {
   const spaceSite = getSpaceSite()
-  if (spaceSite) {
+  if (!spaceSite) {
+    console.info('No spaceSite')
+    return
+  }
+  try {
     const value = addQueueSchema.parse(track)
     addQueue(spaceSite, value)
-  } else {
-    console.info('No spaceSite')
+  } catch (error) {
+    useSnackbar('點歌失敗...', 'danger')
   }
 }
 

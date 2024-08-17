@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const addQueueSchema = z.object({
   name: z.string(),
   uri: z.string(),
-  preview_url: z.string(),
+  preview_url: z.string().optional().nullable(),
   album: z
     .object({
       images: z.array(
