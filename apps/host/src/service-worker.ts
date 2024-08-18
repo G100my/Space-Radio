@@ -8,18 +8,20 @@ self.addEventListener('push', function (event) {
     return
   }
 
-  let data: MessagePayload
+  let payload: MessagePayload
   try {
-    data = event.data.json()
-    console.log('🚀 ~ data:', data)
+    payload = event.data.json()
+    console.log('🚀 ~ data:', payload)
   } catch (error) {
     self.registration.showNotification('Akijo', { body: event.data.text() })
     return
   }
 
-  const options: NotificationOptions = data.notification!
-
-  const promiseChain = self.registration.showNotification(data.notification!.title ?? 'Lubn App', options)
+  const data = JSON.parse(payload.data?.body ?? '{}')
+  const body = `${data.name} - ${data.artists.map((a: { name: string }) => a.name).join(', ')}`
+  const promiseChain = self.registration.showNotification(payload.data?.title ?? 'Lubn App', {
+    body,
+  })
 
   // collapse notifications
   // https://web.dev/articles/push-notifications-common-notification-patterns#merging_notifications

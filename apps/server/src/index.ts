@@ -64,10 +64,24 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
             response,
           }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
         } else {
-          const push2Queue = () => {
+          const push2Queue = async () => {
             const queueRef = spaceRef.child('queue')
             queueRef.push({ ...queue, site: null })
             response.status(200).send('OK')
+            const userMessagingToken = await spaceRef.child('settings/messaging_token').once('value')
+
+            if (userMessagingToken.exists()) {
+              const token = userMessagingToken.val()
+
+              const messaging = admin.messaging()
+              await messaging.send({
+                token,
+                data: {
+                  title: 'Akijo Jukebox',
+                  body: JSON.stringify(queue),
+                },
+              })
+            }
           }
 
           if (!site) {

@@ -20,6 +20,7 @@
         [hash]: string
       },
       "admin_email": string
+      "messaging_token": string
     },
     "queue": {
       [hash]: TrackBaseInfo & { site_id: string }
