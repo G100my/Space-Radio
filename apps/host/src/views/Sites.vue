@@ -2,6 +2,7 @@
 import { useHostStore } from '@/stores'
 import { BaseSwitch, IconWrapper } from 'shared'
 import { ref } from 'vue'
+import QRCode from 'qrcode'
 
 const hostStore = useHostStore()
 
@@ -31,26 +32,54 @@ function closeDeleteGuard() {
 async function handleDelete() {
   hostStore.deleteSite(stageDeleteKey.value).then(() => (showDeleteGuard.value = false))
 }
+
+function handleDownloadQrcode(url: string, downloadName: string) {
+  QRCode.toDataURL(url, {
+    margin: 1,
+    width: 300,
+  }).then(dataUrl => {
+    console.log(dataUrl)
+    const a = document.createElement('a')
+    a.href = dataUrl
+    a.download = downloadName + '.png'
+    a.click()
+  })
+}
 </script>
 <template>
   <div class="flex h-full flex-col">
-    <div class="flex items-center border-b pb-2 text-gray-400 transition-colors active:text-white">
-      <div>
-        <p>無使用者設定連結：</p>
-        <p class="text-xs">
-          <a :href="`${hostStore.clientUrl}`" target="_blank">{{ `${hostStore.clientUrl}` }}</a>
-        </p>
+    <section class="border-b pb-4 text-gray-400 transition-colors active:text-white">
+      <div class="flex w-full items-center">
+        <p>預設連結：</p>
+        <aside class="ml-auto mr-4">
+          <button type="button" class="inline-block h-10 w-10" @click="handleCopyUrl()">
+            <IconWrapper name="file-copy-line" class="text-2xl" />
+          </button>
+          <button
+            type="button"
+            class="inline-block h-10 w-10"
+            @click="handleDownloadQrcode(hostStore.clientUrl, 'default')"
+          >
+            <IconWrapper name="qr-code-line" class="text-2xl" />
+          </button>
+        </aside>
+        <BaseSwitch
+          :modelValue="!!hostStore.settings?.top_switch"
+          label="All Pass"
+          class="w-8"
+          @update:modelValue="hostStore.updateSettings({ top_switch: $event })"
+        />
       </div>
-      <button type="button" @click="handleCopyUrl()" class="inline-block h-10 w-10">
-        <IconWrapper name="file-copy-line" class="text-2xl" />
-      </button>
-    </div>
-    <aside class="-mx-5 overflow-auto">
+      <p class="text-xs">
+        <a :href="`${hostStore.clientUrl}`" target="_blank">{{ `${hostStore.clientUrl}` }}</a>
+      </p>
+    </section>
+    <section class="-mx-5 overflow-auto">
       <ul class="divide-y px-5">
         <li class="py-4 text-base" v-for="(i, key) in hostStore.sites" :key="key">
           <div class="flex items-center justify-between">
             <div>
-              <span>使用者名稱：</span>
+              <!-- <span>使用者名稱：</span> -->
               <input
                 :value="i.name"
                 type="text"
@@ -58,6 +87,21 @@ async function handleDelete() {
                 @change="hostStore.updateSites(key, { name: ($event.target as HTMLInputElement).value })"
               />
             </div>
+            <aside class="whitespace-nowrap">
+              <button type="button" class="inline-block h-10 w-10" @click="openDeleteGuard(key)">
+                <IconWrapper name="delete-bin-line" class="text-system-error2 text-2xl" />
+              </button>
+              <button type="button" class="inline-block h-10 w-10" @click="handleCopyUrl(key)">
+                <IconWrapper name="file-copy-line" class="text-2xl" />
+              </button>
+              <button
+                type="button"
+                class="inline-block h-10 w-10"
+                @click="handleDownloadQrcode(`${hostStore.clientUrl}&site=${key}`, i.name)"
+              >
+                <IconWrapper name="qr-code-line" class="text-2xl" />
+              </button>
+            </aside>
             <BaseSwitch
               :key="key"
               :modelValue="i.need_review"
@@ -65,32 +109,16 @@ async function handleDelete() {
               @update:modelValue="hostStore.updateSites(key, { need_review: $event })"
             />
           </div>
-          <div class="mt-1 flex text-neutral-400 transition-colors duration-150 active:text-white">
-            <a :href="`${hostStore.clientUrl}&site=${key}`" target="_blank" class="text-start text-xs">
-              URL: {{ `${hostStore.clientUrl}&site=` }}<span class="text-natural-gray1">{{ key }}</span>
+          <div class="mt-1 flex text-gray-400 transition-colors duration-150 active:text-white">
+            <a :href="`${hostStore.clientUrl}&site=${key}`" target="_blank" class="text-start text-xs"
+              >{{ `${hostStore.clientUrl}&site=` }}<span class="text-gray-300">{{ key }}</span>
             </a>
-            <div class="whitespace-nowrap">
-              <button class="inline-block h-10 w-10" @click="openDeleteGuard(key)">
-                <IconWrapper name="delete-bin-line" class="text-system-error2 text-2xl" />
-              </button>
-              <button class="inline-block h-10 w-10" @click="handleCopyUrl(key)">
-                <IconWrapper name="file-copy-line" class="text-2xl" />
-              </button>
-            </div>
           </div>
         </li>
       </ul>
-    </aside>
+    </section>
 
-    <aside class="-mx-5 mt-auto space-y-3 border-t px-5 pt-3">
-      <div class="flex items-center text-2xl">
-        <BaseSwitch
-          :modelValue="!!hostStore.settings?.top_switch"
-          label="All Pass"
-          class="w-14"
-          @update:modelValue="hostStore.updateSettings({ top_switch: $event })"
-        />
-      </div>
+    <section class="-mx-5 mt-auto space-y-3 border-t px-5 pt-3">
       <form @submit.prevent="handleAddSite" class="flex items-center">
         <label for="add_new_site" class="align-middle">新增：</label>
         <input
@@ -107,7 +135,7 @@ async function handleDelete() {
           <IconWrapper name="add-line" class="!text-2xl" />
         </button>
       </form>
-    </aside>
+    </section>
 
     <Transition
       enterActiveClass="transition-opacity"
