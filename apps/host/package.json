@@ -11,6 +11,7 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "qrcode": "^1.5.4",
     "server": "^3.0.4",
     "shared": "^3.0.5"
   },
