@@ -1,8 +1,9 @@
 import type { SiteSettings, SpaceClientData } from 'server/schemas'
 import { defineStore } from 'pinia'
 import { auth, db } from '@/plugins/firebase'
-import { push, ref, remove, set, update } from 'firebase/database'
+import { push, equalTo, ref, remove, set, update, query, get } from 'firebase/database'
 import type { AccessToken } from '@spotify/web-api-ts-sdk'
+import { getFCMtoken } from '@/sw/utils'
 
 const baseUrl = import.meta.env.VITE_CLIENT_URL
 export default defineStore('host', {
@@ -51,9 +52,34 @@ export default defineStore('host', {
       await this.checkUid()
       remove(ref(db, `/${this.hostUid}/sites/${key}`))
     },
-    async updateMessagingToken(token: string) {
+    // subscribe
+    async recordFCMtoken() {
       await this.checkUid()
-      set(ref(db, `/${this.hostUid}/messaging_token`), token)
+      const token = await getFCMtoken()
+      push(ref(db, `/${this.hostUid}/messaging_tokens`), {
+        // @ts-ignore
+        device_name: navigator.userAgentData?.platform as string,
+        token,
+      })
+    },
+    // unsubscribe
+    async removeFCMtoken() {
+      await this.checkUid()
+      const token = await getFCMtoken()
+      const filtered = query(ref(db, `/${this.hostUid}/messaging_tokens`), equalTo(token, 'token'))
+      const snapshot = await get(filtered)
+      if (snapshot.exists() && snapshot.hasChildren()) {
+        snapshot.forEach(child => {
+          if (child.val().token === token) remove(child.ref)
+        })
+      }
+    },
+    async checkSubscribeStatus() {
+      await this.checkUid()
+      const currentToken = await getFCMtoken()
+      const filtered = query(ref(db, `/${this.hostUid}/messaging_tokens`), equalTo(currentToken, 'token'))
+      const snapshot = await get(filtered)
+      return snapshot.exists()
     },
   },
 })
