@@ -3,6 +3,8 @@
 </script>
 <template>
   <div class="mx-auto flex h-full w-full max-w-xl flex-col">
-    <RouterView />
+    <Suspense>
+      <RouterView />
+    </Suspense>
   </div>
 </template>

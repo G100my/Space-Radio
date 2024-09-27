@@ -19,8 +19,10 @@
       "rules": {
         [hash]: string
       },
-      "admin_email": string
-      "messaging_token": string
+      "admin_email": string,
+      "messaging_tokens": {
+        [hash]: string
+      },
     },
     "queue": {
       [hash]: TrackBaseInfo & { site_id: string }
