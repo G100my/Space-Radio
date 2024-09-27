@@ -14,15 +14,14 @@ export default defineConfig({
     svgLoader(),
     VitePWA({
       registerType: 'autoUpdate',
-      devOptions: { enabled: true },
-      srcDir: 'src',
+      //When building the application, the vite-plugin-pwa plugin will always register your service worker with type: 'classic' for compatibility with all browsers.
+      devOptions: { enabled: true, type: 'module' },
+      srcDir: 'src/sw',
       filename: 'service-worker.ts',
       strategies: 'injectManifest',
-      injectRegister: false,
       manifest: false,
       injectManifest: {
-        // @ts-expect-error
-        injectionPoint: null,
+        injectionPoint: undefined,
       },
     }),
   ],
