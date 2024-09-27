@@ -9,6 +9,6 @@ async function resolveQueue(params: { space: string; key: string; action: 'appro
   })
 }
 
-export const hostApi = {
+export const HostApi = {
   resolveQueue,
 }
