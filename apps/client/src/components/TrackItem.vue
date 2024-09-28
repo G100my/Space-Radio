@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TrackBaseInfo } from '@/constant'
-import type { AddedQueue } from 'server/schemas'
+import type { AddedQueue } from 'shared'
 import { Marquee, spotifyCoverPicker } from 'shared'
 
 defineProps<{

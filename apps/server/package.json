@@ -24,14 +24,5 @@
     "typescript": "^5.4.5"
   },
   "private": true,
-  "exports": {
-    ".": {
-      "node": "./lib/index.js"
-    },
-    "./schemas": {
-      "import": "./src/schemas.ts",
-      "types": "./src/schemas.ts"
-    }
-  },
   "version": "3.0.4"
 }

@@ -1,4 +1,7 @@
 import type { Actions, Context, Track, Device } from '@spotify/web-api-ts-sdk'
+import type { AccessToken } from '@spotify/web-api-ts-sdk'
+import type { addQueueSchema, settingsSchema } from './schemas'
+import type { z } from 'zod'
 
 export interface ImageObj {
   height?: number
@@ -34,3 +37,20 @@ export interface PlaybackStateOnlyTrack {
   currently_playing_type: string
   actions: Actions
 }
+
+export interface CustomAuth extends AccessToken {
+  timestamp: number
+}
+export interface Site {
+  need_review: boolean
+  name: string
+}
+export type AddedQueue = z.infer<typeof addQueueSchema>
+export interface SpaceClientData {
+  sites?: { [site_id: string]: Site }
+  settings?: SiteSettings
+  queue?: {
+    [hash: string]: AddedQueue & { site: string }
+  }
+}
+export type SiteSettings = z.infer<typeof settingsSchema>

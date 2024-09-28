@@ -1,6 +1,7 @@
 export * from './utils/PKCE'
 export * from './utils'
 export * from './types'
+export * from './schemas'
 export * from './plugins/useGlobalComponent'
 export { generateWrappedSpotifyApi } from './plugins/generateWrappedSpotifyApi'
 

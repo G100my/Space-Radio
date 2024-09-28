@@ -1,8 +1,7 @@
-import type { SiteSettings, SpaceClientData } from 'server/schemas'
+import type { SiteSettings, SpaceClientData, CustomAuth } from 'shared'
 import { defineStore } from 'pinia'
 import { auth, db } from '@/plugins/firebase'
 import { push, equalTo, ref, remove, set, update, query, get } from 'firebase/database'
-import type { AccessToken } from '@spotify/web-api-ts-sdk'
 import { getFCMtoken } from '@/sw/utils'
 
 const baseUrl = import.meta.env.VITE_CLIENT_URL
@@ -31,7 +30,7 @@ export default defineStore('host', {
       }
       return this.hostUid
     },
-    async updateAuth(spotifyAuth: AccessToken) {
+    async updateAuth(spotifyAuth: CustomAuth) {
       await this.checkUid()
       set(ref(db, `/${this.hostUid}/auth`), { ...spotifyAuth, timestamp: Date.now() })
     },

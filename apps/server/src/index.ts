@@ -1,7 +1,8 @@
 import { logger, region } from 'firebase-functions'
-import { addQueueSchema, AddedQueue } from './schemas'
+import { addQueueSchema } from 'shared'
+import type { CustomAuth, AddedQueue } from 'shared'
 import admin = require('firebase-admin')
-import { CustomAuth, checkQueryIsString, createSpotifyInstance, sendQueue, updateAuthCallback } from './utils'
+import { checkQueryIsString, createSpotifyInstance, sendQueue } from './utils'
 import cors = require('cors')
 
 const clientAllowedOrigins = ['https://jukebox.akijo.space', 'http://localhost:2405']
@@ -59,9 +60,10 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
         if (top_switch) {
           const auth = spaceSnapshot.child('auth').val() as CustomAuth
           createSpotifyInstance({
-            tokens: auth,
-            updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),
+            db,
+            hostUid,
             response,
+            tokens: auth,
           }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
         } else {
           const push2Queue = async () => {
@@ -94,9 +96,10 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
           else {
             const auth = spaceSnapshot.child('auth').val() as CustomAuth
             createSpotifyInstance({
-              tokens: auth,
-              updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),
+              db,
+              hostUid,
               response,
+              tokens: auth,
             }).then(spotifySDK => sendQueue(spotifySDK, queue, response))
           }
         }
@@ -129,9 +132,10 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
       const auth = snapshot.val()
 
       createSpotifyInstance({
-        tokens: auth,
-        updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),
+        db,
+        hostUid,
         response,
+        tokens: auth,
       })
         .then(spotifySDK => spotifySDK.player.getCurrentlyPlayingTrack())
         .then(currentPlaying => {
@@ -185,9 +189,10 @@ const resolveQueue = region('asia-east1').https.onRequest((request, response) =>
           const queue = snapshot.val() as AddedQueue
           db.ref(`${spaceOrUid}/auth`).once('value', authSnapshot => {
             createSpotifyInstance({
-              tokens: authSnapshot.val() as CustomAuth,
-              updateTokenCallback: newAuth => updateAuthCallback(hostUid, newAuth, db),
+              db,
+              hostUid,
               response,
+              tokens: authSnapshot.val() as CustomAuth,
             })
               .then(spotifySDK => sendQueue(spotifySDK, queue, response))
               .then(() => ref.remove())

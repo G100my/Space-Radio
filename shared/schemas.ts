@@ -28,18 +28,6 @@ export const addQueueSchema = z.object({
     })
   ),
 })
-export interface Site {
-  need_review: boolean
-  name: string
-}
-export type AddedQueue = z.infer<typeof addQueueSchema>
-export interface SpaceClientData {
-  sites?: { [site_id: string]: Site }
-  settings?: SiteSettings
-  queue?: {
-    [hash: string]: AddedQueue & { site: string }
-  }
-}
 
 export const SPOTIFY_SERVER_SCOPE = ['user-modify-playback-state', 'user-read-currently-playing']
 
@@ -48,4 +36,3 @@ export const settingsSchema = z.object({
   space_name: z.string(),
   welcome_message: z.string(),
 })
-export type SiteSettings = z.infer<typeof settingsSchema>

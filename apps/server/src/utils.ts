@@ -1,13 +1,9 @@
 import { type Response, type Request, logger } from 'firebase-functions'
 import { AccessToken, SpotifyApi } from '@spotify/web-api-ts-sdk'
-import type { AuthParams } from 'shared/types'
+import type { AuthParams, CustomAuth, AddedQueue } from 'shared/types'
 import type { Database } from 'firebase-admin/database'
-import { AddedQueue } from './schemas'
 import type { Auth } from 'firebase-admin/auth'
 
-export interface CustomAuth extends AccessToken {
-  timestamp: number
-}
 export function isTokenExpired(auth: CustomAuth) {
   const now = Date.now()
   const buffer = 60 * 5 * 1000 // 5 minutes
@@ -27,14 +23,21 @@ function refreshAccessToken(params: { refresh_token: string } & Pick<AuthParams,
     body,
   })
 }
+
+function updateAuthCallback(hostUid: string, auth: AccessToken, db: Database) {
+  const timestamp = new Date().getTime()
+  db.ref(hostUid + '/auth').update({ ...auth, timestamp })
+}
 export function createSpotifyInstance({
   tokens,
-  updateTokenCallback,
   response,
+  hostUid,
+  db,
 }: {
   tokens: CustomAuth
-  updateTokenCallback: (auth: AccessToken) => void
   response: Response
+  hostUid: string
+  db: Database
 }) {
   if (isTokenExpired(tokens)) {
     return refreshAccessToken({
@@ -54,7 +57,7 @@ export function createSpotifyInstance({
       })
       .then(res => {
         logger.log('Refreshed token', tokens)
-        updateTokenCallback(res)
+        updateAuthCallback(hostUid, res, db)
         return SpotifyApi.withAccessToken(process.env.SPOTIFY_CLIENT_ID!, res)
       })
   } else {
@@ -68,11 +71,6 @@ export function checkQueryIsString(response: Response, query: Request['query'][s
     return false
   }
   return true
-}
-
-export function updateAuthCallback(hostUid: string, auth: AccessToken, db: Database) {
-  const timestamp = new Date().getTime()
-  db.ref(hostUid + '/auth').update({ ...auth, timestamp })
 }
 
 export async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, response: Response) {
@@ -91,7 +89,7 @@ export async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, respo
         return
       }
       response.status(500).send('Failed to add queue to current host')
-      console.log('Failed to add queue to current host', { error })
+      console.error('Failed to add queue to current host', error)
     })
 }
 

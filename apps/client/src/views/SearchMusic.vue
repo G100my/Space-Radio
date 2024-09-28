@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { IconWrapper, BaseRadio, useInfinityScroll, useSnackbar } from 'shared'
-import { addQueueSchema, type AddedQueue } from 'server/schemas'
+import { IconWrapper, BaseRadio, useInfinityScroll, useSnackbar, addQueueSchema } from 'shared'
+import type { AddedQueue } from 'shared'
 import { computed, ref } from 'vue'
 import { usePreviewAudioStore, useSearchStore } from '@/stores'
 import TrackItem from '@/components/TrackItem.vue'
