@@ -6,34 +6,37 @@ import { spotifyWrappedAPI } from './api/spotifyWrappedAPI'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '/:space',
     name: routeMap.Login,
     component: () => import('@/views/Login.vue'),
     beforeEnter: to => {
-      if (to.query.space) {
-        setSpaceSite(to.query as { site: string; space: string })
+      const spaceName = to.params.space
+      if (spaceName) {
+        setSpaceSite({ site: to.query.site as string, space: spaceName as string })
       } else {
         return { name: routeMap.NotFound }
       }
     },
   },
   {
-    path: '/',
+    path: '/:space',
     component: () => import('@/layouts/CustomerInner.vue'),
     children: [
-      { path: 'search', name: routeMap.Search, component: () => import('@/views/SearchMusic.vue') },
-      { path: 'playing', name: routeMap.Playing, component: () => import('@/views/NowPlaying.vue') },
-      { path: 'collects', name: routeMap.Collections, component: () => import('@/views/Collects.vue') },
-      { path: 'my-playlist', name: routeMap.Playlist, component: () => import('@/views/MyPlaylist.vue') },
-      { path: 'tracks/:type/:uri?', name: routeMap.Tracks, component: () => import('@/views/Tracks.vue') },
+      { path: '/search', name: routeMap.Search, component: () => import('@/views/SearchMusic.vue') },
+      { path: '/playing', name: routeMap.Playing, component: () => import('@/views/NowPlaying.vue') },
+      { path: '/collects', name: routeMap.Collections, component: () => import('@/views/Collects.vue') },
+      { path: '/my-playlist', name: routeMap.Playlist, component: () => import('@/views/MyPlaylist.vue') },
+      { path: '/tracks/:type/:uri?', name: routeMap.Tracks, component: () => import('@/views/Tracks.vue') },
     ],
     beforeEnter: (to, from) => {
       if (import.meta.env.DEV) console.log(to, from)
 
-      const { space } = to.query
-      if (typeof space === 'string') {
-        console.warn('Recorded site and space:', to.query.site, to.query.space)
-        if (space) setSpaceSite({ space })
+      const spaceName = to.params.space
+      if (typeof spaceName === 'string') {
+        if (spaceName) {
+          console.warn('Recorded site and space:', to.query.site, to.params.space)
+          setSpaceSite({ space: spaceName })
+        }
         return { ...to, query: undefined }
       }
 

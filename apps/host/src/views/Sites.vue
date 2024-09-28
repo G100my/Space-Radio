@@ -7,7 +7,7 @@ import QRCode from 'qrcode'
 const hostStore = useHostStore()
 
 function handleCopyUrl(siteKey?: string | number) {
-  const url = `${hostStore.clientUrl}${siteKey ? '&site=' + siteKey : ''}`
+  const url = `${hostStore.clientUrl}${siteKey ? '?site=' + siteKey : ''}`
   navigator.clipboard.writeText(url)
   console.log('copied url:', url)
 }
@@ -97,7 +97,7 @@ function handleDownloadQrcode(url: string, downloadName: string) {
               <button
                 type="button"
                 class="inline-block h-10 w-10"
-                @click="handleDownloadQrcode(`${hostStore.clientUrl}&site=${key}`, i.name)"
+                @click="handleDownloadQrcode(`${hostStore.clientUrl}?site=${key}`, i.name)"
               >
                 <IconWrapper name="qr-code-line" class="text-2xl" />
               </button>
@@ -110,8 +110,8 @@ function handleDownloadQrcode(url: string, downloadName: string) {
             />
           </div>
           <div class="mt-1 flex text-gray-400 transition-colors duration-150 active:text-white">
-            <a :href="`${hostStore.clientUrl}&site=${key}`" target="_blank" class="text-start text-xs"
-              >{{ `${hostStore.clientUrl}&site=` }}<span class="text-gray-300">{{ key }}</span>
+            <a :href="`${hostStore.clientUrl}?site=${key}`" target="_blank" class="text-start text-xs"
+              >{{ `${hostStore.clientUrl}?site=` }}<span class="text-gray-300">{{ key }}</span>
             </a>
           </div>
         </li>

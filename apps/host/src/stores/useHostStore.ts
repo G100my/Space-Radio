@@ -17,7 +17,7 @@ export default defineStore('host', {
   },
   getters: {
     queueAmount: (state): number | undefined => state.queue && Object.keys(state.queue).length,
-    clientUrl: state => `${baseUrl}?space=${state.settings?.space_name ?? state.hostUid}`,
+    clientUrl: state => `${baseUrl}/${state.settings?.space_name ?? state.hostUid}`,
   },
   actions: {
     async checkUid() {
