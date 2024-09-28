@@ -15,10 +15,10 @@ const SpecialListItem: FunctionalComponent = (props, { slots }) => {
       'div',
       {
         class:
-          'border-l-natural-gray2 shadow-natural-white relative overflow-hidden rounded-lg border shadow cursor-pointer',
+          'border-l-natural-gray2 shadow-natural-white relative overflow-hidden rounded-lg border shadow cursor-pointer aspect-square',
       },
       [
-        h('img', { class: 'min-h-[calc(50vw-28px)] rounded-[inherit]', src: CoverPlaceholder }),
+        h('img', { class: 'rounded-[inherit]', src: CoverPlaceholder }),
         h(
           'div',
           { class: 'absolute inset-0 flex flex-col items-center justify-center bg-slate-900/50' },
