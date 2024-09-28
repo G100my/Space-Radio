@@ -3,6 +3,7 @@ import { AccessToken, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import type { AuthParams, CustomAuth, AddedQueue } from 'shared/types'
 import type { Database } from 'firebase-admin/database'
 import type { Auth } from 'firebase-admin/auth'
+import EM from './ErrorMessage'
 
 export function isTokenExpired(auth: CustomAuth) {
   const now = Date.now()
@@ -47,7 +48,7 @@ export function createSpotifyInstance({
       .then(refreshTokenRes => {
         if (refreshTokenRes.ok) return refreshTokenRes.json() as Promise<AccessToken>
         else {
-          logger.log('Failed to refresh token response status:', refreshTokenRes.status)
+          logger.error('Failed to refresh token, response status:', refreshTokenRes.status)
           const status = refreshTokenRes.status
           return refreshTokenRes.json().then(data => {
             response.status(status).send(data)
@@ -56,7 +57,7 @@ export function createSpotifyInstance({
         }
       })
       .then(res => {
-        logger.log('Refreshed token', tokens)
+        logger.log('Record refreshed token:', tokens)
         updateAuthCallback(hostUid, res, db)
         return SpotifyApi.withAccessToken(process.env.SPOTIFY_CLIENT_ID!, res)
       })
@@ -66,8 +67,8 @@ export function createSpotifyInstance({
 }
 export function checkQueryIsString(response: Response, query: Request['query'][string]): query is string {
   if (!query || typeof query !== 'string') {
-    logger.warn('Invalid query', { query })
-    response.status(400).send('Bad Request')
+    logger.log(EM.GENERAL.INVALID_QUERY, { query })
+    response.status(400).send(EM.GENERAL.INVALID_QUERY)
     return false
   }
   return true
@@ -85,19 +86,19 @@ export async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, respo
     })
     .catch((error: any) => {
       if ((error.message as string).includes('NO_ACTIVE_DEVICE')) {
-        response.status(409).send('No active device')
+        response.status(409).send(EM.SPOTIFY.NO_ACTIVE_DEVICE)
         return
       }
-      response.status(500).send('Failed to add queue to current host')
-      console.error('Failed to add queue to current host', error)
+      response.status(500).send(EM.SPOTIFY.FAILED_TO_ADD_QUEUE)
+      console.error(EM.SPOTIFY.FAILED_TO_ADD_QUEUE, error)
     })
 }
 
 export async function checkAuth(request: Request, response: Response, auth: Auth, email: string) {
   const token = request.headers.authorization?.split('Bearer ')[1]
   if (!token) {
-    logger.warn('No Authorization header')
-    response.status(401).send('Unauthorized')
+    logger.warn(EM.AUTH.NO_AUTHORIZATION_HEADER)
+    response.status(401).send(EM.AUTH.NO_AUTHORIZATION_HEADER)
     return null
   } else {
     return auth
@@ -106,8 +107,8 @@ export async function checkAuth(request: Request, response: Response, auth: Auth
         if (DecodedIdToken.email === email) {
           return DecodedIdToken
         } else {
-          logger.warn('Invalid token email', { email: DecodedIdToken.email })
-          response.status(401).send('Unauthorized')
+          logger.log(EM.AUTH.INVALID_TOKEN_EMAIL, { email: DecodedIdToken.email })
+          response.status(401).send(EM.AUTH.INVALID_TOKEN_EMAIL)
           return null
         }
       })
@@ -116,11 +117,11 @@ export async function checkAuth(request: Request, response: Response, auth: Auth
           error.code === 'auth/argument-error' &&
           (error.message as string).startsWith('Firebase ID token has invalid signature.')
         ) {
-          logger.warn('Invalid token signature')
-          response.status(401).send('Unauthorized')
+          logger.log(EM.AUTH.INVALID_TOKEN_SIGNATURE)
+          response.status(401).send(EM.AUTH.INVALID_TOKEN_SIGNATURE)
         } else {
-          logger.error('Failed to verify token', { error })
-          response.status(500).send('Internal Server Error')
+          logger.error(EM.AUTH.FAILED_TO_VERIFY_TOKEN, { error })
+          response.status(500).send(EM.GENERAL.INTERNAL_SERVER_ERROR)
         }
         return null
       })

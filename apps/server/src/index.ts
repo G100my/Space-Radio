@@ -4,6 +4,7 @@ import type { CustomAuth, AddedQueue } from 'shared'
 import admin = require('firebase-admin')
 import { checkQueryIsString, createSpotifyInstance, sendQueue } from './utils'
 import cors = require('cors')
+import EM from './ErrorMessage'
 
 const clientAllowedOrigins = ['https://jukebox.akijo.space', 'http://localhost:2405']
 const hostAllowedOrigins = ['https://jukebox-host.akijo.space', 'http://localhost:2407']
@@ -33,8 +34,9 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
 
     const queueResult = addQueueSchema.safeParse(request.body)
     if (!queueResult.success) {
-      logger.warn(request.body, queueResult.error)
-      response.status(400).send('Bad Request')
+      logger.warn(EM.GENERAL.BAD_REQUEST, { queue: request.body })
+      logger.warn('validation result:', queueResult.error)
+      response.status(400).send(EM.GENERAL.BAD_REQUEST)
       return
     }
     const queue = queueResult.data
@@ -48,8 +50,8 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
     spaceRef
       .once('value', spaceSnapshot => {
         if (!spaceSnapshot.exists()) {
-          logger.warn('space not found', { site, space: spaceOrUid, hostUid })
-          response.status(404).send('Not Found')
+          logger.error(EM.DB_REF.SPACE_NOT_FOUND, { site, space: spaceOrUid, hostUid })
+          response.status(404).send(EM.DB_REF.SPACE_NOT_FOUND)
           return Promise.reject()
         } else {
           return spaceSnapshot
@@ -69,7 +71,7 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
           const push2Queue = async () => {
             const queueRef = spaceRef.child('queue')
             queueRef.push({ ...queue, site: null })
-            response.status(200).send('OK')
+            response.status(200).send()
             const userMessagingToken = await spaceRef.child('settings/messaging_token').once('value')
 
             if (userMessagingToken.exists()) {
@@ -124,8 +126,8 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
 
     db.ref(hostUid + '/auth').once('value', snapshot => {
       if (!snapshot.exists()) {
-        logger.warn('auth record not found', { space: spaceOrUid })
-        response.status(404).send('Not Found')
+        logger.warn(EM.AUTH.NO_TOKEN, { space: spaceOrUid })
+        response.status(404).send(EM.AUTH.NO_TOKEN)
         return
       }
 
@@ -150,7 +152,7 @@ const getCurrentPlaying = region('asia-east1').https.onRequest((request, respons
         })
         .catch(error => {
           logger.error('Failed to get current playing track', { error })
-          response.status(500).send('error')
+          response.status(500).send()
         })
     })
   })
@@ -203,7 +205,7 @@ const resolveQueue = region('asia-east1').https.onRequest((request, response) =>
         ref.remove()
         response.status(200).send('OK')
       } else {
-        response.status(400).send('Bad Request')
+        response.status(400).send(EM.GENERAL.INVALID_QUERY)
       }
     }
   )
