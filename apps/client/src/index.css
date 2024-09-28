@@ -2,8 +2,6 @@
 @import 'shared/style/universal.css';
 @import 'shared/style/button.css';
 
-@import '@oruga-ui/theme-oruga/dist/oruga.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
