@@ -9,6 +9,7 @@ const hostStore = useHostStore()
 
 async function handleResolve(params: { key: string; action: 'approve' | 'reject' }) {
   const space = await hostStore.checkUid()
+  // fixme: 如果自身並未開啟 spotify
   HostApi.resolveQueue({ ...params, space }).catch(() => useSnackbar('Spotify Token 失效，請重新登入', 'danger'))
 }
 </script>

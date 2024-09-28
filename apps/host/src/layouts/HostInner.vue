@@ -21,6 +21,10 @@ onMounted(() => {
       hostStore.sites = snapshot.val()
     })
   )
+
+  if (import.meta.env.DEV) {
+    console.warn('[hostUid]:', hostStore.hostUid)
+  }
 })
 onUnmounted(() => {
   if (unsubscribes.length) unsubscribes.forEach(unsubscribe => unsubscribe())

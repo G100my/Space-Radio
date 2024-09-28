@@ -5,7 +5,7 @@ import svgLoader from 'vite-svg-loader'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(config => ({
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
   },
@@ -33,4 +33,9 @@ export default defineConfig({
   server: {
     port: 2407,
   },
-})
+  build: {
+    terserOptions: {
+      compress: config.mode === 'production',
+    },
+  },
+}))
