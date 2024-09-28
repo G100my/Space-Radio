@@ -33,7 +33,7 @@ export default defineStore('host', {
     },
     async updateAuth(spotifyAuth: AccessToken) {
       await this.checkUid()
-      set(ref(db, `/${this.hostUid}/auth`), spotifyAuth)
+      set(ref(db, `/${this.hostUid}/auth`), { ...spotifyAuth, timestamp: Date.now() })
     },
     async updateSettings(settings: Partial<SiteSettings>) {
       await this.checkUid()

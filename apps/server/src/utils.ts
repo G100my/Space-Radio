@@ -12,6 +12,7 @@ export function isTokenExpired(auth: CustomAuth) {
   const now = Date.now()
   const buffer = 60 * 5 * 1000 // 5 minutes
   const expired = auth.timestamp + auth.expires_in * 1000 - buffer
+  if (isNaN(expired)) return true
   return now > expired
 }
 
