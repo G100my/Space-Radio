@@ -2,7 +2,7 @@ import { logger, region } from 'firebase-functions'
 import { addQueueSchema } from 'shared'
 import type { CustomAuth, AddedQueue } from 'shared'
 import admin = require('firebase-admin')
-import { checkQueryIsString, createSpotifyInstance, sendQueue } from './utils'
+import { createSpotifyInstance, sendQueue } from './utils'
 import cors = require('cors')
 import EM from './ErrorMessage'
 
@@ -30,7 +30,12 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
   cors({ origin: clientAllowedOrigins, methods: 'POST' })(request, response, async () => {
     const site = request.query.site as string | undefined
     const spaceOrUid = request.query.space
-    if (!checkQueryIsString(response, spaceOrUid)) return
+
+    if (!spaceOrUid) {
+      logger.warn(EM.GENERAL.BAD_REQUEST, { space: spaceOrUid })
+      response.status(400).send(EM.GENERAL.BAD_REQUEST)
+      return
+    }
 
     const queueResult = addQueueSchema.safeParse(request.body)
     if (!queueResult.success) {
@@ -116,9 +121,13 @@ const addQueue = region('asia-east1').https.onRequest((request, response) => {
 
 const getCurrentPlaying = region('asia-east1').https.onRequest((request, response) => {
   cors({ origin: clientAllowedOrigins, methods: 'GET' })(request, response, async () => {
-    if (!checkQueryIsString(response, request.query.space)) return
-
     const spaceOrUid = request.query.space
+    if (!spaceOrUid) {
+      logger.warn(EM.GENERAL.BAD_REQUEST, { space: spaceOrUid })
+      response.status(400).send(EM.GENERAL.BAD_REQUEST)
+      return
+    }
+
     let hostUid = (await db.ref('map/' + spaceOrUid).once('value')).val()
     if (!hostUid) {
       hostUid = spaceOrUid
@@ -173,17 +182,23 @@ const resolveQueue = region('asia-east1').https.onRequest((request, response) =>
     response,
     async () => {
       const spaceOrUid = request.query.space
-      if (!checkQueryIsString(response, spaceOrUid)) return
+      if (!spaceOrUid) {
+        logger.warn(EM.GENERAL.BAD_REQUEST, { space: spaceOrUid })
+        response.status(400).send(EM.GENERAL.BAD_REQUEST)
+        return
+      }
       let hostUid = (await db.ref('map/' + spaceOrUid).once('value')).val()
       if (!hostUid) {
         hostUid = spaceOrUid
       }
 
       const queueKey = request.query.key
-      if (!checkQueryIsString(response, queueKey)) return
-
       const action = request.query.action as 'approve' | 'reject'
-      if (!checkQueryIsString(response, action)) return
+      if (!queueKey || !action) {
+        logger.warn(EM.GENERAL.BAD_REQUEST, { queueKey, action })
+        response.status(400).send(EM.GENERAL.BAD_REQUEST)
+        return
+      }
 
       const ref = db.ref(`${spaceOrUid}/queue/${queueKey}`)
       if (action === 'approve') {

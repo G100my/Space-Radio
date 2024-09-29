@@ -65,14 +65,6 @@ export function createSpotifyInstance({
     return Promise.resolve(SpotifyApi.withAccessToken(process.env.SPOTIFY_CLIENT_ID!, tokens))
   }
 }
-export function checkQueryIsString(response: Response, query: Request['query'][string]): query is string {
-  if (!query || typeof query !== 'string') {
-    logger.log(EM.GENERAL.INVALID_QUERY, { query })
-    response.status(400).send(EM.GENERAL.INVALID_QUERY)
-    return false
-  }
-  return true
-}
 
 export async function sendQueue(spotifySDK: SpotifyApi, queue: AddedQueue, response: Response) {
   return spotifySDK.player
