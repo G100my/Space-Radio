@@ -47,5 +47,14 @@
     "vite-svg-loader": "^3.1.2",
     "vitest": "^0.32.0",
     "vue-tsc": "^1.6.5"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "vueIndentScriptAndStyle": false,
+    "printWidth": 120
   }
 }
