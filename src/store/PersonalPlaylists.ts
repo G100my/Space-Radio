@@ -96,11 +96,11 @@ export const usePersonalPlaylistStore = defineStore('PersonalPlaylistStore', {
           limit: increaseOffset,
           ...(!isFirst && { offset: this.spotifyList.offset + increaseOffset }),
         })
-        .then(({ items, next, offset, total }) => {
-          this.spotifyList = { ...this.spotifyList, next, offset, total }
-          const transferResult = items.map(i => playlistTrackFormater(i.track as SpotifyApi.TrackObjectFull))
-          this.chosenList.concat(transferResult)
-        })
+          .then(({ items, next, offset, total }) => {
+            this.spotifyList = { ...this.spotifyList, next, offset, total }
+            const transferResult = items.map(i => playlistTrackFormater(i.track as SpotifyApi.TrackObjectFull))
+            this.chosenList = this.chosenList.concat(transferResult)
+          })
     },
     async _fetch_spotifyLiked(isFirst: boolean) {
       const offset = this.spotifyLiked.offset

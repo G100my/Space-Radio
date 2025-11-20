@@ -26,13 +26,18 @@ const getSpotifyInitSetting = (): Spotify.PlayerInit => ({
   name: 'Space Radio player',
   volume: useVolumeStore().volume / 100,
   getOAuthToken: callback => {
-    const { token, isTokenValid } = usePersonalStore()
+    const personalStore = usePersonalStore()
+    const isTokenValid = personalStore.isTokenValid
     if (isTokenValid()) {
-      callback(token)
+      callback(personalStore.token)
     } else {
-      refreshAccessToken().then(() => {
-        callback(token)
-      })
+      refreshAccessToken()
+        .then(() => {
+          callback(personalStore.token)
+        })
+        .catch(error => {
+          console.error('Failed to refresh Spotify token', error)
+        })
     }
   },
 })
@@ -189,7 +194,7 @@ function hostTogglePlay() {
           })
           .then(async response => {
             if (!response.shuffle_state) await spotifyAPI.setShuffle(true, { device_id })
-            if (!response.repeat_state) await spotifyAPI.setRepeat('context')
+            if (response.repeat_state !== 'context') await spotifyAPI.setRepeat('context')
 
             if (!response.context) {
               await spotifyAPI.play({ context_uri: `spotify:playlist:${useRoomBasicStore().base_playlist}` })
