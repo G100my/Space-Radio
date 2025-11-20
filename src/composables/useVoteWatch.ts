@@ -1,11 +1,11 @@
-import { useVolumeStore, useVoteStore } from '@/store'
+import { useVoteStore } from '@/store'
 import { computed, watch, type WatchStopHandle } from 'vue'
 
 let dislikeCountdownTimer: ReturnType<typeof setInterval> | null
 
 let unwatch: WatchStopHandle | null = null
 
-export function useVoteWatch(nextTrack: (volume: number) => void) {
+export function useVoteWatch(nextTrack: () => void) {
   if (!unwatch) {
     const voteStore = useVoteStore()
     const dislike = computed(() => voteStore.dislike)
@@ -21,7 +21,7 @@ export function useVoteWatch(nextTrack: (volume: number) => void) {
           counter -= 1
           voteStore.updateDislikeCountdown(counter)
           if (counter <= 0) {
-            nextTrack(useVolumeStore().minimal_volume)
+              nextTrack()
 
             if (dislikeCountdownTimer) clearInterval(dislikeCountdownTimer)
             voteStore.clearDislikeVote()

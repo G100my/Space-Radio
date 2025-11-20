@@ -213,7 +213,7 @@ function playingStateConnect2firebase() {
     useVoteStore().dislike = snapshot.val()
   })
   playing_state_ref.child('voted_users').on('value', snapshot => {
-    useVoteStore().adjustIsVoted = snapshot.val()
+    useVoteStore().adjustIsVoted(snapshot)
   })
   playing_state_ref.child('dislike_threshold').on('value', snapshot => {
     useVoteStore().dislike_threshold = snapshot.val()
