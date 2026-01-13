@@ -46,13 +46,16 @@ export default {
       <li v-for="log in logs" :key="log.timestamp">
         <div class="flex">
           <span class="flex-0 mr-5">
-            <IconPlus v-if="['add', 'addMultiple'].includes(log.action_type)" />
-            <IconArrowDown v-else-if="log.action_type === 'urgent2normal'" />
-            <IconArrowUp v-else-if="['jumpIn', 'normal2urgent'].includes(log.action_type)" />
-            <IconClose v-else-if="['normalRemove', 'urgentRemove'].includes(log.action_type)" />
-            <IconVolumn v-else-if="['turnUp', 'turnDown'].includes(log.action_type)" />
-            <IconSkipSong v-else-if="['increaseDislike', 'reduceDislike'].includes(log.action_type)" />
-            <IconRoomSetting v-else-if="['updateMinimalVolume', 'updateDislikeThreshold'].includes(log.action_type)" />
+            <IconPlus v-if="['add', 'addMultiple'].includes(log.action_type)" class="h-6 w-6" />
+            <IconArrowDown v-else-if="log.action_type === 'urgent2normal'" class="h-6 w-6" />
+            <IconArrowUp v-else-if="['jumpIn', 'normal2urgent'].includes(log.action_type)" class="h-6 w-6" />
+            <IconClose v-else-if="['normalRemove', 'urgentRemove'].includes(log.action_type)" class="h-6 w-6" />
+            <IconVolumn v-else-if="['turnUp', 'turnDown'].includes(log.action_type)" class="h-6 w-6" />
+            <IconSkipSong v-else-if="['increaseDislike', 'reduceDislike'].includes(log.action_type)" class="h-6 w-6" />
+            <IconRoomSetting
+              v-else-if="['updateMinimalVolume', 'updateDislikeThreshold'].includes(log.action_type)"
+              class="h-6 w-6"
+            />
           </span>
 
           <span class="flex-0 mr-4 w-fit whitespace-nowrap">{{ timeTransfer(log.timestamp) }}</span>

@@ -63,7 +63,7 @@ export default {
         class="cursor-pointer text-natural-white"
         @click="$router.push({ name: 'Hall' })"
       />
-      <h2
+      <div
         class="relative hidden w-full justify-between text-natural-white laptop:mt-6 laptop:mb-2 laptop:flex"
         @click="copyLinkHandler"
       >
@@ -76,7 +76,7 @@ export default {
           :title="t('copied')"
           :contentText="t('invite_your_friend')"
         />
-      </h2>
+      </div>
     </h1>
     <div class="relative flex flex-col flex-wrap items-end justify-between gap-2 laptop:flex-row laptop:items-center">
       <div class="laptop::w-auto mt-5 flex-auto laptop:mt-0">
