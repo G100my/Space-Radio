@@ -45,7 +45,7 @@ export default {
     <ul class="flex-1 space-y-5 overflow-y-auto text-natural-gray2">
       <li v-for="log in logs" :key="log.timestamp">
         <div class="flex">
-          <span class="flex-0 mr-5">
+          <span class="flex-0 mr-2">
             <IconPlus v-if="['add', 'addMultiple'].includes(log.action_type)" class="h-6 w-6" />
             <IconArrowDown v-else-if="log.action_type === 'urgent2normal'" class="h-6 w-6" />
             <IconArrowUp v-else-if="['jumpIn', 'normal2urgent'].includes(log.action_type)" class="h-6 w-6" />
@@ -58,9 +58,9 @@ export default {
             />
           </span>
 
-          <span class="flex-0 mr-4 w-fit whitespace-nowrap">{{ timeTransfer(log.timestamp) }}</span>
+          <span class="flex-0 mr-2 w-fit whitespace-nowrap">{{ timeTransfer(log.timestamp) }}</span>
 
-          <div class="min-w-0 flex-1">
+          <div class="min-w-0 flex-1 text-md">
             <BaseMarquee
               v-if="
                 ['add', 'jumpIn', 'normalRemove', 'urgentRemove', 'normal2urgent', 'urgent2normal'].includes(
@@ -74,11 +74,21 @@ export default {
                 <span>{{ name }}</span>
               </BaseMarquee>
             </template>
-            <span v-else-if="['turnUp', 'turnDown'].includes(log.action_type)">Adjust Volumn: {{ log.payload }}</span>
-            <span v-else-if="log.action_type === 'updateMinimalVolume'">Minimal Volume: {{ log.payload }}</span>
-            <span v-else-if="log.action_type === 'updateDislikeThreshold'">Skip threshold: {{ log.payload }} </span>
-            <span v-else-if="log.action_type === 'reduceDislike'">Someone want to skip: {{ log.payload }} </span>
-            <span v-else-if="log.action_type === 'increaseDislike'">Someone cancel skip: {{ log.payload }} </span>
+            <span class="text-neutral-400" v-else-if="['turnUp', 'turnDown'].includes(log.action_type)"
+              >Adjust Volumn: {{ log.payload }}</span
+            >
+            <span class="text-neutral-400" v-else-if="log.action_type === 'updateMinimalVolume'"
+              >Minimal Volume: {{ log.payload }}</span
+            >
+            <span class="text-neutral-400" v-else-if="log.action_type === 'updateDislikeThreshold'"
+              >Skip threshold: {{ log.payload }}
+            </span>
+            <span class="text-neutral-400" v-else-if="log.action_type === 'reduceDislike'"
+              >want to skip: {{ log.payload }}
+            </span>
+            <span class="text-neutral-400" v-else-if="log.action_type === 'increaseDislike'"
+              >cancel skip: {{ log.payload }}
+            </span>
           </div>
         </div>
       </li>
