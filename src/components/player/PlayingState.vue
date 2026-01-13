@@ -5,7 +5,7 @@ import SpotifyLogo from '@/assets/images/Spotify_Logo_CMYK_Green.png'
 import ProgressTimer from './ProgressTimer.vue'
 import BaseMarquee from '@/components/base/BaseMarquee.vue'
 import LikeButton from '@/components/player/LikeButton.vue'
-import { usePersonalStore, usePlayingStore } from '@/store'
+import { usePersonalStore, usePlayingStore, useLatestOrderStore } from '@/store'
 
 export default {
   components: {
@@ -17,6 +17,7 @@ export default {
   setup() {
     const store = usePlayingStore()
     const personalStore = usePersonalStore()
+    const latestOrderStore = useLatestOrderStore()
     return {
       SpotifyLogo,
       logo,
@@ -27,6 +28,7 @@ export default {
       isPremium: computed(() => personalStore.isPremium),
       isHostUser: computed(() => personalStore.isHostUser),
       customerPlayerMode: computed(() => personalStore.customerPlayerMode),
+      ordererName: computed(() => latestOrderStore.latest_order.orderer_name),
     }
   },
 }
@@ -76,7 +78,7 @@ export default {
           class="mt-auto flex translate-y-1/2 justify-end text-primary laptop:mt-2 laptop:transform-none laptop:justify-between"
         >
           <ProgressTimer class="text-opacity-80" />
-          <p class="ml-5">{{ '點播人' }}</p>
+          <p class="ml-5">{{ ordererName }}</p>
         </section>
       </section>
     </section>
