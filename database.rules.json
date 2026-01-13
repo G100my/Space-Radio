@@ -1,0 +1,234 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "room_list": {
+      ".read": true,
+      ".write": true,
+      "$roomKey": {
+        "lastest_used": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "room_name": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 50"
+        }
+      }
+    },
+    "$roomKey": {
+      ".read": true,
+      ".write": false,
+      "basic": {
+        ".read": true,
+        ".write": true,
+        "host_id": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "room_key": {
+          ".validate": "newData.isString() && newData.val() === $roomKey"
+        },
+        "room_name": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 50"
+        },
+        "base_playlist": {
+          ".validate": "newData.hasChildren(['id', 'name']) || newData.val() === null"
+        }
+      },
+      "normal_queue": {
+        ".read": true,
+        ".write": true,
+        "$orderId": {
+          ".validate": "newData.hasChildren(['id', 'orderer_id', 'orderer_name', 'track_id', 'track_name'])",
+          "id": {
+            ".validate": "newData.isString() && newData.val() === $orderId"
+          },
+          "orderer_id": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "orderer_name": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "track_id": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "track_name": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "note": {
+            ".validate": "newData.isBoolean() || (newData.hasChildren(['sender', 'recipient', 'message', 'tts']))"
+          }
+        }
+      },
+      "urgent_queue": {
+        ".read": true,
+        ".write": true,
+        "$orderId": {
+          ".validate": "newData.hasChildren(['id', 'orderer_id', 'orderer_name', 'track_id', 'track_name'])",
+          "id": {
+            ".validate": "newData.isString() && newData.val() === $orderId"
+          },
+          "orderer_id": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "orderer_name": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "track_id": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "track_name": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "note": {
+            ".validate": "newData.isBoolean() || (newData.hasChildren(['sender', 'recipient', 'message', 'tts']))"
+          }
+        }
+      },
+      "pending_queue": {
+        ".read": true,
+        ".write": true,
+        "$orderId": {
+          ".validate": "newData.hasChildren(['id', 'orderer_id', 'orderer_name', 'track_id', 'track_name'])",
+          "id": {
+            ".validate": "newData.isString() && newData.val() === $orderId"
+          },
+          "orderer_id": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "orderer_name": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "track_id": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "track_name": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "note": {
+            ".validate": "newData.isBoolean() || (newData.hasChildren(['sender', 'recipient', 'message', 'tts']))"
+          }
+        }
+      },
+      "playing_state": {
+        ".read": true,
+        ".write": true,
+        "volume": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+        },
+        "minimal_volume": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+        },
+        "dislike": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "dislike_threshold": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 5"
+        },
+        "dislike_countdown": {
+          ".validate": "newData.isNumber() || newData.isBoolean()"
+        },
+        "voted_users": {
+          "$userId": {
+            ".validate": "newData.isBoolean()"
+          }
+        },
+        "playing_progress": {
+          ".validate": "newData.hasChildren(['duration', 'paused', 'position'])",
+          "duration": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "paused": {
+            ".validate": "newData.isBoolean()"
+          },
+          "position": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          }
+        },
+        "playing_track": {
+          ".validate": "newData.hasChildren(['id', 'name', 'artists', 'album', 'context_uri'])",
+          "id": {
+            ".validate": "newData.isString()"
+          },
+          "name": {
+            ".validate": "newData.isString()"
+          },
+          "artists": {
+            ".validate": "newData.hasChildren()",
+            "$index": {
+              ".validate": "newData.hasChildren(['name', 'uri', 'url'])",
+              "name": {
+                ".validate": "newData.isString()"
+              },
+              "uri": {
+                ".validate": "newData.isString()"
+              },
+              "url": {
+                ".validate": "newData.isString()"
+              }
+            }
+          },
+          "album": {
+            ".validate": "newData.hasChildren(['name', 'image_url', 'url'])",
+            "name": {
+              ".validate": "newData.isString()"
+            },
+            "image_url": {
+              ".validate": "newData.isString() || newData.val() === null"
+            },
+            "url": {
+              ".validate": "newData.isString()"
+            }
+          },
+          "context_uri": {
+            ".validate": "newData.isString()"
+          }
+        },
+        "latest_order": {
+          ".validate": "newData.hasChildren(['id', 'orderer_id', 'orderer_name', 'track_id', 'track_name', 'note'])",
+          "id": {
+            ".validate": "newData.isString()"
+          },
+          "orderer_id": {
+            ".validate": "newData.isString()"
+          },
+          "orderer_name": {
+            ".validate": "newData.isString()"
+          },
+          "track_id": {
+            ".validate": "newData.isString()"
+          },
+          "track_name": {
+            ".validate": "newData.isString()"
+          },
+          "note": {
+            ".validate": "newData.isBoolean() || (newData.hasChildren(['sender', 'recipient', 'message', 'tts']))"
+          }
+        }
+      },
+      "user_log": {
+        ".read": true,
+        ".write": true,
+        "$logId": {
+          ".validate": "newData.hasChildren(['action_type', 'user_id', 'user_name', 'timestamp'])",
+          "action_type": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "user_id": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "user_name": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          },
+          "payload": {
+            ".validate": "newData.isString() || newData.isNumber() || newData.hasChildren()"
+          },
+          "option": {
+            ".validate": "newData.hasChildren()"
+          }
+        }
+      }
+    }
+  }
+}
