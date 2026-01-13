@@ -15,16 +15,16 @@ const increaseOffset = 25
 
 type CustomListPaging = Pick<SpotifyApi.PlaylistTrackResponse, 'offset' | 'total' | 'next'>
 
-enum SpotifyTopListMap {
-  spotifyLong = 'medium_term',
-  spotifyMedium = 'long_term',
-  spotifyShort = 'short_term',
-}
+const SpotifyTopListMap = {
+  spotifyLong: 'medium_term',
+  spotifyMedium: 'long_term',
+  spotifyShort: 'short_term',
+} as const
 
 const spotifyTopListNames = Object.keys(SpotifyTopListMap) as SpotifyTopListNames[]
 
 type SpotifyTopListNames = keyof typeof SpotifyTopListMap
-export type TimeRange = `${SpotifyTopListMap}`
+export type TimeRange = `${(typeof SpotifyTopListMap)[keyof typeof SpotifyTopListMap]}`
 
 type SpotifyTopLists = Record<SpotifyTopListNames, CustomListPaging & { items: FormattedTrack[] }>
 
@@ -46,18 +46,6 @@ export interface PersonalPlaylistStoreState extends SpotifyTopLists {
 
 export const usePersonalPlaylistStore = defineStore('PersonalPlaylistStore', {
   state: (): PersonalPlaylistStoreState => {
-    const topTracks = spotifyTopListNames.reduce<SpotifyTopLists>((acc, listName) => {
-      return {
-        ...acc,
-        [listName]: {
-          list: [],
-          total: 0,
-          next: 0,
-          offset: 0,
-        },
-      }
-    }, {} as SpotifyTopLists)
-
     return {
       spotifyList: {
         // 不儲存 list，直接送到 choosen list
@@ -76,7 +64,24 @@ export const usePersonalPlaylistStore = defineStore('PersonalPlaylistStore', {
         next: 0,
         total: 0,
       },
-      ...topTracks,
+      spotifyLong: {
+        items: [],
+        total: 0,
+        next: '',
+        offset: 0,
+      },
+      spotifyMedium: {
+        items: [],
+        total: 0,
+        next: '',
+        offset: 0,
+      },
+      spotifyShort: {
+        items: [],
+        total: 0,
+        next: '',
+        offset: 0,
+      },
 
       chosenName: '',
       chosenList: [],
