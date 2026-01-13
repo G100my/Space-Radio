@@ -21,12 +21,14 @@ export default {
       })
     }
     function add2savedHandler() {
-      spotifyAPI.addToMySavedTracks([id.value]).then(() => {
+      // @ts-ignore, api type is not correct
+      spotifyAPI.addToMySavedTracks({ ids: [id.value] }).then(() => {
         checkSavedTrackState(id.value)
       })
     }
     function removeFromSavedHandler() {
-      spotifyAPI.removeFromMySavedTracks([id.value]).then(() => {
+      // @ts-ignore, api type is not correct
+      spotifyAPI.removeFromMySavedTracks({ ids: [id.value] }).then(() => {
         checkSavedTrackState(id.value)
       })
     }
