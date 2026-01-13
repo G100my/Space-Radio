@@ -103,6 +103,7 @@ const formValue = reactive<Params>({
   target_tempo: undefined,
   target_valence: undefined,
 })
+const genreDetails = ref<InstanceType<typeof BaseDetails>>()
 function getRecommendation() {
   const formatted = seeds.reduce<Record<SeedType, string[]>>(
     (acc, i) => {
@@ -119,6 +120,7 @@ function getRecommendation() {
     recommendationList.value = res.tracks.map(playlistTrackFormater)
     showRecommendation.value = true
   })
+  genreDetails.value!.$el.open = false
 }
 const store = useQueueStore()
 function addAll() {
@@ -152,7 +154,7 @@ function addAll() {
       </fieldset>
 
       <fieldset class="my-1 overflow-hidden rounded">
-        <BaseDetails :summaryText="$t('recommendation.genre')">
+        <BaseDetails ref="genreDetails" :summaryText="$t('recommendation.genre')">
           <ul class="columns-2 pb-3 laptop:columns-3">
             <li v-for="genre in genres" :key="genre">
               <button
