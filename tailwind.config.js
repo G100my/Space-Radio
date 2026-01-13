@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-undef
-module.exports = {
+export default {
   mode: 'jit',
   purge: ['src/index.css', './src/**/*.vue'],
   theme: {
